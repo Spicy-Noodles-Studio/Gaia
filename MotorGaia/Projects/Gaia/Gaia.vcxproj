@@ -77,31 +77,33 @@
     <LinkIncremental>true</LinkIncremental>
     <SourcePath>$(SolutionDir)Src\Gaia\$(SourcePath)</SourcePath>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IntDir>$(SolutionDir)inter\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)_d $(Platform)</TargetName>
+    <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>$(ProjectName)_d_$(Platform)</TargetName>
+    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\lib\Debug;$(SolutionDir)Dependencies\bullet3-2.89\Buildx86\lib\Debug;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\lib\x86;$(SolutionDir)Dependencies\SDL2-2.0.10\Buildx86\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <SourcePath>$(SolutionDir)Src\Gaia\$(SourcePath)</SourcePath>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IntDir>$(SolutionDir)inter\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)_d $(Platform)</TargetName>
-    <LibraryPath>$(SolutionDir)Dependencies\bullet3-master\Build\lib\Debug;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\lib;$(SolutionDir)Dependencies\ogre-1.12.5\Build\lib\Debug;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\fsbank\lib;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\studio\lib;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\lowlevel\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>$(ProjectName)_d_$(Platform)</TargetName>
+    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Build\lib\Debug;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\lib\x64;$(SolutionDir)Dependencies\SDL2-2.0.10\Build\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <SourcePath>$(SolutionDir)Src\Gaia\$(SourcePath)</SourcePath>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IntDir>$(SolutionDir)inter\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)$ (Platform)</TargetName>
+    <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)</TargetName>
+    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\lib\Release;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\lib\x86;$(SolutionDir)Dependencies\SDL2-2.0.10\Buildx86\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <SourcePath>$(SolutionDir)Src\Gaia\$(SourcePath)</SourcePath>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IntDir>$(SolutionDir)inter\$(Platform)$(Configuration)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)$ (Platform)</TargetName>
-    <LibraryPath>$(SolutionDir)Dependencies\bullet3-master\Build\lib\Release;$(SolutionDir)Dependencies\ogre-1.12.5\Build\lib\Release;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\lib;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\fsbank\lib;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\studio\lib;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\lowlevel\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)</TargetName>
+    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Build\lib\Release;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\lib\x64;$(SolutionDir)Dependencies\SDL2-2.0.10\Build\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -109,12 +111,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\SDL2-2.0.10\include;$(SolutionDir)Dependencies\json-3.7.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>OgreMain_d.lib;fmodL_vc.lib;SDL2d.lib;SDL2maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -123,14 +127,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Geometry;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Dynamics\ConstraintSolver;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Dynamics\shared;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Dynamics;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Collision\NarrowPhaseCollision\shared;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Collision\NarrowPhaseCollision;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Collision\BroadPhaseCollision\shared;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Collision\BroadPhaseCollision;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Common\shared;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Common;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include\SDL2;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\fsbank\inc;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\studio\inc;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\lowlevel\inc;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\SDL2-2.0.10\include;$(SolutionDir)Dependencies\json-3.7.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;SDL2.lib;SDL2main.lib;fmod64_vc.lib;fmodL64_vc.lib;fmodstudio64_vc.lib;fmodstudioL64_vc.lib;fsbank64_vc.lib;Bullet3Collision_Debug.lib;Bullet3Common_Debug.lib;Bullet3Dynamics_Debug.lib;Bullet3Geometry_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain_d.lib;fmodL_vc.lib;SDL2d.lib;SDL2maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,12 +147,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\SDL2-2.0.10\include;$(SolutionDir)Dependencies\json-3.7.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>OgreMain.lib;fmod_vc.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,14 +167,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Geometry;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Dynamics\ConstraintSolver;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Dynamics\shared;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Dynamics;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Collision\NarrowPhaseCollision\shared;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Collision\NarrowPhaseCollision;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Collision\BroadPhaseCollision\shared;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Collision\BroadPhaseCollision;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Common\shared;$(SolutionDir)Dependencies\bullet3-master\src\Bullet3Common;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include\SDL2;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\fsbank\inc;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\studio\inc;$(SolutionDir)Dependencies\FmodApi\FMOD Studio API Windows\api\lowlevel\inc;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\SDL2-2.0.10\include;$(SolutionDir)Dependencies\json-3.7.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;SDL2.lib;SDL2main.lib;fmod64_vc.lib;fmodL64_vc.lib;fmodstudio64_vc.lib;fmodstudioL64_vc.lib;fsbank64_vc.lib;Bullet3Collision.lib;Bullet3Common.lib;Bullet3Dynamics.lib;Bullet3Geometry.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain.lib;fmod_vc.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

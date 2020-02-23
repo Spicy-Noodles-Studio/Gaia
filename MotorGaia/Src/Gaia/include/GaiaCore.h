@@ -10,8 +10,12 @@ class GAIA_API GaiaCore
 {
 public:
 	GaiaCore();
+	~GaiaCore();
 
 	void init();
+	void run();
+
+private:
 	void update();
 };
 

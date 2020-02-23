@@ -15,7 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Src\Gaia\Gaia.cpp">
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Src\Gaia\src\GaiaCore.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

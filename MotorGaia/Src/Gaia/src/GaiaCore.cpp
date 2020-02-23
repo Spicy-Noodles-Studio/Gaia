@@ -1,5 +1,6 @@
 #include "GaiaCore.h"
 #include <OgreRoot.h>
+
 #include <iostream>
 
 GaiaCore::GaiaCore()

@@ -21,12 +21,12 @@ public:
     template<typename T>
     GameObject* findGameObjectWithTag(std::string tag);
 
-private:
-    Component();
+protected:
+    Component(GameObject* gameObject);
 
 public:
 
 private:
-    GameObject* owner;
+    GameObject* gameObject;
 
 };

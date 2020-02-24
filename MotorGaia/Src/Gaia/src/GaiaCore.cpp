@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "RenderSystem.h"
+
 GaiaCore::GaiaCore()
 {
 }
@@ -18,6 +20,8 @@ void GaiaCore::init()
 #else
     Ogre::Root* r = new Ogre::Root("plugins.cfg");
 #endif
+
+    RenderSystem::GetInstance()->printA();
 }
 
 void GaiaCore::run()

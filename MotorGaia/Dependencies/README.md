@@ -8,6 +8,10 @@
   librerías, la ruta quedaria algo como "../Dependencies/ogre-1.12.5/Build" y ""../Dependencies/ogre-1.12.5/Buildx86"
 
 
+# OGRE3D-1.12.5
+- IMPORTANTE: al hacer las soluciones con CMake, desmarcar la opcion de OVERLAY_IMGUI (o algo asi)
+
+
 # FMOD-2.00.07
 - Utilizar el instalador que hay en un .zip
 - Al instalar elegir una ruta de facil acceso.

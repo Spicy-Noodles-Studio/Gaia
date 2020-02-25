@@ -33,10 +33,10 @@
     <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="GaiaComponent.h">
+    <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="UserComponent.h">
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,10 +56,13 @@
     <ClCompile Include="..\..\Src\Gaia\src\RenderSystem.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="GaiaComponent.cpp">
+    <ClCompile Include="..\..\Src\Gaia\src\UserComponent.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="UserComponent.cpp">
+    <ClCompile Include="main.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\GaiaComponent.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

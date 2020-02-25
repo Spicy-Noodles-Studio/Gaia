@@ -32,17 +32,13 @@ bld/
 
 #Archivos generados
 [Ii]nter/
-#[Bb]ullet3-2.89/Build/**
-#[Bb]ullet3-2.89/
-#[Oo]gre-1.12.5/Build/**
-#[Oo]gre-1.12.5/Buildx86/**
-#[Ff]mod-2.00.07/Build/**
-#[Ff]mod-2.00.07/Buildx86/**
-#[Ss]DL2-2.0.10/Build/**
-#[Ss]DL2-2.0.10/Buildx86/**
+[Bb]ullet3-2.89/**
+[Oo]gre-1.12.5/**
+[Ff]mod-2.00.07/**
 [Bb]uild/
 [Bb]uildx86/
-[Cc]make-3.16.4-win64-x64/
+[Cc]make-3.16.4-win64-x64/**
+[Jj]son-3.7.3/
 
 
 # Visual Studio 2015/2017 cache/options directory

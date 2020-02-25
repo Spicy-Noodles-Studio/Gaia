@@ -1,5 +1,7 @@
 #include "Component.h"
+#include <map>
+#include <functional>
 
-Component::Component() : owner(nullptr) {
+Component::Component(GameObject* gameObject) : gameObject(gameObject) {
 
 }

@@ -110,7 +110,7 @@ xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\zlib.dll" "$(Solut
 xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\RenderSystem_Direct3D11_d.dll" "$(SolutionDir)Bin"  /y
 xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\RenderSystem_GL_d.dll" "$(SolutionDir)Bin"  /y
 xcopy "$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x64\fmodL.dll" "$(SolutionDir)Bin"  /y
-xcopy "$(SolutionDir)Dependencies\SDL2-2.0.10\Build\Debug\SDL2d.dll" "$(SolutionDir)Bin" /y</Command>
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\bin\SDL2.dll" "$(SolutionDir)Bin" /y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -130,7 +130,7 @@ xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\debug\zlib.dll" "$(So
 xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\debug\RenderSystem_Direct3D11_d.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\debug\RenderSystem_GL_d.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x86\fmodL.dll" "$(SolutionDir)Bin" /y
-xcopy "$(SolutionDir)Dependencies\SDL2-2.0.10\Buildx86\Debug\SDL2d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\bin\SDL2.dll" "$(SolutionDir)Bin" /y
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -155,7 +155,7 @@ xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\release\zlib.dll" "$(
 xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\release\RenderSystem_Direct3D11.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\release\RenderSystem_GL.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x86\fmod.dll" "$(SolutionDir)Bin" /y
-xcopy "$(SolutionDir)Dependencies\SDL2-2.0.10\Buildx86\Release\SDL2.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\bin\SDL2d.dll" "$(SolutionDir)Bin" /y
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -180,7 +180,7 @@ xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\release\zlib.dll" "$(Sol
 xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\release\RenderSystem_Direct3D11.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\release\RenderSystem_GL.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x64\fmod.dll" "$(SolutionDir)Bin" /y
-xcopy "$(SolutionDir)Dependencies\SDL2-2.0.10\Build\Release\SDL2.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\bin\SDL2d.dll" "$(SolutionDir)Bin" /y
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

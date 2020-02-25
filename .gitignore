@@ -32,12 +32,12 @@ bld/
 
 #Archivos generados
 [Ii]nter/
-[Bb]ullet3-2.89/**
-[Oo]gre-1.12.5/**
-[Ff]mod-2.00.07/**
+[Bb]ullet3-2.89/
+[Oo]gre-1.12.5/
+[Ff]mod-2.00.07/
 [Bb]uild/
 [Bb]uildx86/
-[Cc]make-3.16.4-win64-x64/**
+[Cc]make-3.16.4-win64-x64/
 [Jj]son-3.7.3/
 
 

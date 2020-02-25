@@ -17,7 +17,7 @@
 - Al instalar elegir una ruta de facil acceso.
 - Se os generará una carpeta llamada "FMOD Studio API Windows", copia todas las carpetas (bin, api, doc, plugins) que contiene.
 - En la carpeta Dependencies de Gaia, crea una carpeta llamada "fmod-2.00.07" y pega dentro de esta las carpetas copiadas.
-- La carpeta "api" contiene los .dll y .lib, asi que cambiad el nombre de la carpeta a "build" (minusculas)
+- La carpeta "api" contiene los .dll y .lib, asi que cambiad el nombre de la carpeta a "Build"
 - Navega por todas las carpetas de "build" (la antigua "api") y cambia todas las carpetas con nombre "inc" a "include"
 - La carpeta generada por el instalador, contiene un uninstall.exe, ejecutadlo para eliminarlo de vuestro sistema
   (solo nos interesa tenerlo en Gaia)

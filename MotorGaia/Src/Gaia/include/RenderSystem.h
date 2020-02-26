@@ -1,7 +1,7 @@
-#ifndef RENDER_SYSTEM
-#define RENDER_SYSTEM
-
 #pragma once
+
+#ifndef RENDER_SYSTEM_H
+#define RENDER_SYSTEM_H
 
 #include "Singleton.h"
 

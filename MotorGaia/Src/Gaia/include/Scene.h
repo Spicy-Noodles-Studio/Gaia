@@ -1,7 +1,9 @@
 #pragma once
 
-#include <vector>
+#ifndef SCENE_H
+#define SCENE_H
 
+#include <vector>
 #include "GameObject.h"
 
 class Scene {
@@ -10,7 +12,6 @@ public:
 	~Scene();
 
 private:
-
 	bool addGameObject(GameObject* gameObject);
 	bool delGameObjectWithName(std::string name);
 	bool delGameObjectWithTag(std::string tag);
@@ -19,7 +20,6 @@ private:
 	GameObject* findGameObjectWithTag(std::string tag);
 
 public:
-
 	inline std::string getSceneName();
 
 private:
@@ -27,3 +27,5 @@ private:
 	std::vector<GameObject*> sceneObjects;
 
 };
+
+#endif

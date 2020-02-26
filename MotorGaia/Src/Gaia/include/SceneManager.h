@@ -16,9 +16,6 @@ public:
 	SceneManager();
 	~SceneManager();
 
-private:
-	
-
 public:
 
 	bool loadScene(std::string name);

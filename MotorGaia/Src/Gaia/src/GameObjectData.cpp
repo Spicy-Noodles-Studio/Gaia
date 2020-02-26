@@ -15,10 +15,12 @@ inline void GameObjectData::setName(const std::string& gameObjectName)
 
 inline void GameObjectData::setTag(const std::string& gameObjectTag)
 {
+	tag = gameObjectTag;
 }
 
 inline void GameObjectData::setComponentData(const ComponentData& data)
 {
+	componentData.push_back(data);
 }
 
 inline const std::string& GameObjectData::getName() const

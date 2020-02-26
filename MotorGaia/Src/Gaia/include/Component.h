@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef COMPONENT_H
+#define COMPONENT_H
+
 #include <string>
 
 class GameObject;
@@ -30,3 +33,5 @@ private:
     GameObject* gameObject;
 
 };
+
+#endif

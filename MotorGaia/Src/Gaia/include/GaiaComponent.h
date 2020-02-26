@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef GAIA_COMPONENT_H
+#define GAIA_COMPONENT_H
+
 #include "Component.h"
 
 
@@ -11,3 +15,4 @@ public:
 
 };
 
+#endif

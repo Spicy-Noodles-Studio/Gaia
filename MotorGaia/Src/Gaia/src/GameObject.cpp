@@ -13,6 +13,13 @@ GameObject::~GameObject() {
     
 }
 
+
+void GameObject::addComponent(const std::string& componentName, Component* component)
+{
+    //TODO: falta deteccion de errores
+    components[componentName] = component;
+}
+
 inline Scene* GameObject::getScene()
 {
 	return myScene;
@@ -31,7 +38,7 @@ T* GameObject::addComponent() {
         printf("Error al añadir componente: %s, al GameObject con nombre: %s", key, name)
 
     components[key] = constructor();*/
-
+    
     return true;
 }
 

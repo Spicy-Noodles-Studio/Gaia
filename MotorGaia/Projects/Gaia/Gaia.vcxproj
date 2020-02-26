@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\Component.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentData.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
@@ -35,6 +36,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\Component.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\ComponentData.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\ComponentManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GaiaComponent.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GaiaCore.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject.cpp" />

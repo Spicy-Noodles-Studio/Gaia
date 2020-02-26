@@ -1,32 +1,19 @@
-# En este archivo describirá los pasos a seguir para
-# que los nombres de carpetas de las dependencias coincidan
+# En este archivo se describen los pasos a seguir para
+# la instalación de las librerías del motor
 
 
 # GENERAL (IMPORTANTE!)
-- Para todas las librerias en las que sea necesario utilizar CMake para construir las soluciones,
+- Descargar el zip Dependencias del drive y extraer todas las librerías en Dependencies.
+- Para todas las librerías en las que sea necesario utilizar CMake para construir las soluciones,
   utilizad carpetas llamadas "Build" (para x64) y "Buildx86" (para x86) dentro de las carpetas de las
-  librerías, la ruta quedaria algo como "../Dependencies/ogre-1.12.5/Build" y ""../Dependencies/ogre-1.12.5/Buildx86"
+  librerías. La ruta quedaría así "../Dependencies/ogre-1.12.5/Build" y ""../Dependencies/ogre-1.12.5/Buildx86".
 
 
-# OGRE3D-1.12.5
-- IMPORTANTE: al hacer las soluciones con CMake, desmarcar la opcion de OVERLAY_IMGUI (o algo asi)
+# OGRE3D-1.12.5/BULLET3-2.89/JSON-3.7.3
+- Misma instalación en los tres casos, usando CMake.
+- IMPORTANTE: solo en Ogre3D, al hacer las soluciones con CMake, desmarcar la opcion de OVERLAY_IMGUI.
 
 
 # FMOD-2.00.07
-- Utilizar el instalador que hay en un .zip
-- Al instalar elegir una ruta de facil acceso.
-- Se os generará una carpeta llamada "FMOD Studio API Windows", copia todas las carpetas (bin, api, doc, plugins) que contiene.
-- En la carpeta Dependencies de Gaia, crea una carpeta llamada "fmod-2.00.07" y pega dentro de esta las carpetas copiadas.
-- La carpeta "api" contiene los .dll y .lib, asi que cambiad el nombre de la carpeta a "build" (minusculas)
-- Navega por todas las carpetas de "build" (la antigua "api") y cambia todas las carpetas con nombre "inc" a "include"
-- La carpeta generada por el instalador, contiene un uninstall.exe, ejecutadlo para eliminarlo de vuestro sistema
-  (solo nos interesa tenerlo en Gaia)
-
-
-# SDL2-2.0.10
-- Utilizar CMake de la manera descrita en el apartado GENERAL
-- IMPORTANTE: la compilacion de SDL falla si la ruta donde construis la solucion tiene algun espacio.
-
-
-# NOTAS ADICIONALES
-- Si surge algún problema con las dependencias, se deberá de escribir en este documento el error y la solucion
+- Extraer todas las carpetas (bin, Build, doc, plugins) que contiene en la carpeta Dependencies de Gaia, dentro de una carpeta llamada "fmod-2.00.07".
+- Navegad por todas las carpetas de "Build" y cambiad todas las carpetas con nombre "inc" a "include".

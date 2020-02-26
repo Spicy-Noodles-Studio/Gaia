@@ -1,12 +1,12 @@
 #pragma once
-
 #include <string>
 
 class GameObject;
 
-class Component {
+class Component
+{
 public: 
-    // Devuelve el componente de tipo indicado suponiendo que existe en el mismo owner,
+    // Devuelve el componente del tipo indicado suponiendo que existe en el mismo owner,
     // si no, devuelve un nullptr  
     template<typename T>
     T* getComponent();
@@ -23,8 +23,6 @@ public:
 
 protected:
     Component(GameObject* gameObject);
-
-public:
 
 private:
     GameObject* gameObject;

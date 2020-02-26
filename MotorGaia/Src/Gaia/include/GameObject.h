@@ -7,7 +7,8 @@
 
 class Scene;
 
-class GameObject {
+class GameObject
+{
 public:
     GameObject(std::string name, std::string tag, Scene* scene);
     ~GameObject();
@@ -23,8 +24,6 @@ public:
 
 private:
     inline Scene* getScene();
-
-public:
 
 private: 
     std::string name;

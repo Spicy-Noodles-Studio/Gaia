@@ -7,10 +7,12 @@
 
 GaiaCore::GaiaCore()
 {
+
 }
 
 GaiaCore::~GaiaCore()
 {
+
 }
 
 void GaiaCore::init()
@@ -20,8 +22,6 @@ void GaiaCore::init()
 #else
     Ogre::Root* r = new Ogre::Root("plugins.cfg");
 #endif
-
-    RenderSystem::GetInstance()->printA();
 }
 
 void GaiaCore::run()
@@ -31,4 +31,5 @@ void GaiaCore::run()
 
 void GaiaCore::update()
 {
+
 }

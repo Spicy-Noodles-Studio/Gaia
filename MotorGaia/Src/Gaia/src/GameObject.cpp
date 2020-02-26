@@ -5,11 +5,13 @@
 
 //#include "ComponentManager.h"
 
-GameObject::GameObject(std::string name, std::string tag, Scene* scene) : name(name), tag(tag), myScene(scene) {
+GameObject::GameObject(std::string name, std::string tag, Scene* scene) : name(name), tag(tag), myScene(scene)
+{
 
 }
 
-GameObject::~GameObject() {
+GameObject::~GameObject()
+{
     
 }
 
@@ -19,31 +21,37 @@ inline Scene* GameObject::getScene()
 }
 
 template<typename T>
-T* GameObject::addComponent() {
-   std::string key = typeid(T).name();
-    if(components.find(key) != components.end())
-        return false;
-    // Usar el gestor de componentes
-    // y su mapa de constructoras
-    /*auto constructor = ComponentManager::getConstructor(key);
+T* GameObject::addComponent()
+{
+	std::string key = typeid(T).name();
 
-    if(constructor == nullptr)
-        printf("Error al añadir componente: %s, al GameObject con nombre: %s", key, name)
+	if (components.find(key) != components.end())
+		return false;
 
-    components[key] = constructor();*/
+	// Usar el gestor de componentes
+	// y su mapa de constructoras
+	/*auto constructor = ComponentManager::getConstructor(key);
 
-    return true;
+	if(constructor == nullptr)
+		printf("Error al añadir componente: %s, al GameObject con nombre: %s", key, name)
+
+	components[key] = constructor();*/
+
+	return true;
 }
 
 template<typename T>
-bool GameObject::delComponent() {
+bool GameObject::delComponent()
+{
     // Como el gestor de componentes los crea,
     // seria oportuno que los borrara.
 }
 
 template<typename T>
-T* GameObject::getComponent() {
+T* GameObject::getComponent()
+{
     std::string key = typeid(T).name();
+
     if(components.find(key) == components.end())
         return nullptr;
 

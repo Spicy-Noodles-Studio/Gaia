@@ -18,4 +18,3 @@ public:
 	virtual void onCollisionStay(GameObject* other);
 	virtual void onCollisionExit(GameObject* other);
 };
-

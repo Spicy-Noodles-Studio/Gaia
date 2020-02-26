@@ -2,10 +2,12 @@
 
 Scene::Scene(std::string sceneName) : name(sceneName)
 {
+
 }
 
 Scene::~Scene()
 {
+
 }
 
 bool Scene::addGameObject(GameObject* gameObject)

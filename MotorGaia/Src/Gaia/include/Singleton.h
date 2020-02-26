@@ -7,16 +7,15 @@ template<typename T>
 class Singleton
 {
 private:
-
 	//Si se llaman es que hay dos instancias
-	Singleton(Singleton const&) = delete;//Constructor por copia
-	Singleton& operator=(Singleton const&) = delete;//Operador igual
+	Singleton(Singleton const&) = delete; //Constructor por copia
+	Singleton& operator=(Singleton const&) = delete; //Operador igual
 
 protected:
 	static T* instance;
 
 	Singleton();
-	~Singleton() {};
+	~Singleton() {}
 
 public:
 	static T* GetInstance();

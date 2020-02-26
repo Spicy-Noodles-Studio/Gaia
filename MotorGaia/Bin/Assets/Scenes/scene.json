@@ -1,0 +1,72 @@
+{
+    "SceneName": "Scene1",
+    "SceneObjects": [
+        {
+            "ObjectType": "BLUEPRINT",
+            "ObjectName": "O1",
+            "Tag": "tig",
+            "BlueprintPath": "_path_",
+            "ComponentModifications": [
+                {
+                    "ComponentName": "Transform",
+                    "ComponentProperties": {
+                        "PropertyName1": "1",
+                        "PropertyName2": "5"
+                    }
+                }
+            ],
+            "Components": [
+                {
+                    "ComponentName": "RigidBody",
+                    "ComponentProperties": {
+                        "PropertyName1": "2",
+                        "PropertyName2": "tres"
+                    }
+                }
+            ],
+            "ChildrenModifications": {
+                "Pato": {
+                    "ComponentModifications": [
+                        {
+                            "ComponentName": "Transform",
+                            "ComponentProperties": {
+                                "PropertyName1": "5",
+                                "PropertyName2": "102"
+                            }
+                        }
+                    ]
+                }
+            },
+            "Children": [
+                {
+                    "ObjectType": "GAMEOBJECT",
+                    "ObjectName": "O2",
+                    "Tag": "teg",
+                    "Components": [
+                        {
+                            "ComponentName": "Transform",
+                            "ComponentProperties": {
+                                "PropertyName1": "4543",
+                                "PropertyName2": "543"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ObjectType": "GAMEOBJECT",
+            "ObjectName": "O3",
+            "Tag": "tag",
+            "Components": [
+                {
+                    "ComponentName": "MeshRenderer",
+                    "ComponentProperties": {
+                        "PropertyName1": "Sprite",
+                        "PropertyName2": "si"
+                    }
+                }
+            ]
+        }
+    ]
+}

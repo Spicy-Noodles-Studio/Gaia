@@ -12,11 +12,13 @@ public:
 	ComponentData();
 	~ComponentData();
 
-	inline void setName(const std::string& componentName);
-	inline void setProperty(const std::string& propName, const std::string& propValue);
+	void setName(const std::string& componentName);
+	void addProperty(const std::string& propName, const std::string& propValue);
 
-	inline const std::string& getName() const;
-	inline const std::map<std::string, std::string>& getProperties() const;
+	void modifyProperty(const std::string& propName, const std::string& propValue);
+
+	const std::string& getName() const;
+	const std::map<std::string, std::string>& getProperties() const;
 
 public:
 	std::string name;

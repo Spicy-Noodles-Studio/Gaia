@@ -13,45 +13,72 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de encabezado\Component">
+      <UniqueIdentifier>{448dd2da-b659-4ec0-9973-d7d01a3a3618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\GameObject">
+      <UniqueIdentifier>{b088a7d0-7c86-45ba-a014-77ea241bb018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Systems">
+      <UniqueIdentifier>{344f724e-c094-4d5f-b125-7d30ea09a259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Scene">
+      <UniqueIdentifier>{fc27a983-fe51-4d95-9eab-6642fef7503e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Component">
+      <UniqueIdentifier>{d739d491-f967-4931-b5a6-3f2d0ce840d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\GameObject">
+      <UniqueIdentifier>{db120ade-c43e-46b9-9f2b-eaddb014a6d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Scene">
+      <UniqueIdentifier>{f5490ebe-8b06-4744-b71c-ea0e8c444c78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Systems">
+      <UniqueIdentifier>{e8a4f9f3-13a2-434f-8b27-6392a5197340}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\Component.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\GameObject.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\Scene.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\Singleton.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\ComponentData.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\SceneData.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\GameObject.h">
+      <Filter>Archivos de encabezado\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h">
+      <Filter>Archivos de encabezado\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h">
+      <Filter>Archivos de encabezado\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Scene.h">
+      <Filter>Archivos de encabezado\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\SceneData.h">
+      <Filter>Archivos de encabezado\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Singleton.h">
+      <Filter>Archivos de encabezado\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h">
+      <Filter>Archivos de encabezado\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,40 +86,43 @@
     <ClCompile Include="..\..\Src\Gaia\src\GaiaCore.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Component.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\GameObject.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Scene.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\RenderSystem.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\UserComponent.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\GaiaComponent.cpp">
-      <Filter>Archivos de origen</Filter>
+    <ClCompile Include="..\..\Src\Gaia\src\Component.cpp">
+      <Filter>Archivos de origen\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\ComponentData.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\GameObjectData.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\SceneData.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\SceneManager.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Archivos de origen\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\ComponentManager.cpp">
+      <Filter>Archivos de origen\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\GaiaComponent.cpp">
+      <Filter>Archivos de origen\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\UserComponent.cpp">
+      <Filter>Archivos de origen\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\GameObject.cpp">
+      <Filter>Archivos de origen\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\GameObjectData.cpp">
+      <Filter>Archivos de origen\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Scene.cpp">
+      <Filter>Archivos de origen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\SceneData.cpp">
+      <Filter>Archivos de origen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\SceneManager.cpp">
+      <Filter>Archivos de origen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\RenderSystem.cpp">
+      <Filter>Archivos de origen\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\DataLoader.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

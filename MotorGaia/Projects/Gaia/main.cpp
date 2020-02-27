@@ -28,7 +28,7 @@ int main()
 
 	DataLoader dL;
 	std::fstream i;
-	i.open("Assets//Scenes//scene.json");
+	i.open("Assets//Scenes//S.scene");
 	if (i.is_open()) {
 		json j;
 		i >> j;

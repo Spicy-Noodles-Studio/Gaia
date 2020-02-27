@@ -1,13 +1,12 @@
 #include "DataLoader.h"
 
+#include <fstream>
 #include <stdio.h>
 
-#include "ComponentData.h"
-#include "GameObjectData.h"
-#include "SceneData.h"
+#include "ResourcesManager.h"
 
 
-DataLoader::DataLoader()
+DataLoader::DataLoader(ResourcesManager* resourcesManager) : resourcesManager(resourcesManager)
 {
 }
 
@@ -15,43 +14,67 @@ DataLoader::~DataLoader()
 {
 }
 
-ComponentData DataLoader::loadComponentData(const json& data)
+bool DataLoader::loadScene(const std::string& filename)
 {
-	ComponentData cD = ComponentData();
+	std::fstream i;
+	i.open(filename);
+	if (!i.is_open()) {
+		printf("DATA LOADER: filename %s not found\n", filename.c_str());
+		return false;
+	}
+
+	json j;
+	i >> j;
+	resourcesManager->registerSceneData(loadSceneData(j));
+	i.close();
+	return true;
+}
+
+bool DataLoader::loadBlueprint(const std::string& filename)
+{
+
+	return true;
+}
+
+ComponentData* DataLoader::loadComponentData(const json& data)
+{
+	ComponentData* cD = new ComponentData();
 
 	json::const_iterator name = data.find("ComponentName");
 	if (name == data.end()) {
-		printf("ERROR: No se encuentra el nombre del componente");
+		printf("DATA LOADER: Component name not found\n");
 		return cD;
 	}
-	cD.setName(*name);
+	cD->setName(*name);
 
 	json::const_iterator properties = data.find("ComponentProperties");
 	if (properties != data.end())
 		for (auto& property : (*properties).items())
-			cD.addProperty(property.key(), property.value());
+			cD->addProperty(property.key(), property.value());
 
 	return cD;
 }
 
-GameObjectData DataLoader::loadGameObjectData(const json& data)
+GameObjectData* DataLoader::loadGameObjectData(const json& data)
 {
-	GameObjectData gOD = GameObjectData();
+	GameObjectData* gOD = new GameObjectData();
 
 	//Se leen el nombre y el tag del objeto
 	json::const_iterator objectName = data.find("ObjectName");
 	json::const_iterator objectTag = data.find("Tag");
 	if (objectName == data.end() || objectTag == data.end()) {
-		printf("ERROR: No se ha podido encontrar el nombre o el tag del objeto.\n");
-		return GameObjectData();
+		printf("DATA LOADER: Object name nor tag found\n");
+		//TODO: return empty GAMEOBJECTDATA instead of nullptr
+		delete gOD;
+		return nullptr;
 	}
 
-	gOD.setName(*objectName);
-	gOD.setTag(*objectTag);
+	gOD->setName(*objectName);
+	gOD->setTag(*objectTag);
 
 	json::const_iterator buildType = data.find("ObjectType");
 	if (buildType == data.end()) {
-		printf("ERROR: No se encuentra el tipo del objeto %s.\n", gOD.getName().c_str());
+		printf("DATA LOADER: Object type not found %s\n", gOD->getName().c_str());
 		return gOD;
 	}
 	std::string type, aux = *buildType;
@@ -63,14 +86,14 @@ GameObjectData DataLoader::loadGameObjectData(const json& data)
 		//Se modifican los componentes si es necesario
 		json::const_iterator mod = data.find("ComponentModifications");
 		if (mod != data.end())
-			modifyComponents(gOD, *mod);
+			modifyComponents(*gOD, *mod);
 
 		//Se modifican los hijos si es necesario
 		json::const_iterator childMod = data.find("ChildrenModifications");
 		if (childMod != data.end())
 			for (auto& child : (*childMod).items()) {
 				bool exists;
-				GameObjectData& childData = gOD.getChild(child.key(), exists);
+				GameObjectData& childData = gOD->getChild(child.key(), exists);
 				if (exists) {//Si el hijo actual no existe
 					json::const_iterator childCompMod = child.value().find("ComponentModifications");
 					if (childCompMod != child.value().end())
@@ -83,14 +106,16 @@ GameObjectData DataLoader::loadGameObjectData(const json& data)
 			}
 	}
 	else if (type != "gameobject") {
-		printf("ERROR: se ha introducido un tipo no valido para la creacion del objeto %s.\n", gOD.getName().c_str());
-		return  GameObjectData();
+		printf("DATA LOADER: %s is an invalid object type\n", gOD->getName().c_str());
+		//TODO: return empty GAMEOBJECTDATA instead of nullptr
+		delete gOD;
+		return nullptr;
 	}
 
 	//Se cargan los nuevos componentes
 	json::const_iterator components = data.find("Components");
 	if (components != data.end())
-		addComponents(gOD, *components);
+		addComponents(*gOD, *components);
 
 	//Se cargan los datos de los hijos con una llamada recursiva
 	json::const_iterator children = data.find("Children");
@@ -98,31 +123,32 @@ GameObjectData DataLoader::loadGameObjectData(const json& data)
 		for (auto& child : (*children).items()) {
 			json::const_iterator name = child.value().find("ObjectName");
 			if (name == child.value().end()) {
-				printf("ERROR: No se ha podido encontrar el nombre del hijo del objeto %s.\n", gOD.name.c_str());
-				return GameObjectData();
+				printf("DATA LOADER: object child name %s not found\n", gOD->name.c_str());
+				//TODO: return empty GAMEOBJECTDATA instead of nullptr
+				return nullptr;
 			}
 
-			gOD.addChildrenData(child.value()["ObjectName"], loadGameObjectData(child.value()));
+			gOD->addChildrenData(child.value()["ObjectName"], *loadGameObjectData(child.value()));
 		}
 
 	return gOD;
 }
 
-SceneData DataLoader::loadSceneData(const json& data)
+SceneData* DataLoader::loadSceneData(const json& data)
 {
-	SceneData sD = SceneData();
+	SceneData* sD = new SceneData();
 
 	json::const_iterator name = data.find("SceneName");
 	if (name == data.end()) {
-		printf("ERROR: No se ha podido encontrar el nombre de la escena.\n");
+		printf("DATA LOADER: SceneName not found\n");
 		return sD;
 	}
-	sD.setName(*name);
+	sD->setName(*name);
 
 	json::const_iterator objects = data.find("SceneObjects");
 	if (objects != data.end())
 		for (auto& gameObject : (*objects).items()) {
-			sD.setGameObjectData(loadGameObjectData(gameObject.value()));
+			sD->setGameObjectData(*loadGameObjectData(gameObject.value()));
 		}
 
 	return sD;
@@ -133,11 +159,11 @@ void DataLoader::addComponents(GameObjectData& gOD, const json& data)
 	for (auto& component : data.items()) {
 		json::const_iterator name = component.value().find("ComponentName");
 		if (name == component.value().end()) {
-			printf("ERROR: No se ha podido encontrar el nombre del componente a añadir.\n");
+			printf("DATA LOADER: ComponentName not found\n");
 			return;
 		}
 
-		gOD.addComponentData(*name, loadComponentData(component.value()));
+		gOD.addComponentData(*name, *loadComponentData(component.value()));
 	}
 }
 
@@ -146,7 +172,7 @@ void DataLoader::modifyComponents(GameObjectData& gOD, const json& data)
 	for (auto& component : data.items()) {
 		json::const_iterator name = component.value().find("ComponentName");
 		if (name == component.value().end()) {
-			printf("ERROR: No se ha podido encontrar el nombre del componente a modificar.\n");
+			printf("DATA LOADER: ComponentName not found for modification\n");
 			return;
 		}
 		json::const_iterator properties = component.value().find("ComponentProperties");

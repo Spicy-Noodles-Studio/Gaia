@@ -1,0 +1,19 @@
+{
+    "SceneName": "MainScene",
+    "SceneObjects": [
+        {
+            "ObjectType": "GAMEOBJECT",
+            "ObjectName": "Example",
+            "Tag": "ExampleTag",
+            "Components": [
+                {
+                    "ComponentName": "Transform",
+                    "ComponentProperties": {
+                        "position": "0 0 0",
+                        "scale": "2 2 2"
+                    }
+                }
+            ]
+        }
+    ]
+}

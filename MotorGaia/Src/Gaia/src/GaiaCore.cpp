@@ -21,7 +21,6 @@ void GaiaCore::init()
     Ogre::Root* r = new Ogre::Root("plugins.cfg");
 #endif
 
-    RenderSystem::GetInstance()->printA();
 }
 
 void GaiaCore::run()

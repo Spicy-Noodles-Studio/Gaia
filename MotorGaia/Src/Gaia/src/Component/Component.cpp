@@ -4,3 +4,4 @@
 Component::Component(GameObject* gameObject) : gameObject(gameObject) {
 
 }
+

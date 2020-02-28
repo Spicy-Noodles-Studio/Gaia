@@ -3,6 +3,7 @@
 #include "GaiaCore.h"
 #include "ComponentManager.h"
 #include "GaiaComponent.h"
+#include "UserComponent.h"
 #include "GameObject.h"
 #include "SceneManager.h"
 #include "ResourcesManager.h"
@@ -15,15 +16,18 @@ int main()
 
 	//EJEMPLO DE CARGAR DE ESCENA
 	//Carga de componentes
+
+	printf("%s\n", Component::getID<GaiaComponent>().c_str());
+	printf("%s\n", Component::getID<UserComponent>().c_str());
+
 	ComponentManager cM;
 	cM.registerComponent<GaiaComponent>("GaiaComponent");
-	//Creamos el gameObject que hay que generar (no tiene Scene, por eso el nullptr)
-	GameObject* gameObject = new GameObject("Example", "Example", nullptr);
-	//Creamos sus componentes y se los asignamos
-	std::string componentName = "GaiaComponent";
-	auto compConstructor = cM.getComponentFactory(componentName);
-	GaiaComponent* gC = (GaiaComponent*)compConstructor(gameObject);
-	gameObject->addComponent(componentName, gC);
+	cM.registerComponent<UserComponent>("UserComponent");
+
+	printf("%s\n", Component::getID<GaiaComponent>().c_str());
+	printf("%s\n", Component::getID<UserComponent>().c_str());
+	printf("%s\n", Component::getID<GaiaComponent>().c_str());
+	printf("%s\n", Component::getID<Component>().c_str());
 
 	SceneManager sceneManager;
 	ResourcesManager rManager;
@@ -31,13 +35,7 @@ int main()
 	SceneData* data = ResourcesManager::getSceneData("MainScene");
 
 
-	//TODO: si es posible, hacer que cada componente tenga un nombre identificador
-	//dinamico, que al añadir al componentManager, se asigna y no cambia nunca mas.
-
 	engine.run();
-
-	delete gC;
-	delete gameObject;
 
 	return 0;
 }

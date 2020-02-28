@@ -33,6 +33,7 @@ void ComponentManager::registerComponent(const std::string& nameID)
 		printf("COMPONENT MANAGER: trying to register a ComponentFactory ID: %s, there is already an existing one.\n", nameID.c_str());
 		return;
 	}
+	Component::nameID<T>.id = nameID;
 	factories[nameID] = [](GameObject* gameObject) { return new T(gameObject); };
 }
 

@@ -1,22 +1,30 @@
 #pragma once
-class GaiaInput
+
+#include <iostream>
+#include <set>
+
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_gamecontroller.h"
+#include "SDL2/SDL_keyboard.h"
+#include "SDL2/SDL_keycode.h"
+
+#include "Singleton.h"
+
+class GaiaInput : public Singleton<GaiaInput>
 {
 private:
-    GaiaInput(); // Disallow instantiation outside of the class.
+
+    int JOYSTICK_DEAD_ZONE = 8000;
+
+    std::set<std::string> keyPress;
+    std::set<std::string> keyHold;
+    std::set<std::string> keyRelease;
+
 public:
-    GaiaInput(const GaiaInput&) = delete;
-    GaiaInput& operator=(const GaiaInput&) = delete;
-    GaiaInput(GaiaInput&&) = delete;
-    GaiaInput& operator=(GaiaInput&&) = delete;
-
-    static auto& instance() {
-        static GaiaInput gaiaInput;
-        return gaiaInput;
-    }
-
     void init();
     void close();
+    void Update();
 
-
+    void setDeadZone(int zone) { JOYSTICK_DEAD_ZONE = zone; }
 };
 

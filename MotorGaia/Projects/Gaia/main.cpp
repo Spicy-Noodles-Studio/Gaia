@@ -5,6 +5,7 @@ int main()
 
 	GaiaCore engine;
 
+	engine.setupResources();
 	engine.init();
 	engine.run();
 

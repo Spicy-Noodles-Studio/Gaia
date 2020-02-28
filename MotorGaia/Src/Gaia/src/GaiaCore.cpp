@@ -1,5 +1,8 @@
 #include "GaiaCore.h"
+//Ogre includes
 #include <OgreRoot.h>
+#include <OgreException.h>
+#include <OgreConfigFile.h>
 
 #include <iostream>
 
@@ -12,16 +15,41 @@ GaiaCore::GaiaCore()
 
 GaiaCore::~GaiaCore()
 {
+	delete mRoot;
+}
 
+void GaiaCore::setupResources()
+{
+	// Ogre configuration loader
+	Ogre::ConfigFile cf;
+	cf.load(mResourcesCfg);
+
+	Ogre::String name, locationType;
+	Ogre::ConfigFile::SettingsBySection_ settingsBySection = cf.getSettingsBySection();
+	for (const auto& p : settingsBySection) {
+		for (const auto& r : p.second) {
+			locationType = r.first;
+			name = r.second;
+			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(name, locationType);
+		}
+	}
 }
 
 void GaiaCore::init()
 {
+	// Ogre3D init
 #ifdef _DEBUG
-    Ogre::Root* r = new Ogre::Root("plugins_d.cfg");
+	mResourcesCfg = "resources_d.cfg";
+	mPluginsCfg = "plugins_d.cfg";
 #else
-    Ogre::Root* r = new Ogre::Root("plugins.cfg");
+	mResourcesCfg = "resources.cfg";
+	mPluginsCfg = "plugins.cfg";
 #endif
+
+	mRoot = new Ogre::Root(mPluginsCfg);
+
+
+	
 }
 
 void GaiaCore::run()

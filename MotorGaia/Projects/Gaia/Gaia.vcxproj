@@ -28,6 +28,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\Scene.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Singleton.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\Component.cpp" />
@@ -39,6 +40,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Scene.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\UserComponent.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

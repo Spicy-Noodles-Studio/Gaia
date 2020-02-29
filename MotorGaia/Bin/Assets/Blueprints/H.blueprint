@@ -21,7 +21,7 @@
     "Children": [
         {
             "ObjectType": "GAMEOBJECT",
-            "ObjectName": "O3",
+            "ObjectName": "O2",
             "Tag": "t2",
             "Components": [
                 {
@@ -35,9 +35,9 @@
         },
         {
             "ObjectType": "BLUEPRINT",
-            "ObjectName": "O2",
+            "ObjectName": "O3",
             "Tag": "t2",
-            "BlueprintPath": "_path_",
+            "BlueprintPath": "B1",
             "Components": [
                 {
                     "ComponentName": "Transform",

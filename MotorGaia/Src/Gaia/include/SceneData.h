@@ -7,7 +7,7 @@
 
 #include "GameObjectData.h"
 
-struct SceneData {
+class SceneData {
 public:
 	SceneData();
 	~SceneData();

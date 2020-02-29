@@ -3,12 +3,12 @@
     "SceneObjects": [
         {
             "ObjectType": "BLUEPRINT",
-            "ObjectName": "O1",
+            "ObjectName": "O1.1",
             "Tag": "tig",
-            "BlueprintPath": "_path_",
+            "BlueprintPath": "O1",
             "ComponentModifications": [
                 {
-                    "ComponentName": "Transform",
+                    "ComponentName": "Animator",
                     "ComponentProperties": {
                         "PropertyName1": "1",
                         "PropertyName2": "5"
@@ -25,10 +25,10 @@
                 }
             ],
             "ChildrenModifications": {
-                "Pato": {
+                "O2": {
                     "ComponentModifications": [
                         {
-                            "ComponentName": "Transform",
+                            "ComponentName": "SpriteComponent",
                             "ComponentProperties": {
                                 "PropertyName1": "5",
                                 "PropertyName2": "102"
@@ -40,7 +40,7 @@
             "Children": [
                 {
                     "ObjectType": "GAMEOBJECT",
-                    "ObjectName": "O2",
+                    "ObjectName": "O5",
                     "Tag": "teg",
                     "Components": [
                         {
@@ -56,7 +56,7 @@
         },
         {
             "ObjectType": "GAMEOBJECT",
-            "ObjectName": "O3",
+            "ObjectName": "O6",
             "Tag": "tag",
             "Components": [
                 {

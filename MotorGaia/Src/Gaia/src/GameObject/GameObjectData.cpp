@@ -81,7 +81,7 @@ GameObjectData& GameObjectData::getChild(const std::string& childName, bool& exi
 	if (child == childrenData.end()) {
 		exists = false;
 		printf("ERROR: El hijo con nombre %s no existe en el objeto %s.\n", childName.c_str(), name.c_str());
-		return empty;
+		return empty;//TODO: return the default gameobject data
 	}
 	exists = true;
 	return  (*child).second;
@@ -94,7 +94,7 @@ ComponentData& GameObjectData::getComponent(const std::string& componentName, bo
 	if (component == componentData.end()) {
 		exists = false;
 		printf("ERROR: El componente con nombre %s no existe en el objeto %s.\n", componentName.c_str(), name.c_str());
-		return empty;
+		return empty;//TODO: return the default component data
 	}
 	exists = true;
 	return  (*component).second;

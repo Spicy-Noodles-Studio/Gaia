@@ -1,0 +1,14 @@
+{
+    "ObjectType": "GAMEOBJECT",
+    "ObjectName": "B1",
+    "Tag": "t1",
+    "Components": [
+        {
+            "ComponentName": "Collider",
+            "ComponentProperties": {
+                "PropertyName1": "234",
+                "PropertyName2": "6456"
+            }
+        }
+    ]
+}

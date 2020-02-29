@@ -6,7 +6,7 @@
 #include "ResourcesManager.h"
 
 
-DataLoader::DataLoader(ResourcesManager* resourcesManager) : resourcesManager(resourcesManager)
+DataLoader::DataLoader()
 {
 }
 
@@ -14,35 +14,46 @@ DataLoader::~DataLoader()
 {
 }
 
-bool DataLoader::loadScene(const std::string& filename)
+SceneData* DataLoader::loadScene(const std::string& filename, bool& loaded)
 {
 	std::fstream i;
 	i.open(filename);
 	if (!i.is_open()) {
 		printf("DATA LOADER: filename %s not found\n", filename.c_str());
-		return false;
+		loaded = false;
+		return nullptr;//TODO: return empty Scene
 	}
 
 	json j;
 	i >> j;
-	resourcesManager->registerSceneData(loadSceneData(j));
 	i.close();
-	return true;
+	return loadSceneData(j, loaded);
 }
 
-bool DataLoader::loadBlueprint(const std::string& filename)
+GameObjectData* DataLoader::loadBlueprint(const std::string& filename, bool& loaded)
 {
+	std::fstream i;
+	i.open(filename);
+	if (!i.is_open()) {
+		printf("DATA LOADER: filename %s not found\n", filename.c_str());
+		loaded = false;
+		return nullptr;//TODO: return empty GameObjectData
+	}
 
-	return true;
+	json j;
+	i >> j;
+	i.close();
+	return loadGameObjectData(j, loaded);
 }
 
-ComponentData* DataLoader::loadComponentData(const json& data)
+ComponentData* DataLoader::loadComponentData(const json& data, bool& loaded)
 {
 	ComponentData* cD = new ComponentData();
 
 	json::const_iterator name = data.find("ComponentName");
 	if (name == data.end()) {
 		printf("DATA LOADER: Component name not found\n");
+		loaded = false;
 		return cD;
 	}
 	cD->setName(*name);
@@ -50,12 +61,12 @@ ComponentData* DataLoader::loadComponentData(const json& data)
 	json::const_iterator properties = data.find("ComponentProperties");
 	if (properties != data.end())
 		for (auto& property : (*properties).items())
-			cD->addProperty(property.key(), property.value());
+			loaded = cD->addProperty(property.key(), property.value()) && loaded;//Cuidado evaluacion perezosa
 
 	return cD;
 }
 
-GameObjectData* DataLoader::loadGameObjectData(const json& data)
+GameObjectData* DataLoader::loadGameObjectData(const json& data, bool& loaded)
 {
 	GameObjectData* gOD = new GameObjectData();
 
@@ -65,6 +76,7 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data)
 	if (objectName == data.end() || objectTag == data.end()) {
 		printf("DATA LOADER: Object name nor tag found\n");
 		//TODO: return empty GAMEOBJECTDATA instead of nullptr
+		loaded = false;
 		delete gOD;
 		return nullptr;
 	}
@@ -75,18 +87,24 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data)
 	json::const_iterator buildType = data.find("ObjectType");
 	if (buildType == data.end()) {
 		printf("DATA LOADER: Object type not found %s\n", gOD->getName().c_str());
+		loaded = false;
 		return gOD;
 	}
 	std::string type, aux = *buildType;
 	for (char c : aux) type += std::tolower(c);
 
 	if (type == "blueprint") {//Comprobar si existe en el json
-		//Si se usa un prefab se buscan sus datos y se modifican sus propiedades 
-		//gOD = resourceManager->findBlueprint(data["BlueprintPath"]);
+		//Si se usa un prefab se buscan sus datos y se modifican sus propiedades 	
+		gOD = ResourcesManager::getBlueprint(data["BlueprintPath"]);
+		if (gOD == nullptr)//Si el blueprint no ha sido cargado
+			return nullptr;//TODO: return empty GO
+		gOD->setName(*objectName);
+		gOD->setTag(*objectTag);
+
 		//Se modifican los componentes si es necesario
 		json::const_iterator mod = data.find("ComponentModifications");
 		if (mod != data.end())
-			modifyComponents(*gOD, *mod);
+			loaded = modifyComponents(*gOD, *mod);
 
 		//Se modifican los hijos si es necesario
 		json::const_iterator childMod = data.find("ChildrenModifications");
@@ -94,20 +112,21 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data)
 			for (auto& child : (*childMod).items()) {
 				bool exists;
 				GameObjectData& childData = gOD->getChild(child.key(), exists);
-				if (exists) {//Si el hijo actual no existe
+				if (exists) {//Si el hijo actual existe
 					json::const_iterator childCompMod = child.value().find("ComponentModifications");
 					if (childCompMod != child.value().end())
-						modifyComponents(childData, *childCompMod);
+						loaded = modifyComponents(childData, *childCompMod) && loaded;
 
 					json::const_iterator childComp = child.value().find("Components");
 					if (childComp != child.value().end())
-						addComponents(childData, *childComp);
+						loaded = addComponents(childData, *childComp) && loaded;
 				}
 			}
 	}
 	else if (type != "gameobject") {
 		printf("DATA LOADER: %s is an invalid object type\n", gOD->getName().c_str());
 		//TODO: return empty GAMEOBJECTDATA instead of nullptr
+		loaded = false;
 		delete gOD;
 		return nullptr;
 	}
@@ -115,7 +134,7 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data)
 	//Se cargan los nuevos componentes
 	json::const_iterator components = data.find("Components");
 	if (components != data.end())
-		addComponents(*gOD, *components);
+		loaded = addComponents(*gOD, *components) && loaded;
 
 	//Se cargan los datos de los hijos con una llamada recursiva
 	json::const_iterator children = data.find("Children");
@@ -125,63 +144,77 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data)
 			if (name == child.value().end()) {
 				printf("DATA LOADER: object child name %s not found\n", gOD->name.c_str());
 				//TODO: return empty GAMEOBJECTDATA instead of nullptr
+				loaded = false;
 				return nullptr;
 			}
-
-			gOD->addChildrenData(child.value()["ObjectName"], *loadGameObjectData(child.value()));
+			bool aux = true;
+			gOD->addChildrenData(*name, *loadGameObjectData(child.value(), aux));
+			loaded = loaded && aux;
 		}
 
 	return gOD;
 }
 
-SceneData* DataLoader::loadSceneData(const json& data)
+SceneData* DataLoader::loadSceneData(const json& data, bool& loaded)
 {
 	SceneData* sD = new SceneData();
 
 	json::const_iterator name = data.find("SceneName");
 	if (name == data.end()) {
 		printf("DATA LOADER: SceneName not found\n");
+		loaded = false;
 		return sD;
 	}
 	sD->setName(*name);
 
 	json::const_iterator objects = data.find("SceneObjects");
-	if (objects != data.end())
+	if (objects != data.end()) {
+		bool aux = true;
 		for (auto& gameObject : (*objects).items()) {
-			sD->setGameObjectData(*loadGameObjectData(gameObject.value()));
+			sD->setGameObjectData(*loadGameObjectData(gameObject.value(), aux));
+			loaded = aux && loaded;
 		}
+	}
 
 	return sD;
 }
 
-void DataLoader::addComponents(GameObjectData& gOD, const json& data)
+bool DataLoader::addComponents(GameObjectData& gOD, const json& data)
 {
+	bool allAded = true;
 	for (auto& component : data.items()) {
 		json::const_iterator name = component.value().find("ComponentName");
 		if (name == component.value().end()) {
 			printf("DATA LOADER: ComponentName not found\n");
-			return;
+			return false;
 		}
-
-		gOD.addComponentData(*name, *loadComponentData(component.value()));
+		bool aux = true;
+		gOD.addComponentData(*name, *loadComponentData(component.value(), aux));
+		allAded = allAded && aux;
 	}
+	return allAded;
 }
 
-void DataLoader::modifyComponents(GameObjectData& gOD, const json& data)
+bool DataLoader::modifyComponents(GameObjectData& gOD, const json& data)
 {
+	bool allMod = true;
 	for (auto& component : data.items()) {
 		json::const_iterator name = component.value().find("ComponentName");
 		if (name == component.value().end()) {
 			printf("DATA LOADER: ComponentName not found for modification\n");
-			return;
+			allMod = false;
+			continue;;//Si no se ha podido modificar el componente pasamos al siguiente
 		}
 		json::const_iterator properties = component.value().find("ComponentProperties");
 		if (properties != component.value().end()) {
 			for (auto& property : (*properties).items()) {
-				if (!gOD.modifyComponentData(*name, property.key(), property.value()))//Si no se ha podido modificar el componente pasamos al siguiente
+				if (!gOD.modifyComponentData(*name, property.key(), property.value())) {//Si no se ha podido modificar una propiedad del componente pasamos a la siguiente
+					allMod = false;
 					break;
+				}
 			}
 		}
 	}
+	return allMod;
 }
 

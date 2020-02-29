@@ -13,9 +13,9 @@ public:
 	~ComponentData();
 
 	void setName(const std::string& componentName);
-	void addProperty(const std::string& propName, const std::string& propValue);
+	bool addProperty(const std::string& propName, const std::string& propValue);
 
-	void modifyProperty(const std::string& propName, const std::string& propValue);
+	bool modifyProperty(const std::string& propName, const std::string& propValue);
 
 	const std::string& getName() const;
 	const std::map<std::string, std::string>& getProperties() const;

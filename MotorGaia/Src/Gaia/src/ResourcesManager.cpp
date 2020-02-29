@@ -2,8 +2,9 @@
 #include <fstream>
 
 std::map<std::string, SceneData*> ResourcesManager::sceneData;
+std::map<std::string, GameObjectData*> ResourcesManager::blueprints;
 
-ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(this), resourcesPath(filePath)
+ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(), resourcesPath(filePath)
 {
 
 }
@@ -12,6 +13,8 @@ ResourcesManager::~ResourcesManager()
 {
 	for (auto s : sceneData)
 		delete s.second;
+	for (auto b : blueprints)
+		delete b.second;
 }
 
 
@@ -54,32 +57,54 @@ void ResourcesManager::clean()
 
 void ResourcesManager::loadScene(const std::string& filename)
 {
-	if (!dataLoader.loadScene(filename))
-		printf("RESOURCES MANAGER: invalid Scene filename %s", filename.c_str());
+	bool loaded = true;
+	registerSceneData(dataLoader.loadScene(filename, loaded));
+	if (!loaded)
+		printf("RESOURCES MANAGER: invalid Scene, filename %s.\n", filename.c_str());
 }
 
 void ResourcesManager::loadBlueprint(const std::string& filename)
 {
-	if (!dataLoader.loadBlueprint(filename))
-		printf("RESOURCES MANAGER: invalid Blueprint filename %s", filename.c_str());
+	bool loaded = true;
+	registerBlueprint(dataLoader.loadBlueprint(filename, loaded));
+	if (!loaded)
+		printf("RESOURCES MANAGER: invalid Blueprint, filename %s.\n", filename.c_str());
 }
 
 void ResourcesManager::registerSceneData(SceneData* data)
 {
 	if (sceneData.find(data->name) != sceneData.end()) {
-		printf("RESOURCES MANAGER: trying to add an already existing SceneData: %s\n", data->name.c_str());
+		printf("RESOURCES MANAGER: trying to add an already existing SceneData: %s.\n", data->name.c_str());
 		return;
 	}
 	sceneData[data->name] = data;
 }
 
+void ResourcesManager::registerBlueprint(GameObjectData* data)
+{
+	if (blueprints.find(data->name) != blueprints.end()) {
+		printf("RESOURCES MANAGER: trying to add an already existing Blueprint: %s.\n", data->name.c_str());
+		return;
+	}
+	blueprints[data->name] = data;
+}
+
 SceneData* ResourcesManager::getSceneData(const std::string& name)
 {
 	if (sceneData.find(name) == sceneData.end()) {
-		printf("RESOURCES MANAGER: trying to get none existing SceneData: %s\n", name.c_str());
+		printf("RESOURCES MANAGER: trying to get not existing SceneData: %s.\n", name.c_str());
 		return nullptr;
 	}
 	return sceneData[name];
+}
+
+GameObjectData* ResourcesManager::getBlueprint(const std::string& name)
+{
+	if (blueprints.find(name) == blueprints.end()) {
+		printf("RESOURCES MANAGER: trying to get not existing Blueprint: %s.\n", name.c_str());
+		return nullptr;
+	}
+	return blueprints[name];
 }
 
 void ResourcesManager::loadResources(const std::string& resourceType, const std::string& path)
@@ -89,14 +114,14 @@ void ResourcesManager::loadResources(const std::string& resourceType, const std:
 	else if (resourceType == "Blueprints")
 		loadBlueprints(path);
 	else
-		printf("RESOURCES MANAGER: invalid resource type: %s. Resource not loaded\n", resourceType.c_str());
+		printf("RESOURCES MANAGER: invalid resource type: %s. Resource not loaded.\n", resourceType.c_str());
 }
 
 void ResourcesManager::loadScenes(const std::string& filename)
 {
 	std::fstream file(filename);
 	if (!file.is_open()) {
-		printf("RESOURCES MANAGER: ScenesAssets path %s not found\n", filename.c_str());
+		printf("RESOURCES MANAGER: ScenesAssets path %s not found.\n", filename.c_str());
 		return;
 	}
 	std::vector<std::string> paths;
@@ -112,7 +137,7 @@ void ResourcesManager::loadBlueprints(const std::string& filename)
 {
 	std::fstream file(filename);
 	if (!file.is_open()) {
-		printf("RESOURCES MANAGER: BlueprintsAssets path %s not found\n", filename.c_str());
+		printf("RESOURCES MANAGER: BlueprintsAssets path %s not found.\n", filename.c_str());
 		return;
 	}
 	std::vector<std::string> paths;

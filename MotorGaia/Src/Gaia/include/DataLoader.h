@@ -6,7 +6,6 @@
 #include <nlohmann/json.hpp>
 
 
-class ResourcesManager;
 class ComponentData;
 class GameObjectData;
 class SceneData;
@@ -15,22 +14,19 @@ using json = nlohmann::json;
 
 class DataLoader {
 public:
-	DataLoader(ResourcesManager* resourcesManager);
+	DataLoader();
 	~DataLoader();
 
-	bool loadScene(const std::string& filename);
-	bool loadBlueprint(const std::string& filename);
+	SceneData* loadScene(const std::string& filename, bool& loaded);
+	GameObjectData* loadBlueprint(const std::string& filename, bool& loaded);
 
-	ComponentData* loadComponentData(const json& data);
-	GameObjectData* loadGameObjectData(const json& data);
-	SceneData* loadSceneData(const json& data);
-
-private:
-	void addComponents(GameObjectData& gOD, const json& data);
-	void modifyComponents(GameObjectData& gOD, const json& data);
+	ComponentData* loadComponentData(const json& data, bool& loaded);
+	GameObjectData* loadGameObjectData(const json& data, bool& loaded);
+	SceneData* loadSceneData(const json& data, bool& loaded);
 
 private:
-	ResourcesManager* resourcesManager;
+	bool addComponents(GameObjectData& gOD, const json& data);
+	bool modifyComponents(GameObjectData& gOD, const json& data);
 };
 
 #endif

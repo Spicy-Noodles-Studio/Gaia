@@ -18,7 +18,7 @@ int main()
 	rManager.init();
 
 	SceneManager sceneManager;
-	SceneData* data = ResourcesManager::getSceneData("MainScene");
+	SceneData* data = ResourcesManager::getSceneData("Scene1");
 
 	engine.run();
 

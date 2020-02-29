@@ -4,7 +4,7 @@
 #define RESOURCES_MANAGER_H
 
 #include <map>
-#include "DataLoader.h""
+#include "DataLoader.h"
 #include "SceneData.h"
 #include "GameObjectData.h"
 
@@ -18,9 +18,10 @@ public:
 	void clean();
 
 	void registerSceneData(SceneData* data);
+	void registerBlueprint(GameObjectData* data);
 
 	static SceneData* getSceneData(const std::string& name);
-	//static Blueprint* getBlueprint(const std::string& name);
+	static GameObjectData* getBlueprint(const std::string& name);
 
 private:
 	void loadResources(const std::string& resourceType, const std::string& filename);
@@ -36,6 +37,7 @@ private:
 	DataLoader dataLoader;
 
 	static std::map<std::string, SceneData*> sceneData;
+	static std::map<std::string, GameObjectData*> blueprints;
 
 };
 

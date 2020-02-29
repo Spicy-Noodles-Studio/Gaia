@@ -14,7 +14,6 @@ public:
 	GaiaCore();
 	~GaiaCore();
 
-	void setupResources();
 	void init();
 	void run();
 
@@ -22,7 +21,9 @@ private:
 	Ogre::Root* mRoot;
 	Ogre::String mResourcesCfg;
 	Ogre::String mPluginsCfg;
+	Ogre::String mWindowCfg;
 
+	void setupResources();
 	void update();
 
 };

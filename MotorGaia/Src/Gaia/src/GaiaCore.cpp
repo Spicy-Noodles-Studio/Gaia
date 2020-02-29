@@ -3,10 +3,10 @@
 #include <OgreRoot.h>
 #include <OgreException.h>
 #include <OgreConfigFile.h>
-
 #include <iostream>
 
 #include "RenderSystem.h"
+#include "Window.h"
 
 GaiaCore::GaiaCore()
 {
@@ -37,24 +37,29 @@ void GaiaCore::setupResources()
 
 void GaiaCore::init()
 {
-	// Ogre3D init
 #ifdef _DEBUG
 	mResourcesCfg = "resources_d.cfg";
 	mPluginsCfg = "plugins_d.cfg";
+	mWindowCfg = "window_d.cfg";
 #else
 	mResourcesCfg = "resources.cfg";
 	mPluginsCfg = "plugins.cfg";
+	mWindowCfg = "window.cfg";
 #endif
 
+	// Ogre initialization
 	mRoot = new Ogre::Root(mPluginsCfg);
+	setupResources();
 
+	// Setup window
+	Window* win = new Window(mRoot, mWindowCfg);
 
-	
 }
 
 void GaiaCore::run()
 {
-
+	// PARA QUE NO SE CIERRE
+	while (true);
 }
 
 void GaiaCore::update()

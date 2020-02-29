@@ -13,7 +13,6 @@ struct ComponentID
     std::string id;
 };
 
-
 class Component 
 {
 public: 

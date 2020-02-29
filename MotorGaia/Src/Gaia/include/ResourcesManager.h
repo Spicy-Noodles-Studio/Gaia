@@ -11,14 +11,11 @@
 class ResourcesManager
 {
 public:
-	ResourcesManager();
+	ResourcesManager(const std::string& filePath);
 	~ResourcesManager();
 
 	void init();
 	void clean();
-
-	void loadScene(const std::string& filename);
-	void loadBlueprint(const std::string& filename);
 
 	void registerSceneData(SceneData* data);
 
@@ -26,6 +23,16 @@ public:
 	//static Blueprint* getBlueprint(const std::string& name);
 
 private:
+	void loadResources(const std::string& resourceType, const std::string& filename);
+	
+	void loadScenes(const std::string& filename);
+	void loadBlueprints(const std::string& filename);
+
+	void loadScene(const std::string& filename);
+	void loadBlueprint(const std::string& filename);
+
+private:
+	std::string resourcesPath;
 	DataLoader dataLoader;
 
 	static std::map<std::string, SceneData*> sceneData;

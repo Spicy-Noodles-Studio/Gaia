@@ -14,6 +14,7 @@ public:
 
 	void init();
 	void run();
+	void close();
 
 private:
 	void update();

@@ -1,0 +1,3 @@
+Scenes = .//Assets//Scenes//scenes.asset
+Blueprints = .//Assets//Blueprints//blueprints.asset
+Sounds = .//Assets//Sounds//sounds.asset

@@ -28,6 +28,11 @@ void GaiaCore::run()
 
 }
 
+void GaiaCore::close()
+{
+
+}
+
 void GaiaCore::update()
 {
 }

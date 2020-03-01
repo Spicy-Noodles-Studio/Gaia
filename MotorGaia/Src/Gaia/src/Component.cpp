@@ -1,8 +1,8 @@
 #include "Component.h"
-#include <map>
-#include <functional>
 
-Component::Component(GameObject* gameObject) : gameObject(gameObject)
+inline GameObject* Component::getOwner()
 {
-
+	return gameObject;
 }
+
+Component::Component(GameObject* gameObject) : gameObject(gameObject) {}

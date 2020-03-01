@@ -1,30 +1,31 @@
-#pragma once
+#ifndef RENDER_COMPONENT_H
+#define RENDER_COMPONERT_H
 
+#pragma once
 #include "GaiaComponent.h"
 #include "RenderSystem.h"
-
-enum Axis { X, Y, Z };
 
 class RenderComponent : public GaiaComponent
 {
 private:
 	Ogre::SceneNode* node;
+	bool visible = true;
+
 	std::map<std::string, Ogre::Entity*> entities;
-	std::map<std::string, Ogre::SceneNode*> nodes;
-	std::map<std::string, bool> nodesVisibility;
 
 public:
 	RenderComponent(GameObject* gameObject);
 	~RenderComponent();
 
-	void createEntity(Ogre::Entity* entity, std::string mesh, std::string id);
-	void setMaterial(Ogre::Entity* entity, std::string material);
-	void createChildNode(Ogre::Entity* entity, std::string id);
+	Ogre::SceneNode* getNode();
 
-	void setPosition(Ogre::SceneNode* node, Ogre::Vector3 position);
-	void setScale(Ogre::SceneNode* node, Ogre::Vector3 scale);
-	void setRotation(Ogre::SceneNode* node, Axis axis, float degrees);
+	void createEntity(std::string id, std::string mesh);
+	void setMaterial(std::string id, std::string material);
 
-	void setVisible(Ogre::SceneNode* node, bool visible);
-	bool isVisible(std::string id);
+	void setVisible(bool visible);
+	bool isVisible();
+
+	void addChildNode(std::string tag);
 };
+
+#endif

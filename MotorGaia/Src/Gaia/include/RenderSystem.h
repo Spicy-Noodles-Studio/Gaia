@@ -1,5 +1,5 @@
-#ifndef RENDER_SYSTEM
-#define RENDER_SYSTEM
+#ifndef RENDER_SYSTEM_H
+#define RENDER_SYSTEM_H
 
 #pragma once
 #include <OgreRoot.h>
@@ -16,16 +16,14 @@ private:
 
 public:
 	RenderSystem();
+	~RenderSystem();
 
 	void setup(Ogre::Root* root);
 	void shutDown(Ogre::Root* root);
 
 	Ogre::SceneManager* getSceneManager();
 
-	Ogre::Entity* createEntity(Ogre::Entity* entity, std::string mesh);
-	void setMaterial(Ogre::Entity* entity, std::string material);
-	Ogre::SceneNode* createChildNode(Ogre::SceneNode* node, Ogre::Entity* entity, std::string id);
-
+	Ogre::Entity* createEntity(std::string mesh);
 };
 
 #endif

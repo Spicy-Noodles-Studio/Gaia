@@ -5,15 +5,9 @@
 
 //#include "ComponentManager.h"
 
-GameObject::GameObject(std::string name, std::string tag, Scene* scene) : name(name), tag(tag), myScene(scene)
-{
+GameObject::GameObject(std::string name, std::string tag, Scene* scene) : name(name), tag(tag), myScene(scene) {}
 
-}
-
-GameObject::~GameObject()
-{
-    
-}
+GameObject::~GameObject() {}
 
 inline Scene* GameObject::getScene()
 {

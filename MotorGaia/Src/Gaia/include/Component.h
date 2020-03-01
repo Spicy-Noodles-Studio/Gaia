@@ -5,7 +5,9 @@ class GameObject;
 
 class Component
 {
-public: 
+public:
+	inline GameObject* getOwner();
+
     // Devuelve el componente del tipo indicado suponiendo que existe en el mismo owner,
     // si no, devuelve un nullptr  
     template<typename T>

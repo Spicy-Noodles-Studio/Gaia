@@ -1,72 +1,43 @@
 #include "RenderComponent.h"
+#include "GameObject.h"
 
 RenderComponent::RenderComponent(GameObject* gameObject) :  GaiaComponent(gameObject)
 {
 	node = RenderSystem::GetInstance()->getSceneManager()->createSceneNode();
-	nodes["Root"] = node;
-	nodesVisibility["Root"] = true;
 }
 
-RenderComponent::~RenderComponent()
+RenderComponent::~RenderComponent() {}
+
+Ogre::SceneNode* RenderComponent::getNode()
 {
-
+	return node;
 }
 
-void RenderComponent::createEntity(Ogre::Entity* entity, std::string mesh, std::string id)
-{
-	if (entities.find(id) == entities.end())
-		entities[id] = RenderSystem::GetInstance()->createEntity(entity, mesh);
-}
-
-void RenderComponent::setMaterial(Ogre::Entity* entity, std::string material)
-{
-	RenderSystem::GetInstance()->setMaterial(entity, material);
-}
-
-void RenderComponent::createChildNode(Ogre::Entity* entity, std::string id)
+void RenderComponent::createEntity(std::string id, std::string mesh)
 {
 	if (entities.find(id) == entities.end())
-	{
-		nodes[id] = RenderSystem::GetInstance()->createChildNode(node, entity, id);
-		nodesVisibility[id] = true;
-	}
+		entities[id] = RenderSystem::GetInstance()->createEntity(mesh);
 }
 
-void RenderComponent::setPosition(Ogre::SceneNode* node, Ogre::Vector3 position)
+void RenderComponent::setMaterial(std::string id, std::string material)
 {
-	node->setPosition(position);
+	entities[id]->setMaterialName(material);
 }
 
-void RenderComponent::setScale(Ogre::SceneNode* node, Ogre::Vector3 scale)
-{
-	node->setScale(scale);
-}
-
-void RenderComponent::setRotation(Ogre::SceneNode* node, Axis axis, float degrees)
-{
-	switch (axis)
-	{
-	case X:
-		node->pitch(Ogre::Radian(Ogre::Degree(degrees)));
-		break;
-	case Y:
-		node->yaw(Ogre::Radian(Ogre::Degree(degrees)));
-		break;
-	case Z:
-		node->roll(Ogre::Radian(Ogre::Degree(degrees)));
-		break;
-	default:
-		break;
-	}
-}
-
-void RenderComponent::setVisible(Ogre::SceneNode* node, bool visible)
+void RenderComponent::setVisible(bool visible)
 {
 	node->setVisible(visible);
 }
 
-bool RenderComponent::isVisible(std::string id)
+bool RenderComponent::isVisible()
 {
-	if (entities.find(id) != entities.end())
-		return nodesVisibility[id];
+	return visible;
+}
+
+void RenderComponent::addChildNode(std::string tag)
+{
+	/*RenderComponent* aux = findGameObjectWithTag(tag)->getComponent<RenderComponent>();
+
+	if (aux != nullptr)
+		node->addChild(aux->getNode());*/
 }

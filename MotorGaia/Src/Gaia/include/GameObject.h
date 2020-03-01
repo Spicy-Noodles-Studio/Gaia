@@ -22,7 +22,6 @@ public:
     template<typename T>
     T* getComponent();
 
-private:
     inline Scene* getScene();
 
 private: 

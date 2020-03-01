@@ -362,7 +362,7 @@ void GaiaInput::controllerInputDown(int index)
     }
     if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_Y) && !controllers[index].YButton) {
         controllers[index].YButton = true;
-        controllers[index].buttonPress.emplace("UP");
+        controllers[index].buttonPress.emplace("Y");
     }
 }
 
@@ -414,7 +414,7 @@ void GaiaInput::controllerInputUp(int index)
     }
     if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_Y) && !controllers[index].YButton) {
         controllers[index].YButton = false;
-        controllers[index].buttonRelease.emplace("UP");
+        controllers[index].buttonRelease.emplace("Y");
     }
 }
 

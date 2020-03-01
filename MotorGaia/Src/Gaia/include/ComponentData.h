@@ -20,6 +20,8 @@ public:
 	const std::string& getName() const;
 	const std::map<std::string, std::string>& getProperties() const;
 
+	static ComponentData* empty();
+
 public:
 	std::string name;
 	std::map<std::string, std::string> properties;

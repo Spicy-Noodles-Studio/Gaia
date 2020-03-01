@@ -21,10 +21,10 @@ public:
 	bool loadScene(std::string name);
 	bool exist(std::string name);
 
-	void addSceneData(const SceneData* sData);
+	// void addSceneData(const SceneData* sData);
 
 private:
-	std::map<std::string, SceneData> sceneData;
+	// std::map<std::string, SceneData> sceneData;
 	Scene* currentScene;
 };
 

@@ -18,7 +18,7 @@ bool SceneManager::exist(std::string name)
 	return false;
 }
 
-void SceneManager::addSceneData(const SceneData* sData)
+/*void SceneManager::addSceneData(const SceneData* sData)
 {
 	if (sceneData.find(sData->name) != sceneData.end())
 	{
@@ -26,4 +26,4 @@ void SceneManager::addSceneData(const SceneData* sData)
 		return;
 	}
 	sceneData[sData->name] = *sData;
-}
+}*/

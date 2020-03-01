@@ -15,6 +15,9 @@ ResourcesManager::~ResourcesManager()
 		delete s.second;
 	for (auto b : blueprints)
 		delete b.second;
+
+	sceneData.clear();
+	blueprints.clear();
 }
 
 

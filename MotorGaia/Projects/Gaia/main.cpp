@@ -14,7 +14,7 @@ int main()
 	GaiaCore engine;
 	engine.init();
 
-	ResourcesManager rManager(".//resources.asset");
+	ResourcesManager rManager("resources.asset");
 	rManager.init();
 
 	SceneManager sceneManager;

@@ -13,14 +13,16 @@ public:
 	~SceneData();
 
 	void setName(const std::string& sceneName);
-	void setGameObjectData(const GameObjectData& data);
+	void setGameObjectData(GameObjectData* data);
 
 	const std::string& getName() const;
-	const std::vector<GameObjectData>& getGameObjectsData() const;
+	const std::vector<GameObjectData*>& getGameObjectsData() const;
+
+	static SceneData* empty();
 
 public:
 	std::string name;
-	std::vector<GameObjectData> gData;
+	std::vector<GameObjectData*> gData;
 };
 
 #endif

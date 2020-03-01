@@ -24,7 +24,10 @@ public:
     template<typename T>
     T* getComponent();
 
-    void addComponent(const std::string& componentName, Component* component);
+    bool addComponent(const std::string& componentName, Component* component);
+    
+    const std::string& getName() const;
+    const std::string& getTag() const ;
 
 private:
     inline Scene* getScene();

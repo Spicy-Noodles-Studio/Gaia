@@ -92,7 +92,7 @@ void ResourcesManager::registerBlueprint(GameObjectData* data)
 	blueprints[data->name] = data;
 }
 
-SceneData* ResourcesManager::getSceneData(const std::string& name)
+const SceneData* ResourcesManager::getSceneData(const std::string& name)
 {
 	if (sceneData.find(name) == sceneData.end()) {
 		printf("RESOURCES MANAGER: trying to get not existing SceneData: %s.\n", name.c_str());
@@ -101,7 +101,7 @@ SceneData* ResourcesManager::getSceneData(const std::string& name)
 	return sceneData[name];
 }
 
-GameObjectData* ResourcesManager::getBlueprint(const std::string& name)
+const GameObjectData* ResourcesManager::getBlueprint(const std::string& name)
 {
 	if (blueprints.find(name) == blueprints.end()) {
 		printf("RESOURCES MANAGER: trying to get not existing Blueprint: %s.\n", name.c_str());

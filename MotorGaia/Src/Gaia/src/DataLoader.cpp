@@ -95,7 +95,7 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data, bool& loaded)
 	if (type == "blueprint") {//Comprobar si existe en el json
 		//Si se usa un prefab se buscan sus datos y se modifican sus propiedades 
 		delete gOD;
-		GameObjectData* blueprint = ResourcesManager::getBlueprint(data["BlueprintPath"]);
+		const GameObjectData* blueprint = ResourcesManager::getBlueprint(data["BlueprintPath"]);
 		if (blueprint == nullptr)//Si el blueprint no ha sido cargado
 			return GameObjectData::empty();
 		gOD = new GameObjectData(*blueprint); //Copia del blueprint

@@ -1,5 +1,7 @@
 #include "ComponentManager.h"
 
+std::map<std::string, ComponentFactory> ComponentManager::factories;
+
 ComponentManager::ComponentManager()
 {
 }

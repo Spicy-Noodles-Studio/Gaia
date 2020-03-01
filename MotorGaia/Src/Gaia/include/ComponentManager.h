@@ -15,18 +15,18 @@ public:
 	ComponentManager();
 	~ComponentManager();
 	
-	const ComponentFactory getComponentFactory(const std::string& nameID);
+	static const ComponentFactory getComponentFactory(const std::string& nameID);
 
 	template<typename T>
-	void registerComponent(const std::string& nameID);
+	static void registerComponent(const std::string& nameID);
 	
 private:
-	std::map<std::string, ComponentFactory> factories;
+	static std::map<std::string, ComponentFactory> factories;
 
 };
 
 template<typename T>
-void ComponentManager::registerComponent(const std::string& nameID)
+static void ComponentManager::registerComponent(const std::string& nameID)
 {
 	if (factories.find(nameID) != factories.end())
 	{

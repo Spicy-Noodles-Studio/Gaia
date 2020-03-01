@@ -18,14 +18,12 @@ public:
 
 public:
 
-	bool loadScene(std::string name);
+	bool createScene(std::string name);
 	bool exist(std::string name);
 
-	// void addSceneData(const SceneData* sData);
-
 private:
-	// std::map<std::string, SceneData> sceneData;
 	Scene* currentScene;
+	std::map<std::string, Scene*> scenes;
 };
 
 #endif

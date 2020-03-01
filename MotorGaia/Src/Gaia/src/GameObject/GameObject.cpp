@@ -14,10 +14,24 @@ GameObject::~GameObject() {
 }
 
 
-void GameObject::addComponent(const std::string& componentName, Component* component)
+bool GameObject::addComponent(const std::string& componentName, Component* component)
 {
-    //TODO: falta deteccion de errores
+    if (components.find(componentName) != components.end()) {
+        printf("GAMEOBJECT: Trying to add component with name %s that already exists in gameobject %s.\n", componentName.c_str(), name.c_str());
+        return false;
+    }
     components[componentName] = component;
+    return true;
+}
+
+const std::string& GameObject::getName() const
+{
+    return name;
+}
+
+const std::string& GameObject::getTag() const 
+{
+    return tag;
 }
 
 inline Scene* GameObject::getScene()

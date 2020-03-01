@@ -20,8 +20,8 @@ public:
 	void registerSceneData(SceneData* data);
 	void registerBlueprint(GameObjectData* data);
 
-	static SceneData* getSceneData(const std::string& name);
-	static GameObjectData* getBlueprint(const std::string& name);
+	static const SceneData* getSceneData(const std::string& name);
+	static const GameObjectData* getBlueprint(const std::string& name);
 
 private:
 	void loadResources(const std::string& resourceType, const std::string& filename);

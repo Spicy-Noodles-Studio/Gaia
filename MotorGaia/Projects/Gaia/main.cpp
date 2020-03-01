@@ -17,9 +17,10 @@ int main()
 	ResourcesManager rManager("resources.asset");
 	rManager.init();
 
+	ComponentManager::registerComponent<GaiaComponent>("GaiaComponent");
+	
 	SceneManager sceneManager;
-	SceneData* data = ResourcesManager::getSceneData("Scene1");
-
+	sceneManager.createScene("MainScene");
 	engine.run();
 
 	engine.close();

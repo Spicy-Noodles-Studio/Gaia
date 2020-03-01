@@ -6,7 +6,7 @@
 class Window
 {
 public:
-	Window(Ogre::Root* root, Ogre::String cfgFile);
+	Window(Ogre::Root* root, Ogre::String windowTitle);
 	~Window();
 
 	void setFullscreen(bool fullscreen);
@@ -16,6 +16,5 @@ private:
 	Ogre::RenderWindow* mWindow;
 
 	void displayConfig(Ogre::RenderSystem* rs);
-	void setConfigFromFile(Ogre::RenderSystem* rs, Ogre::String file);
 };
 

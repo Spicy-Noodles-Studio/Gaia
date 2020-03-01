@@ -48,11 +48,14 @@ void GaiaCore::init()
 #endif
 
 	// Ogre initialization
-	mRoot = new Ogre::Root(mPluginsCfg);
+	mRoot = new Ogre::Root(mPluginsCfg, mWindowCfg);
 	setupResources();
+	
+	if (!mRoot->restoreConfig());
 
 	// Setup window
-	Window* win = new Window(mRoot, mWindowCfg);
+	Window* win = new Window(mRoot, "Ventana de prueba");
+	
 
 }
 

@@ -111,7 +111,7 @@ void GaiaInput::Update()
 
 
         case SDL_CONTROLLERDEVICEADDED:
-            if (event.cdevice.which < MAX_CONTROLLERS) {
+            if (event.cdevice.which < MAX_CONTROLLERS && SDL_IsGameController(event.cdevice.which)) {
 
                 int index = event.cdevice.which;
 

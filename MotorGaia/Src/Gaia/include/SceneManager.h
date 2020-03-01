@@ -18,8 +18,8 @@ public:
 
 public:
 
-	bool createScene(std::string name);
-	bool exist(std::string name);
+	bool createScene(const std::string& name);
+	bool exist(const std::string& name);
 
 private:
 	Scene* currentScene;

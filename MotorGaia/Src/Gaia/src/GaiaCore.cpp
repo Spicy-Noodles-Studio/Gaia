@@ -21,6 +21,11 @@ void GaiaCore::init()
     Ogre::Root* r = new Ogre::Root("plugins.cfg");
 #endif
 
+    if (!(r->restoreConfig() || r->showConfigDialog(nullptr)))
+        return;
+
+    r->initialise(false);
+
 }
 
 void GaiaCore::run()

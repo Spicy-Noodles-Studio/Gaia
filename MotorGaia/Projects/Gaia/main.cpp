@@ -21,6 +21,7 @@ int main()
 	
 	SceneManager sceneManager;
 	sceneManager.createScene("MainScene");
+
 	engine.run();
 
 	engine.close();

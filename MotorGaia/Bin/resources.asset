@@ -1,3 +1,5 @@
 Blueprints = .//Assets//Blueprints//blueprints.asset
 Scenes = .//Assets//Scenes//scenes.asset
 Sounds = .//Assets//Sounds//sounds.asset
+
+Ogre = .//resources.cfg

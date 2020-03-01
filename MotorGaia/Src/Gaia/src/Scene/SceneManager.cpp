@@ -12,7 +12,7 @@ SceneManager::~SceneManager()
 {
 }
 
-bool SceneManager::createScene(std::string name) {
+bool SceneManager::createScene(const std::string& name) {
 
 	bool created = true;
 	const SceneData* sD = ResourcesManager::getSceneData(name);
@@ -40,7 +40,7 @@ bool SceneManager::createScene(std::string name) {
 		return false;
 }
 
-bool SceneManager::exist(std::string name)
+bool SceneManager::exist(const std::string& name)
 {
 	return scenes.find(name) == scenes.end();
 }

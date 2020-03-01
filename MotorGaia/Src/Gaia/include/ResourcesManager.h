@@ -8,6 +8,8 @@
 #include "SceneData.h"
 #include "GameObjectData.h"
 
+#include <OgreFileSystemLayer.h>
+
 class ResourcesManager
 {
 public:
@@ -28,6 +30,7 @@ private:
 	
 	void loadScenes(const std::string& filename);
 	void loadBlueprints(const std::string& filename);
+	void loadOgreResources(const std::string& filename);
 
 	void loadScene(const std::string& filename);
 	void loadBlueprint(const std::string& filename);
@@ -38,6 +41,8 @@ private:
 
 	static std::map<std::string, SceneData*> sceneData;
 	static std::map<std::string, GameObjectData*> blueprints;
+
+	Ogre::FileSystemLayer* fileSystemLayer;
 
 };
 

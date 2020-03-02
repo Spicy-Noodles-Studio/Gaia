@@ -27,7 +27,9 @@
     <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Scene.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Singleton.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Transform.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\Component.cpp" />
@@ -37,7 +39,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\RenderComponent.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Scene.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Transform.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\UserComponent.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\utilities.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

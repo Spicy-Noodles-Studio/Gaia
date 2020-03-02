@@ -9,6 +9,8 @@
 #include "GameObjectData.h"
 
 #include <OgreFileSystemLayer.h>
+#include <OgreSGTechniqueResolverListener.h>
+
 
 class ResourcesManager
 {
@@ -35,6 +37,9 @@ private:
 	void loadScene(const std::string& filename);
 	void loadBlueprint(const std::string& filename);
 
+	bool initShaderSystem();
+	void destroyShaderSystem();
+
 private:
 	std::string resourcesPath;
 	DataLoader dataLoader;
@@ -43,6 +48,9 @@ private:
 	static std::map<std::string, GameObjectData*> blueprints;
 
 	Ogre::FileSystemLayer* fileSystemLayer;
+	Ogre::String mRTShaderLibPath;
+	Ogre::RTShader::ShaderGenerator* mShaderGenerator; // The Shader generator instance.
+	OgreBites::SGTechniqueResolverListener* mMaterialMgrListener; // Shader generator material manager listener.
 
 };
 

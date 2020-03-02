@@ -62,7 +62,7 @@ void GaiaInput::close()
 
 /// MAIN LOOP
 
-void GaiaInput::Update()
+void GaiaInput::update()
 {
     // Clear previous frame press/release events
     clearInputs();
@@ -420,8 +420,42 @@ void GaiaInput::controllerInputUp(int index)
 
 bool GaiaInput::isButtonPressed(int controllerIndex, std::string button)
 {
+    if (controllerIndex >= currentControllers) return false;
+
     if (button == "UP") {
         return controllers[controllerIndex].Up;
+    }else if (button == "DOWN") {
+        return controllers[controllerIndex].Down;
+    }
+    else if (button == "RIGHT") {
+        return controllers[controllerIndex].Right;
+    }
+    else if (button == "LEFT") {
+        return controllers[controllerIndex].Left;
+    }
+    else if (button == "START") {
+        return controllers[controllerIndex].Start;
+    }
+    else if (button == "BACK") {
+        return controllers[controllerIndex].Back;
+    }
+    else if (button == "LB") {
+        return controllers[controllerIndex].LeftShoulder;
+    }
+    else if (button == "RB") {
+        return controllers[controllerIndex].RightShoulder;
+    }
+    else if (button == "A") {
+        return controllers[controllerIndex].AButton;
+    }
+    else if (button == "B") {
+        return controllers[controllerIndex].BButton;
+    }
+    else if (button == "Y") {
+        return controllers[controllerIndex].YButton;
+    }
+    else if (button == "X") {
+        return controllers[controllerIndex].XButton;
     }
     // TODO
     else return false;
@@ -429,6 +463,8 @@ bool GaiaInput::isButtonPressed(int controllerIndex, std::string button)
 
 bool GaiaInput::getButtonPress(int controllerIndex, std::string button)
 {
+    if (controllerIndex >= currentControllers) return false;
+
     std::transform(button.begin(), button.end(), button.begin(), ::toupper);
     const bool is_in = controllers[controllerIndex].buttonPress.find(button) != controllers[controllerIndex].buttonPress.end();
     return is_in;
@@ -436,6 +472,8 @@ bool GaiaInput::getButtonPress(int controllerIndex, std::string button)
 
 bool GaiaInput::getButtonRelease(int controllerIndex, std::string button)
 {
+    if (controllerIndex >= currentControllers) return false;
+
     std::transform(button.begin(), button.end(), button.begin(), ::toupper);
     const bool is_in = controllers[controllerIndex].buttonRelease.find(button) != controllers[controllerIndex].buttonRelease.end();
     return is_in;

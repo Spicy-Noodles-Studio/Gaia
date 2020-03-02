@@ -2,7 +2,6 @@
 
 int main()
 {
-
 	GaiaCore engine;
 
 	engine.init();

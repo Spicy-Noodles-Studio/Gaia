@@ -9,6 +9,11 @@ GameObject::GameObject(std::string name, std::string tag, Scene* scene) : name(n
 
 GameObject::~GameObject() {}
 
+const std::string GameObject::getName()
+{
+	return name;
+}
+
 inline Scene* GameObject::getScene()
 {
 	return myScene;

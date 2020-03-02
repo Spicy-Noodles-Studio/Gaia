@@ -22,6 +22,9 @@ public:
     template<typename T>
     T* getComponent();
 
+    const std::string getName();
+
+private:
     inline Scene* getScene();
 
 private: 

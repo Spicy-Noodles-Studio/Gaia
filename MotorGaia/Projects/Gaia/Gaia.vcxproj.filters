@@ -43,6 +43,10 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\Window.h">
+    <ClInclude Include="..\..\Src\Gaia\include\Transform.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\utilities.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -75,6 +79,10 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Window.cpp">
+    <ClCompile Include="..\..\Src\Gaia\src\Transform.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\utilities.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

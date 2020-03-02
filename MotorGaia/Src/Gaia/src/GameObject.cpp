@@ -15,6 +15,11 @@ GameObject::~GameObject()
     
 }
 
+const std::string GameObject::getName()
+{
+	return name;
+}
+
 inline Scene* GameObject::getScene()
 {
 	return myScene;

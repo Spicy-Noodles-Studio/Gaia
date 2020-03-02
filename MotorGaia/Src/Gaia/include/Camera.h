@@ -3,21 +3,21 @@
 #include "RenderSystem.h"
 #include "utilities.h"
 
-class CameraComponent : public GaiaComponent
+class Camera : public GaiaComponent
 {
 private:
 	Ogre::SceneNode* node;
 	Ogre::Camera* cam;
 
 public:
-	CameraComponent(GameObject* gameObject, std::string name);
-	~CameraComponent();
+	Camera(GameObject* gameObject);
+	~Camera();
 
 	void setPosition(Ogre::SceneNode* node, Ogre::Vector3 position);
 	
 	void setRotation(Ogre::SceneNode* node, Axis axis, float degrees);
 
-	void lookAt(Ogre::Vector3 pos, Ogre::Node::TransformSpace space);
+	void lookAt(Ogre::Vector3 pos, SpaceReference space);
 	void setDirecction(Ogre::Vector3 dir);
 
 	//Solo falta añadirla al viewport

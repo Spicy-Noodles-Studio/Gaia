@@ -5,6 +5,8 @@
 
 enum Axis { X, Y, Z };
 
+enum SpaceReference{LocalSpace,WorldSpace,ParentSpace};
+
 struct Vector3 {
 	double x;
 	double y;

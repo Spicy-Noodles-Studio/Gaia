@@ -3,7 +3,7 @@
 Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject)
 {
 	
-	node = RenderSystem::GetInstance()->getSceneManager()->createSceneNode();
+	node = RenderSystem::GetInstance()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 	cam = RenderSystem::GetInstance()->getSceneManager()->createCamera(gameObject->getName()+"Cam");
 	cam->setAutoAspectRatio(true);
 	node->attachObject(cam);

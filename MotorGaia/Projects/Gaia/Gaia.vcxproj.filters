@@ -14,6 +14,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\utilities.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Camera.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Light.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\Component.h" />
@@ -29,5 +30,6 @@
     <ClInclude Include="..\..\Src\Gaia\include\Window.h" />
     <ClInclude Include="..\..\Src\Gaia\include\utilities.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Camera.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
   </ItemGroup>
 </Project>

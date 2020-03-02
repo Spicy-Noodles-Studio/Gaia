@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "OgreViewport.h"
+#include "Light.h"
 
 #include "RenderComponent.h"
 
@@ -76,8 +77,10 @@ void GaiaCore::init()
 	rc->createEntity("knot", "knot.mesh");
 	rc->getNode()->setPosition({ 0,0,-400 });
 
-	RenderSystem::GetInstance()->getSceneManager()->setAmbientLight(Ogre::ColourValue(.5, .5, .5));
-	Ogre::Light* light = RenderSystem::GetInstance()->getSceneManager()->createLight("MainLight");
+	Light* lz = new Light(go);
+	lz->setType(Point);
+	lz->setColour(0.7, 0.1, 0.7);
+
 
 }
 

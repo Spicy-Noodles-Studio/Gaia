@@ -6,6 +6,8 @@ enum Axis { X, Y, Z };
 
 enum SpaceReference { LocalSpace, WorldSpace, ParentSpace };
 
+enum LightType{Directional,Point,Spotlight};
+
 struct Vector3 {
 	double x;
 	double y;

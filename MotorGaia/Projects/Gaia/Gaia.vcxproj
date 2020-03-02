@@ -24,6 +24,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\RenderComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Scene.h" />
@@ -39,6 +40,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\GaiaComponent.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GaiaCore.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Light.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\RenderComponent.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Scene.cpp" />

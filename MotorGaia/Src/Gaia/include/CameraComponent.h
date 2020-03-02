@@ -20,5 +20,8 @@ public:
 	void lookAt(Ogre::Vector3 pos, Ogre::Node::TransformSpace space);
 	void setDirecction(Ogre::Vector3 dir);
 
+	//Solo falta añadirla al viewport
+	Ogre::Camera* getCamera();
+
 	void setClipDistances(double near, double far);
 };

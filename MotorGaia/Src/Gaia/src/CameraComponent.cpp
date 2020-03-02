@@ -50,6 +50,11 @@ void CameraComponent::setDirecction(Ogre::Vector3 dir)
 	node->setDirection(dir);
 }
 
+Ogre::Camera* CameraComponent::getCamera()
+{
+	return cam;
+}
+
 
 void CameraComponent::setClipDistances(double near, double far)
 {

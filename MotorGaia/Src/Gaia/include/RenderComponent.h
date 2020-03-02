@@ -2,8 +2,9 @@
 
 #include "GaiaComponent.h"
 #include "RenderSystem.h"
+#include "utilities.h"
 
-enum Axis { X, Y, Z };
+//enum Axis { X, Y, Z };
 
 class RenderComponent : public GaiaComponent
 {

@@ -3,6 +3,7 @@
 #define UTILITIES
 #pragma once
 
+enum Axis { X, Y, Z };
 
 struct Vector3 {
 	double x;

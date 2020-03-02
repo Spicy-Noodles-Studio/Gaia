@@ -3,7 +3,7 @@
 #include <OgreRenderSystem.h>
 #include <iostream>
 
-Window::Window(Ogre::Root* mRoot, Ogre::String windowTitle)
+Window::Window(Ogre::Root* mRoot, std::string windowTitle)
 {
 	Ogre::RenderSystem* rs = mRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
 	mRoot->setRenderSystem(rs);
@@ -31,8 +31,18 @@ void Window::displayConfig(Ogre::RenderSystem* rs)
 	}
 }
 
+void Window::addViewport(Ogre::Camera* cam)
+{
+	mWindow->addViewport(cam);
+}
+
 void Window::setFullscreen(bool fullscreen)
 {
 	mWindow->setFullscreen(fullscreen, 1920, 1080);
+}
+
+void Window::setFSAA(unsigned int fsaa)
+{
+	mWindow->setFSAA(fsaa, "");
 }
 

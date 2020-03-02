@@ -6,11 +6,13 @@
 class Window
 {
 public:
-	Window(Ogre::Root* root, Ogre::String windowTitle);
+	Window(Ogre::Root* root, std::string windowTitle);
 	~Window();
 
+	void addViewport(Ogre::Camera* cam);
+
 	void setFullscreen(bool fullscreen);
-	//void setViewport(bool fullscreen);
+	void setFSAA(unsigned int fsaa);
 
 private:
 	Ogre::RenderWindow* mWindow;

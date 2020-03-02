@@ -89,7 +89,7 @@ private:
 public:
     void init();
     void close();
-    void Update();
+    void update();
 
     void setDeadZone(int zone) { JOYSTICK_DEAD_ZONE = zone; }
 

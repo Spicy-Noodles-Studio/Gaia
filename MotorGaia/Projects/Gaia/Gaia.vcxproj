@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Src\Gaia\include\Camera.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Component.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\utilities.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Src\Gaia\src\Camera.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GaiaComponent.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GaiaCore.cpp" />

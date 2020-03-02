@@ -3,7 +3,7 @@
 
 RenderComponent::RenderComponent(GameObject* gameObject) :  GaiaComponent(gameObject)
 {
-	node = RenderSystem::GetInstance()->getSceneManager()->createSceneNode();
+	node = RenderSystem::GetInstance()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 }
 
 RenderComponent::~RenderComponent() {}
@@ -16,7 +16,10 @@ Ogre::SceneNode* RenderComponent::getNode()
 void RenderComponent::createEntity(std::string id, std::string mesh)
 {
 	if (entities.find(id) == entities.end())
+	{
 		entities[id] = RenderSystem::GetInstance()->createEntity(mesh);
+		node->attachObject(entities[id]);
+	}
 }
 
 void RenderComponent::setMaterial(std::string id, std::string material)

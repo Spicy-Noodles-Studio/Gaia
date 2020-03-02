@@ -1,11 +1,10 @@
-
-#ifndef  UTILITIES
-#define UTILITIES
 #pragma once
+#ifndef  UTILITIES_H
+#define UTILITIES_H
 
 enum Axis { X, Y, Z };
 
-enum SpaceReference{LocalSpace,WorldSpace,ParentSpace};
+enum SpaceReference { LocalSpace, WorldSpace, ParentSpace };
 
 struct Vector3 {
 	double x;
@@ -20,8 +19,6 @@ struct Vector3 {
 
 Vector3 operator +(const Vector3& p1, const Vector3& p2);
 
-
 Vector3 operator -(const Vector3& p1, const Vector3& p2);
-
 
 #endif

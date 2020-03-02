@@ -1,28 +1,20 @@
+#pragma once
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-#pragma once
 #include "GaiaComponent.h"
 #include "utilities.h"
 
-
 class Transform : public GaiaComponent
 {
-
 private:
-
-
-	
 	Vector3 position;
 	Vector3 rotation;
 	Vector3 scale;
-	
 
 public:
 	Transform(GameObject* gameObject);
 	~Transform();
-
-
 
 	void setPosition(double xPos, double yPos, double zPos);
 	void setScale(double xScale, double yScale, double zScale);
@@ -38,7 +30,6 @@ public:
 
 	void translate(Vector3 pos);
 	void rotate(Vector3 rot);
-
 
 };
 

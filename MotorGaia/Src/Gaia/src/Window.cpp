@@ -31,9 +31,9 @@ void Window::displayConfig(Ogre::RenderSystem* rs)
 	}
 }
 
-void Window::addViewport(Ogre::Camera* cam)
+Ogre::Viewport* Window::addViewport(Ogre::Camera* cam)
 {
-	mWindow->addViewport(cam);
+	return mWindow->addViewport(cam);
 }
 
 void Window::setFullscreen(bool fullscreen)

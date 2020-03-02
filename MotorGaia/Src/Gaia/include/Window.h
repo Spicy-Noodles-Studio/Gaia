@@ -9,7 +9,7 @@ public:
 	Window(Ogre::Root* root, std::string windowTitle);
 	~Window();
 
-	void addViewport(Ogre::Camera* cam);
+	Ogre::Viewport* addViewport(Ogre::Camera* cam);
 
 	void setFullscreen(bool fullscreen);
 	void setFSAA(unsigned int fsaa);

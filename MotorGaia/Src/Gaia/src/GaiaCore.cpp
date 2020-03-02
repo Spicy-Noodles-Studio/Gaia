@@ -7,6 +7,11 @@
 
 #include "RenderSystem.h"
 #include "Window.h"
+#include "Camera.h"
+#include "GameObject.h"
+#include "OgreViewport.h"
+
+#include "RenderComponent.h"
 
 GaiaCore::GaiaCore()
 {
@@ -33,6 +38,8 @@ void GaiaCore::setupResources()
 			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(name, locationType);
 		}
 	}
+
+	
 }
 
 void GaiaCore::init()
@@ -50,22 +57,39 @@ void GaiaCore::init()
 	// Ogre initialization
 	mRoot = new Ogre::Root(mPluginsCfg, mWindowCfg);
 	setupResources();
-	
+
 	if (!mRoot->restoreConfig());
 
 	// Setup window
-	Window* win = new Window(mRoot, "Ventana de prueba");
-	
+	Window* win = new Window(mRoot, "Test window - 2020 (c) Gaia ");
+
+	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+
+	RenderSystem::GetInstance()->setup(mRoot);
+
+	GameObject* go = new GameObject("Camera", "Cam", nullptr);
+	Camera* cam = new Camera(go);
+
+	Ogre::Viewport* vp = win->addViewport(cam->getCamera());
+
+	RenderComponent* rc = new RenderComponent(go);
+	rc->createEntity("knot", "knot.mesh");
+	rc->getNode()->setPosition({ 0,0,-400 });
+
+	RenderSystem::GetInstance()->getSceneManager()->setAmbientLight(Ogre::ColourValue(.5, .5, .5));
+	Ogre::Light* light = RenderSystem::GetInstance()->getSceneManager()->createLight("MainLight");
 
 }
 
 void GaiaCore::run()
 {
-	// PARA QUE NO SE CIERRE
-	while (true);
+	while (true)
+	{
+		update();
+	}
 }
 
 void GaiaCore::update()
 {
-
+	mRoot->renderOneFrame();
 }

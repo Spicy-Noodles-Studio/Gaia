@@ -12,8 +12,9 @@ class Scene;
 
 class GameObject {
     friend class SceneManager;
+    friend class UserComponent;
 public:
-    GameObject(const std::string& name, const std::string& tag, const Scene* scene);
+    GameObject(const std::string& name, const std::string& tag, Scene* scene);
     ~GameObject();
 
     template<typename T>
@@ -38,7 +39,7 @@ private:
     const std::string name;
     const std::string tag;
 
-    const Scene* myScene;
+    Scene* myScene;
 
     std::map<std::string, Component*> components;
 };

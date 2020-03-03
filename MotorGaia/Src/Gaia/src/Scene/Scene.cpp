@@ -7,36 +7,65 @@ Scene::Scene(const std::string& sceneName) : name(sceneName)
 
 Scene::~Scene()
 {
+	for (GameObject* g : sceneObjects) {
+		delete g;
+		g = nullptr;
+	}
+
+	sceneObjects.clear();
+	destroyQueue.clear();
 }
 
 
 void Scene::awake()
 {
 	// awake components
+	for (UserComponent* c : userComponents) {
+		if (c->isActive() && c->isSleeping()) {
+			c->awake();
+			c->setSleeping(false);
+		}
+	}
 }
 
 
 void Scene::start()
 {
 	// start components
+	for (UserComponent* c : userComponents) {
+		if (c->isActive() && !c->isSleeping() && !c->hasStarted())
+			c->start();
+	}
 }
 
 
 void Scene::preUpdate(float deltaTime)
 {
 	//Preupdate components
+	for (UserComponent* c : userComponents) {
+		if (c->isActive() && !c->isSleeping() && c->hasStarted())
+			c->preUpdate(deltaTime);
+	}
 }
 
 
 void Scene::update(float deltaTime)
 {
 	// update components
+	for (UserComponent* c : userComponents) {
+		if (c->isActive() && !c->isSleeping() && c->hasStarted())
+			c->update(deltaTime);
+	}
 }
 
 
 void Scene::postUpdate(float deltaTime)
 {
 	// postUpdate compoenent
+	for (UserComponent* c : userComponents) {
+		if (c->isActive() && !c->isSleeping() && c->hasStarted())
+			c->postUpdate(deltaTime);
+	}
 }
 
 
@@ -75,6 +104,30 @@ GameObject* Scene::findGameObjectWithName(const std::string& name)
 GameObject* Scene::findGameObjectWithTag(const std::string& tag)
 {
 	return nullptr;
+}
+
+void Scene::destroyPendingGameObjects()
+{
+	if (!destroyQueue.size())
+		return;
+
+	for (GameObject* g : destroyQueue) {
+		// Sacarlo de almacenamiento
+		std::vector<GameObject*>::iterator it = std::find(sceneObjects.begin(), sceneObjects.end(), g);
+		sceneObjects.erase(it);
+		delete g;
+		g = nullptr;
+	}
+}
+
+void Scene::destroyGameObject(GameObject* gameObject)
+{
+	destroyQueue.push_back(gameObject);
+}
+
+void Scene::addUserComponent(UserComponent* component)
+{
+	userComponents.push_back(component);
 }
 
 

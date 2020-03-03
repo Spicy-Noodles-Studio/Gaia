@@ -1,17 +1,22 @@
 #include "GameObject.h"
-
-#include <typeinfo>
-#include <algorithm>
-
 #include "ComponentManager.h"
 
-GameObject::GameObject(const std::string& name, const std::string& tag, const Scene* scene) : name(name), tag(tag), myScene(scene) {
+#include <algorithm>
+
+
+GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene) 
+{
 
 }
 
 
-GameObject::~GameObject() {
-    
+GameObject::~GameObject() 
+{
+    for (auto c : components) {
+        delete c.second;
+        c.second = nullptr;
+    }
+    components.clear();
 }
 
 

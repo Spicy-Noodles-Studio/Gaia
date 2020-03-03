@@ -43,6 +43,9 @@ protected:
 
 
 public:
+	void setActive(bool active);
+	bool isActive();
+
 	template<typename T>
 	static const std::string& getID();
 
@@ -52,6 +55,7 @@ private:
 	template<typename T>
 	static ComponentID<T> nameID;
 
+	bool active;
 };
 
 

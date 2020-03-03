@@ -24,50 +24,22 @@ GaiaCore::~GaiaCore()
 {
 	delete mRoot;
 	delete obj;
-}
-
-void GaiaCore::setupResources()
-{
-	// Ogre configuration loader
-	Ogre::ConfigFile cf;
-	cf.load(mResourcesCfg);
-
-	Ogre::String name, locationType;
-	Ogre::ConfigFile::SettingsBySection_ settingsBySection = cf.getSettingsBySection();
-
-	for (const auto& p : settingsBySection)
-	{
-		for (const auto& r : p.second)
-		{
-			locationType = r.first;
-			name = r.second;
-			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(name, locationType);
-		}
-	}
+    delete win;
 }
 
 void GaiaCore::init()
 {
 #ifdef _DEBUG
-	mResourcesCfg = "resources_d.cfg";
-	mPluginsCfg = "plugins_d.cfg";
-	mWindowCfg = "window_d.cfg";
+	mRoot = new Ogre::Root("plugins_d.cfg", "window_d.cfg");
 #else
-	mResourcesCfg = "resources.cfg";
-	mPluginsCfg = "plugins.cfg";
-	mWindowCfg = "window.cfg";
+    mRoot = new Ogre::Root("plugins.cfg", "window.cfg");
 #endif
 
-	// Ogre initialization
-	mRoot = new Ogre::Root(mPluginsCfg, mWindowCfg);
-	setupResources();
-
-	if (!mRoot->restoreConfig());
+	if (!(r->restoreConfig() || r->showConfigDialog(nullptr)))
+        return;
 
 	// Setup window
 	Window* win = new Window(mRoot, "Test window - 2020 (c) Gaia ");
-
-	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 	RenderSystem::GetInstance()->setup(mRoot);
 
@@ -97,6 +69,11 @@ void GaiaCore::run()
 		RenderSystem::GetInstance()->render();
 		update();
 	}
+}
+
+void GaiaCore::close()
+{
+
 }
 
 void GaiaCore::update()

@@ -30,10 +30,11 @@ public:
 
 	void addChildNode(GameObject* child);
 
-	const std::string getName();
-	const std::string getTag();
-
-	Scene* getScene();
+    bool addComponent(const std::string& componentName, Component* component);
+    
+    const std::string& getName() const;
+    const std::string& getTag() const ;
+	const Scene* getScene() const;
 
 private: 
     std::string name;

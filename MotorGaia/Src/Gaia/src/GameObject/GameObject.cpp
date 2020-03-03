@@ -22,17 +22,28 @@ void GameObject::addChildNode(GameObject* child)
 		node->addChild(child->node);
 }
 
-const std::string GameObject::getName()
+
+bool GameObject::addComponent(const std::string& componentName, Component* component)
 {
-	return name;
+    if (components.find(componentName) != components.end()) {
+        printf("GAMEOBJECT: Trying to add component with name %s that already exists in gameobject %s.\n", componentName.c_str(), name.c_str());
+        return false;
+    }
+    components[componentName] = component;
+    return true;
 }
 
-const std::string GameObject::getTag()
+const std::string& GameObject::getName() const
 {
-	return tag;
+    return name;
 }
 
-Scene* GameObject::getScene()
+const std::string& GameObject::getTag() const 
+{
+    return tag;
+}
+
+const Scene* GameObject::getScene() const
 {
 	return myScene;
 }
@@ -49,12 +60,9 @@ T* GameObject::addComponent()
 	// y su mapa de constructoras
 	/*auto constructor = ComponentManager::getConstructor(key);
 
-	if(constructor == nullptr)
-		printf("Error al añadir componente: %s, al GameObject con nombre: %s", key, name)
-
-	components[key] = constructor();*/
-
-	return true;
+    components[key] = constructor();*/
+    
+    return true;
 }
 
 template<typename T>

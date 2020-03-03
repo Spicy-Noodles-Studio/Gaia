@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
@@ -16,12 +15,16 @@ struct ComponentID
 
 class Component
 {
+friend class ComponentManager;
 public:
-	friend class ComponentManager;
-	// Devuelve el componente de tipo indicado suponiendo que existe en el mismo owner,
-	// si no, devuelve un nullptr  
+	Component(GameObject* gameObject);
+
+	GameObject* gameObject;
+
+    // Devuelve el componente del tipo indicado suponiendo que existe en el mismo owner,
+    // si no, devuelve un nullptr
 	template<typename T>
-	T* getComponent();
+    T* getComponent();
 
 	// Busca a partir de la referencia de Scene desde el owner un objeto en la misma escena
 	// con el nombre indicado
@@ -38,17 +41,11 @@ public:
 	//Usando sstream se da valor a la variable ->                sstream>>variable
 	virtual void handleData(ComponentData* data);
 
-protected:
-	Component(GameObject* gameObject);
-
-
 public:
 	template<typename T>
 	static const std::string& getID();
 
 private:
-	GameObject* gameObject;
-
 	template<typename T>
 	static ComponentID<T> nameID;
 

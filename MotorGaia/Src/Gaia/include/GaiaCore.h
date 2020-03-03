@@ -9,6 +9,7 @@
 #define GAIA_API __declspec(dllimport)
 #endif
 
+#include "GameObject.h"
 #include "Window.h"
 
 class GAIA_API GaiaCore
@@ -22,8 +23,11 @@ public:
 	void close();
 
 private:
-	void update();
+	Ogre::Root* root;
 	Window* win;
+	GameObject* obj;
+	
+	void update();
 };
 
 #endif 

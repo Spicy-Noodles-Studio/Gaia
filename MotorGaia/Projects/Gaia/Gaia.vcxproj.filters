@@ -37,21 +37,27 @@
     <Filter Include="Archivos de origen\Systems">
       <UniqueIdentifier>{e8a4f9f3-13a2-434f-8b27-6392a5197340}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Managers">
+      <UniqueIdentifier>{a2a916a7-737f-4e33-9ae4-01e2bc8a161d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Utilities">
+      <UniqueIdentifier>{d933d6af-61b1-4460-a189-acff39d98ea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Managers">
+      <UniqueIdentifier>{2c1cb58e-5d00-4e15-b0cc-cba6e4efcf60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Utilities">
+      <UniqueIdentifier>{44608ac8-1403-4f0c-b1fd-0b9256c46b16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\Component.h">
       <Filter>Archivos de encabezado\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\ComponentData.h">
-      <Filter>Archivos de encabezado\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h">
       <Filter>Archivos de encabezado\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h">
@@ -75,17 +81,38 @@
     <ClInclude Include="..\..\Src\Gaia\include\SceneData.h">
       <Filter>Archivos de encabezado\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h">
-      <Filter>Archivos de encabezado\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h">
       <Filter>Archivos de encabezado\Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\ResourcesManager.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\Window.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Camera.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Light.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Transform.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h">
+      <Filter>Archivos de encabezado\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\ResourcesManager.h">
+      <Filter>Archivos de encabezado\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Vector3.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h">
+      <Filter>Archivos de encabezado\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h">
+      <Filter>Archivos de encabezado\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -95,16 +122,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\DataLoader.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Component\Component.cpp">
       <Filter>Archivos de origen\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Component\ComponentData.cpp">
-      <Filter>Archivos de origen\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Component\ComponentManager.cpp">
       <Filter>Archivos de origen\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Component\GaiaComponent.cpp">
@@ -112,9 +133,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Component\UserComponent.cpp">
       <Filter>Archivos de origen\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp">
-      <Filter>Archivos de origen\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObjectData.cpp">
       <Filter>Archivos de origen\GameObject</Filter>
@@ -125,17 +143,41 @@
     <ClCompile Include="..\..\Src\Gaia\src\Scene\SceneData.cpp">
       <Filter>Archivos de origen\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Scene\SceneManager.cpp">
-      <Filter>Archivos de origen\Scene</Filter>
+    <ClCompile Include="..\..\Src\Gaia\src\Window.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Camera.cpp">
+      <Filter>Archivos de origen\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Managers\DataLoader.cpp">
+      <Filter>Archivos de origen\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp">
+      <Filter>Archivos de origen\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Light.cpp">
+      <Filter>Archivos de origen\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\MeshRenderer.cpp">
+      <Filter>Archivos de origen\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp">
       <Filter>Archivos de origen\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\ResourcesManager.cpp">
-      <Filter>Archivos de origen</Filter>
+    <ClCompile Include="..\..\Src\Gaia\src\Managers\ResourcesManager.cpp">
+      <Filter>Archivos de origen\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Window.cpp">
-      <Filter>Archivos de origen</Filter>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp">
+      <Filter>Archivos de origen\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Vector3.cpp">
+      <Filter>Archivos de origen\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Managers\SceneManager.cpp">
+      <Filter>Archivos de origen\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp">
+      <Filter>Archivos de origen\Managers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

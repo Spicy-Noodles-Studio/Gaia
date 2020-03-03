@@ -1,12 +1,12 @@
 #pragma once
-
 #ifndef SCENE_H
 #define SCENE_H
 
 #include <vector>
 #include "GameObject.h"
 
-class Scene {
+class Scene
+{
 public:
 	Scene(std::string sceneName);
 	~Scene();

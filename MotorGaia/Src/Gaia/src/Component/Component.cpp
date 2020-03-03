@@ -5,7 +5,8 @@ void Component::handleData(ComponentData* data)
 {
 }
 
-Component::Component(GameObject* gameObject) : gameObject(gameObject) {
+Component::Component(GameObject* gameObject) : gameObject(gameObject)
+{
 
 }
 

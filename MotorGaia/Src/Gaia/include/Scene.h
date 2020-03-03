@@ -6,26 +6,39 @@
 #include <vector>
 #include "GameObject.h"
 
+#include "GaiaComponent.h"
+#include "UserComponent.h"
+
 class Scene {
+	friend class SceneManager;
 public:
-	Scene(std::string sceneName);
+	Scene(const std::string& sceneName);
 	~Scene();
 
-	bool addGameObject(GameObject* gameObject);
+	void awake();
+	void start();
+	void preUpdate(float deltaTime);
+	void update(float deltaTime);
+	void postUpdate(float deltaTime);
+	
+	const std::string& getName();
 
 private:
+	bool addGameObject(GameObject* gameObject);
 	bool delGameObjectWithName(const std::string& name);
 	bool delGameObjectWithTag(const std::string& tag);
 
 	GameObject* findGameObjectWithName(const std::string& name);
 	GameObject* findGameObjectWithTag(const std::string& tag);
 
-public:
-	inline std::string getSceneName();
 
 private:
 	std::string name;
+	// Aun por ver
 	std::vector<GameObject*> sceneObjects;
+
+	std::vector<GaiaComponent*> gaiaComponents;
+	std::vector<UserComponent*> userComponents;
 
 };
 

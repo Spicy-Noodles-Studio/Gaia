@@ -9,6 +9,8 @@
 #include "Scene.h"
 #include "SceneData.h"
 
+#include <OgreRoot.h>
+
 
 class SceneManager
 {
@@ -16,14 +18,29 @@ public:
 	SceneManager();
 	~SceneManager();
 
-public:
+	void init(Ogre::Root* root);
+	void close();
 
-	bool createScene(const std::string& name);
+	// Stuff before process currentScene
+	void preUpdate(float deltaTime);
+	// Process currentScene
+	void update(float deltaTime);
+	// Stuff after process currentScene
+	void postUpdate(float deltaTime);
+
+	bool changeScene(const std::string& name, bool async = false);
 	bool exist(const std::string& name);
 
 private:
+	bool createScene(const std::string& name);
+	Scene* createScene(const SceneData* data);
+
+private:
 	Scene* currentScene;
-	std::map<std::string, Scene*> scenes;
+	Scene* stackScene;
+
+	Ogre::Root* root;
+
 };
 
 #endif

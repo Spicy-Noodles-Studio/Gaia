@@ -1,12 +1,44 @@
 #include "Scene.h"
 
-Scene::Scene(std::string sceneName) : name(sceneName)
+Scene::Scene(const std::string& sceneName) : name(sceneName)
 {
 }
+
 
 Scene::~Scene()
 {
 }
+
+
+void Scene::awake()
+{
+	// awake components
+}
+
+
+void Scene::start()
+{
+	// start components
+}
+
+
+void Scene::preUpdate(float deltaTime)
+{
+	//Preupdate components
+}
+
+
+void Scene::update(float deltaTime)
+{
+	// update components
+}
+
+
+void Scene::postUpdate(float deltaTime)
+{
+	// postUpdate compoenent
+}
+
 
 bool Scene::addGameObject(GameObject* gameObject)
 {
@@ -21,27 +53,32 @@ bool Scene::addGameObject(GameObject* gameObject)
 	return true;
 }
 
+
 bool Scene::delGameObjectWithName(const std::string& name)
 {
 	return false;
 }
+
 
 bool Scene::delGameObjectWithTag(const std::string& tag)
 {
 	return false;
 }
 
+
 GameObject* Scene::findGameObjectWithName(const std::string& name)
 {
 	return nullptr;
 }
+
 
 GameObject* Scene::findGameObjectWithTag(const std::string& tag)
 {
 	return nullptr;
 }
 
-inline std::string Scene::getSceneName()
+
+const std::string& Scene::getName()
 {
 	return name;
 }

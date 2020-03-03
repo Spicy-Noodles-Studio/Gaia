@@ -3,16 +3,58 @@
 #include <typeinfo>
 #include <algorithm>
 
-//#include "ComponentManager.h"
+#include "ComponentManager.h"
 
-GameObject::GameObject(std::string name, std::string tag, Scene* scene) : name(name), tag(tag), myScene(scene) {
+GameObject::GameObject(const std::string& name, const std::string& tag, const Scene* scene) : name(name), tag(tag), myScene(scene) {
 
 }
+
 
 GameObject::~GameObject() {
     
 }
 
+
+template<typename T>
+T* GameObject::addComponent() {
+    const std::string key = Component::nameID<T>;
+    if (components.find(key) != components.end()) {
+        printf("GAMEOBJECT: Component %s already exists in %s GameObject\n", key.c_str(), name.c_str());
+        return false;
+    }
+    auto constructor = ComponentManager::getComponentFactory(Component::nameID<T>);
+
+    if (constructor == nullptr) {
+        printf("GAMEOBJECT: Component %s not attached to %s GameObject. Constructor not found\n", key.c_str(), name.c_str());
+        return false;
+    }
+
+    components[key] = constructor();
+    return true;
+}
+
+template<typename T>
+bool GameObject::delComponent() {
+    const std::string key = Component::nameID<T>;
+    if (components.find(key) != components.end()) {
+        printf("GAMEOBJECT: Cannot remove. Component %s does not exist in %s GameObject\n", key.c_str(), name.c_str());
+        return false;
+    }
+
+    delete components[key];
+    components.erase(key);
+
+    return true;
+}
+
+template<typename T>
+T* GameObject::getComponent() {
+    const std::string key = Component::nameID<T>;
+    if (components.find(key) == components.end())
+        return nullptr;
+
+    return (T*)components[key];
+}
 
 bool GameObject::addComponent(const std::string& componentName, Component* component)
 {
@@ -34,39 +76,7 @@ const std::string& GameObject::getTag() const
     return tag;
 }
 
-inline Scene* GameObject::getScene()
+const Scene* GameObject::getScene() const
 {
 	return myScene;
-}
-
-template<typename T>
-T* GameObject::addComponent() {
-   std::string key = typeid(T).name();
-    if(components.find(key) != components.end())
-        return false;
-    // Usar el gestor de componentes
-    // y su mapa de constructoras
-    /*auto constructor = ComponentManager::getConstructor(key);
-
-    if(constructor == nullptr)
-        printf("Error al añadir componente: %s, al GameObject con nombre: %s", key, name)
-
-    components[key] = constructor();*/
-    
-    return true;
-}
-
-template<typename T>
-bool GameObject::delComponent() {
-    // Como el gestor de componentes los crea,
-    // seria oportuno que los borrara.
-}
-
-template<typename T>
-T* GameObject::getComponent() {
-    std::string key = typeid(T).name();
-    if(components.find(key) == components.end())
-        return nullptr;
-
-    return (T*)components[key];
 }

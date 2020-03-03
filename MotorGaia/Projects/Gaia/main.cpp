@@ -13,15 +13,7 @@ int main()
 {
 	GaiaCore engine;
 	engine.init();
-
-	ResourcesManager rManager("resources.asset");
-	rManager.init();
-
-	ComponentManager::registerComponent<GaiaComponent>("GaiaComponent");
 	
-	SceneManager sceneManager;
-	sceneManager.createScene("MainScene");
-
 	engine.run();
 
 	engine.close();

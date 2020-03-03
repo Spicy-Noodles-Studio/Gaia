@@ -10,6 +10,8 @@
 #endif
 
 #include "Window.h"
+#include "ResourcesManager.h"
+#include "SceneManager.h"
 
 class GAIA_API GaiaCore
 {
@@ -22,8 +24,13 @@ public:
 	void close();
 
 private:
-	void update();
+	void preUpdate(float deltaTime);
+	void update(float deltaTime);
+	void postUpdate(float deltaTime);
+
 	Window* win;
+	ResourcesManager resourcesManager;
+	SceneManager sceneManager;
 };
 
 #endif 

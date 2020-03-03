@@ -13,9 +13,7 @@ std::map<std::string, GameObjectData*> ResourcesManager::blueprints;
 
 ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(), resourcesPath(filePath)
 {
-	fileSystemLayer = new Ogre::FileSystemLayer("./");
 
-	initShaderSystem();
 }
 
 ResourcesManager::~ResourcesManager()
@@ -36,6 +34,10 @@ ResourcesManager::~ResourcesManager()
 
 void ResourcesManager::init()
 {
+	// Init Ogre SubSystem
+	fileSystemLayer = new Ogre::FileSystemLayer("./");
+	initShaderSystem();
+
 	// Pair: (Types, Filepath)
 	std::vector<std::pair<std::string, std::string>> filePaths;
 	// Reads all file paths

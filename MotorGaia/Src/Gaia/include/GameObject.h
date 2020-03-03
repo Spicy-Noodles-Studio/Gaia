@@ -11,8 +11,9 @@
 class Scene;
 
 class GameObject {
+    friend class SceneManager;
 public:
-    GameObject(std::string name, std::string tag, Scene* scene);
+    GameObject(const std::string& name, const std::string& tag, const Scene* scene);
     ~GameObject();
 
     template<typename T>
@@ -23,24 +24,23 @@ public:
 
     template<typename T>
     T* getComponent();
-
-    bool addComponent(const std::string& componentName, Component* component);
     
     const std::string& getName() const;
-    const std::string& getTag() const ;
+    const std::string& getTag() const;
 
 private:
-    inline Scene* getScene();
+    bool addComponent(const std::string& componentName, Component* component);
+    const Scene* getScene() const;
 
 public:
 
 private: 
-    std::string name;
-    std::string tag;
+    const std::string name;
+    const std::string tag;
 
-    Scene* myScene;
+    const Scene* myScene;
+
     std::map<std::string, Component*> components;
-
 };
 
 #endif

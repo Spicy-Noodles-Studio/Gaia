@@ -33,7 +33,7 @@ private:
 
 
 private:
-	std::string name;
+	const std::string name;
 	// Aun por ver
 	std::vector<GameObject*> sceneObjects;
 

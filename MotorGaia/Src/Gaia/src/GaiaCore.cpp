@@ -28,7 +28,7 @@ void GaiaCore::init()
 
 	// ResourcesManager initialization
 	resourcesManager.init();
-	// SceneManager initialization (required ResourcesManager initialization)
+	// SceneManager initialization (required ResourcesManager previous initialization)
 	sceneManager.init(r);
 
 	//Pruebas
@@ -55,6 +55,8 @@ void GaiaCore::close()
 {
 	// SceneManager termination
 	sceneManager.close();
+	// ResourcesManager termination
+	resourcesManager.close();
 }
 
 void GaiaCore::preUpdate(float deltaTime)

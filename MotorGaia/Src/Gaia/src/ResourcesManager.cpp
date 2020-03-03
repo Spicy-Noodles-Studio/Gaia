@@ -18,17 +18,7 @@ ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(), 
 
 ResourcesManager::~ResourcesManager()
 {
-	for (auto s : sceneData)
-		delete s.second;
-	for (auto b : blueprints)
-		delete b.second;
-
-	sceneData.clear();
-	blueprints.clear();
-
-	delete fileSystemLayer;
-
-	destroyShaderSystem();
+	close();
 }
 
 
@@ -73,8 +63,19 @@ void ResourcesManager::init()
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 }
 
-void ResourcesManager::clean()
+void ResourcesManager::close()
 {
+	for (auto s : sceneData)
+		delete s.second;
+	for (auto b : blueprints)
+		delete b.second;
+
+	sceneData.clear();
+	blueprints.clear();
+
+	delete fileSystemLayer;
+
+	destroyShaderSystem();
 }
 
 void ResourcesManager::loadScene(const std::string& filename)

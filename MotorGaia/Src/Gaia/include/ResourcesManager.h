@@ -19,7 +19,7 @@ public:
 	~ResourcesManager();
 
 	void init();
-	void clean();
+	void close();
 
 	void registerSceneData(SceneData* data);
 	void registerBlueprint(GameObjectData* data);

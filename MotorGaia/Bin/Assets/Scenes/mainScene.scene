@@ -1,0 +1,15 @@
+{
+    "SceneName": "MainScene",
+    "SceneObjects": [
+        {
+            "ObjectType": "GAMEOBJECT",
+            "ObjectName": "Example",
+            "Tag": "ExampleTag",
+            "Components": [
+                {
+                    "ComponentName": "GaiaComponent"
+                }
+            ]
+        }
+    ]
+}

@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
+
 #include <string>
 #include <map>
 
@@ -21,6 +24,11 @@ public:
     template<typename T>
     T* getComponent();
 
+    bool addComponent(const std::string& componentName, Component* component);
+    
+    const std::string& getName() const;
+    const std::string& getTag() const ;
+
 private:
     inline Scene* getScene();
 
@@ -34,3 +42,5 @@ private:
     std::map<std::string, Component*> components;
 
 };
+
+#endif

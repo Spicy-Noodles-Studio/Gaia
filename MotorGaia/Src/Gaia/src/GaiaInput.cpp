@@ -73,6 +73,8 @@ void GaiaInput::update()
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
+
+        int index;
         std::string key;
         switch (event.type)
         {
@@ -103,7 +105,7 @@ void GaiaInput::update()
 
             // Controller events
         case SDL_CONTROLLERBUTTONDOWN:
-            int index = event.cdevice.which;
+            index = event.cdevice.which;
             if (ControllerHandles[index] != 0 && SDL_GameControllerGetAttached(ControllerHandles[index])) controllerInputDown(index);
             break;
         case SDL_CONTROLLERBUTTONUP: {
@@ -115,7 +117,7 @@ void GaiaInput::update()
         case SDL_CONTROLLERDEVICEADDED:
             if (event.cdevice.which < MAX_CONTROLLERS && SDL_IsGameController(event.cdevice.which)) {
 
-                int index = event.cdevice.which;
+                index = event.cdevice.which;
 
                 ControllerHandles[index] = SDL_GameControllerOpen(index);
                 currentControllers++;
@@ -134,7 +136,7 @@ void GaiaInput::update()
             }
             break;
         case SDL_CONTROLLERDEVICEREMOVED:
-            int index = event.cdevice.which;
+            index = event.cdevice.which;
 
             if (index < 0) return; // unknown controller?
 
@@ -429,7 +431,7 @@ void GaiaInput::controllerInputUp(int index)
 
 bool GaiaInput::isButtonPressed(int controllerIndex, std::string button)
 {
-    if (!controllers[controllerIndex].isConected)return;
+    if (!controllers[controllerIndex].isConected)return false;
 
     std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 

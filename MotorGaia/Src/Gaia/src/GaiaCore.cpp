@@ -6,6 +6,7 @@
 #include <OgreViewport.h>
 #include <iostream>
 
+#include "ResourcesManager.h"
 #include "RenderSystem.h"
 #include "Window.h"
 #include "Camera.h"
@@ -22,7 +23,7 @@ GaiaCore::GaiaCore()
 
 GaiaCore::~GaiaCore()
 {
-	delete mRoot;
+	delete root;
 	delete obj;
     delete win;
 }
@@ -30,18 +31,21 @@ GaiaCore::~GaiaCore()
 void GaiaCore::init()
 {
 #ifdef _DEBUG
-	mRoot = new Ogre::Root("plugins_d.cfg", "window_d.cfg");
+	root = new Ogre::Root("plugins_d.cfg", "window_d.cfg");
 #else
-    mRoot = new Ogre::Root("plugins.cfg", "window.cfg");
+	root = new Ogre::Root("plugins.cfg", "window.cfg");
 #endif
 
-	if (!(r->restoreConfig() || r->showConfigDialog(nullptr)))
+	if (!(root->restoreConfig() || root->showConfigDialog(nullptr)))
         return;
 
 	// Setup window
-	Window* win = new Window(mRoot, "Test window - 2020 (c) Gaia ");
+	Window* win = new Window(root, "Test window - 2020 (c) Gaia ");
 
-	RenderSystem::GetInstance()->setup(mRoot);
+	ResourcesManager rManager("resources.asset");
+	rManager.init();
+
+	RenderSystem::GetInstance()->setup(root);
 
 	GameObject* aux = new GameObject("Camera", "Cam", nullptr);
 	Transform* transform1 = new Transform(aux);

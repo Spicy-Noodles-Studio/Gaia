@@ -6,9 +6,6 @@
 #include <OgreSceneManager.h>
 #include <OgreEntity.h>
 
-#ifndef RENDER_SYSTEM_H
-#define RENDER_SYSTEM_H
-
 #include "Singleton.h"
 
 class RenderSystem : public Singleton<RenderSystem>

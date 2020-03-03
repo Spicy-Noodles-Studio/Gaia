@@ -23,7 +23,7 @@ public:
 	void close();
 
 private:
-	Ogre::Root* mRoot;
+	Ogre::Root* root;
 	Window* win;
 	GameObject* obj;
 	

@@ -6,6 +6,8 @@
 #define GAIA_API __declspec(dllimport)
 #endif
 
+#include <OgreString.h>
+
 class GAIA_API GaiaCore
 {
 public:
@@ -16,6 +18,12 @@ public:
 	void run();
 
 private:
-	void update();
-};
+	Ogre::Root* mRoot;
+	Ogre::String mResourcesCfg;
+	Ogre::String mPluginsCfg;
+	Ogre::String mWindowCfg;
 
+	void setupResources();
+	void update();
+
+};

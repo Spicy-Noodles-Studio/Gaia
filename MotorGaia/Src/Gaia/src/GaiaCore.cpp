@@ -6,7 +6,6 @@
 #include <OgreViewport.h>
 #include <iostream>
 
-#include "ResourcesManager.h"
 #include "RenderSystem.h"
 #include "Window.h"
 #include "Camera.h"
@@ -26,6 +25,7 @@ GaiaCore::~GaiaCore()
 	delete root;
 	delete obj;
     delete win;
+	delete rManager;
 }
 
 void GaiaCore::init()
@@ -42,8 +42,8 @@ void GaiaCore::init()
 	// Setup window
 	Window* win = new Window(root, "Test window - 2020 (c) Gaia ");
 
-	ResourcesManager rManager("resources.asset");
-	rManager.init();
+	rManager = new ResourcesManager("resources.asset");
+	rManager->init();
 
 	RenderSystem::GetInstance()->setup(root);
 

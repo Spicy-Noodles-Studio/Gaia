@@ -1,15 +1,8 @@
 #include <iostream>
 
 #include "GaiaCore.h"
-#include "ComponentManager.h"
-#include "GaiaComponent.h"
-#include "UserComponent.h"
-#include "GameObject.h"
-#include "SceneManager.h"
-#include "ResourcesManager.h"
 
-
-int main() 
+int main()
 {
 	GaiaCore engine;
 	engine.init();

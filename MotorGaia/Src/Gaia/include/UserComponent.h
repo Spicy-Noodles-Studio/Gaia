@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef USER_COMPONENT_H
 #define USER_COMPONENT_H
 

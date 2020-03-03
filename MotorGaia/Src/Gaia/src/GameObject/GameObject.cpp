@@ -1,22 +1,28 @@
 #include "GameObject.h"
 #include "ComponentManager.h"
+#include "RenderSystem.h"
 
 #include <algorithm>
 
 
-GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene) 
+GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene)
 {
-
+	node = RenderSystem::GetInstance()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 }
 
-
-GameObject::~GameObject() 
+GameObject::~GameObject()
 {
     for (auto c : components) {
         delete c.second;
         c.second = nullptr;
     }
     components.clear();
+}
+
+void GameObject::addChildNode(GameObject* child)
+{
+	if (node != nullptr)
+		node->addChild(child->node);
 }
 
 

@@ -9,6 +9,7 @@
 #define GAIA_API __declspec(dllimport)
 #endif
 
+#include "GameObject.h"
 #include "Window.h"
 #include "ResourcesManager.h"
 #include "SceneManager.h"
@@ -28,9 +29,12 @@ private:
 	void update(float deltaTime);
 	void postUpdate(float deltaTime);
 
+	Ogre::Root* root;
 	Window* win;
 	ResourcesManager resourcesManager;
 	SceneManager sceneManager;
+
+	GameObject* obj;
 };
 
 #endif 

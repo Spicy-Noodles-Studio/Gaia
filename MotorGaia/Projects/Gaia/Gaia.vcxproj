@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Src\Gaia\include\Camera.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Component.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h" />
@@ -26,6 +27,8 @@
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ResourcesManager.h" />
@@ -33,25 +36,32 @@
     <ClInclude Include="..\..\Src\Gaia\include\SceneData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Singleton.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Transform.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Vector3.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Camera.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Light.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\MeshRenderer.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Managers\DataLoader.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Managers\ResourcesManager.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Managers\SceneManager.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Vector3.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Window.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Component.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\ComponentData.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\Component\ComponentManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\GaiaComponent.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\UserComponent.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\DataLoader.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GaiaCore.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObjectData.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\ResourcesManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Scene\Scene.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Scene\SceneData.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\Scene\SceneManager.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\Window.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

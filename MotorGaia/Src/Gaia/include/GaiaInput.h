@@ -47,6 +47,9 @@ private:
     int currentControllers = 0;
 
     struct gameController {
+
+        bool isConected = false;
+
         bool Up = false;
         bool Down = false;
         bool Left = false;

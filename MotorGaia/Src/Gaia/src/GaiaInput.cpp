@@ -27,6 +27,7 @@ void GaiaInput::init()
             break;
         }
         ControllerHandles[ControllerIndex] = SDL_GameControllerOpen(JoystickIndex);
+        controllers[ControllerIndex].isConected = true;
         ControllerIndex++;
         currentControllers++;
 
@@ -54,6 +55,7 @@ void GaiaInput::close()
         {
             SDL_GameControllerClose(ControllerHandles[ControllerIndex]);
             if (RumbleHandles[ControllerIndex]) SDL_HapticClose(RumbleHandles[ControllerIndex]);
+            controllers[ControllerIndex].isConected = false;
         }
     }
 
@@ -117,6 +119,7 @@ void GaiaInput::update()
 
                 ControllerHandles[index] = SDL_GameControllerOpen(index);
                 currentControllers++;
+                controllers[index].isConected = true;
 
                 // Checks if controller has rumble device & asigns it
                 SDL_Joystick* JoystickHandle = SDL_GameControllerGetJoystick(ControllerHandles[index]);
@@ -137,6 +140,10 @@ void GaiaInput::update()
 
             SDL_GameControllerClose(ControllerHandles[index]);
             if (RumbleHandles[index]) SDL_HapticClose(RumbleHandles[index]);
+
+            ControllerHandles[index] = NULL;
+            controllers[index].isConected = false;
+            currentControllers--;
 
             break;
         case SDL_CONTROLLERDEVICEREMAPPED:
@@ -316,6 +323,7 @@ bool GaiaInput::getMouseButtonRelease(char button)
 
 void GaiaInput::controllerInputDown(int index)
 {
+    if (!controllers[index].isConected)return;
     if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_DPAD_UP) && !controllers[index].Up) {
         controllers[index].Up = true;
         controllers[index].buttonPress.emplace("UP");
@@ -368,6 +376,7 @@ void GaiaInput::controllerInputDown(int index)
 
 void GaiaInput::controllerInputUp(int index)
 {
+    if (!controllers[index].isConected)return;
     if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_DPAD_UP) && !controllers[index].Up) {
         controllers[index].Up = false;
         controllers[index].buttonRelease.emplace("UP");
@@ -420,7 +429,9 @@ void GaiaInput::controllerInputUp(int index)
 
 bool GaiaInput::isButtonPressed(int controllerIndex, std::string button)
 {
-    if (controllerIndex >= currentControllers) return false;
+    if (!controllers[controllerIndex].isConected)return;
+
+    std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 
     if (button == "UP") {
         return controllers[controllerIndex].Up;

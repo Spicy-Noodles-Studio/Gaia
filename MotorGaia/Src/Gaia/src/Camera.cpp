@@ -1,12 +1,12 @@
 #include "Camera.h"
 #include "GameObject.h"
+
 Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject)
 {
-	
-	node = RenderSystem::GetInstance()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
-	cam = RenderSystem::GetInstance()->getSceneManager()->createCamera(gameObject->getName()+"Cam");
+	cam = RenderSystem::GetInstance()->getSceneManager()->createCamera(gameObject->getName() + "Cam");
+
 	cam->setAutoAspectRatio(true);
-	node->attachObject(cam);
+	gameObject->node->attachObject(cam);
 }
 
 Camera::~Camera()
@@ -14,53 +14,27 @@ Camera::~Camera()
 	
 }
 
-
-
-void Camera::setPosition(Ogre::SceneNode* node, Ogre::Vector3 position)
-{
-	node->setPosition(position);
-}
-
-
-void Camera::setRotation(Ogre::SceneNode* node, Axis axis, float degrees)
-{
-	switch (axis)
-	{
-	case X:
-		node->pitch(Ogre::Radian(Ogre::Degree(degrees)));
-		break;
-	case Y:
-		node->yaw(Ogre::Radian(Ogre::Degree(degrees)));
-		break;
-	case Z:
-		node->roll(Ogre::Radian(Ogre::Degree(degrees)));
-		break;
-	default:
-		break;
-	}
-}
-
-void Camera::lookAt(Ogre::Vector3 pos, SpaceReference space)
+void Camera::lookAt(const Vector3& pos, SpaceReference space)
 {
 	switch (space)
 	{
 	case LocalSpace:
-		node->lookAt(pos, Ogre::Node::TS_LOCAL);
+		gameObject->node->lookAt(Ogre::Vector3(pos.x, pos.y, pos.z), Ogre::Node::TS_LOCAL);
 		break;
-		node->lookAt(pos, Ogre::Node::TS_WORLD);
 	case WorldSpace:
+		gameObject->node->lookAt(Ogre::Vector3(pos.x, pos.y, pos.z), Ogre::Node::TS_WORLD);
 		break;
 	case ParentSpace:
-		node->lookAt(pos, Ogre::Node::TS_PARENT);
+		gameObject->node->lookAt(Ogre::Vector3(pos.x, pos.y, pos.z), Ogre::Node::TS_PARENT);
 		break;
 	default:
 		break;
 	}
 }
 
-void Camera::setDirecction(Ogre::Vector3 dir)
+void Camera::setDirection(const Vector3& dir)
 {
-	node->setDirection(dir);
+	gameObject->node->setDirection(Ogre::Vector3(dir.x, dir.y, dir.z));
 }
 
 Ogre::Camera* Camera::getCamera()
@@ -68,10 +42,8 @@ Ogre::Camera* Camera::getCamera()
 	return cam;
 }
 
-
 void Camera::setClipDistances(double near, double far)
 {
 	cam->setNearClipDistance(near);
 	cam->setFarClipDistance(far);
-	
 }

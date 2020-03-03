@@ -7,6 +7,7 @@
 #endif
 
 #include <OgreString.h>
+#include "GameObject.h"
 
 class GAIA_API GaiaCore
 {
@@ -22,8 +23,8 @@ private:
 	Ogre::String mResourcesCfg;
 	Ogre::String mPluginsCfg;
 	Ogre::String mWindowCfg;
+	GameObject* obj;
 
 	void setupResources();
 	void update();
-
 };

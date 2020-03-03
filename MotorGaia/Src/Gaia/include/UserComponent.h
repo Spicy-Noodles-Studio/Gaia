@@ -1,6 +1,8 @@
 #pragma once
-#include "Component.h"
+#ifndef USER_COMPONENT_H
+#define USER_COMPONENT_H
 
+#include "Component.h"
 
 class UserComponent : public Component
 {
@@ -18,3 +20,5 @@ public:
 	virtual void onCollisionStay(GameObject* other);
 	virtual void onCollisionExit(GameObject* other);
 };
+
+#endif

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef COMPONENT_H
+#define COMPONENT_H
+
 #include <string>
 
 class GameObject;
@@ -6,7 +9,9 @@ class GameObject;
 class Component
 {
 public:
-	inline GameObject* getOwner();
+	Component(GameObject* gameObject);
+
+	GameObject* gameObject;
 
     // Devuelve el componente del tipo indicado suponiendo que existe en el mismo owner,
     // si no, devuelve un nullptr  
@@ -22,11 +27,6 @@ public:
     // con el tag indicado
     template<typename T>
     GameObject* findGameObjectWithTag(std::string tag);
-
-protected:
-    Component(GameObject* gameObject);
-
-private:
-    GameObject* gameObject;
-
 };
+
+#endif

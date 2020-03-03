@@ -1,4 +1,6 @@
 #pragma once
+#ifndef WINDOW_H
+#define WINDOW_H
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
@@ -20,3 +22,4 @@ private:
 	void displayConfig(Ogre::RenderSystem* rs);
 };
 
+#endif

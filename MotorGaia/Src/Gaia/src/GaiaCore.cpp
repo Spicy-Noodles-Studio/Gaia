@@ -1,18 +1,19 @@
 #include "GaiaCore.h"
-//Ogre includes
+
 #include <OgreRoot.h>
 #include <OgreException.h>
 #include <OgreConfigFile.h>
+#include <OgreViewport.h>
 #include <iostream>
 
 #include "RenderSystem.h"
 #include "Window.h"
 #include "Camera.h"
-#include "GameObject.h"
-#include "OgreViewport.h"
 #include "Light.h"
 
-#include "RenderComponent.h"
+#include "GameObject.h"
+#include "Transform.h"
+#include "MeshRenderer.h"
 
 GaiaCore::GaiaCore()
 {
@@ -22,6 +23,7 @@ GaiaCore::GaiaCore()
 GaiaCore::~GaiaCore()
 {
 	delete mRoot;
+	delete obj;
 }
 
 void GaiaCore::setupResources()
@@ -32,15 +34,16 @@ void GaiaCore::setupResources()
 
 	Ogre::String name, locationType;
 	Ogre::ConfigFile::SettingsBySection_ settingsBySection = cf.getSettingsBySection();
-	for (const auto& p : settingsBySection) {
-		for (const auto& r : p.second) {
+
+	for (const auto& p : settingsBySection)
+	{
+		for (const auto& r : p.second)
+		{
 			locationType = r.first;
 			name = r.second;
 			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(name, locationType);
 		}
 	}
-
-	
 }
 
 void GaiaCore::init()
@@ -68,31 +71,35 @@ void GaiaCore::init()
 
 	RenderSystem::GetInstance()->setup(mRoot);
 
-	GameObject* go = new GameObject("Camera", "Cam", nullptr);
-	Camera* cam = new Camera(go);
+	GameObject* aux = new GameObject("Camera", "Cam", nullptr);
+	Transform* transform1 = new Transform(aux);
+	Camera* cam = new Camera(aux);
 
 	Ogre::Viewport* vp = win->addViewport(cam->getCamera());
 
-	RenderComponent* rc = new RenderComponent(go);
-	rc->createEntity("knot", "knot.mesh");
-	rc->getNode()->setPosition({ 0,0,-400 });
-
-	Light* lz = new Light(go);
-	lz->setType(Point);
+	Light* lz = new Light(aux);
+	lz->setType(Light::Point);
 	lz->setColour(0.7, 0.1, 0.7);
 
-
+	obj = new GameObject("Churro", "Ch", nullptr);
+	Transform* transform2 = new Transform(obj);
+	MeshRenderer* ms = new MeshRenderer(obj);
+	ms->createEntity("knot", "knot.mesh");
+	obj->transform->setPosition(Vector3(0, 0, -400));
+	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
+	obj->transform->rotate(Vector3(0, 90, 0));
 }
 
 void GaiaCore::run()
 {
 	while (true)
 	{
+		RenderSystem::GetInstance()->render();
 		update();
 	}
 }
 
 void GaiaCore::update()
 {
-	mRoot->renderOneFrame();
+	obj->transform->translate(Vector3(0.5, 0, 0));
 }

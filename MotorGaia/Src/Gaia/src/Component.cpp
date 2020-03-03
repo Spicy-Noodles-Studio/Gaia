@@ -1,8 +1,6 @@
 #include "Component.h"
 
-inline GameObject* Component::getOwner()
+Component::Component(GameObject* gameObject) : gameObject(gameObject)
 {
-	return gameObject;
-}
 
-Component::Component(GameObject* gameObject) : gameObject(gameObject) {}
+}

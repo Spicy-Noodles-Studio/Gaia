@@ -3,7 +3,7 @@
 #define TRANSFORM_H
 
 #include "GaiaComponent.h"
-#include "utilities.h"
+#include "Vector3.h"
 
 class Transform : public GaiaComponent
 {
@@ -16,22 +16,20 @@ public:
 	Transform(GameObject* gameObject);
 	~Transform();
 
-	void setPosition(double xPos, double yPos, double zPos);
-	void setScale(double xScale, double yScale, double zScale);
-	void setRotation(double xRot, double yRot, double zRot);
+	void setPosition(double x, double y, double z);
+	void setScale(double x, double y, double z);
+	void setRotation(double x, double y, double z);
 
-	void setPosition(Vector3 pos);
-	void setScale(Vector3 _scale);
-	void setRotation(Vector3 rot);
+	void setPosition(const Vector3& pos);
+	void setScale(const Vector3& scale);
+	void setRotation(const Vector3& rot);
 
-	Vector3 getPosition();
-	Vector3 getRotation();
-	Vector3 getScale();
+	const Vector3& getPosition() const;
+	const Vector3& getScale() const;
+	const Vector3& getRotation() const;
 
-	void translate(Vector3 pos);
-	void rotate(Vector3 rot);
-
+	void translate(const Vector3& pos);
+	void rotate(const Vector3& rot);
 };
 
 #endif
-

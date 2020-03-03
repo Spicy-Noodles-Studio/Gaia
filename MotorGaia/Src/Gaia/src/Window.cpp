@@ -45,4 +45,3 @@ void Window::setFSAA(unsigned int fsaa)
 {
 	mWindow->setFSAA(fsaa, "");
 }
-

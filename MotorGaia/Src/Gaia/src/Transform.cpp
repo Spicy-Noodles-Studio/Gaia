@@ -1,4 +1,6 @@
 #include "Transform.h"
+#include "GameObject.h"
+#include <OgreQuaternion.h>
 
 Transform::Transform(GameObject* gameObject) : GaiaComponent(gameObject)
 {
@@ -13,6 +15,8 @@ Transform::Transform(GameObject* gameObject) : GaiaComponent(gameObject)
 	rotation.x = 0;
 	rotation.y = 0;
 	rotation.z = 0;
+
+	gameObject->transform = this;
 }
 
 Transform::~Transform()
@@ -20,66 +24,80 @@ Transform::~Transform()
 
 }
 
-void Transform::setPosition(double xPos, double yPos, double zPos)
+void Transform::setPosition(double x, double y, double z)
 {
-	position.x = xPos;
-	position.y = yPos;
-	position.z = zPos;
+	position.x = x;
+	position.y = y;
+	position.z = z;
+
+	if (gameObject->node != nullptr)
+		gameObject->node->setPosition(x, y, z);
 }
 
-void Transform::setScale(double xScale, double yScale, double zScale)
+void Transform::setScale(double x, double y, double z)
 {
-	scale.x = xScale;
-	scale.y = yScale;
-	scale.z = zScale;
+	scale.x = x;
+	scale.y = y;
+	scale.z = z;
+
+	if (gameObject->node != nullptr)
+		gameObject->node->setScale(x, y, z);
 }
 
-void Transform::setRotation(double xRot, double yRot, double zRot)
+void Transform::setRotation(double x, double y, double z)
 {
-	rotation.x = xRot;
-	rotation.y = yRot;
-	rotation.z = zRot;
+	rotation.x = x;
+	rotation.y = y;
+	rotation.z = z;
+
+	gameObject->node->setOrientation(Ogre::Quaternion());
+
+	if (gameObject->node != nullptr)
+	{
+		gameObject->node->pitch(Ogre::Radian(Ogre::Degree(x)));
+		gameObject->node->yaw(Ogre::Radian(Ogre::Degree(y)));
+		gameObject->node->roll(Ogre::Radian(Ogre::Degree(z)));
+	}
 }
 
-void Transform::setPosition(Vector3 pos)
+void Transform::setPosition(const Vector3& pos)
 {
-	position = pos;
+	setPosition(pos.x, pos.y, pos.z);
 }
 
-void Transform::setScale(Vector3 _scale)
+void Transform::setScale(const Vector3& scale)
 {
-	scale = _scale;
+	setScale(scale.x, scale.y, scale.z);
 }
 
-void Transform::setRotation(Vector3 rot)
+void Transform::setRotation(const Vector3& rot)
 {
-	rotation = rot;
+	setRotation(rot.x, rot.y, rot.z);
 }
 
-Vector3 Transform::getPosition()
+const Vector3& Transform::getPosition() const
 {
 	return position;
 }
 
-Vector3 Transform::getRotation()
-{
-	return rotation;
-}
-
-Vector3 Transform::getScale()
+const Vector3& Transform::getScale() const
 {
 	return scale;
 }
 
-void Transform::translate(Vector3 pos)
+const Vector3& Transform::getRotation() const
+{
+	return rotation;
+}
+
+void Transform::translate(const Vector3& pos)
 {
 	position += pos;
-
+	setPosition(position);
 }
 
-void Transform::rotate(Vector3 rot)
+void Transform::rotate(const Vector3& rot)
 {
 	rotation += rot;
-
+	setRotation(rotation);
 }
-

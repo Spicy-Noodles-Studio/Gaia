@@ -1,17 +1,16 @@
 #include "Light.h"
 #include "GameObject.h"
+
 Light::Light(GameObject* gameObject) : GaiaComponent(gameObject)
 {
-	node = RenderSystem::GetInstance()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 	light = RenderSystem::GetInstance()->getSceneManager()->createLight(gameObject->getName() + " -L");
-	node->attachObject(light);
+	gameObject->node->attachObject(light);
 }
 
 Light::~Light()
 {
 
 }
-
 
 /*
 -Directional-
@@ -46,34 +45,9 @@ void Light::setSpecularColour(float red, float green, float blue)
 	light->setSpecularColour(red, green, blue);
 }
 
-void Light::setPosition(Ogre::SceneNode* node, Ogre::Vector3 position)
+void Light::setDirection(const Vector3& dir)
 {
-	node->setPosition(position);
-}
-
-
-void Light::setRotation(Ogre::SceneNode* node, Axis axis, float degrees)
-{
-	switch (axis)
-	{
-	case X:
-		node->pitch(Ogre::Radian(Ogre::Degree(degrees)));
-		break;
-	case Y:
-		node->yaw(Ogre::Radian(Ogre::Degree(degrees)));
-		break;
-	case Z:
-		node->roll(Ogre::Radian(Ogre::Degree(degrees)));
-		break;
-	default:
-		break;
-	}
-}
-
-
-void Light::setDirecction(Ogre::Vector3 dir)
-{
-	node->setDirection(dir);
+	gameObject->node->setDirection(Ogre::Vector3(dir.x, dir.y, dir.z));
 }
 
 /*
@@ -98,6 +72,3 @@ bool Light::isVisible()
 {
 	return light->isVisible();
 }
-
-
-

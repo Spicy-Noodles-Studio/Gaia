@@ -5,6 +5,7 @@
 #include "Singleton.h"
 #include "btBulletDynamicsCommon.h"
 #include "Vector3.h"
+#include"DebugDrawer.h"
 
 enum RB_Shape
 {
@@ -23,6 +24,8 @@ public:
 
 	// World config methods
 	void setWorldGravity(Vector3 gravity);
+
+	void setDebugDrawer(DebugDrawer* debugDrawer);
 
 	// Rigid Body methods
 	btRigidBody* createRigidBody(float m, RB_Shape shape, Vector3 dim, Vector3 pos);

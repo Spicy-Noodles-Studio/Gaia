@@ -34,6 +34,7 @@ void PhysicsSystem::setup()
 void PhysicsSystem::update()
 {
 	dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+	dynamicsWorld->debugDrawWorld();
 }
 
 void PhysicsSystem::shutDown()
@@ -85,6 +86,12 @@ void PhysicsSystem::setWorldGravity(Vector3 gravity)
 	dynamicsWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 }
 
+void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
+{
+	debugDrawer->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+	dynamicsWorld->setDebugDrawer(debugDrawer);
+}
+
 
 
 // Creates a btRigidBody with the specified properties, adds it to the dynamicWorld
@@ -98,7 +105,7 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, Vector3 dim
 		colShape = new btBoxShape(btVector3(dim.x, dim.y, dim.z));
 		break;
 	case SPHERE_RB_SHAPE:
-		colShape = new btSphereShape(btScalar(dim.x));
+		colShape = new btSphereShape(btScalar(std::max(std::max(dim.x, dim.y), dim.z)));
 		break;
 	default:
 		break;

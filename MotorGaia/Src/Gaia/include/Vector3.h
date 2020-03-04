@@ -13,11 +13,25 @@ struct Vector3
 
 	Vector3 operator +=(const Vector3& p);
 	Vector3 operator -=(const Vector3& p);
+	Vector3 operator /= (const Vector3& p);
+	Vector3 operator *= (const Vector3& p);
+	Vector3 operator /= (const double d);
+	Vector3 operator *= (const double d);
 	bool operator == (const Vector3& p) const;
 	Vector3 operator = (const Vector3& p);
+
+	double magnitudeSquared();
+	double magnitude();
+	void normalize();
+	Vector3 normalized();
 };
 
 Vector3 operator +(const Vector3& p1, const Vector3& p2);
 Vector3 operator -(const Vector3& p1, const Vector3& p2);
+Vector3 operator *(const Vector3& p1, const Vector3& p2);
+Vector3 operator /(const Vector3& p1, const Vector3& p2);
+Vector3 operator *(const Vector3& p1, const double d);
+Vector3 operator /(const Vector3& p1, const double d);
+
 
 #endif

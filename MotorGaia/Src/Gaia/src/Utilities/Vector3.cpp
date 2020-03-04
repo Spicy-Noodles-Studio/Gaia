@@ -1,4 +1,5 @@
 #include "Vector3.h"
+#include<cmath>
 
 Vector3::Vector3()
 {
@@ -28,6 +29,38 @@ Vector3 Vector3::operator-=(const Vector3& p)
 	return *this;
 }
 
+Vector3 Vector3::operator/=(const Vector3& p)
+{
+	this->x /= p.x;
+	this->y /= p.y;
+	this->z /= p.z;
+	return *this;
+}
+
+Vector3 Vector3::operator*=(const Vector3& p)
+{
+	this->x *= p.x;
+	this->y *= p.y;
+	this->z *= p.z;
+	return *this;
+}
+
+Vector3 Vector3::operator/=(const double d)
+{
+	this->x /= d;
+	this->y /= d;
+	this->z /= d;
+	return *this;
+}
+
+Vector3 Vector3::operator*=(const double d)
+{
+	this->x *= d;
+	this->y *= d;
+	this->z *= d;
+	return *this;
+}
+
 bool Vector3::operator == (const Vector3& p) const
 {
 	return this->x == p.x && this->y == p.y && this->z == p.z;
@@ -45,20 +78,54 @@ Vector3 Vector3::operator=(const Vector3& p)
 	return *this;
 }
 
+void Vector3::normalize()
+{
+	*this /= magnitude();
+}
+
+Vector3 Vector3::normalized()
+{
+	Vector3 aux = *this / magnitude();
+	return aux;
+}
+
+double Vector3::magnitudeSquared()
+{
+	return x * x + y * y + z * z;
+}
+
+double Vector3::magnitude()
+{
+	return sqrt(magnitudeSquared());
+}
+
 Vector3 operator +(const Vector3& p1, const Vector3& p2)
 {
-	Vector3 result;
-	result.x = p1.x + p2.x;
-	result.y = p1.y + p2.y;
-	result.z = p1.z + p2.z;
-	return result;
+	return Vector3(p1.x + p2.x, p1.y + p2.y, p1.z + p2.z);
 }
 
 Vector3 operator -(const Vector3& p1, const Vector3& p2)
 {
-	Vector3 result;
-	result.x = p1.x - p2.x;
-	result.y = p1.y - p2.y;
-	result.z = p1.z - p2.z;
-	return result;
+	return Vector3(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
 }
+
+Vector3 operator*(const Vector3& p1, const Vector3& p2)
+{
+	return Vector3(p1.x * p2.x, p1.y * p2.y, p1.z * p2.z);
+}
+
+Vector3 operator/(const Vector3& p1, const Vector3& p2)
+{
+	return Vector3(p1.x / p2.x, p1.y / p2.y, p1.z / p2.z);
+}
+
+Vector3 operator*(const Vector3& p1, const double d)
+{
+	return Vector3(p1.x * d, p1.y * d, p1.z * d);
+}
+
+Vector3 operator/(const Vector3& p1, const double d)
+{
+	return Vector3(p1.x / d, p1.y / d, p1.z / d);
+}
+

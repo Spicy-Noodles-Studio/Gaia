@@ -6,14 +6,15 @@
 
 class RigidBody : public GaiaComponent
 {
-public:
+private:
 	btRigidBody* body = nullptr;
+	static Vector3 btScaleConversion;
 
-
-	RigidBody(GameObject* gameObject, float mass, RB_Shape shape, Vector3 dimensions, Vector3 position = { 0.0f, 0.0f, 0.0f });
+public:
+	RigidBody(GameObject* gameObject);
 	~RigidBody();
 
-
+	void setRigidBody(float mass, RB_Shape shape, Vector3 offset = { 0.0f, 0.0f, 0.0f });
 };
 
 #endif

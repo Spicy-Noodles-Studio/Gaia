@@ -24,15 +24,18 @@
     <ClInclude Include="..\..\Src\Gaia\include\ComponentData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\DebugDrawer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\OgreBulletUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ResourcesManager.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\RigidBody.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Scene.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h" />
@@ -41,12 +44,12 @@
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Vector3.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Window.h" />
-    <ClInclude Include="RigidBody.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\Component\Camera.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Light.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\MeshRenderer.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\RigidBody.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />
@@ -55,6 +58,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Managers\SceneManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\DebugDrawer.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Vector3.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Window.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Component.cpp" />
@@ -66,7 +70,6 @@
     <ClCompile Include="..\..\Src\Gaia\src\Scene\Scene.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Scene\SceneData.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

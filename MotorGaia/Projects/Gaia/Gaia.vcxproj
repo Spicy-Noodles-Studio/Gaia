@@ -41,6 +41,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Vector3.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Window.h" />
+    <ClInclude Include="RigidBody.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\Component\Camera.cpp" />
@@ -65,6 +66,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Scene\Scene.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Scene\SceneData.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

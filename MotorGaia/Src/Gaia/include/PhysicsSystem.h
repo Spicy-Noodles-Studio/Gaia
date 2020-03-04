@@ -4,6 +4,12 @@
 
 #include "Singleton.h"
 #include "btBulletDynamicsCommon.h"
+#include "Vector3.h"
+
+enum RB_Shape
+{
+	BOX_RB_SHAPE, SPHERE_RB_SHAPE
+};
 
 class PhysicsSystem : public Singleton<PhysicsSystem> 
 {
@@ -14,6 +20,12 @@ public:
 	void setup();
 	void update();
 	void shutDown();
+
+	// World config methods
+	void setWorldGravity(Vector3 gravity);
+
+	// Rigid Body methods
+	btRigidBody* createRigidBody(float m, RB_Shape shape, Vector3 dim, Vector3 pos);
 
 private:
 	btDiscreteDynamicsWorld* dynamicsWorld;

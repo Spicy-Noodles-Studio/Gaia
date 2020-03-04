@@ -78,3 +78,55 @@ void PhysicsSystem::shutDown()
 	//next line is optional: it will be cleared by the destructor when the array goes out of scope
 	collisionShapes.clear();
 }
+
+
+void PhysicsSystem::setWorldGravity(Vector3 gravity)
+{
+	dynamicsWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+}
+
+
+
+// Creates a btRigidBody with the specified properties, adds it to the dynamicWorld
+// and returns a reference to it
+btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, Vector3 dim, Vector3 pos)
+{
+	btCollisionShape* colShape;
+	switch (shape)
+	{
+	case BOX_RB_SHAPE:
+		colShape = new btBoxShape(btVector3(dim.x, dim.y, dim.z));
+		break;
+	case SPHERE_RB_SHAPE:
+		colShape = new btSphereShape(btScalar(dim.x));
+		break;
+	default:
+		break;
+	}
+	
+	collisionShapes.push_back(colShape);
+
+	/// Create Dynamic Objects
+	btTransform startTransform;
+	startTransform.setIdentity();
+
+	btScalar mass(m);
+
+	//rigidbody is dynamic if and only if mass is non zero, otherwise static
+	bool isDynamic = (mass != 0.f);
+
+	btVector3 localInertia(0, 0, 0);
+	if (isDynamic)
+		colShape->calculateLocalInertia(mass, localInertia);
+
+	startTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
+
+	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	dynamicsWorld->addRigidBody(body);
+
+	return body;
+}

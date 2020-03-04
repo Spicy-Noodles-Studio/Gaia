@@ -1,9 +1,10 @@
 #include "Camera.h"
 #include "GameObject.h"
+#include "Scene.h"
 
 Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject)
 {
-	cam = RenderSystem::GetInstance()->getSceneManager()->createCamera(gameObject->getName() + "Cam");
+	cam = gameObject->getScene()->getSceneManager()->createCamera(gameObject->getName() + "Cam");
 
 	cam->setAutoAspectRatio(true);
 	gameObject->node->attachObject(cam);

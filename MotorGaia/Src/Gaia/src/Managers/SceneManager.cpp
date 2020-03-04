@@ -75,7 +75,7 @@ bool SceneManager::createScene(const std::string& name) {
 	bool created = true;
 	const SceneData* sD = ResourcesManager::getSceneData(name);
 	if (sD != nullptr) {
-		Scene* myScene = new Scene(name);
+		Scene* myScene = new Scene(name, root);
 		for (GameObjectData* gameObjectD : sD->getGameObjectsData()) {
 			GameObject* gameObject = new GameObject(gameObjectD->getName(), gameObjectD->getTag(), myScene);
 			for (auto it : gameObjectD->getComponentData()) {
@@ -100,7 +100,7 @@ bool SceneManager::createScene(const std::string& name) {
 
 Scene* SceneManager::createScene(const SceneData* data)
 {
-	Scene* myScene = new Scene(data->name);
+	Scene* myScene = new Scene(data->name, root);
 	for (GameObjectData* gameObjectD : data->getGameObjectsData()) {
 		GameObject* gameObject = new GameObject(gameObjectD->getName(), gameObjectD->getTag(), myScene);
 		for (auto it : gameObjectD->getComponentData()) {
@@ -120,6 +120,11 @@ Scene* SceneManager::createScene(const SceneData* data)
 bool SceneManager::exist(const std::string& name)
 {
 	return ResourcesManager::getSceneData(name) != nullptr;
+}
+
+Scene* SceneManager::getCurrentScene()
+{
+	return currentScene == nullptr ? stackScene : currentScene;
 }
 
 

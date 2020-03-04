@@ -32,10 +32,10 @@ public:
 	void addChildNode(GameObject* child);
     const std::string& getName() const;
     const std::string& getTag() const;
+    Scene* getScene() const;
 
 private:
     bool addComponent(const std::string& componentName, Component* component);
-    const Scene* getScene() const;
 
 public:
 
@@ -46,5 +46,14 @@ private:
     Scene* myScene;
     std::map<std::string, Component*> components;
 };
+
+template<typename T>
+T* GameObject::getComponent() {
+    const std::string key = Component::nameID<T>.id;
+    if (components.find(key) == components.end())
+        return nullptr;
+
+    return (T*)components[key];
+}
 
 #endif

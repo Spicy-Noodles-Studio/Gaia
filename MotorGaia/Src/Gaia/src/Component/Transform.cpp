@@ -1,6 +1,8 @@
 #include "Transform.h"
 #include "GameObject.h"
+#include "ComponentData.h"
 #include <OgreQuaternion.h>
+#include <sstream>
 
 Transform::Transform(GameObject* gameObject) : GaiaComponent(gameObject)
 {
@@ -100,4 +102,25 @@ void Transform::rotate(const Vector3& rot)
 {
 	rotation += rot;
 	setRotation(rotation);
+}
+
+void Transform::handleData(ComponentData* data)
+{
+	for (auto prop : data->getProperties()) {
+		std::stringstream ss(prop.second);
+		double x, y, z; ss >> x >> y >> z;
+
+		if (prop.first == "position") {
+			setPosition(x, y, z);
+		}
+		else if (prop.first == "scale") {
+			setScale(x, y, z);
+		}
+		else if (prop.first == "rotation") {
+			setRotation(x, y, z);
+		}
+		else {
+			printf("TRANSFORM: property %s does not exist\n", prop.first.c_str());
+		}
+	}
 }

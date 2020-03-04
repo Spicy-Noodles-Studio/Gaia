@@ -1,13 +1,13 @@
 #include "GameObject.h"
 #include "ComponentManager.h"
-#include "RenderSystem.h"
+#include "Scene.h"
 
 #include <algorithm>
 
 
 GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene)
 {
-	node = RenderSystem::GetInstance()->getSceneManager()->getRootSceneNode()->createChildSceneNode();
+	node = scene->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 }
 
 GameObject::~GameObject()
@@ -58,14 +58,6 @@ bool GameObject::delComponent() {
     return true;
 }
 
-template<typename T>
-T* GameObject::getComponent() {
-    const std::string key = Component::nameID<T>;
-    if (components.find(key) == components.end())
-        return nullptr;
-
-    return (T*)components[key];
-}
 
 bool GameObject::addComponent(const std::string& componentName, Component* component)
 {
@@ -87,7 +79,7 @@ const std::string& GameObject::getTag() const
     return tag;
 }
 
-const Scene* GameObject::getScene() const
+Scene* GameObject::getScene() const
 {
 	return myScene;
 }

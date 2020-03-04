@@ -1,7 +1,8 @@
 #include "Scene.h"
 
-Scene::Scene(const std::string& sceneName) : name(sceneName)
+Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager())
 {
+
 }
 
 
@@ -14,6 +15,8 @@ Scene::~Scene()
 
 	sceneObjects.clear();
 	destroyQueue.clear();
+	
+	root->destroySceneManager(sceneManager);
 }
 
 
@@ -97,6 +100,10 @@ bool Scene::delGameObjectWithTag(const std::string& tag)
 
 GameObject* Scene::findGameObjectWithName(const std::string& name)
 {
+	for (auto g : sceneObjects) {
+		if (g->getName() == name)
+			return g;
+	}
 	return nullptr;
 }
 
@@ -134,4 +141,14 @@ void Scene::addUserComponent(UserComponent* component)
 const std::string& Scene::getName()
 {
 	return name;
+}
+
+Ogre::SceneManager* Scene::getSceneManager() const
+{
+	return sceneManager;
+}
+
+Ogre::Entity* Scene::createEntity(const std::string& name)
+{
+	return sceneManager->createEntity(name);
 }

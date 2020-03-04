@@ -12,6 +12,7 @@
 #include "GameObject.h"
 #include "Window.h"
 #include "ResourcesManager.h"
+#include "ComponentManager.h"
 #include "SceneManager.h"
 
 class GAIA_API GaiaCore
@@ -32,6 +33,7 @@ private:
 	Ogre::Root* root;
 	Window* win;
 	ResourcesManager resourcesManager;
+	ComponentManager componentManager;
 	SceneManager sceneManager;
 
 	GameObject* obj;

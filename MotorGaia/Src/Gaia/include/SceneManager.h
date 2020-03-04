@@ -31,6 +31,8 @@ public:
 	bool changeScene(const std::string& name, bool async = false);
 	bool exist(const std::string& name);
 
+	Scene* getCurrentScene();
+
 private:
 	bool createScene(const std::string& name);
 	Scene* createScene(const SceneData* data);

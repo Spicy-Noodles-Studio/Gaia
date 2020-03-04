@@ -3,6 +3,7 @@
 #define SCENE_H
 
 #include <vector>
+#include <OgreRoot.h>
 #include "GameObject.h"
 
 #include "GaiaComponent.h"
@@ -12,7 +13,7 @@ class Scene {
 	friend class SceneManager;
 	friend class UserComponent;
 public:
-	Scene(const std::string& sceneName);
+	Scene(const std::string& sceneName, Ogre::Root* root);
 	~Scene();
 
 	//Component Calls
@@ -23,6 +24,12 @@ public:
 	void postUpdate(float deltaTime);
 	
 	const std::string& getName();
+	Ogre::SceneManager* getSceneManager() const;
+
+	Ogre::Entity* createEntity(const std::string& name);
+
+	GameObject* findGameObjectWithName(const std::string& name);
+	GameObject* findGameObjectWithTag(const std::string& tag);
 
 private:
 	void addUserComponent(UserComponent* component);
@@ -31,14 +38,14 @@ private:
 	bool delGameObjectWithName(const std::string& name);
 	bool delGameObjectWithTag(const std::string& tag);
 
-	GameObject* findGameObjectWithName(const std::string& name);
-	GameObject* findGameObjectWithTag(const std::string& tag);
 
 	void destroyPendingGameObjects();
 	void destroyGameObject(GameObject* gameObject);
 
 private:
 	const std::string name;
+	Ogre::Root* root;
+	Ogre::SceneManager* sceneManager;
 
 	std::vector<UserComponent*> userComponents;
 

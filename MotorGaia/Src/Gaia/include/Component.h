@@ -16,6 +16,7 @@ struct ComponentID
 class Component
 {
 friend class ComponentManager;
+friend class GameObject;
 public:
 	Component(GameObject* gameObject);
 

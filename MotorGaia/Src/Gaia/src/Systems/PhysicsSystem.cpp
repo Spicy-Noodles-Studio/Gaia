@@ -35,7 +35,7 @@ void PhysicsSystem::setup()
 
 void PhysicsSystem::update()
 {
-	dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+	dynamicsWorld->stepSimulation(1.f / 30.f, 10);
 	dynamicsWorld->debugDrawWorld();
 }
 
@@ -98,13 +98,13 @@ void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
 
 // Creates a btRigidBody with the specified properties, adds it to the dynamicWorld
 // and returns a reference to it
-btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim, Vector3 pos)
+btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim)
 {
 	btCollisionShape* colShape;
 	switch (shape)
 	{
 	case BOX_RB_SHAPE:
-		colShape = new btBoxShape(btVector3(dim.x, dim.y, dim.z));
+		colShape = new btBoxShape(btVector3(dim.x, dim.z, dim.y));
 		break;
 	case SPHERE_RB_SHAPE:
 		colShape = new btSphereShape(btScalar(std::max(std::max(dim.x, dim.y), dim.z)));
@@ -127,7 +127,6 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	btVector3 localInertia(0, 0, 0);
 	if (isDynamic)
 		colShape->calculateLocalInertia(mass, localInertia);
-
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 

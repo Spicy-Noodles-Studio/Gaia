@@ -31,7 +31,7 @@ public:
 	void setDebugDrawer(DebugDrawer* debugDrawer);
 
 	// Rigid Body methods
-	btRigidBody* createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim, Vector3 pos);
+	btRigidBody* createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim);
 	// Turns a Gaia Transform into a Bullet Physics Transform
 	btTransform parseToBulletTransform(Transform* transform);
 

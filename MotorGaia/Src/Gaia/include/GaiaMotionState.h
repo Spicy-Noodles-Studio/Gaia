@@ -4,6 +4,7 @@
 #define GAIA_MOTION_STATE_H
 
 #include "btBulletDynamicsCommon.h"
+#include "Vector3.h"
 class Transform;
 
 // This class extends the Motion State from Bullet Physics Library
@@ -13,12 +14,14 @@ class GaiaMotionState : public btMotionState
 {
 protected:
 	Transform* transform;
+	Vector3 offset = Vector3();
 public:
-	GaiaMotionState(Transform* transform);
+	GaiaMotionState(Transform* transform, const Vector3& offset);
 	~GaiaMotionState();
 
 	Transform* getTransform() const;
 
+	void setOffset(const Vector3& offset);
 	// Methods from bullet physics
 
 	virtual void getWorldTransform(btTransform& worldTrans) const;

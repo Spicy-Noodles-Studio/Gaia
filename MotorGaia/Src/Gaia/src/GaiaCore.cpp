@@ -91,8 +91,8 @@ void GaiaCore::run()
 {
 	while (true)
 	{
-		RenderSystem::GetInstance()->render();
 		PhysicsSystem::GetInstance()->update();
+		RenderSystem::GetInstance()->render();
 		update();
 	}
 }

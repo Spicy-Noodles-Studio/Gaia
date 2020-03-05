@@ -13,7 +13,7 @@ Vector3::Vector3(double x, double y, double z) : x(x), y(y), z(z)
 
 }
 
-Vector3 Vector3::operator+=(const Vector3& p)
+Vector3& Vector3::operator+=(const Vector3& p)
 {
 	this->x += p.x;
 	this->y += p.y;
@@ -21,7 +21,7 @@ Vector3 Vector3::operator+=(const Vector3& p)
 	return *this;
 }
 
-Vector3 Vector3::operator-=(const Vector3& p)
+Vector3& Vector3::operator-=(const Vector3& p)
 {
 	this->x -= p.x;
 	this->y -= p.y;
@@ -29,7 +29,7 @@ Vector3 Vector3::operator-=(const Vector3& p)
 	return *this;
 }
 
-Vector3 Vector3::operator/=(const Vector3& p)
+Vector3& Vector3::operator/=(const Vector3& p)
 {
 	this->x /= p.x;
 	this->y /= p.y;
@@ -37,7 +37,7 @@ Vector3 Vector3::operator/=(const Vector3& p)
 	return *this;
 }
 
-Vector3 Vector3::operator*=(const Vector3& p)
+Vector3& Vector3::operator*=(const Vector3& p)
 {
 	this->x *= p.x;
 	this->y *= p.y;
@@ -45,7 +45,7 @@ Vector3 Vector3::operator*=(const Vector3& p)
 	return *this;
 }
 
-Vector3 Vector3::operator/=(const double d)
+Vector3& Vector3::operator/=(const double d)
 {
 	this->x /= d;
 	this->y /= d;
@@ -53,7 +53,7 @@ Vector3 Vector3::operator/=(const double d)
 	return *this;
 }
 
-Vector3 Vector3::operator*=(const double d)
+Vector3& Vector3::operator*=(const double d)
 {
 	this->x *= d;
 	this->y *= d;
@@ -66,7 +66,7 @@ bool Vector3::operator == (const Vector3& p) const
 	return this->x == p.x && this->y == p.y && this->z == p.z;
 }
 
-Vector3 Vector3::operator=(const Vector3& p)
+Vector3& Vector3::operator=(const Vector3& p)
 {
 	//Comprueba que no se este intentando igualar un vector3 a si mismo
 	if (this != &p)
@@ -83,7 +83,7 @@ void Vector3::normalize()
 	*this /= magnitude();
 }
 
-Vector3 Vector3::normalized()
+Vector3& Vector3::normalized()
 {
 	Vector3 aux = *this / magnitude();
 	return aux;
@@ -102,6 +102,16 @@ double Vector3::magnitude()
 Vector3 operator +(const Vector3& p1, const Vector3& p2)
 {
 	return Vector3(p1.x + p2.x, p1.y + p2.y, p1.z + p2.z);
+}
+
+Vector3 operator+(const Vector3& p1, const btVector3& p2)
+{
+	return Vector3(p1.x + p2.x(), p1.y + p2.y(), p1.z + p2.z());
+}
+
+btVector3 operator+(const btVector3& p1, const Vector3& p2)
+{
+	return btVector3(p1.x() + btScalar(p2.x), p1.y() + btScalar(p2.y), p1.z() + btScalar(p2.z));
 }
 
 Vector3 operator -(const Vector3& p1, const Vector3& p2)

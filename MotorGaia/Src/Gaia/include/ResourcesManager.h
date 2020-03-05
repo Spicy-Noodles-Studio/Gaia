@@ -25,6 +25,7 @@ public:
 	void registerBlueprint(GameObjectData* data);
 
 	static const SceneData* getSceneData(const std::string& name);
+	static const SceneData* getSceneData(int index);
 	static const GameObjectData* getBlueprint(const std::string& name);
 
 private:

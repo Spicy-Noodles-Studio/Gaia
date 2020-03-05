@@ -40,10 +40,6 @@ void GaiaCore::init()
 
 	// ResourcesManager initialization
 	resourcesManager.init();
-	// SceneManager initialization (required ResourcesManager previous initialization)
-	sceneManager.init(root, win);
-	//Pruebas
-	RenderSystem::GetInstance()->init(root);
 
 	//REGISTRO DE COMPONENTES (probablemente se deberia de pasar al init de componentManager)
 	componentManager.registerComponent<Transform>("Transform");
@@ -51,9 +47,10 @@ void GaiaCore::init()
 	componentManager.registerComponent<Light>("Light");
 	componentManager.registerComponent<MeshRenderer>("MeshRenderer");
 
-	// Carga de escena
-	sceneManager.changeScene("MainScene");
-	obj = sceneManager.getCurrentScene()->findGameObjectWithName("Nudo");	
+	// SceneManager initialization (required ResourcesManager previous initialization)
+	sceneManager.init(root, win);
+	//Pruebas
+	RenderSystem::GetInstance()->init(root);
 }
 
 void GaiaCore::run()
@@ -61,12 +58,14 @@ void GaiaCore::run()
 	bool exit = false;
 	float deltaTime = 1.f / 60.f;
 	while (!exit) {
-		// Render
-		RenderSystem::GetInstance()->render(deltaTime);
-
-		// Stuff like update
+		// Pre-process
 		preUpdate(deltaTime);
+		
+		// Process
+		RenderSystem::GetInstance()->render(deltaTime);
 		update(deltaTime);
+
+		// Post-process
 		postUpdate(deltaTime);
 	}
 }
@@ -93,10 +92,6 @@ void GaiaCore::update(float deltaTime)
 
 	// Managers
 	sceneManager.update(deltaTime);
-
-	//Eliminar
-	if (++count >= 10000) // 10 segundos
-		sceneManager.changeScene("Scene1");
 }
 
 void GaiaCore::postUpdate(float deltaTime)

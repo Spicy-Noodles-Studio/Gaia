@@ -25,7 +25,15 @@ SceneData* DataLoader::loadScene(const std::string& filename, bool& loaded)
 	}
 
 	json j;
-	i >> j;
+	// Try if format file is valid
+	try {
+		i >> j;
+	}
+	catch(std::exception message){
+		printf("DATA LOADER: Scene file \"%s\" invalid format. Should be .json formatting\n", filename.c_str());
+		i.close();
+		return SceneData::empty();
+	}
 	i.close();
 	return loadSceneData(j, loaded);
 }

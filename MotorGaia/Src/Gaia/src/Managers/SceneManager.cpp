@@ -17,6 +17,8 @@ void SceneManager::init(Ogre::Root* root, Window* window)
 {
 	this->root = root;
 	this->window = window;
+	
+	loadScene(ResourcesManager::getSceneData(0));
 }
 
 void SceneManager::close()
@@ -54,43 +56,12 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 {
 	// Check if scene exists
 	const SceneData* data = ResourcesManager::getSceneData(name);
-	if (data == nullptr) {
-		printf("SCENE MANAGER: scen with name %s not found\n", name.c_str());
-		return false;
-	}
+	if (data == nullptr) 
+		printf("SCENE MANAGER: scene with name %s not found\n", name.c_str());
 
-	// Creates the Scene by its data (assuming creation was succesfull)
-	stackScene = createScene(data);
+	loadScene(data);
 
-	return true;
-}
-
-bool SceneManager::createScene(const std::string& name) {
-
-	bool created = true;
-	const SceneData* sD = ResourcesManager::getSceneData(name);
-	if (sD != nullptr) {
-		Scene* myScene = new Scene(name, root);
-		for (GameObjectData* gameObjectD : sD->getGameObjectsData()) {
-			GameObject* gameObject = new GameObject(gameObjectD->getName(), gameObjectD->getTag(), myScene);
-			for (auto it : gameObjectD->getComponentData()) {
-				ComponentData* cD = it.second;
-				auto constructor = ComponentManager::getComponentFactory(cD->getName());
-				if (constructor != nullptr) {
-					Component* comp = constructor(gameObject);
-					comp->handleData(cD);
-					created = created && gameObject->addComponent(cD->getName(), comp);
-				}
-				else
-					created = false;
-			}
-			created = created && myScene->addGameObject(gameObject);
-		}
-		//scenes[name] = myScene;
-		return created;
-	}
-	else
-		return false;
+	return data == nullptr ? false : true;
 }
 
 Scene* SceneManager::createScene(const SceneData* data)
@@ -112,17 +83,28 @@ Scene* SceneManager::createScene(const SceneData* data)
 	return myScene;
 }
 
+void SceneManager::loadScene(const SceneData* data)
+{
+	if (data == nullptr) {
+		printf("SCENE MANAGER: given SceneData not valid. Loading default SceneData\n");
+		return;
+	}
+	// Creates the Scene by its data (assuming creation was succesfull)
+	stackScene = createScene(data);
+}
+
 void SceneManager::processSceneChange()
 {
-	if (stackScene != nullptr) {
-		Scene* oldScene = currentScene;
-		currentScene = stackScene;
-		stackScene = nullptr;
-		if (oldScene != nullptr)
-			delete oldScene;
+	if (stackScene == nullptr)
+		return;
 
-		processCameraChange();
-	}
+	Scene* oldScene = currentScene;
+	currentScene = stackScene;
+	stackScene = nullptr;
+	if (oldScene != nullptr)
+		delete oldScene;
+
+	processCameraChange();
 }
 
 void SceneManager::processCameraChange()

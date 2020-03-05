@@ -161,6 +161,17 @@ const SceneData* ResourcesManager::getSceneData(const std::string& name)
 	return sceneData[name];
 }
 
+const SceneData* ResourcesManager::getSceneData(int index)
+{
+	if (index >= sceneData.size()) {
+		printf("RESOURCES MANAGER: trying to get not existing SceneData index: %i.\n", index);
+		return nullptr;
+	}
+	auto it = sceneData.begin(); 
+	std::advance(it, index);
+	return (*it).second;
+}
+
 const GameObjectData* ResourcesManager::getBlueprint(const std::string& name)
 {
 	if (blueprints.find(name) == blueprints.end()) {

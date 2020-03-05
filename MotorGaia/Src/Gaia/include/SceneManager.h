@@ -36,8 +36,8 @@ public:
 	Scene* getCurrentScene();
 
 private:
-	bool createScene(const std::string& name);
 	Scene* createScene(const SceneData* data);
+	void loadScene(const SceneData* data);
 
 	void processSceneChange();
 	void processCameraChange();

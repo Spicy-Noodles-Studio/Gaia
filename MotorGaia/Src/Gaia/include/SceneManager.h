@@ -10,6 +10,8 @@
 #include "SceneData.h"
 
 #include <OgreRoot.h>
+#include "Window.h"
+#include "Camera.h"
 
 
 class SceneManager
@@ -18,14 +20,14 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void init(Ogre::Root* root);
+	void init(Ogre::Root* root, Window* window);
 	void close();
 
-	// Stuff before process currentScene
+	// Before process currentScene
 	void preUpdate(float deltaTime);
 	// Process currentScene
 	void update(float deltaTime);
-	// Stuff after process currentScene
+	// After process currentScene
 	void postUpdate(float deltaTime);
 
 	bool changeScene(const std::string& name, bool async = false);
@@ -37,12 +39,15 @@ private:
 	bool createScene(const std::string& name);
 	Scene* createScene(const SceneData* data);
 
+	void processSceneChange();
+	void processCameraChange();
+
 private:
 	Scene* currentScene;
 	Scene* stackScene;
 
 	Ogre::Root* root;
-
+	Window* window;
 };
 
 #endif

@@ -13,7 +13,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 
-GaiaCore::GaiaCore() : win(nullptr), resourcesManager("resources.asset")
+GaiaCore::GaiaCore() : root(nullptr), win(nullptr), resourcesManager("resources.asset"), obj(nullptr), count(0)
 {
 
 }
@@ -41,12 +41,11 @@ void GaiaCore::init()
 	// ResourcesManager initialization
 	resourcesManager.init();
 	// SceneManager initialization (required ResourcesManager previous initialization)
-	sceneManager.init(root);
-
+	sceneManager.init(root, win);
 	//Pruebas
 	RenderSystem::GetInstance()->init(root);
 
-	//REGISTRO DE COMPONENTES
+	//REGISTRO DE COMPONENTES (probablemente se deberia de pasar al init de componentManager)
 	componentManager.registerComponent<Transform>("Transform");
 	componentManager.registerComponent<Camera>("Camera");
 	componentManager.registerComponent<Light>("Light");
@@ -54,15 +53,7 @@ void GaiaCore::init()
 
 	// Carga de escena
 	sceneManager.changeScene("MainScene");
-	
-	Scene* scene = sceneManager.getCurrentScene();
-	GameObject* camera = scene->findGameObjectWithName("MainCamera");
-	Camera* cam = camera->getComponent<Camera>();
-
-	obj = scene->findGameObjectWithName("Nudo");
-
-	win->addViewport(cam->getCamera());
-	
+	obj = sceneManager.getCurrentScene()->findGameObjectWithName("Nudo");	
 }
 
 void GaiaCore::run()
@@ -70,10 +61,10 @@ void GaiaCore::run()
 	bool exit = false;
 	float deltaTime = 1.f / 60.f;
 	while (!exit) {
-		//Stuff like render
+		// Render
 		RenderSystem::GetInstance()->render(deltaTime);
 
-		//Stuff like update
+		// Stuff like update
 		preUpdate(deltaTime);
 		update(deltaTime);
 		postUpdate(deltaTime);
@@ -90,9 +81,9 @@ void GaiaCore::close()
 
 void GaiaCore::preUpdate(float deltaTime)
 {
-	//Systems
+	// Systems
 
-	//Managers
+	// Managers
 	sceneManager.preUpdate(deltaTime);
 }
 
@@ -104,7 +95,8 @@ void GaiaCore::update(float deltaTime)
 	sceneManager.update(deltaTime);
 
 	//Eliminar
-	obj->transform->translate(Vector3(0.0, 0.0, -0.1));
+	if (++count >= 10000) // 10 segundos
+		sceneManager.changeScene("Scene1");
 }
 
 void GaiaCore::postUpdate(float deltaTime)

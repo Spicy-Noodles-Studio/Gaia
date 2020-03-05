@@ -13,6 +13,8 @@ public:
 
 	Ogre::Viewport* addViewport(Ogre::Camera* cam);
 
+	void removeAllViewports();
+
 	void setFullscreen(bool fullscreen);
 	void setFSAA(unsigned int fsaa);
 

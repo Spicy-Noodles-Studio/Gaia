@@ -36,6 +36,11 @@ Ogre::Viewport* Window::addViewport(Ogre::Camera* cam)
 	return mWindow->addViewport(cam);
 }
 
+void Window::removeAllViewports()
+{
+	mWindow->removeAllViewports();
+}
+
 void Window::setFullscreen(bool fullscreen)
 {
 	mWindow->setFullscreen(fullscreen, 1920, 1080);

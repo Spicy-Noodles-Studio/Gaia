@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager())
+Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager()), mainCamera(nullptr)
 {
 
 }
@@ -17,6 +17,8 @@ Scene::~Scene()
 	destroyQueue.clear();
 	
 	root->destroySceneManager(sceneManager);
+
+	mainCamera = nullptr;
 }
 
 
@@ -111,6 +113,16 @@ GameObject* Scene::findGameObjectWithName(const std::string& name)
 GameObject* Scene::findGameObjectWithTag(const std::string& tag)
 {
 	return nullptr;
+}
+
+void Scene::setMainCamera(Camera* camera)
+{
+	mainCamera = camera;
+}
+
+Camera* Scene::getMainCamera() const
+{
+	return mainCamera;
 }
 
 void Scene::destroyPendingGameObjects()

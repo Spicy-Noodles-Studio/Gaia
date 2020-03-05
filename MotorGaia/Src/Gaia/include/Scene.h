@@ -5,6 +5,7 @@
 #include <vector>
 #include <OgreRoot.h>
 #include "GameObject.h"
+#include "Camera.h"
 
 #include "GaiaComponent.h"
 #include "UserComponent.h"
@@ -31,13 +32,15 @@ public:
 	GameObject* findGameObjectWithName(const std::string& name);
 	GameObject* findGameObjectWithTag(const std::string& tag);
 
+	void setMainCamera(Camera* camera);
+	Camera* getMainCamera() const;
+
 private:
 	void addUserComponent(UserComponent* component);
 
 	bool addGameObject(GameObject* gameObject);
 	bool delGameObjectWithName(const std::string& name);
 	bool delGameObjectWithTag(const std::string& tag);
-
 
 	void destroyPendingGameObjects();
 	void destroyGameObject(GameObject* gameObject);
@@ -51,6 +54,8 @@ private:
 
 	std::vector<GameObject*> sceneObjects;
 	std::vector<GameObject*> destroyQueue;
+
+	Camera* mainCamera;
 };
 
 #endif

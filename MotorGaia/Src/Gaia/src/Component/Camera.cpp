@@ -1,8 +1,10 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "Scene.h"
+#include "ComponentData.h"
+#include <sstream>
 
-Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject)
+Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera(false)
 {
 	cam = gameObject->getScene()->getSceneManager()->createCamera(gameObject->getName() + "Cam");
 
@@ -47,4 +49,30 @@ void Camera::setClipDistances(double near, double far)
 {
 	cam->setNearClipDistance(near);
 	cam->setFarClipDistance(far);
+}
+
+void Camera::handleData(ComponentData* data)
+{
+	for (auto prop : data->getProperties()) {
+		if (prop.first == "main") {
+			if (prop.second == "true") {
+				if (gameObject->getScene()->getMainCamera() == nullptr) {
+					isMainCamera = true;
+					gameObject->getScene()->setMainCamera(this);
+				}
+				else {
+					printf("CAMERA: there's already a main Camera\n");
+				}
+			}
+			else if (prop.second == "false") {
+				isMainCamera = false;
+			}
+			else {
+				printf("CAMERA: %s value not valid for \"main\" property\n", prop.second.c_str());
+			}
+		}
+		else {
+			printf("CAMERA: %s is not a valid property name\n", prop.first.c_str());
+		}
+	}
 }

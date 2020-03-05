@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "SceneData.h"
 
-SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr)
+SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), window(nullptr)
 {
 }
 
@@ -13,9 +13,10 @@ SceneManager::~SceneManager()
 	close();
 }
 
-void SceneManager::init(Ogre::Root* root)
+void SceneManager::init(Ogre::Root* root, Window* window)
 {
 	this->root = root;
+	this->window = window;
 }
 
 void SceneManager::close()
@@ -29,13 +30,7 @@ void SceneManager::close()
 void SceneManager::preUpdate(float deltaTime)
 {
 	// If stack not empty, change scene and delete the current one
-	if (stackScene != nullptr) {
-		Scene* oldScene = currentScene;
-		currentScene = stackScene;
-		stackScene = nullptr;
-		if(oldScene != nullptr)
-			delete oldScene;
-	}
+	processSceneChange();
 }
 
 void SceneManager::update(float deltaTime) {
@@ -115,6 +110,31 @@ Scene* SceneManager::createScene(const SceneData* data)
 		myScene->addGameObject(gameObject);
 	}
 	return myScene;
+}
+
+void SceneManager::processSceneChange()
+{
+	if (stackScene != nullptr) {
+		Scene* oldScene = currentScene;
+		currentScene = stackScene;
+		stackScene = nullptr;
+		if (oldScene != nullptr)
+			delete oldScene;
+
+		processCameraChange();
+	}
+}
+
+void SceneManager::processCameraChange()
+{
+	Camera* camera = currentScene->getMainCamera();
+	if (camera == nullptr) {
+		printf("SCENE MANAGER: changing to scene \"%s\" that has no main camera\n", currentScene->getName().c_str());
+		window->removeAllViewports();
+		return;
+	}
+	window->removeAllViewports();
+	window->addViewport(camera->getCamera());
 }
 
 bool SceneManager::exist(const std::string& name)

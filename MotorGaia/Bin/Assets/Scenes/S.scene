@@ -2,68 +2,91 @@
     "SceneName": "Scene1",
     "SceneObjects": [
         {
-            "ObjectType": "BLUEPRINT",
-            "ObjectName": "O1.1",
-            "Tag": "tig",
-            "BlueprintPath": "O1",
-            "ComponentModifications": [
+            "ObjectType": "GAMEOBJECT",
+            "ObjectName": "MainCamera",
+            "Tag": "MainCamera",
+            "Components":
+            [
                 {
-                    "ComponentName": "Animator",
+                    "ComponentName": "Camera",
                     "ComponentProperties": {
-                        "PropertyName1": "1",
-                        "PropertyName2": "5"
+                        "main": "true"
                     }
-                }
-            ],
-            "Components": [
+                },
                 {
-                    "ComponentName": "RigidBody",
+                    "ComponentName": "Transform"
+                },
+                {
+                    "ComponentName": "Light",
                     "ComponentProperties": {
-                        "PropertyName1": "2",
-                        "PropertyName2": "tres"
+                        "type": "Point",
+                        "colour": "0.0 0.0 1.0"
                     }
-                }
-            ],
-            "ChildrenModifications": {
-                "O2": {
-                    "ComponentModifications": [
-                        {
-                            "ComponentName": "SpriteComponent",
-                            "ComponentProperties": {
-                                "PropertyName1": "5",
-                                "PropertyName2": "102"
-                            }
-                        }
-                    ]
-                }
-            },
-            "Children": [
-                {
-                    "ObjectType": "GAMEOBJECT",
-                    "ObjectName": "O5",
-                    "Tag": "teg",
-                    "Components": [
-                        {
-                            "ComponentName": "Transform",
-                            "ComponentProperties": {
-                                "PropertyName1": "4543",
-                                "PropertyName2": "543"
-                            }
-                        }
-                    ]
                 }
             ]
         },
         {
             "ObjectType": "GAMEOBJECT",
-            "ObjectName": "O6",
-            "Tag": "tag",
-            "Components": [
+            "ObjectName": "Nudo",
+            "Tag": "objeto",
+            "Components":
+            [
+                {
+                    "ComponentName": "Transform",
+                    "ComponentProperties": {
+                        "position": "0 0 -400",
+                        "scale": "0.5 0.5 0.5",
+                        "rotation": "0 90 0"
+                    }
+                },
                 {
                     "ComponentName": "MeshRenderer",
                     "ComponentProperties": {
-                        "PropertyName1": "Sprite",
-                        "PropertyName2": "si"
+                        "mesh": "knot knot.mesh"
+                    }
+                }
+            ]
+        },
+        {
+            "ObjectType": "GAMEOBJECT",
+            "ObjectName": "Nudo1",
+            "Tag": "objeto",
+            "Components":
+            [
+                {
+                    "ComponentName": "Transform",
+                    "ComponentProperties": {
+                        "position": "-200 0 -400",
+                        "scale": "0.5 0.5 0.5",
+                        "rotation": "0 90 0"
+                    }
+                },
+                {
+                    "ComponentName": "MeshRenderer",
+                    "ComponentProperties": {
+                        "mesh": "knot knot.mesh"
+                    }
+                }
+            ]
+        },
+        {
+            "ObjectType": "GAMEOBJECT",
+            "ObjectName": "Nudo2",
+            "Tag": "objeto",
+            "Components":
+            [
+                {
+                    "ComponentName": "Transform",
+                    "ComponentProperties": {
+                        "position": "200 0 -400",
+                        "scale": "0.5 0.5 0.5",
+                        "rotation": "0 90 0"
+                    }
+                },
+                {
+                    "ComponentName": "MeshRenderer",
+                    "ComponentProperties": {
+                        "mesh": "knot knot.mesh"
                     }
                 }
             ]

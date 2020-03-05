@@ -4,11 +4,14 @@
 #include "GaiaComponent.h"
 #include "PhysicsSystem.h"
 
+class GaiaMotionState;
+
 class RigidBody : public GaiaComponent
 {
 private:
 	btRigidBody* body = nullptr;
 	static Vector3 btScaleConversion;
+	GaiaMotionState* motionState;
 
 public:
 	RigidBody(GameObject* gameObject);

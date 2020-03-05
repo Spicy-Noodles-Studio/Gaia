@@ -7,6 +7,9 @@
 #include "Vector3.h"
 #include"DebugDrawer.h"
 
+class Transform;
+class GaiaMotionState;
+
 enum RB_Shape
 {
 	BOX_RB_SHAPE, SPHERE_RB_SHAPE
@@ -28,7 +31,9 @@ public:
 	void setDebugDrawer(DebugDrawer* debugDrawer);
 
 	// Rigid Body methods
-	btRigidBody* createRigidBody(float m, RB_Shape shape, Vector3 dim, Vector3 pos);
+	btRigidBody* createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim, Vector3 pos);
+	// Turns a Gaia Transform into a Bullet Physics Transform
+	btTransform parseToBulletTransform(Transform* transform);
 
 private:
 	btDiscreteDynamicsWorld* dynamicsWorld;

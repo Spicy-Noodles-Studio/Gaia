@@ -1,4 +1,6 @@
 #include "..\..\include\PhysicsSystem.h"
+#include "Transform.h"
+#include "GaiaMotionState.h"
 
 PhysicsSystem::PhysicsSystem()
 {
@@ -96,7 +98,7 @@ void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
 
 // Creates a btRigidBody with the specified properties, adds it to the dynamicWorld
 // and returns a reference to it
-btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, Vector3 dim, Vector3 pos)
+btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim, Vector3 pos)
 {
 	btCollisionShape* colShape;
 	switch (shape)
@@ -114,8 +116,8 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, Vector3 dim
 	collisionShapes.push_back(colShape);
 
 	/// Create Dynamic Objects
-	btTransform startTransform;
-	startTransform.setIdentity();
+	//btTransform transform = parseToBulletTransform(mState->getTransform());
+	//	transform.setOrigin(btVector3(pos.x, pos.y, pos.z));
 
 	btScalar mass(m);
 
@@ -126,14 +128,19 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, Vector3 dim
 	if (isDynamic)
 		colShape->calculateLocalInertia(mass, localInertia);
 
-	startTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-
-	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
 	dynamicsWorld->addRigidBody(body);
 
 	return body;
+}
+
+btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
+{
+	btTransform t;
+	t.setIdentity();
+	t.setOrigin({ btScalar(transform->getPosition().x), btScalar(transform->getPosition().y), btScalar(transform->getPosition().z) });
+	t.setRotation({ btScalar(transform->getRotation().x), btScalar(transform->getRotation().y), btScalar(transform->getRotation().z) });
+	return t;
 }

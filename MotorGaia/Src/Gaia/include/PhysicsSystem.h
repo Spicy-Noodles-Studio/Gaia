@@ -35,6 +35,8 @@ public:
 	// Turns a Gaia Transform into a Bullet Physics Transform
 	btTransform parseToBulletTransform(Transform* transform);
 
+	void checkCollisions();
+
 private:
 	btDiscreteDynamicsWorld* dynamicsWorld;
 	btDefaultCollisionConfiguration* collisionConfiguration;

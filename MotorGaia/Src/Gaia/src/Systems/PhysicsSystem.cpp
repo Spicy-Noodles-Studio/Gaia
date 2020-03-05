@@ -1,6 +1,8 @@
-#include "..\..\include\PhysicsSystem.h"
+#include "PhysicsSystem.h"
 #include "Transform.h"
 #include "GaiaMotionState.h"
+#include "RigidBody.h"
+#include "GameObject.h"
 
 PhysicsSystem::PhysicsSystem()
 {
@@ -37,6 +39,7 @@ void PhysicsSystem::update()
 {
 	dynamicsWorld->stepSimulation(1.f / 30.f, 10);
 	dynamicsWorld->debugDrawWorld();
+	checkCollisions();
 }
 
 void PhysicsSystem::shutDown()
@@ -90,7 +93,7 @@ void PhysicsSystem::setWorldGravity(Vector3 gravity)
 
 void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
 {
-	debugDrawer->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+	debugDrawer->setDebugMode(btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE);
 	dynamicsWorld->setDebugDrawer(debugDrawer);
 }
 
@@ -142,4 +145,44 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 	t.setOrigin({ btScalar(transform->getPosition().x), btScalar(transform->getPosition().y), btScalar(transform->getPosition().z) });
 	t.setRotation({ btScalar(transform->getRotation().x), btScalar(transform->getRotation().y), btScalar(transform->getRotation().z) });
 	return t;
+}
+
+void PhysicsSystem::checkCollisions()
+{
+	int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
+
+	for (int i = 0; i < numManifolds; i++)
+	{
+		btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0());
+		btCollisionObject* obB = (btCollisionObject*)(contactManifold->getBody1());
+
+		RigidBody* rbA = (RigidBody*)obA->getUserPointer();
+		RigidBody* rbB = (RigidBody*)obB->getUserPointer();
+
+		GameObject* goA = rbA->gameObject;
+		GameObject* goB = rbB->gameObject;
+
+		if (rbA->isTrigger() && !rbB->isTrigger())
+			goB->onTrigger(goA);
+		else if (rbB->isTrigger())
+			goA->onTrigger(goB);
+		else {
+			goA->onCollision(goB);
+			goB->onCollision(goA);
+		}
+
+		//Saca los puntos de colision
+		/*int numContacts = contactManifold->getNumContacts();
+		for (int j = 0; j < numContacts; j++)
+		{
+			btManifoldPoint& pt = contactManifold->getContactPoint(j);
+			if (pt.getDistance() < 0.f)
+			{
+				const btVector3& ptA = pt.getPositionWorldOnA();
+				const btVector3& ptB = pt.getPositionWorldOnB();
+				const btVector3& normalOnB = pt.m_normalWorldOnB;
+			}
+		}*/
+	}
 }

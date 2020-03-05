@@ -36,6 +36,9 @@ public:
     const std::string& getTag() const ;
 	const Scene* getScene() const;
 
+    void onCollision(GameObject* other);
+    void onTrigger(GameObject* other);
+
 private: 
     std::string name;
     std::string tag;

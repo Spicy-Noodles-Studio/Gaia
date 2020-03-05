@@ -12,13 +12,15 @@ private:
 	btRigidBody* body = nullptr;
 	static Vector3 btScaleConversion;
 	GaiaMotionState* motionState;
+	bool trigger;
 
 public:
 	RigidBody(GameObject* gameObject);
 	~RigidBody();
 
-	void setRigidBody(float mass, RB_Shape shape, const Vector3& offset = { 0.0f, 0.0f, 0.0f }, const Vector3& dim = { 1,1,1 });
+	void setRigidBody(float mass, RB_Shape shape, const Vector3& offset = { 0.0f, 0.0f, 0.0f }, const Vector3& dim = { 1,1,1 }, bool isTrigger = false);
 	void handleData(ComponentData* data);
+	bool isTrigger() const;
 };
 
 #endif

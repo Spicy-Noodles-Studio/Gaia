@@ -75,7 +75,7 @@ void GaiaCore::init()
 	RigidBody* rb = new RigidBody(obj);
 	rb->setRigidBody(0.0, SPHERE_RB_SHAPE);
 
-	GameObject* obj1 = new GameObject("Churro", "Ch", nullptr);
+	GameObject* obj1 = new GameObject("Cubo", "Ch", nullptr);
 	Transform* transform3 = new Transform(obj1);
 	obj1->transform->setPosition(Vector3(25, 100, -400));
 	obj1->transform->setScale(Vector3(0.5, 0.5, 0.5));

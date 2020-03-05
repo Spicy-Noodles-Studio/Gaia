@@ -36,6 +36,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\SceneData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Singleton.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Transform.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Vector3.h" />
@@ -52,6 +53,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ResourcesManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\SceneManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Vector3.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Window.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Component.cpp" />

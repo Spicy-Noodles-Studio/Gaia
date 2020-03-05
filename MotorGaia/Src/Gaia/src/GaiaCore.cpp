@@ -56,13 +56,18 @@ void GaiaCore::init()
 	// Setup window
 	Window* win = new Window(mRoot, "Ventana de prueba");
 	
-
+	
 }
 
 void GaiaCore::run()
 {
 	// PARA QUE NO SE CIERRE
-	while (true);
+	while (true) {
+		input = new GaiaInput();
+		input->init();
+		input->update();
+
+	};
 }
 
 void GaiaCore::update()

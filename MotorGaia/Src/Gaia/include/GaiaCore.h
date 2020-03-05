@@ -8,6 +8,8 @@
 
 #include <OgreString.h>
 
+#include "GaiaInput.h"
+
 class GAIA_API GaiaCore
 {
 public:
@@ -22,6 +24,7 @@ private:
 	Ogre::String mResourcesCfg;
 	Ogre::String mPluginsCfg;
 	Ogre::String mWindowCfg;
+	GaiaInput* input;
 
 	void setupResources();
 	void update();

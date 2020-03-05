@@ -14,6 +14,10 @@ void GaiaInput::init()
     SDL_GetMouseState(&MOUSE_POSITION_X, &MOUSE_POSITION_Y);
 
     // CONTROLLER SYSTEM
+    if (!SDL_WasInit(SDL_INIT_JOYSTICK)) SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+
+    SDL_JoystickEventState(SDL_ENABLE);
+
     int MaxJoysticks = SDL_NumJoysticks();
     int ControllerIndex = 0;
     for (int JoystickIndex = 0; JoystickIndex < MaxJoysticks; ++JoystickIndex)
@@ -74,6 +78,7 @@ void GaiaInput::update()
     while (SDL_PollEvent(&event))
     {
 
+        SDL_JoystickUpdate();
         int index;
         std::string key;
         switch (event.type)
@@ -98,23 +103,31 @@ void GaiaInput::update()
             break;
         case SDL_MOUSEBUTTONDOWN:
             processMouseInputDown(event.button);
+            std::cout << MOUSE_POSITION_X << " " << MOUSE_POSITION_Y << "\n";
             break;
         case SDL_MOUSEBUTTONUP:
             processMouseInputUp(event.button);
             break;
 
             // Controller events
-        case SDL_CONTROLLERBUTTONDOWN:
+        case SDL_JOYBUTTONDOWN:
             index = event.cdevice.which;
             if (ControllerHandles[index] != 0 && SDL_GameControllerGetAttached(ControllerHandles[index])) controllerInputDown(index);
+
             break;
-        case SDL_CONTROLLERBUTTONUP: {
+        case SDL_JOYBUTTONUP: 
+            index = event.cdevice.which;
             if (ControllerHandles[index] != 0 && SDL_GameControllerGetAttached(ControllerHandles[index])) controllerInputUp(index);
             break;
-        }
+
+        case SDL_JOYAXISMOTION:
+            index = event.cdevice.which;
+            //Hacer los correspondiente al joystick
+            break;
+        
 
 
-        case SDL_CONTROLLERDEVICEADDED:
+        case SDL_JOYDEVICEADDED:
             if (event.cdevice.which < MAX_CONTROLLERS && SDL_IsGameController(event.cdevice.which)) {
 
                 index = event.cdevice.which;
@@ -135,7 +148,7 @@ void GaiaInput::update()
                 }
             }
             break;
-        case SDL_CONTROLLERDEVICEREMOVED:
+        case SDL_JOYDEVICEREMOVED:
             index = event.cdevice.which;
 
             if (index < 0) return; // unknown controller?
@@ -156,6 +169,7 @@ void GaiaInput::update()
             break;
         default:
             std::cout << "Unknown event\n";
+            std::cout << event.type << "\n";
         }
 
         // Save current keyboard state

@@ -18,6 +18,8 @@ class GaiaInput : public Singleton<GaiaInput>
 
 private:
 
+    
+
     // KEYBOARD
     const Uint8* keyboardState; // Stores current keyboard state
 
@@ -95,6 +97,10 @@ private:
     int getControllerByReference(SDL_GameController* handle);
 
 public:
+
+    // está feo...
+    bool exit = false;
+
     void init();
     void close();
     void update();

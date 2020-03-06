@@ -9,6 +9,7 @@
 
 class Window
 {
+	friend class InterfaceSystem;
 public:
 	Window(Ogre::Root* root, std::string windowTitle);
 	~Window();

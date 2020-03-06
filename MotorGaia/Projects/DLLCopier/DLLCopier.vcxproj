@@ -123,7 +123,8 @@ xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\Codec_STBI_d.dll" 
 xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\bin\libexpat_d.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUICoreWindowRendererSet_d.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\bin\glew_d.dll" "$(SolutionDir)Bin" /y
-xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUISILLYImageCodec_d.dll" "$(SolutionDir)Bin" /y</Command>
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUISILLYImageCodec_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\bin\SILLY_d.dll" "$(SolutionDir)Bin" /y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

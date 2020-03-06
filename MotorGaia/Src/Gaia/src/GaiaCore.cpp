@@ -69,14 +69,16 @@ void GaiaCore::init()
 	obj->transform->rotate(Vector3(0, 90, 0));
 
 	GaiaInput::GetInstance()->init();
-	InterfaceSystem::GetInstance()->setup(root);
+
+
+	InterfaceSystem::GetInstance()->setup(root, win);
 	
 	
 }
 
 void GaiaCore::run()
 {
-	while (true)
+	while (!GaiaInput::GetInstance()->exit)
 	{
 		RenderSystem::GetInstance()->render();
 		update();

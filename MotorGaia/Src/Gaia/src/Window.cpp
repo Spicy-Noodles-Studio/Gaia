@@ -18,6 +18,8 @@ Window::Window(Ogre::Root* root, std::string windowTitle) :root(root)
 		OGRE_EXCEPT(Ogre::Exception::ERR_INTERNAL_ERROR, "Cannot initialize SDL2!",
 			"BaseApplication::setup");
 	}
+	
+	SDL_ShowCursor(SDL_DISABLE);
 
 	Ogre::ConfigOptionMap ropts = rs->getConfigOptions();
 	std::istringstream mode(ropts["Video Mode"].currentValue);
@@ -29,6 +31,8 @@ Window::Window(Ogre::Root* root, std::string windowTitle) :root(root)
 
 	Uint32 flags = SDL_WINDOW_RESIZABLE;
 	sdlWindow = SDL_CreateWindow(windowTitle.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, flags);
+
+	
 
 	SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);

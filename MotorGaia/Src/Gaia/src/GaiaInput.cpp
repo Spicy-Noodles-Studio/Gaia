@@ -1,5 +1,10 @@
 #include "GaiaInput.h"
 
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/System.h>
+//#include <CEGUI/InjectedInputReceiver.h>
+
+
 // Initialization
 void GaiaInput::init()
 {
@@ -102,9 +107,16 @@ void GaiaInput::update()
             // Mouse events
         case SDL_MOUSEMOTION:
             SDL_GetMouseState(&MOUSE_POSITION_X, &MOUSE_POSITION_Y);
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(
+                static_cast<float>(MOUSE_POSITION_X),
+                static_cast<float>(MOUSE_POSITION_Y)
+            );
             break;
         case SDL_MOUSEBUTTONDOWN:
             processMouseInputDown(event.button);
+
+            
+
             std::cout << MOUSE_POSITION_X << " " << MOUSE_POSITION_Y << "\n";
             break;
         case SDL_MOUSEBUTTONUP:
@@ -198,6 +210,7 @@ void GaiaInput::update()
 
             // System events
         case SDL_QUIT:
+            exit = true;
             break;
 
         case SDL_WINDOWEVENT:
@@ -268,25 +281,33 @@ bool GaiaInput::getKeyRelease(std::string key)
 
 // MOUSE
 
-void GaiaInput::processMouseInputDown (SDL_MouseButtonEvent& e)
+void GaiaInput::processMouseInputDown(SDL_MouseButtonEvent& e)
 {
+
+
     switch (e.button) {
     case SDL_BUTTON_LEFT:
         MOUSE_BUTTON_LEFT.hold = true;
         MOUSE_BUTTON_LEFT.pressed = true;
+
+        CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
         break;
     case SDL_BUTTON_RIGHT:
         MOUSE_BUTTON_RIGHT.hold = true;
         MOUSE_BUTTON_RIGHT.pressed = true;
+
+        CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::RightButton);
         break;
     case SDL_BUTTON_MIDDLE:
         MOUSE_BUTTON_MIDDLE.hold = true;
         MOUSE_BUTTON_MIDDLE.pressed = true;
+        CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::MiddleButton);
         break;
     default:
         break;
     }
 }
+    
 
 void GaiaInput::processMouseInputUp(SDL_MouseButtonEvent& e)
 {

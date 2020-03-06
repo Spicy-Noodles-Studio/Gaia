@@ -29,7 +29,6 @@
     <ClInclude Include="..\..\Src\Gaia\include\GaiaInput.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InterfaceSystem.h" />
-    <ClInclude Include="..\..\Src\Gaia\include\RenderComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
@@ -182,7 +181,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;OgreBites_d.lib;OgreRTShaderSystem_d.lib;fmodL_vc.lib;SDL2.lib;SDL2main.lib;CEGUIBase-0_d.lib;CEGUIExpatParser_d.lib;CEGUIOpenGLRenderer-0_d.lib;CEGUISILLYImageCodec_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain_d.lib;OgreBites_d.lib;OgreRTShaderSystem_d.lib;fmodL_vc.lib;SDL2.lib;SDL2main.lib;CEGUIBase-0_d.lib;CEGUIExpatParser_d.lib;CEGUIOgreRenderer-0_d.lib;CEGUISILLYImageCodec_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -117,9 +117,13 @@ xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\bin\SDL2.dll" "
 xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIBase-0_d.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\bin\pcre_d.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\bin\freetype_d.dll" "$(SolutionDir)Bin" /y
-xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIOgreRenderer-0_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIOpenGLRenderer-0_d.dll" "$(SolutionDir)Bin" /y
 xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIExpatParser_d.dll" "$(SolutionDir)Bin" /y
-xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\Codec_STBI_d.dll" "$(SolutionDir)Bin" /y</Command>
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\Codec_STBI_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\bin\libexpat_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUICoreWindowRendererSet_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\bin\glew_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUISILLYImageCodec_d.dll" "$(SolutionDir)Bin" /y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

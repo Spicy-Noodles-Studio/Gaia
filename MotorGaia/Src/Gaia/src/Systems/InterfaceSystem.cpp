@@ -4,7 +4,9 @@
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
 //#include <CEGUI/Renderer.h>
 
-#include <CEGUI/ImageCodec.h>
+//#include <CEGUI/ImageCodec.h>
+#include <CEGUI/RendererModules/OpenGL/GLRenderer.h>
+
 
 InterfaceSystem::InterfaceSystem()
 {
@@ -20,8 +22,9 @@ InterfaceSystem::~InterfaceSystem()
 void InterfaceSystem::setup(Ogre::Root* _root)
 {
 	root = _root;
-	CEGUI::OgreRenderer* mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
-
+	//CEGUI::OgreRenderer* mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
+	// Init with SDL Window
+	CEGUI::OpenGLRenderer& mRenderer = CEGUI::OpenGLRenderer::bootstrapSystem();
 	
 
 	CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");

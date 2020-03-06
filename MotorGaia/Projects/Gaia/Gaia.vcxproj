@@ -174,12 +174,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GAIA_EXPORTS;_DEBUG;_CONSOLE;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\src;$(SolutionDir)Src\Gaia\include;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\Bites\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\cegui-0.8.7\cegui\include;$(SolutionDir)Dependencies\json-3.7.3\include;$(SolutionDir)Dependencies\cegui-0.8.7\Build\cegui\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\src;$(SolutionDir)Src\Gaia\include;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\Bites\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\cegui-0.8.7\cegui\include;$(SolutionDir)Dependencies\json-3.7.3\include;$(SolutionDir)Dependencies\cegui-0.8.7\Build\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;OgreBites_d.lib;OgreRTShaderSystem_d.lib;fmodL_vc.lib;SDL2.lib;SDL2main.lib;CEGUIBase-0_d.lib;CEGUIOgreRenderer-0_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain_d.lib;OgreBites_d.lib;OgreRTShaderSystem_d.lib;fmodL_vc.lib;SDL2.lib;SDL2main.lib;CEGUIBase-0_d.lib;CEGUIExpatParser_d.lib;CEGUIOpenGLRenderer-0_d.lib;CEGUISILLYImageCodec_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

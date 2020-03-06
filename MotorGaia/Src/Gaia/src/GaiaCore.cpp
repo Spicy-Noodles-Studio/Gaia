@@ -61,6 +61,7 @@ void GaiaCore::init()
 	Transform* transform2 = new Transform(obj);
 	MeshRenderer* ms = new MeshRenderer(obj);
 	ms->createEntity("knot", "knot.mesh");
+	ms->attachEntityToNode("knot");
 	obj->transform->setPosition(Vector3(0, 0, -400));
 	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
 	obj->transform->rotate(Vector3(0, 90, 0));

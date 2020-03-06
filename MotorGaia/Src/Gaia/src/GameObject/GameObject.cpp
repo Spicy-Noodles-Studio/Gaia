@@ -47,38 +47,3 @@ const Scene* GameObject::getScene() const
 {
 	return myScene;
 }
-
-template<typename T>
-T* GameObject::addComponent()
-{
-	std::string key = typeid(T).name();
-
-	if (components.find(key) != components.end())
-		return false;
-
-	// Usar el gestor de componentes
-	// y su mapa de constructoras
-	/*auto constructor = ComponentManager::getConstructor(key);
-
-    components[key] = constructor();*/
-    
-    return true;
-}
-
-template<typename T>
-bool GameObject::delComponent()
-{
-    // Como el gestor de componentes los crea,
-    // seria oportuno que los borrara.
-}
-
-template<typename T>
-T* GameObject::getComponent()
-{
-    std::string key = typeid(T).name();
-
-    if(components.find(key) == components.end())
-        return nullptr;
-
-    return (T*)components[key];
-}

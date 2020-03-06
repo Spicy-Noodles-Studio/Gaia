@@ -64,9 +64,11 @@ void InputSystem::update()
         case SDL_KEYDOWN:
             key = SDL_GetKeyName(event.key.keysym.sym);
             std::transform(key.begin(), key.end(), key.begin(), ::toupper);
-            keyPress.emplace(key);
-            keyHold.emplace(key);
-            if (flags) std::cout << "Key down: " << key << "\n";
+            if (!isKeyPressed(key)) {
+                keyPress.emplace(key);
+                keyHold.emplace(key);
+                if (flags) std::cout << "Key down: " << key << "\n";
+            }  
             break;
         case SDL_KEYUP:
             key = SDL_GetKeyName(event.key.keysym.sym);

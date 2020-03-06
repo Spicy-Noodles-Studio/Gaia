@@ -1,8 +1,12 @@
 #include "Component.h"
-#include <map>
-#include <functional>
+
+
+void Component::handleData(ComponentData* data)
+{
+}
 
 Component::Component(GameObject* gameObject) : gameObject(gameObject)
 {
 
 }
+

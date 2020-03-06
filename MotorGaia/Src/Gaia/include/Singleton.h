@@ -1,7 +1,6 @@
+#pragma once
 #ifndef SINGLETON_H
 #define SINGLETON_H
-
-#pragma once
 
 template<typename T>
 class Singleton
@@ -20,7 +19,6 @@ protected:
 public:
 	static T* GetInstance();
 	static void destroy();
-
 };
 
 template<typename T>

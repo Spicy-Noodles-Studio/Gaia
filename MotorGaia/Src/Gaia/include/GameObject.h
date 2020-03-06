@@ -1,9 +1,12 @@
 #pragma once
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
 
+#include <OgreSceneNode.h>
 #include <string>
 #include <map>
 
-#include "Component.h"
+#include "Transform.h"
 
 class Scene;
 
@@ -12,6 +15,9 @@ class GameObject
 public:
     GameObject(std::string name, std::string tag, Scene* scene);
     ~GameObject();
+
+	Ogre::SceneNode* node = nullptr;
+	Transform* transform = nullptr;
 
     template<typename T>
     T* addComponent();
@@ -22,8 +28,13 @@ public:
     template<typename T>
     T* getComponent();
 
-private:
-    inline Scene* getScene();
+	void addChildNode(GameObject* child);
+
+    bool addComponent(const std::string& componentName, Component* component);
+    
+    const std::string& getName() const;
+    const std::string& getTag() const ;
+	const Scene* getScene() const;
 
 private: 
     std::string name;
@@ -31,5 +42,6 @@ private:
 
     Scene* myScene;
     std::map<std::string, Component*> components;
-
 };
+
+#endif

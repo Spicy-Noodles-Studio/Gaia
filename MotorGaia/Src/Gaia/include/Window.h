@@ -1,4 +1,6 @@
 #pragma once
+#ifndef WINDOW_H
+#define WINDOW_H
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
@@ -9,7 +11,7 @@ public:
 	Window(Ogre::Root* root, std::string windowTitle);
 	~Window();
 
-	void addViewport(Ogre::Camera* cam);
+	Ogre::Viewport* addViewport(Ogre::Camera* cam);
 
 	void setFullscreen(bool fullscreen);
 	void setFSAA(unsigned int fsaa);
@@ -20,3 +22,4 @@ private:
 	void displayConfig(Ogre::RenderSystem* rs);
 };
 
+#endif

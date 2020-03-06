@@ -1,12 +1,20 @@
 #include "GaiaCore.h"
-//Ogre includes
+
 #include <OgreRoot.h>
 #include <OgreException.h>
 #include <OgreConfigFile.h>
+#include <OgreViewport.h>
 #include <iostream>
 
+#include "ResourcesManager.h"
 #include "RenderSystem.h"
 #include "Window.h"
+#include "Camera.h"
+#include "Light.h"
+
+#include "GameObject.h"
+#include "Transform.h"
+#include "MeshRenderer.h"
 
 GaiaCore::GaiaCore()
 {
@@ -15,60 +23,64 @@ GaiaCore::GaiaCore()
 
 GaiaCore::~GaiaCore()
 {
-	delete mRoot;
-}
-
-void GaiaCore::setupResources()
-{
-	// Ogre configuration loader
-	Ogre::ConfigFile cf;
-	cf.load(mResourcesCfg);
-
-	Ogre::String name, locationType;
-	Ogre::ConfigFile::SettingsBySection_ settingsBySection = cf.getSettingsBySection();
-	for (const auto& p : settingsBySection) {
-		for (const auto& r : p.second) {
-			locationType = r.first;
-			name = r.second;
-			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(name, locationType);
-		}
-	}
+	delete root;
+	delete obj;
+    delete win;
 }
 
 void GaiaCore::init()
 {
 #ifdef _DEBUG
-	mResourcesCfg = "resources_d.cfg";
-	mPluginsCfg = "plugins_d.cfg";
-	mWindowCfg = "window_d.cfg";
+	root = new Ogre::Root("plugins_d.cfg", "window_d.cfg");
 #else
-	mResourcesCfg = "resources.cfg";
-	mPluginsCfg = "plugins.cfg";
-	mWindowCfg = "window.cfg";
+	root = new Ogre::Root("plugins.cfg", "window.cfg");
 #endif
 
-	// Ogre initialization
-	mRoot = new Ogre::Root(mPluginsCfg, mWindowCfg);
-	setupResources();
-	
-	if (!mRoot->restoreConfig());
+	if (!(root->restoreConfig() || root->showConfigDialog(nullptr)))
+        return;
 
 	// Setup window
-	Window* win = new Window(mRoot, "Ventana de prueba");
-	
-	// Setup input
-	/*input = GaiaInput::GetInstance();
-	input->init();*/
-	
+	Window* win = new Window(root, "Test window - 2020 (c) Gaia ");
+
+	ResourcesManager rManager("resources.asset");
+	rManager.init();
+
+	RenderSystem::GetInstance()->setup(root);
+
+	GameObject* aux = new GameObject("Camera", "Cam", nullptr);
+	Transform* transform1 = new Transform(aux);
+	Camera* cam = new Camera(aux);
+
+	Ogre::Viewport* vp = win->addViewport(cam->getCamera());
+
+	Light* lz = new Light(aux);
+	lz->setType(Light::Point);
+	lz->setColour(0.7, 0.1, 0.7);
+
+	obj = new GameObject("Churro", "Ch", nullptr);
+	Transform* transform2 = new Transform(obj);
+	MeshRenderer* ms = new MeshRenderer(obj);
+	ms->createEntity("knot", "knot.mesh");
+	obj->transform->setPosition(Vector3(0, 0, -400));
+	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
+	obj->transform->rotate(Vector3(0, 90, 0));
 }
 
 void GaiaCore::run()
 {
-	while (true) {
-	};
+	while (true)
+	{
+		RenderSystem::GetInstance()->render();
+		update();
+	}
+}
+
+void GaiaCore::close()
+{
+
 }
 
 void GaiaCore::update()
 {
-
+	obj->transform->translate(Vector3(0.5, 0, 0));
 }

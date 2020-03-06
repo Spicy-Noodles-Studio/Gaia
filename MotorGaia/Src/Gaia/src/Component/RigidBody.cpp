@@ -29,6 +29,7 @@ void RigidBody::handleData(ComponentData* data)
 	float mass = 1.0;
 	RB_Shape shape;
 	Vector3 off = Vector3(), dim = Vector3(1,1,1);
+	bool isTrigger = false;
 
 	for (auto prop : data->getProperties()) {
 		std::stringstream ss(prop.second);
@@ -50,8 +51,11 @@ void RigidBody::handleData(ComponentData* data)
 		else if (prop.first == "size") {
 			ss >> dim.x >> dim.y >> dim.z;
 		}
+		else if (prop.first == "trigger") {
+			ss >> isTrigger;
+		}
 	}
-	setRigidBody(mass, shape, off, dim);
+	setRigidBody(mass, shape, off, dim, isTrigger);
 }
 
 bool RigidBody::isTrigger() const

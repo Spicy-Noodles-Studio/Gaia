@@ -4,6 +4,7 @@
 #include "RigidBody.h"
 #include "GameObject.h"
 #include "gTime.h"
+#include "Bullet3Common/b3Scalar.h"
 
 PhysicsSystem::PhysicsSystem()
 {
@@ -108,7 +109,7 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	switch (shape)
 	{
 	case BOX_RB_SHAPE:
-		colShape = new btBoxShape(btVector3(dim.x, dim.z, dim.y));
+		colShape = new btBoxShape(btVector3(btScalar(dim.x), btScalar(dim.y), btScalar(dim.z)));
 		break;
 	case SPHERE_RB_SHAPE:
 		colShape = new btSphereShape(btScalar(std::max(std::max(dim.x, dim.y), dim.z)));
@@ -116,7 +117,7 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	default:
 		break;
 	}
-	
+
 	collisionShapes.push_back(colShape);
 
 	/// Create Dynamic Objects
@@ -144,7 +145,7 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 	btTransform t;
 	t.setIdentity();
 	t.setOrigin({ btScalar(transform->getPosition().x), btScalar(transform->getPosition().y), btScalar(transform->getPosition().z) });
-	t.setRotation({ btScalar(transform->getRotation().x), btScalar(transform->getRotation().y), btScalar(transform->getRotation().z) });
+	t.setRotation(btQuaternion(btScalar(transform->getRotation().y) * SIMD_RADS_PER_DEG, btScalar(transform->getRotation().x) * SIMD_RADS_PER_DEG, btScalar(transform->getRotation().z) * SIMD_RADS_PER_DEG));
 	return t;
 }
 

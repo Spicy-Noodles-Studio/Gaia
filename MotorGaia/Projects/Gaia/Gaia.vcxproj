@@ -30,7 +30,6 @@
     <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaInput.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
-    <ClInclude Include="..\..\Src\Gaia\include\RenderComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />

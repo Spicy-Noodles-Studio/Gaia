@@ -45,6 +45,8 @@ private:
 	void destroyPendingGameObjects();
 	void destroyGameObject(GameObject* gameObject);
 
+	void updateAllAnimations(float deltaTime);
+
 private:
 	const std::string name;
 	Ogre::Root* root;

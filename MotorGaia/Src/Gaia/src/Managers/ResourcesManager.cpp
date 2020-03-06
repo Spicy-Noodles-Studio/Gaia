@@ -11,7 +11,8 @@
 std::map<std::string, SceneData*> ResourcesManager::sceneData;
 std::map<std::string, GameObjectData*> ResourcesManager::blueprints;
 
-ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(), resourcesPath(filePath)
+ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(), resourcesPath(filePath), fileSystemLayer(nullptr), 
+																	shaderLibPath(""), shaderGenerator(nullptr), shaderTechniqueResolver(nullptr)
 {
 
 }
@@ -98,16 +99,16 @@ bool ResourcesManager::initShaderSystem()
 {
 	if (Ogre::RTShader::ShaderGenerator::initialize())
 	{
-		mShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+		shaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 		// Core shader libs not found -> shader generating will fail.
-		if (mRTShaderLibPath.empty()) {
+		if (shaderLibPath.empty()) {
 			printf("RESOURCES MANAGER: Shader libs not found.\n");
 			return false;
 		}
 		// Create and register the material manager listener if it doesn't exist yet.
-		if (!mMaterialMgrListener) {
-			mMaterialMgrListener = new OgreBites::SGTechniqueResolverListener(mShaderGenerator);
-			Ogre::MaterialManager::getSingleton().addListener(mMaterialMgrListener);
+		if (!shaderTechniqueResolver) {
+			shaderTechniqueResolver = new ShaderTechniqueResolver(shaderGenerator);
+			Ogre::MaterialManager::getSingleton().addListener(shaderTechniqueResolver);
 		}
 	}
 	return true;
@@ -119,18 +120,18 @@ void ResourcesManager::destroyShaderSystem()
 	Ogre::MaterialManager::getSingleton().setActiveScheme(Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
 
 	// Unregister the material manager listener.
-	if (mMaterialMgrListener != nullptr)
+	if (shaderTechniqueResolver != nullptr)
 	{
-		Ogre::MaterialManager::getSingleton().removeListener(mMaterialMgrListener);
-		delete mMaterialMgrListener;
-		mMaterialMgrListener = nullptr;
+		Ogre::MaterialManager::getSingleton().removeListener(shaderTechniqueResolver);
+		delete shaderTechniqueResolver;
+		shaderTechniqueResolver = nullptr;
 	}
 
 	// Destroy RTShader system.
-	if (mShaderGenerator != nullptr)
+	if (shaderGenerator != nullptr)
 	{
 		Ogre::RTShader::ShaderGenerator::destroy();
-		mShaderGenerator = nullptr;
+		shaderGenerator = nullptr;
 	}
 }
 

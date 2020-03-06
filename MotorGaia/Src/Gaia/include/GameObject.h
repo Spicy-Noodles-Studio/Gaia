@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 
+#include "UserComponent.h"
 #include "Transform.h"
 
 class Scene;
@@ -35,7 +36,9 @@ public:
     Scene* getScene() const;
 
 private:
-    bool addComponent(const std::string& componentName, Component* component);
+    void addUserComponent(UserComponent* component);
+    bool addComponent(const std::string& name, Component* component);
+
 
 public:
 
@@ -45,6 +48,7 @@ private:
 
     Scene* myScene;
     std::map<std::string, Component*> components;
+    std::vector<UserComponent*> userComponents;
 };
 
 template<typename T>

@@ -13,7 +13,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 
-GaiaCore::GaiaCore() : root(nullptr), win(nullptr), resourcesManager("resources.asset"), obj(nullptr), count(0)
+GaiaCore::GaiaCore() : root(nullptr), win(nullptr), resourcesManager("resources.asset"), obj(nullptr)
 {
 
 }

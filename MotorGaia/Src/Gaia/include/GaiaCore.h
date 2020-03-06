@@ -37,7 +37,6 @@ private:
 	SceneManager sceneManager;
 
 	GameObject* obj;
-	int count;
 };
 
 #endif 

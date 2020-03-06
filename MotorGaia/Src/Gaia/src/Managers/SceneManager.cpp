@@ -17,8 +17,9 @@ void SceneManager::init(Ogre::Root* root, Window* window)
 {
 	this->root = root;
 	this->window = window;
-	
+
 	loadScene(ResourcesManager::getSceneData(0));
+	processSceneChange();
 }
 
 void SceneManager::close()
@@ -27,15 +28,22 @@ void SceneManager::close()
 		delete currentScene;
 	if (stackScene != nullptr)
 		delete stackScene;
+
+	currentScene = nullptr;
+	stackScene = nullptr;
 }
 
 void SceneManager::preUpdate(float deltaTime)
 {
 	// If stack not empty, change scene and delete the current one
 	processSceneChange();
+
+	//Update all animations
+	currentScene->updateAllAnimations(deltaTime);
 }
 
-void SceneManager::update(float deltaTime) {
+void SceneManager::update(float deltaTime)
+{
 	//All stuff about scene
 	currentScene->awake();
 	currentScene->start();
@@ -56,7 +64,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 {
 	// Check if scene exists
 	const SceneData* data = ResourcesManager::getSceneData(name);
-	if (data == nullptr) 
+	if (data == nullptr)
 		printf("SCENE MANAGER: scene with name %s not found\n", name.c_str());
 
 	loadScene(data);
@@ -91,6 +99,7 @@ void SceneManager::loadScene(const SceneData* data)
 	}
 	// Creates the Scene by its data (assuming creation was succesfull)
 	stackScene = createScene(data);
+	
 }
 
 void SceneManager::processSceneChange()
@@ -110,7 +119,8 @@ void SceneManager::processSceneChange()
 void SceneManager::processCameraChange()
 {
 	Camera* camera = currentScene->getMainCamera();
-	if (camera == nullptr) {
+	if (camera == nullptr)
+	{
 		printf("SCENE MANAGER: changing to scene \"%s\" that has no main camera\n", currentScene->getName().c_str());
 		window->removeAllViewports();
 		return;
@@ -126,7 +136,7 @@ bool SceneManager::exist(const std::string& name)
 
 Scene* SceneManager::getCurrentScene()
 {
-	return currentScene == nullptr ? stackScene : currentScene;
+	return currentScene;
 }
 
 

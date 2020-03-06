@@ -5,6 +5,7 @@
 
 UserComponent::UserComponent(GameObject* gameObject) : Component(gameObject), started(false), sleeping(false)
 {
+	gameObject->addUserComponent(this);
 	gameObject->myScene->addUserComponent(this);
 }
 

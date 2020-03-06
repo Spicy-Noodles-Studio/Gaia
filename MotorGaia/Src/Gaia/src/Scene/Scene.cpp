@@ -51,6 +51,7 @@ void Scene::preUpdate(float deltaTime)
 		if (c->isActive() && !c->isSleeping() && c->hasStarted())
 			c->preUpdate(deltaTime);
 	}
+
 }
 
 
@@ -142,6 +143,15 @@ void Scene::destroyPendingGameObjects()
 void Scene::destroyGameObject(GameObject* gameObject)
 {
 	destroyQueue.push_back(gameObject);
+}
+
+void Scene::updateAllAnimations(float deltaTime)
+{
+	for (auto anim : sceneManager->getAnimationStates()) 
+	{
+
+		anim.second->addTime(deltaTime);
+	}
 }
 
 void Scene::addUserComponent(UserComponent* component)

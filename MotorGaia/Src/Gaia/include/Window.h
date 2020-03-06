@@ -5,6 +5,8 @@
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
 
+#include <SDL2/SDL.h>
+
 class Window
 {
 public:
@@ -17,6 +19,9 @@ public:
 	void setFSAA(unsigned int fsaa);
 
 private:
+	Ogre::Root* root;
+
+	SDL_Window* sdlWindow;
 	Ogre::RenderWindow* mWindow;
 
 	void displayConfig(Ogre::RenderSystem* rs);

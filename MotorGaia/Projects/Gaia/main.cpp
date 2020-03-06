@@ -4,7 +4,6 @@
 #include "ComponentManager.h"
 #include "GaiaComponent.h"
 #include "UserComponent.h"
-#include "GameObject.h"
 #include "SceneManager.h"
 
 int main()

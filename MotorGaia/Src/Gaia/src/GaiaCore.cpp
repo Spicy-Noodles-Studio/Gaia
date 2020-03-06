@@ -17,6 +17,7 @@
 
 #include "RigidBody.h"
 #include "DebugDrawer.h"
+#include "gTime.h"
 
 GaiaCore::GaiaCore()
 {
@@ -51,6 +52,7 @@ void GaiaCore::init()
 	RenderSystem::GetInstance()->setup(root);
 	PhysicsSystem::GetInstance()->setup();
 	PhysicsSystem::GetInstance()->setWorldGravity({ 0,-1,0 });
+	gTime::GetInstance()->setup();
 
 	GameObject* aux = new GameObject("Camera", "Cam", nullptr);
 	Transform* transform1 = new Transform(aux);

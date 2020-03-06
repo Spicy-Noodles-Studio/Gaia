@@ -50,12 +50,12 @@ const Scene* GameObject::getScene() const
 
 void GameObject::onCollision(GameObject* other)
 {
-    printf("Collision between %s & %s.\n", name.c_str(), other->getName().c_str());
+    //printf("Collision between %s & %s.\n", name.c_str(), other->getName().c_str());
 }
 
 void GameObject::onTrigger(GameObject* other)
 {
-    printf("%s entered the trigger %s.\n", name.c_str(), other->getName().c_str());
+    //printf("%s entered the trigger %s.\n", name.c_str(), other->getName().c_str());
 }
 
 template<typename T>

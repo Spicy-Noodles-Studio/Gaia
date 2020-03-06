@@ -3,6 +3,7 @@
 #include "GaiaMotionState.h"
 #include "RigidBody.h"
 #include "GameObject.h"
+#include "gTime.h"
 
 PhysicsSystem::PhysicsSystem()
 {
@@ -37,7 +38,7 @@ void PhysicsSystem::setup()
 
 void PhysicsSystem::update()
 {
-	dynamicsWorld->stepSimulation(1.f / 30.f, 10);
+	dynamicsWorld->stepSimulation(1.0f / 50.0f, 10);
 	dynamicsWorld->debugDrawWorld();
 	checkCollisions();
 }

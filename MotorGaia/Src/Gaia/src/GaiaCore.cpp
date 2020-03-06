@@ -18,10 +18,10 @@
 #include "RigidBody.h"
 #include "DebugDrawer.h"
 #include "gTime.h"
+#include "GaiaInput.h"
 
 GaiaCore::GaiaCore()
 {
-
 }
 
 GaiaCore::~GaiaCore()
@@ -44,49 +44,49 @@ void GaiaCore::init()
 		return;
 
 	// Setup window
-	Window* win = new Window(root, "Test window - 2020 (c) Gaia ");
+	Window *win = new Window(root, "Test window - 2020 (c) Gaia ");
 
 	rManager = new ResourcesManager("resources.asset");
 	rManager->init();
 
 	RenderSystem::GetInstance()->setup(root);
+	GaiaInput::GetInstance()->init();
 	PhysicsSystem::GetInstance()->setup();
-	PhysicsSystem::GetInstance()->setWorldGravity({ 0,-1,0 });
+	PhysicsSystem::GetInstance()->setWorldGravity({0, -1, 0});
 	gTime::GetInstance()->setup();
 
-	GameObject* aux = new GameObject("Camera", "Cam", nullptr);
-	Transform* transform1 = new Transform(aux);
-	Camera* cam = new Camera(aux);
+	GameObject *aux = new GameObject("Camera", "Cam", nullptr);
+	Transform *transform1 = new Transform(aux);
+	Camera *cam = new Camera(aux);
 
-	Ogre::Viewport* vp = win->addViewport(cam->getCamera());
+	Ogre::Viewport *vp = win->addViewport(cam->getCamera());
 
-	Light* lz = new Light(aux);
+	Light *lz = new Light(aux);
 	lz->setType(Light::Point);
 	lz->setColour(0.7, 0.1, 0.7);
 
-	DebugDrawer* db = new DebugDrawer(RenderSystem::GetInstance()->getSceneManager());
+	DebugDrawer *db = new DebugDrawer(RenderSystem::GetInstance()->getSceneManager());
 	PhysicsSystem::GetInstance()->setDebugDrawer(db);
 
 	obj = new GameObject("Churro", "Ch", nullptr);
-	Transform* transform2 = new Transform(obj);
+	Transform *transform2 = new Transform(obj);
 	obj->transform->setPosition(Vector3(0, 0, -400));
 	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
 	obj->transform->rotate(Vector3(0, 90, 0));
-	MeshRenderer* ms = new MeshRenderer(obj);
+	MeshRenderer *ms = new MeshRenderer(obj);
 	ms->createEntity("knot", "knot.mesh");
-	RigidBody* rb = new RigidBody(obj);
+	RigidBody *rb = new RigidBody(obj);
 	rb->setRigidBody(0.0, SPHERE_RB_SHAPE);
 
-	GameObject* obj1 = new GameObject("Cubo", "Ch", nullptr);
-	Transform* transform3 = new Transform(obj1);
+	GameObject *obj1 = new GameObject("Cubo", "Ch", nullptr);
+	Transform *transform3 = new Transform(obj1);
 	obj1->transform->setPosition(Vector3(25, 100, -400));
 	obj1->transform->setScale(Vector3(0.5, 0.5, 0.5));
 	obj1->transform->rotate(Vector3(0, 90, 0));
-	MeshRenderer* ms1 = new MeshRenderer(obj1);
+	MeshRenderer *ms1 = new MeshRenderer(obj1);
 	ms1->createEntity("cube", "cube.mesh");
-	RigidBody* rb2 = new RigidBody(obj1);
+	RigidBody *rb2 = new RigidBody(obj1);
 	rb2->setRigidBody(1.0, BOX_RB_SHAPE);
-
 }
 
 void GaiaCore::run()
@@ -94,6 +94,7 @@ void GaiaCore::run()
 	while (true)
 	{
 		PhysicsSystem::GetInstance()->update();
+		GaiaInput::GetInstance()->update();
 		RenderSystem::GetInstance()->render();
 		update();
 	}
@@ -101,10 +102,8 @@ void GaiaCore::run()
 
 void GaiaCore::close()
 {
-
 }
 
 void GaiaCore::update()
 {
-	//obj->transform->translate(Vector3(0.5, 0, 0));
 }

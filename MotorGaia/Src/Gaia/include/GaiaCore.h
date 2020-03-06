@@ -29,6 +29,7 @@ private:
 	GameObject* obj;
 	ResourcesManager* rManager;
 	
+
 	void update();
 };
 

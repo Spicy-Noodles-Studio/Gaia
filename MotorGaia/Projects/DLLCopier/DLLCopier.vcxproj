@@ -113,7 +113,13 @@ xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\OgreRTShaderSystem
 xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\RenderSystem_Direct3D11_d.dll" "$(SolutionDir)Bin"  /y
 xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\RenderSystem_GL_d.dll" "$(SolutionDir)Bin"  /y
 xcopy "$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x64\fmodL.dll" "$(SolutionDir)Bin"  /y
-xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\bin\SDL2.dll" "$(SolutionDir)Bin" /y</Command>
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\bin\SDL2.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIBase-0_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\bin\pcre_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\bin\freetype_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIOgreRenderer-0_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIExpatParser_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\Codec_STBI_d.dll" "$(SolutionDir)Bin" /y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

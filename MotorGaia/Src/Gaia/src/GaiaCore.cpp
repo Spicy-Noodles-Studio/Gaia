@@ -16,6 +16,8 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 
+#include "InterfaceSystem.h"
+
 GaiaCore::GaiaCore()
 {
 
@@ -52,7 +54,7 @@ void GaiaCore::init()
 	Camera* cam = new Camera(aux);
 
 	Ogre::Viewport* vp = win->addViewport(cam->getCamera());
-
+	vp->setBackgroundColour(Ogre::ColourValue::Blue);
 	Light* lz = new Light(aux);
 	lz->setType(Light::Point);
 	lz->setColour(0.7, 0.1, 0.7);
@@ -64,6 +66,9 @@ void GaiaCore::init()
 	obj->transform->setPosition(Vector3(0, 0, -400));
 	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
 	obj->transform->rotate(Vector3(0, 90, 0));
+
+
+	InterfaceSystem::GetInstance()->setup(root);
 }
 
 void GaiaCore::run()
@@ -72,6 +77,8 @@ void GaiaCore::run()
 	{
 		RenderSystem::GetInstance()->render();
 		update();
+
+		InterfaceSystem::GetInstance()->render();
 	}
 }
 

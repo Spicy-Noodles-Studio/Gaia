@@ -26,7 +26,8 @@ private:
 	Ogre::Root* root;
 	Window* win;
 	GameObject* obj;
-	
+
 	void update();
+};
 
 #endif 

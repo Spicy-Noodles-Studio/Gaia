@@ -14,37 +14,36 @@ void GaiaInput::init()
     SDL_GetMouseState(&MOUSE_POSITION_X, &MOUSE_POSITION_Y);
 
     // CONTROLLER SYSTEM
-    if (!SDL_WasInit(SDL_INIT_JOYSTICK)) SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
-    SDL_JoystickEventState(SDL_ENABLE);
+    for (int i = 0; i < 4; i++) controllers[i].controllerIndex = i;
+
+
+    if (!SDL_WasInit(SDL_INIT_JOYSTICK)) SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
+
+    SDL_GameControllerEventState(true);
 
     int MaxJoysticks = SDL_NumJoysticks();
     int ControllerIndex = 0;
     for (int JoystickIndex = 0; JoystickIndex < MaxJoysticks; ++JoystickIndex)
     {
-        if (!SDL_IsGameController(JoystickIndex))
+        if (SDL_IsGameController(JoystickIndex) && ControllerIndex < MAX_CONTROLLERS)
         {
-            continue;
-        }
-        if (ControllerIndex >= MAX_CONTROLLERS)
-        {
-            break;
-        }
-        ControllerHandles[ControllerIndex] = SDL_GameControllerOpen(JoystickIndex);
-        controllers[ControllerIndex].isConected = true;
-        ControllerIndex++;
-        currentControllers++;
+            ControllerHandles[ControllerIndex] = SDL_GameControllerOpen(JoystickIndex);
 
-        // Checks if controller has rumble device & asigns it
-        SDL_Joystick* JoystickHandle = SDL_GameControllerGetJoystick(ControllerHandles[ControllerIndex]);
-        RumbleHandles[ControllerIndex] = SDL_HapticOpenFromJoystick(JoystickHandle);
+            // Data pass to internal controller struct
+            controllers[currentControllers].controller = ControllerHandles[ControllerIndex];
+            controllers[currentControllers].isConected = true;
 
-        // Checks if rumble device is compatible with basic rumble features
-        if (SDL_HapticRumbleInit(RumbleHandles[ControllerIndex]) != 0)
-        {
-            SDL_HapticClose(RumbleHandles[ControllerIndex]);
-            RumbleHandles[ControllerIndex] = 0;
+            // Checks if controller has rumble device & asigns it
+            SDL_Joystick* JoystickHandle = SDL_GameControllerGetJoystick(ControllerHandles[ControllerIndex]);
+            if ((RumbleHandles[ControllerIndex] = SDL_HapticOpenFromJoystick(JoystickHandle)) != NULL) {
+                controllers[currentControllers].controllerRumble = RumbleHandles[ControllerIndex];
+            }
+            std::cout << "ANADIDO MANDO " << currentControllers << "\n";
+            ControllerIndex++;
+            currentControllers++;
         }
+        
     }
 }
 
@@ -75,12 +74,13 @@ void GaiaInput::update()
 
     // Get new input events
     SDL_Event event;
+    int index; int controllerIndex;
+    std::string key;
+
     while (SDL_PollEvent(&event))
     {
 
-        SDL_JoystickUpdate();
-        int index;
-        std::string key;
+        /*SDL_JoystickUpdate();*/
         switch (event.type)
         {
             // Keyboard events
@@ -96,6 +96,8 @@ void GaiaInput::update()
             keyRelease.emplace(key);
             keyHold.erase(key);
             break;
+        case SDL_TEXTINPUT:
+            break;
 
             // Mouse events
         case SDL_MOUSEMOTION:
@@ -110,35 +112,48 @@ void GaiaInput::update()
             break;
 
             // Controller events
-        case SDL_JOYBUTTONDOWN:
-            index = event.cdevice.which;
-            if (ControllerHandles[index] != 0 && SDL_GameControllerGetAttached(ControllerHandles[index])) controllerInputDown(index);
+        case SDL_CONTROLLERBUTTONDOWN:
+
+            if ((controllerIndex = getControllerByReference(ControllerHandles[event.cdevice.which])) == -1) break;
+
+            if (controllers[controllerIndex].isConected) controllerInputDown(controllerIndex);
+
+            std::cout << "MANDO DOWN | Index = ";
+            std::cout << event.cdevice.which << "\n";
 
             break;
-        case SDL_JOYBUTTONUP: 
-            index = event.cdevice.which;
-            if (ControllerHandles[index] != 0 && SDL_GameControllerGetAttached(ControllerHandles[index])) controllerInputUp(index);
+        case SDL_CONTROLLERBUTTONUP:
+
+            if ((controllerIndex = getControllerByReference(ControllerHandles[event.cdevice.which])) == -1) break;
+
+            if (controllers[controllerIndex].isConected) controllerInputUp(controllerIndex);
+            break;
+        
+        case SDL_CONTROLLERAXISMOTION:
             break;
 
         case SDL_JOYAXISMOTION:
-            index = event.cdevice.which;
-            //Hacer los correspondiente al joystick
             break;
-        
 
-
-        case SDL_JOYDEVICEADDED:
-            if (event.cdevice.which < MAX_CONTROLLERS && SDL_IsGameController(event.cdevice.which)) {
+        case SDL_CONTROLLERDEVICEADDED:
+            if (currentControllers < MAX_CONTROLLERS && SDL_IsGameController(event.cdevice.which)) {
 
                 index = event.cdevice.which;
 
                 ControllerHandles[index] = SDL_GameControllerOpen(index);
-                currentControllers++;
-                controllers[index].isConected = true;
+
+                if ((controllerIndex = getFirstFreeController()) == -1) break;
+
+                controllers[controllerIndex].controller = ControllerHandles[index];
+                controllers[controllerIndex].isConected = true;
 
                 // Checks if controller has rumble device & asigns it
+
                 SDL_Joystick* JoystickHandle = SDL_GameControllerGetJoystick(ControllerHandles[index]);
-                RumbleHandles[index] = SDL_HapticOpenFromJoystick(JoystickHandle);
+                if ((RumbleHandles[index] = SDL_HapticOpenFromJoystick(JoystickHandle)) != NULL) {
+                    controllers[controllerIndex].controllerRumble = RumbleHandles[index];
+                }
+
 
                 // Checks if rumble device is compatible with basic rumble features
                 if (SDL_HapticRumbleInit(RumbleHandles[index]) != 0)
@@ -146,19 +161,36 @@ void GaiaInput::update()
                     SDL_HapticClose(RumbleHandles[index]);
                     RumbleHandles[index] = 0;
                 }
+
+                currentControllers++;
+
+                std::cout << "MANDO ADDED | Index = ";
+                std::cout << controllerIndex << "\n";
             }
             break;
-        case SDL_JOYDEVICEREMOVED:
+        case SDL_CONTROLLERDEVICEREMOVED:
             index = event.cdevice.which;
 
             if (index < 0) return; // unknown controller?
 
+            if ((controllerIndex = getControllerByReference(ControllerHandles[index])) == -1) break;
+
             SDL_GameControllerClose(ControllerHandles[index]);
-            if (RumbleHandles[index]) SDL_HapticClose(RumbleHandles[index]);
+
+            if (RumbleHandles[index]) {
+                controllers[controllerIndex].controllerRumble = nullptr;
+                SDL_HapticClose(RumbleHandles[index]);
+            }
 
             ControllerHandles[index] = NULL;
-            controllers[index].isConected = false;
+           
+            controllers[controllerIndex].controller = nullptr;
+            controllers[controllerIndex].isConected = false;
+
             currentControllers--;
+
+            std::cout << "MANDO REMOVED | Index = ";
+            std::cout << controllerIndex << "\n";
 
             break;
         case SDL_CONTROLLERDEVICEREMAPPED:
@@ -167,6 +199,10 @@ void GaiaInput::update()
             // System events
         case SDL_QUIT:
             break;
+
+        case SDL_WINDOWEVENT:
+            break;
+
         default:
             std::cout << "Unknown event\n";
             std::cout << event.type << "\n";
@@ -175,27 +211,25 @@ void GaiaInput::update()
         // Save current keyboard state
         keyboardState = SDL_GetKeyboardState(NULL);
 
-        for (int ControllerIndex = 0;
-            ControllerIndex < MAX_CONTROLLERS;
-            ++ControllerIndex)
+        for (int i = 0; i < MAX_CONTROLLERS; i++)
         {
-            if (ControllerHandles[ControllerIndex] != 0 && SDL_GameControllerGetAttached(ControllerHandles[ControllerIndex]))
+            if (controllers[i].isConected)
             {
                 // Left joystick
-                controllers[ControllerIndex].LeftStickX = abs(SDL_GameControllerGetAxis(ControllerHandles[ControllerIndex], SDL_CONTROLLER_AXIS_LEFTX)) > JOYSTICK_DEAD_ZONE ?
-                    SDL_GameControllerGetAxis(ControllerHandles[ControllerIndex], SDL_CONTROLLER_AXIS_LEFTX) : 0;
-                controllers[ControllerIndex].LeftStickY = abs(SDL_GameControllerGetAxis(ControllerHandles[ControllerIndex], SDL_CONTROLLER_AXIS_LEFTY)) > JOYSTICK_DEAD_ZONE ?
-                    SDL_GameControllerGetAxis(ControllerHandles[ControllerIndex], SDL_CONTROLLER_AXIS_LEFTY) : 0;
+                controllers[i].LeftStickX = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTX)) > JOYSTICK_DEAD_ZONE ?
+                    SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTX) : 0;
+                controllers[i].LeftStickY = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTY)) > JOYSTICK_DEAD_ZONE ?
+                    SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTY) : 0;
 
                 // Right joystick
-                controllers[ControllerIndex].RightStickX = abs(SDL_GameControllerGetAxis(ControllerHandles[ControllerIndex], SDL_CONTROLLER_AXIS_RIGHTX)) > JOYSTICK_DEAD_ZONE ?
-                    SDL_GameControllerGetAxis(ControllerHandles[ControllerIndex], SDL_CONTROLLER_AXIS_RIGHTX) : 0;
-                controllers[ControllerIndex].RightStickY = abs(SDL_GameControllerGetAxis(ControllerHandles[ControllerIndex], SDL_CONTROLLER_AXIS_RIGHTY)) > JOYSTICK_DEAD_ZONE ?
-                    SDL_GameControllerGetAxis(ControllerHandles[ControllerIndex], SDL_CONTROLLER_AXIS_RIGHTY) : 0;
+                controllers[i].RightStickX = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTX)) > JOYSTICK_DEAD_ZONE ?
+                    SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTX) : 0;
+                controllers[i].RightStickY = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTY)) > JOYSTICK_DEAD_ZONE ?
+                    SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTY) : 0;
 
                 // Triggers
-                controllers[ControllerIndex].LeftTrigger = SDL_GameControllerGetAxis(ControllerHandles[ControllerIndex], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-                controllers[ControllerIndex].RightTrigger = SDL_GameControllerGetAxis(ControllerHandles[ControllerIndex], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+                controllers[i].LeftTrigger = SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+                controllers[i].RightTrigger = SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
             }
             else
             {
@@ -340,51 +374,52 @@ bool GaiaInput::getMouseButtonRelease(char button)
 void GaiaInput::controllerInputDown(int index)
 {
     if (!controllers[index].isConected)return;
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_DPAD_UP) && !controllers[index].Up) {
+
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_UP) && !controllers[index].Up) {
         controllers[index].Up = true;
         controllers[index].buttonPress.emplace("UP");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_DPAD_DOWN) && !controllers[index].Down) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN) && !controllers[index].Down) {
         controllers[index].Down = true;
         controllers[index].buttonPress.emplace("DOWN");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_DPAD_LEFT) && !controllers[index].Left) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT) && !controllers[index].Left) {
         controllers[index].Left = true;
         controllers[index].buttonPress.emplace("LEFT");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_DPAD_RIGHT) && !controllers[index].Right) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT) && !controllers[index].Right) {
         controllers[index].Right = true;
         controllers[index].buttonPress.emplace("RIGHT");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_START) && !controllers[index].Start) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_START) && !controllers[index].Start) {
         controllers[index].Start = true;
         controllers[index].buttonPress.emplace("START");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_BACK) && !controllers[index].Back) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_BACK) && !controllers[index].Back) {
         controllers[index].Back = true;
         controllers[index].buttonPress.emplace("BACK");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_LEFTSHOULDER) && !controllers[index].LeftShoulder) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER) && !controllers[index].LeftShoulder) {
         controllers[index].LeftShoulder = true;
         controllers[index].buttonPress.emplace("LB");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) && !controllers[index].RightShoulder) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) && !controllers[index].RightShoulder) {
         controllers[index].RightShoulder = true;
         controllers[index].buttonPress.emplace("RB");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_A) && !controllers[index].AButton) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_A) && !controllers[index].AButton) {
         controllers[index].AButton = true;
         controllers[index].buttonPress.emplace("A");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_B) && !controllers[index].BButton) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_B) && !controllers[index].BButton) {
         controllers[index].BButton = true;
         controllers[index].buttonPress.emplace("B");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_X) && !controllers[index].XButton) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_X) && !controllers[index].XButton) {
         controllers[index].XButton = true;
         controllers[index].buttonPress.emplace("X");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_Y) && !controllers[index].YButton) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_Y) && !controllers[index].YButton) {
         controllers[index].YButton = true;
         controllers[index].buttonPress.emplace("Y");
     }
@@ -393,51 +428,52 @@ void GaiaInput::controllerInputDown(int index)
 void GaiaInput::controllerInputUp(int index)
 {
     if (!controllers[index].isConected)return;
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_DPAD_UP) && !controllers[index].Up) {
+
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_UP) && !controllers[index].Up) {
         controllers[index].Up = false;
         controllers[index].buttonRelease.emplace("UP");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_DPAD_DOWN) && !controllers[index].Down) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN) && !controllers[index].Down) {
         controllers[index].Down = false;
         controllers[index].buttonRelease.emplace("DOWN");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_DPAD_LEFT) && !controllers[index].Left) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT) && !controllers[index].Left) {
         controllers[index].Left = false;
         controllers[index].buttonRelease.emplace("LEFT");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_DPAD_RIGHT) && !controllers[index].Right) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT) && !controllers[index].Right) {
         controllers[index].Right = false;
         controllers[index].buttonRelease.emplace("RIGHT");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_START) && !controllers[index].Start) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_START) && !controllers[index].Start) {
         controllers[index].Start = false;
         controllers[index].buttonRelease.emplace("START");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_BACK) && !controllers[index].Back) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_BACK) && !controllers[index].Back) {
         controllers[index].Back = false;
         controllers[index].buttonRelease.emplace("BACK");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_LEFTSHOULDER) && !controllers[index].LeftShoulder) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER) && !controllers[index].LeftShoulder) {
         controllers[index].LeftShoulder = false;
         controllers[index].buttonRelease.emplace("LB");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) && !controllers[index].RightShoulder) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) && !controllers[index].RightShoulder) {
         controllers[index].RightShoulder = false;
         controllers[index].buttonRelease.emplace("RB");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_A) && !controllers[index].AButton) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_A) && !controllers[index].AButton) {
         controllers[index].AButton = false;
         controllers[index].buttonRelease.emplace("A");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_B) && !controllers[index].BButton) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_B) && !controllers[index].BButton) {
         controllers[index].BButton = false;
         controllers[index].buttonRelease.emplace("B");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_X) && !controllers[index].XButton) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_X) && !controllers[index].XButton) {
         controllers[index].XButton = false;
         controllers[index].buttonRelease.emplace("X");
     }
-    if (SDL_GameControllerGetButton(ControllerHandles[index], SDL_CONTROLLER_BUTTON_Y) && !controllers[index].YButton) {
+    if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_Y) && !controllers[index].YButton) {
         controllers[index].YButton = false;
         controllers[index].buttonRelease.emplace("Y");
     }
@@ -445,7 +481,7 @@ void GaiaInput::controllerInputUp(int index)
 
 bool GaiaInput::isButtonPressed(int controllerIndex, std::string button)
 {
-    if (!controllers[controllerIndex].isConected)return false;
+    if (!controllers[controllerIndex].isConected) return false;
 
     std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 
@@ -535,5 +571,19 @@ void GaiaInput::clearInputs()
         controllers[i].buttonPress.clear();
         controllers[i].buttonRelease.clear();
     }
+}
+int GaiaInput::getFirstFreeController()
+{
+    for (int i = 0; i < 4; i++) {
+        if (!controllers[i].isConected) return i;
+    }
+    return -1;
+}
+int GaiaInput::getControllerByReference(SDL_GameController* handle)
+{
+    for (int i = 0; i < 4; i++) {
+        if (controllers[i].controller == handle) return i;
+    }
+    return -1;
 }
 #pragma endregion

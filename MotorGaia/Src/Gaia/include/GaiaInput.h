@@ -48,6 +48,9 @@ private:
 
     struct gameController {
 
+        SDL_GameController* controller = nullptr;
+        SDL_Haptic* controllerRumble = nullptr;
+        int controllerIndex = -1;
         bool isConected = false;
 
         bool Up = false;
@@ -88,6 +91,8 @@ private:
 
     // UTILS
     void clearInputs();
+    int getFirstFreeController();
+    int getControllerByReference(SDL_GameController* handle);
 
 public:
     void init();

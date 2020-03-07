@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-Window::Window(Ogre::Root* root, std::string windowTitle) :root(root)
+Window::Window(Ogre::Root* root, std::string windowTitle) : root(root)
 {
 	Ogre::RenderSystem* rs = root->getRenderSystem();//ByName("OpenGL Rendering Subsystem");
 	root->setRenderSystem(rs);
@@ -18,7 +18,7 @@ Window::Window(Ogre::Root* root, std::string windowTitle) :root(root)
 		OGRE_EXCEPT(Ogre::Exception::ERR_INTERNAL_ERROR, "Cannot initialize SDL2!",
 			"BaseApplication::setup");
 	}
-	
+
 	SDL_ShowCursor(SDL_DISABLE);
 
 	Ogre::ConfigOptionMap ropts = rs->getConfigOptions();
@@ -31,8 +31,6 @@ Window::Window(Ogre::Root* root, std::string windowTitle) :root(root)
 
 	Uint32 flags = SDL_WINDOW_RESIZABLE;
 	sdlWindow = SDL_CreateWindow(windowTitle.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, flags);
-
-	
 
 	SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
@@ -81,7 +79,8 @@ Ogre::Viewport* Window::addViewport(Ogre::Camera* cam)
 
 void Window::setFullscreen(bool fullscreen)
 {
-	mWindow->setFullscreen(fullscreen, 1920, 1080);
+	mWindow->setFullscreen(fullscreen, mWindow->getWidth(), mWindow->getHeight());
+	//mWindow->update();
 }
 
 void Window::setFSAA(unsigned int fsaa)

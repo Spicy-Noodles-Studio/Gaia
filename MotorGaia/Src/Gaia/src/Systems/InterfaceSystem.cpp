@@ -28,39 +28,24 @@ bool InterfaceSystem::clicked(const CEGUI::EventArgs& args)
 void InterfaceSystem::setup(Ogre::Root* _root, Window* window)
 {
 	root = _root;
-
-	//mRenderer = &CEGUI::OgreRenderer::bootstrapSystem(*window->mWindow);
-	//SDL_ShowCursor(SDL_DISABLE);
-
-	//mRenderer = &CEGUI::OpenGLRenderer::bootstrapSystem();
-
-	// create renderer and enable extra states
+	
+	// init
 	mRenderer = &CEGUI::OgreRenderer::create(*window->mWindow);
-	//mRenderer->enableExtraStateSettings(true);
-
-	// create CEGUI system object
 	CEGUI::System::create(*mRenderer);
-
-	//CEGUI::OpenGLRenderer* renderer = new CEGUI::OpenGLRenderer(CEGUI::OpenGLRenderer::);
-
-	//CEGUI::System::getSingleton().renderAllGUIContexts();
-	//CEGUI::System::getSingleton().create(mRenderer);
-	//mRenderer.setActiveRenderTarget()
-
-	//CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(root->getwi)
 
 	CEGUI::DefaultResourceProvider* rp =
 		static_cast<CEGUI::DefaultResourceProvider*>
 		(CEGUI::System::getSingleton().getResourceProvider());
 
-	rp->setResourceGroupDirectory("schemes", "../Dependencies/cegui-0.8.7/datafiles/schemes/");
-	rp->setResourceGroupDirectory("imagesets", "../Dependencies/cegui-0.8.7/datafiles/imagesets/");
-	rp->setResourceGroupDirectory("fonts", "../Dependencies/cegui-0.8.7/datafiles/fonts/");
-	rp->setResourceGroupDirectory("layouts", "../Dependencies/cegui-0.8.7/datafiles/layouts/");
-	rp->setResourceGroupDirectory("looknfeels", "../Dependencies/cegui-0.8.7/datafiles/looknfeel/");
-	rp->setResourceGroupDirectory("lua_scripts", "../Dependencies/cegui-0.8.7/datafiles/lua_scripts/");
-	rp->setResourceGroupDirectory("schemas", "../Dependencies/cegui-0.8.7/datafiles/xml_schemas/");
-	rp->setResourceGroupDirectory("animations", "../Dependencies/cegui-0.8.7/datafiles/animations/");
+	// setup resources
+	rp->setResourceGroupDirectory("schemes", "./Assets/UI/schemes/");
+	rp->setResourceGroupDirectory("imagesets", "./Assets/UI/imagesets/");
+	rp->setResourceGroupDirectory("fonts", "./Assets/UI/fonts/");
+	rp->setResourceGroupDirectory("layouts", "./Assets/UI/layouts/");
+	rp->setResourceGroupDirectory("looknfeels", "./Assets/UI/looknfeel/");
+	rp->setResourceGroupDirectory("lua_scripts", "./Assets/UI/lua_scripts/");
+	rp->setResourceGroupDirectory("schemas", "./Assets/UI/xml_schemas/");
+	rp->setResourceGroupDirectory("animations", "./Assets/UI/animations/");
 
 	CEGUI::ImageManager::setImagesetDefaultResourceGroup("imagesets");
 	CEGUI::Font::setDefaultResourceGroup("fonts");
@@ -68,22 +53,23 @@ void InterfaceSystem::setup(Ogre::Root* _root, Window* window)
 	CEGUI::WidgetLookManager::setDefaultResourceGroup("looknfeels");
 	CEGUI::WindowManager::setDefaultResourceGroup("layouts");
 
-	//CEGUI::SchemeManager::getSingleton().createFromFile("VanillaSkin.scheme");
-
+	// load theme
 	CEGUI::SchemeManager::getSingleton().createFromFile("VanillaSkin.scheme");
 	CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
 	CEGUI::SchemeManager::getSingleton().createFromFile("Generic.scheme");
 	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
-	//CEGUI::System::getSingleton().mouse
+	// load font
+	CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang", 12, true, "batang.ttf", "fonts");
 
+	// test panel with text
 	CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
 	myRoot = wmgr.createWindow("TaharezLook/StaticText", "staticText");
+	myRoot->setFont("Batang");
 	myRoot->setText("christian tenllado hijo de puta");
 
 	myRoot->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
 	myRoot->setSize(CEGUI::USize(CEGUI::UDim(0.5, 0), CEGUI::UDim(0.5, 0)));
-	//myRoot->setProperty("Image", "WindowsLook/full_image");
 
 	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(myRoot);
 
@@ -99,13 +85,15 @@ void InterfaceSystem::setup(Ogre::Root* _root, Window* window)
 	
 }
 
-
-
 void InterfaceSystem::render()
 {
 	mRenderer->beginRendering();
 	CEGUI::System::getSingleton().renderAllGUIContexts();
-	//CEGUI::System::getSingleton().event
 	mRenderer->endRendering();
+}
+
+void InterfaceSystem::update(float deltaTime)
+{
+	CEGUI::System::getSingleton().getDefaultGUIContext().injectTimePulse(deltaTime);
 }
 

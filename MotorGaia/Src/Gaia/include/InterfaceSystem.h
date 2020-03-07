@@ -28,5 +28,6 @@ public:
 
 	void setup(Ogre::Root* _root, Window* window);
 	void render();
+	void update(float deltaTime);
 };
 

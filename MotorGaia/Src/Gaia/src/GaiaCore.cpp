@@ -43,7 +43,7 @@ void GaiaCore::init()
         return;
 
 	// Setup window
-	Window* win = new Window(root, "Test window - 2020 (c) Gaia ");
+	win = new Window(root, "Test window - 2020 (c) Gaia ");
 
 	ResourcesManager rManager("resources.asset");
 	rManager.init();
@@ -85,6 +85,12 @@ void GaiaCore::run()
 
 		InterfaceSystem::GetInstance()->render();
 		GaiaInput::GetInstance()->update();
+
+		// fullscreen test
+		if (GaiaInput::GetInstance()->getKeyPress("f"))
+			win->setFullscreen(true);
+		else if (GaiaInput::GetInstance()->getKeyPress("w"))
+			win->setFullscreen(false);
 	}
 }
 

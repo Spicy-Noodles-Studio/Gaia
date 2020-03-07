@@ -2,8 +2,6 @@
 
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/System.h>
-//#include <CEGUI/InjectedInputReceiver.h>
-
 
 // Initialization
 void GaiaInput::init()
@@ -19,9 +17,7 @@ void GaiaInput::init()
     SDL_GetMouseState(&MOUSE_POSITION_X, &MOUSE_POSITION_Y);
 
     // CONTROLLER SYSTEM
-
     for (int i = 0; i < 4; i++) controllers[i].controllerIndex = i;
-
 
     if (!SDL_WasInit(SDL_INIT_JOYSTICK)) SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
 
@@ -48,14 +44,12 @@ void GaiaInput::init()
             ControllerIndex++;
             currentControllers++;
         }
-        
     }
 }
 
 // Closing
 void GaiaInput::close()
 {
-
     // CONTROLLER SYSTEM
     for (int ControllerIndex = 0; ControllerIndex < MAX_CONTROLLERS; ++ControllerIndex)
     {
@@ -66,8 +60,6 @@ void GaiaInput::close()
             controllers[ControllerIndex].isConected = false;
         }
     }
-
-
 }
 
 /// MAIN LOOP
@@ -84,7 +76,6 @@ void GaiaInput::update()
 
     while (SDL_PollEvent(&event))
     {
-
         /*SDL_JoystickUpdate();*/
         switch (event.type)
         {
@@ -114,9 +105,6 @@ void GaiaInput::update()
             break;
         case SDL_MOUSEBUTTONDOWN:
             processMouseInputDown(event.button);
-
-            
-
             std::cout << MOUSE_POSITION_X << " " << MOUSE_POSITION_Y << "\n";
             break;
         case SDL_MOUSEBUTTONUP:
@@ -165,7 +153,6 @@ void GaiaInput::update()
                 if ((RumbleHandles[index] = SDL_HapticOpenFromJoystick(JoystickHandle)) != NULL) {
                     controllers[controllerIndex].controllerRumble = RumbleHandles[index];
                 }
-
 
                 // Checks if rumble device is compatible with basic rumble features
                 if (SDL_HapticRumbleInit(RumbleHandles[index]) != 0)
@@ -280,11 +267,8 @@ bool GaiaInput::getKeyRelease(std::string key)
 }
 
 // MOUSE
-
 void GaiaInput::processMouseInputDown(SDL_MouseButtonEvent& e)
 {
-
-
     switch (e.button) {
     case SDL_BUTTON_LEFT:
         MOUSE_BUTTON_LEFT.hold = true;
@@ -307,7 +291,6 @@ void GaiaInput::processMouseInputDown(SDL_MouseButtonEvent& e)
         break;
     }
 }
-    
 
 void GaiaInput::processMouseInputUp(SDL_MouseButtonEvent& e)
 {

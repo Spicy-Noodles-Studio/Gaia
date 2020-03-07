@@ -92,6 +92,7 @@ bool SoundSystem::createSounds(const std::string filename)
 			std::cout << "Sound loading failed at file: " << soundfile_name << "\n" <<
 				"FMOD Error: " << FMOD_ErrorString(result) << "\n" 
 				<< "Sounds loaded before error: " << i << "\n\n";
+			stream.close();
 			return false;
 		}
 		sounds.emplace(sound_name, sonido);

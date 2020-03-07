@@ -1,8 +1,5 @@
 #include "GameObject.h"
-#include "ComponentManager.h"
 #include "Scene.h"
-
-#include <algorithm>
 
 
 GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene)
@@ -25,40 +22,6 @@ void GameObject::addChildNode(GameObject* child)
 	if (node != nullptr)
 		node->addChild(child->node);
 }
-
-
-template<typename T>
-T* GameObject::addComponent() {
-    const std::string key = Component::nameID<T>;
-    if (components.find(key) != components.end()) {
-        printf("GAMEOBJECT: Component %s already exists in %s GameObject\n", key.c_str(), name.c_str());
-        return false;
-    }
-    auto constructor = ComponentManager::getComponentFactory(Component::nameID<T>);
-
-    if (constructor == nullptr) {
-        printf("GAMEOBJECT: Component %s not attached to %s GameObject. Constructor not found\n", key.c_str(), name.c_str());
-        return false;
-    }
-
-    components[key] = constructor();
-    return true;
-}
-
-template<typename T>
-bool GameObject::delComponent() {
-    const std::string key = Component::nameID<T>;
-    if (components.find(key) != components.end()) {
-        printf("GAMEOBJECT: Cannot remove. Component %s does not exist in %s GameObject\n", key.c_str(), name.c_str());
-        return false;
-    }
-
-    delete components[key];
-    components.erase(key);
-
-    return true;
-}
-
 
 const std::string& GameObject::getName() const
 {

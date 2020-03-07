@@ -6,6 +6,7 @@
 
 SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), window(nullptr)
 {
+
 }
 
 SceneManager::~SceneManager()
@@ -19,7 +20,8 @@ void SceneManager::init(Ogre::Root* root, Window* window)
 	this->window = window;
 
 	loadScene(ResourcesManager::getSceneData(0));
-	processSceneChange();
+	// Let it change runtime
+	// processSceneChange();
 }
 
 void SceneManager::close()
@@ -98,8 +100,7 @@ void SceneManager::loadScene(const SceneData* data)
 		return;
 	}
 	// Creates the Scene by its data (assuming creation was succesfull)
-	stackScene = createScene(data);
-	
+	stackScene = createScene(data);	
 }
 
 void SceneManager::processSceneChange()

@@ -36,10 +36,18 @@ void GaiaCore::init()
 	if (!(root->restoreConfig() || root->showConfigDialog(nullptr)))
 		return;
 
+	// Window initialization
 	win = new Window(root, "Ventana de Prueba");
 
+	// Systems initialization
+	RenderSystem::GetInstance()->init(root);
+
+	// Managers initialization
 	// ResourcesManager initialization
 	resourcesManager.init();
+
+	// TODO: ComponentManager initialization
+	// componentManager.init();
 
 	//REGISTRO DE COMPONENTES (probablemente se deberia de pasar al init de componentManager)
 	componentManager.registerComponent<Transform>("Transform");
@@ -47,10 +55,9 @@ void GaiaCore::init()
 	componentManager.registerComponent<Light>("Light");
 	componentManager.registerComponent<MeshRenderer>("MeshRenderer");
 
-	// SceneManager initialization (required ResourcesManager previous initialization)
+	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager.init(root, win);
-	//Pruebas
-	RenderSystem::GetInstance()->init(root);
+
 }
 
 void GaiaCore::run()
@@ -58,11 +65,13 @@ void GaiaCore::run()
 	bool exit = false;
 	float deltaTime = 1.f / 60.f;
 	while (!exit) {
+		// Render
+		render(deltaTime);
+
 		// Pre-process
 		preUpdate(deltaTime);
 		
 		// Process
-		RenderSystem::GetInstance()->render(deltaTime);
 		update(deltaTime);
 
 		// Post-process
@@ -78,9 +87,26 @@ void GaiaCore::close()
 	resourcesManager.close();
 }
 
+void GaiaCore::render(float deltaTime)
+{
+	// RenderSystem
+	RenderSystem::GetInstance()->render(deltaTime);
+	// InterfaceSystem
+	// InterfaceSystem::GetInstance()->render(deltaTime);
+}
+
 void GaiaCore::preUpdate(float deltaTime)
 {
-	// Systems
+	// Systems TODO:
+	// RenderSystem (animations)
+	// RenderSystem::GetInstance()->update(deltaTime);
+
+	// InterfaceSystem
+	// InterfaceSystem::GetInstance()->update(deltaTime);
+	
+	// InputSystem
+	// InputSystem::GetInstance()->update(deltaTime);
+
 
 	// Managers
 	sceneManager.preUpdate(deltaTime);
@@ -88,16 +114,15 @@ void GaiaCore::preUpdate(float deltaTime)
 
 void GaiaCore::update(float deltaTime)
 {
-	// Systems
-
 	// Managers
 	sceneManager.update(deltaTime);
 }
 
 void GaiaCore::postUpdate(float deltaTime)
 {
-	// Systems 
-
 	// Managers
 	sceneManager.postUpdate(deltaTime);
+
+	// Systems 
+	// Si es que hay
 }

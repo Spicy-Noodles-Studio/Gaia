@@ -40,8 +40,6 @@ private:
     bool addComponent(const std::string& name, Component* component);
 
 
-public:
-
 private: 
     const std::string name;
     const std::string tag;
@@ -50,6 +48,41 @@ private:
     std::map<std::string, Component*> components;
     std::vector<UserComponent*> userComponents;
 };
+
+
+template<typename T>
+T* GameObject::addComponent() {
+    const std::string key = Component::nameID<T>;
+    if (components.find(key) != components.end()) {
+        printf("GAMEOBJECT: Component %s already exists in %s GameObject\n", key.c_str(), name.c_str());
+        return (T*)components[key]; // Return the exiting one.
+    }
+    auto constructor = ComponentManager::getComponentFactory(Component::nameID<T>);
+
+    if (constructor == nullptr) {
+        printf("GAMEOBJECT: Component %s not attached to %s GameObject. Constructor not found\n", key.c_str(), name.c_str());
+        return nullptr;
+    }
+
+    components[key] = constructor();
+    return (T*)components[key];
+}
+
+
+template<typename T>
+bool GameObject::delComponent() {
+    const std::string key = Component::nameID<T>;
+    if (components.find(key) != components.end()) {
+        printf("GAMEOBJECT: Cannot remove. Component %s does not exist in %s GameObject\n", key.c_str(), name.c_str());
+        return false;
+    }
+
+    delete components[key];
+    components.erase(key);
+
+    return true;
+}
+
 
 template<typename T>
 T* GameObject::getComponent() {

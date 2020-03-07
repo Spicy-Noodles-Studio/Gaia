@@ -26,6 +26,7 @@ public:
 	void close();
 
 private:
+	void render(float deltaTime);
 	void preUpdate(float deltaTime);
 	void update(float deltaTime);
 	void postUpdate(float deltaTime);

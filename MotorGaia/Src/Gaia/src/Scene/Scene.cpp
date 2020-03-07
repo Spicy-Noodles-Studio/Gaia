@@ -77,9 +77,9 @@ void Scene::postUpdate(float deltaTime)
 
 bool Scene::addGameObject(GameObject* gameObject)
 {
-	// Antes deberia de mirar si el objeto ya existe, o si hay alguno con el mismo nombre o tag
+	// TODO: Antes deberia de mirar si el objeto ya existe, o si hay alguno con el mismo nombre o tag
 	/* Hacer aqui */
-	if (findGameObjectWithName(gameObject->getName()) != nullptr) {
+	if (getGameObjectWithName(gameObject->getName()) != nullptr) {
 		printf("SCENE: Trying to add gameobject with name %s that already exists in scene %s.\n", gameObject->getName().c_str(), name.c_str());
 		return false;
 	}
@@ -89,19 +89,7 @@ bool Scene::addGameObject(GameObject* gameObject)
 }
 
 
-bool Scene::delGameObjectWithName(const std::string& name)
-{
-	return false;
-}
-
-
-bool Scene::delGameObjectWithTag(const std::string& tag)
-{
-	return false;
-}
-
-
-GameObject* Scene::findGameObjectWithName(const std::string& name)
+GameObject* Scene::getGameObjectWithName(const std::string& name)
 {
 	for (auto g : sceneObjects) {
 		if (g->getName() == name)
@@ -111,9 +99,17 @@ GameObject* Scene::findGameObjectWithName(const std::string& name)
 }
 
 
-GameObject* Scene::findGameObjectWithTag(const std::string& tag)
+std::vector<GameObject*> Scene::getGameObjectsWithTag(const std::string& tag)
 {
-	return nullptr;
+	std::vector<GameObject*> result;
+	
+	for (auto g : sceneObjects) {
+		if (g->getTag() == tag) {
+			result.push_back(g);
+		}
+	}
+
+	return result;
 }
 
 void Scene::setMainCamera(Camera* camera)
@@ -149,7 +145,6 @@ void Scene::updateAllAnimations(float deltaTime)
 {
 	for (auto anim : sceneManager->getAnimationStates()) 
 	{
-
 		anim.second->addTime(deltaTime);
 	}
 }

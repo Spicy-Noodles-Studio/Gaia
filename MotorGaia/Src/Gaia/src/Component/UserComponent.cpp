@@ -59,6 +59,16 @@ void UserComponent::destroy(GameObject* gameObject)
 	gameObject->myScene->destroyGameObject(gameObject);
 }
 
+GameObject* UserComponent::findGameObjectWithName(const std::string& name)
+{
+	return gameObject->myScene->getGameObjectWithName(name);
+}
+
+std::vector<GameObject*> UserComponent::findGameObjectsWithTag(const std::string& tag)
+{
+	return gameObject->myScene->getGameObjectsWithTag(tag);
+}
+
 
 bool UserComponent::hasStarted()
 {

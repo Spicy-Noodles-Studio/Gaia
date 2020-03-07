@@ -7,18 +7,21 @@
 class GameObject;
 class ComponentData;
 
-template<typename T>
-struct ComponentID
-{
-	std::string id;
-};
-
 class Component
 {
 friend class ComponentManager;
 friend class GameObject;
 public:
+
+	template<typename T>
+	struct ComponentID
+	{
+		std::string id;
+	};
+
+
 	Component(GameObject* gameObject);
+	virtual ~Component();
 
 	//Da valor a las variables del componente segun el ComponentData que reciba
 	//Usando if else para elegir la propiedad que modifica if(ComponentData->name == name)
@@ -42,7 +45,7 @@ private:
 };
 
 template<typename T>
-ComponentID<T> Component::nameID = { "not assigned" };
+Component::ComponentID<T> Component::nameID = { "not assigned" };
 
 
 template<typename T>

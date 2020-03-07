@@ -4,27 +4,29 @@
 #include "ComponentData.h"
 #include <sstream>
 
-MeshRenderer::MeshRenderer(GameObject* gameObject) : GaiaComponent(gameObject)
+MeshRenderer::MeshRenderer(GameObject* gameObject) : GaiaComponent(gameObject), visible(true)
 {
 
 }
 
 MeshRenderer::~MeshRenderer()
 {
-
+	for (auto entity : entities) 
+		gameObject->getScene()->getSceneManager()->destroyEntity(entity.second);
+	
+	entities.clear();
 }
 
-void MeshRenderer::setMesh(std::string id, std::string mesh)
+void MeshRenderer::setMesh(const std::string& id, const std::string& mesh)
 {
 	if (entities.find(id) == entities.end())
 	{
-		// TODO: intentar quitar esta dependencis
 		entities[id] = gameObject->getScene()->createEntity(mesh);
 		gameObject->node->attachObject(entities[id]);
 	}
 }
 
-void MeshRenderer::setMaterial(std::string id, std::string material)
+void MeshRenderer::setMaterial(const std::string& id, const std::string& material)
 {
 	if (entities.find(id) != entities.end())
 		entities[id]->setMaterialName(material);

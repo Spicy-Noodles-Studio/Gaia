@@ -15,7 +15,7 @@ public:
 	ComponentManager();
 	~ComponentManager();
 	
-	static const ComponentFactory getComponentFactory(const std::string& nameID);
+	static const ComponentFactory& getComponentFactory(const std::string& nameID);
 
 	template<typename T>
 	static void registerComponent(const std::string& nameID);

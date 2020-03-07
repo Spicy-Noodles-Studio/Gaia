@@ -6,15 +6,16 @@
 
 Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera(false)
 {
-	cam = gameObject->getScene()->getSceneManager()->createCamera(gameObject->getName() + "Cam");
+	camera = gameObject->getScene()->getSceneManager()->createCamera(gameObject->getName() + "Cam");
 
-	cam->setAutoAspectRatio(true);
-	gameObject->node->attachObject(cam);
+	camera->setAutoAspectRatio(true);
+	gameObject->node->attachObject(camera);
 }
 
 Camera::~Camera()
 {
-	
+	gameObject->getScene()->getSceneManager()->destroyCamera(camera);
+	camera = nullptr;
 }
 
 void Camera::lookAt(const Vector3& pos, SpaceReference space)
@@ -42,13 +43,13 @@ void Camera::setDirection(const Vector3& dir)
 
 Ogre::Camera* Camera::getCamera()
 {
-	return cam;
+	return camera;
 }
 
 void Camera::setClipDistances(double near, double far)
 {
-	cam->setNearClipDistance(near);
-	cam->setFarClipDistance(far);
+	camera->setNearClipDistance(near);
+	camera->setFarClipDistance(far);
 }
 
 void Camera::handleData(ComponentData* data)

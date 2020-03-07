@@ -77,15 +77,17 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 Scene* SceneManager::createScene(const SceneData* data)
 {
 	Scene* myScene = new Scene(data->name, root);
-	for (GameObjectData* gameObjectD : data->getGameObjectsData()) {
-		GameObject* gameObject = new GameObject(gameObjectD->getName(), gameObjectD->getTag(), myScene);
-		for (auto it : gameObjectD->getComponentData()) {
-			ComponentData* cD = it.second;
-			auto constructor = ComponentManager::getComponentFactory(cD->getName());
-			if (constructor != nullptr) {
+	for (GameObjectData* gData : data->getGameObjectsData()) {
+		GameObject* gameObject = new GameObject(gData->getName(), gData->getTag(), myScene);
+		for (auto it : gData->getComponentData()) {
+			ComponentData* cData = it.second;
+			auto constructor = ComponentManager::getComponentFactory(cData->getName());
+			if (constructor != nullptr) 
+			{
 				Component* comp = constructor(gameObject);
-				comp->handleData(cD);
-				gameObject->addComponent(cD->getName(), comp);
+				comp->handleData(cData);
+				if (!gameObject->addComponent(cData->getName(), comp))
+					delete comp;
 			}
 		}
 		myScene->addGameObject(gameObject);

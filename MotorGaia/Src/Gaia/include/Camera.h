@@ -9,7 +9,7 @@
 class Camera : public GaiaComponent
 {
 private:
-	Ogre::Camera* cam;
+	Ogre::Camera* camera;
 	bool isMainCamera;
 
 public:

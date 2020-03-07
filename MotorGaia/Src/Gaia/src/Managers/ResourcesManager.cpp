@@ -20,7 +20,7 @@ ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(), 
 ResourcesManager::~ResourcesManager()
 {
 	// Close method should be called externally
-	// close();
+	close();
 }
 
 
@@ -120,7 +120,8 @@ bool ResourcesManager::initShaderSystem()
 void ResourcesManager::destroyShaderSystem()
 {
 	// Restore default scheme.
-	Ogre::MaterialManager::getSingleton().setActiveScheme(Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
+	if(Ogre::MaterialManager::getSingletonPtr() != nullptr)
+		Ogre::MaterialManager::getSingleton().setActiveScheme(Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
 
 	// Unregister the material manager listener.
 	if (shaderTechniqueResolver != nullptr)

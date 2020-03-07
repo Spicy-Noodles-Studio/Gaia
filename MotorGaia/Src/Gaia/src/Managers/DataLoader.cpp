@@ -49,7 +49,15 @@ GameObjectData* DataLoader::loadBlueprint(const std::string& filename, bool& loa
 	}
 
 	json j;
-	i >> j;
+	// Try if format file is valid
+	try {
+		i >> j;
+	}
+	catch (std::exception message) {
+		printf("DATA LOADER: Scene file \"%s\" invalid format. Should be .json formatting\n", filename.c_str());
+		i.close();
+		return GameObjectData::empty();
+	}
 	i.close();
 	return loadGameObjectData(j, loaded);
 }
@@ -62,14 +70,17 @@ ComponentData* DataLoader::loadComponentData(const json& data, bool& loaded)
 	if (name == data.end()) {
 		printf("DATA LOADER: Component name not found\n");
 		loaded = false;
-		return cD;
+		delete cD;
+		return ComponentData::empty();
 	}
 	cD->setName(*name);
 
 	json::const_iterator properties = data.find("ComponentProperties");
-	if (properties != data.end())
-		for (auto& property : (*properties).items())
+	if (properties != data.end()) {
+		for (auto& property : (*properties).items()) {
 			loaded = cD->addProperty(property.key(), property.value()) && loaded;//Cuidado evaluacion perezosa
+		}
+	}
 
 	return cD;
 }
@@ -95,7 +106,8 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data, bool& loaded)
 	if (buildType == data.end()) {
 		printf("DATA LOADER: Object type not found %s\n", gOD->getName().c_str());
 		loaded = false;
-		return gOD;
+		delete gOD;
+		return GameObjectData::empty();
 	}
 	std::string type, aux = *buildType;
 	for (char c : aux) type += std::tolower(c);
@@ -146,7 +158,7 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data, bool& loaded)
 
 	//Se cargan los datos de los hijos con una llamada recursiva
 	json::const_iterator children = data.find("Children");
-	if (children != data.end())
+	if (children != data.end()) {
 		for (auto& child : (*children).items()) {
 			json::const_iterator name = child.value().find("ObjectName");
 			if (name == child.value().end()) {
@@ -159,6 +171,7 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data, bool& loaded)
 			gOD->addChildrenData(*name, loadGameObjectData(child.value(), aux));
 			loaded = loaded && aux;
 		}
+	}
 
 	return gOD;
 }
@@ -171,6 +184,7 @@ SceneData* DataLoader::loadSceneData(const json& data, bool& loaded)
 	if (name == data.end()) {
 		printf("DATA LOADER: SceneName not found\n");
 		loaded = false;
+		delete sD;
 		return SceneData::empty();
 	}
 	sD->setName(*name);

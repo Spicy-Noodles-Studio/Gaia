@@ -6,6 +6,10 @@ Component::Component(GameObject* gameObject) : gameObject(gameObject), active(tr
 
 }
 
+Component::~Component()
+{
+}
+
 void Component::setActive(bool active)
 {
 	this->active = active;

@@ -16,6 +16,7 @@ Scene::~Scene()
 	sceneObjects.clear();
 	destroyQueue.clear();
 	
+	sceneManager->clearScene();
 	root->destroySceneManager(sceneManager);
 
 	mainCamera = nullptr;
@@ -28,7 +29,7 @@ void Scene::awake()
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && c->isSleeping()) {
 			c->awake();
-			c->setSleeping(false);
+			c->sleeping = false;
 		}
 	}
 }
@@ -38,8 +39,10 @@ void Scene::start()
 {
 	// start components
 	for (UserComponent* c : userComponents) {
-		if (c->isActive() && !c->isSleeping() && !c->hasStarted())
+		if (c->isActive() && !c->isSleeping() && !c->hasStarted()) {
 			c->start();
+			c->started = true;
+		}
 	}
 }
 

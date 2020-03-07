@@ -9,6 +9,8 @@ GameObject::GameObject(const std::string& name, const std::string& tag, Scene* s
 
 GameObject::~GameObject()
 {
+    node->detachAllObjects();
+
     for (auto c : components) {
         delete c.second;
         c.second = nullptr;

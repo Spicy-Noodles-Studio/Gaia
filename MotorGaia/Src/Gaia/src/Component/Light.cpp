@@ -12,7 +12,8 @@ Light::Light(GameObject* gameObject) : GaiaComponent(gameObject)
 
 Light::~Light()
 {
-
+	gameObject->getScene()->getSceneManager()->destroyLight(light);
+	light = nullptr;
 }
 
 /*

@@ -92,9 +92,3 @@ bool UserComponent::isSleeping()
 {
 	return sleeping;
 }
-
-
-void UserComponent::setSleeping(bool sleep)
-{
-	sleeping = sleep;
-}

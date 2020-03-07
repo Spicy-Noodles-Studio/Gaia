@@ -36,8 +36,6 @@ private:
 	ResourcesManager resourcesManager;
 	ComponentManager componentManager;
 	SceneManager sceneManager;
-
-	GameObject* obj;
 };
 
 #endif 

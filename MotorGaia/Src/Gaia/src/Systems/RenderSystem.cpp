@@ -22,6 +22,5 @@ void RenderSystem::render(float deltaTime)
 
 void RenderSystem::close()
 {
-	/*if (root != nullptr)
-		root->destroySceneManager(sceneManager);*/
+	
 }

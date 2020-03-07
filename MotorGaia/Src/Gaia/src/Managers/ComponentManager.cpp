@@ -4,13 +4,15 @@ std::map<std::string, ComponentFactory> ComponentManager::factories;
 
 ComponentManager::ComponentManager()
 {
+
 }
 
 ComponentManager::~ComponentManager()
 {
+
 }
 
-const ComponentFactory ComponentManager::getComponentFactory(const std::string& nameID)
+const ComponentFactory& ComponentManager::getComponentFactory(const std::string& nameID)
 {
 	if (factories.find(nameID) == factories.end())
 	{

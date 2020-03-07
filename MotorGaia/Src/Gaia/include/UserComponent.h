@@ -11,7 +11,7 @@ class UserComponent : public Component
 	friend class Scene;
 public:
 	UserComponent(GameObject* gameObject);
-	~UserComponent();
+	virtual ~UserComponent();
 
 	virtual void awake();
 	virtual void start();
@@ -38,7 +38,6 @@ public:
 private:
 	bool hasStarted();
 	bool isSleeping();
-	void setSleeping(bool sleep);
 
 private:
 	bool started;

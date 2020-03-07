@@ -14,16 +14,14 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 
-GaiaCore::GaiaCore() : root(nullptr), win(nullptr), resourcesManager("resources.asset"), obj(nullptr)
+GaiaCore::GaiaCore() : root(nullptr), win(nullptr), resourcesManager("resources.asset")
 {
 
 }
 
 GaiaCore::~GaiaCore()
 {
-	delete obj;
-    delete win;
-	delete root;
+	close();
 }
 
 void GaiaCore::init()
@@ -87,6 +85,17 @@ void GaiaCore::close()
 	sceneManager.close();
 	// ResourcesManager termination
 	resourcesManager.close();
+
+	//Systems termination
+	GaiaInput::destroy();
+	RenderSystem::destroy();
+
+	if (win != nullptr)
+		delete win;
+	win = nullptr;
+	if (root != nullptr)
+		delete root;
+	root = nullptr;
 }
 
 void GaiaCore::render(float deltaTime)
@@ -111,19 +120,19 @@ void GaiaCore::preUpdate(float deltaTime)
 
 
 	// Managers
-	sceneManager.preUpdate(deltaTime);
+	//sceneManager.preUpdate(deltaTime);
 }
 
 void GaiaCore::update(float deltaTime)
 {
 	// Managers
-	sceneManager.update(deltaTime);
+	//sceneManager.update(deltaTime);
 }
 
 void GaiaCore::postUpdate(float deltaTime)
 {
 	// Managers
-	sceneManager.postUpdate(deltaTime);
+	//sceneManager.postUpdate(deltaTime);
 
 	// Systems 
 	// Si es que hay

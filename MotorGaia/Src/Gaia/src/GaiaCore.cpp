@@ -76,7 +76,7 @@ void GaiaCore::init()
 	MeshRenderer *ms = new MeshRenderer(obj);
 	ms->createEntity("knot", "knot.mesh");
 	RigidBody *rb = new RigidBody(obj);
-	rb->setRigidBody(1.0, SPHERE_RB_SHAPE);
+	rb->setRigidBody(1.0, SPHERE_RB_SHAPE, {}, { 2,2,2 });
 
 	GameObject *obj1 = new GameObject("Cubo", "Cu", nullptr);
 	Transform *transform3 = new Transform(obj1);

@@ -1,10 +1,12 @@
 #include "PhysicsSystem.h"
+
+#include "Bullet3Common/b3Scalar.h"
+
 #include "Transform.h"
 #include "GaiaMotionState.h"
 #include "RigidBody.h"
 #include "GameObject.h"
 #include "gTime.h"
-#include "Bullet3Common/b3Scalar.h"
 
 PhysicsSystem::PhysicsSystem()
 {
@@ -151,8 +153,9 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 
 void PhysicsSystem::checkCollisions()
 {
-	int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
+	std::map<std::pair<RigidBody*, RigidBody*>, bool> newContacts;
 
+	int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
 	for (int i = 0; i < numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
@@ -162,17 +165,22 @@ void PhysicsSystem::checkCollisions()
 		RigidBody* rbA = (RigidBody*)obA->getUserPointer();
 		RigidBody* rbB = (RigidBody*)obB->getUserPointer();
 
+		if (rbA == 0 or rbB == 0)
+			return;
+
+		// Orden A < B, para el mapa
+		RigidBody* aux;
+		if (rbA > rbB)
+		{
+			aux = rbA;
+			rbA = rbB;
+			rbB = aux;
+		}
+
 		GameObject* goA = rbA->gameObject;
 		GameObject* goB = rbB->gameObject;
 
-		if (rbA->isTrigger() && !rbB->isTrigger())
-			goB->onTrigger(goA);
-		else if (rbB->isTrigger())
-			goA->onTrigger(goB);
-		else {
-			goA->onCollision(goB);
-			goB->onCollision(goA);
-		}
+
 
 		//Saca los puntos de colision
 		/*int numContacts = contactManifold->getNumContacts();
@@ -186,5 +194,58 @@ void PhysicsSystem::checkCollisions()
 				const btVector3& normalOnB = pt.m_normalWorldOnB;
 			}
 		}*/
+
+
+
+		newContacts[{rbA, rbB}] = true;
+
+		bool aTrigger = rbA->isTrigger(), bTrigger = rbB->isTrigger();
+
+		//llamamos al collisionEnter si no estaban registrados.
+		if (!contacts[{rbA, rbB}])
+		{
+			if (!aTrigger && !bTrigger) {
+				goA->onCollisionEnter(goB);
+				goB->onCollisionEnter(goA);
+			}
+			else if (aTrigger && !bTrigger)
+				goB->onTriggerEnter(goA);
+			else if (bTrigger && !aTrigger)
+				goA->onTriggerEnter(goB);
+		}// Si ya estaban llamamos al collisionStay.
+		else {
+			if (!aTrigger && !bTrigger) {
+				goA->onCollisionStay(goB);
+				goB->onCollisionStay(goA);
+			}
+			else if (aTrigger && !bTrigger)
+				goB->onTriggerStay(goA);
+			else if (bTrigger && !aTrigger)
+				goA->onTriggerStay(goB);
+		}
+
 	}
+
+	for (auto it = contacts.begin(); it != contacts.end(); it++)
+	{
+		std::pair<RigidBody*, RigidBody*> col = (*it).first;
+		if (newContacts.find(col) == newContacts.end())
+		{
+			bool aTrigger = col.first->isTrigger();
+			bool bTrigger = col.second->isTrigger();
+			GameObject* goA = col.first->gameObject;
+			GameObject* goB = col.second->gameObject;
+
+			if (!aTrigger && !bTrigger) {
+				goA->onCollisionExit(goB);
+				goB->onCollisionExit(goA);
+			}
+			else if (aTrigger && !bTrigger)
+				goB->onTriggerExit(goA);
+			else if (bTrigger && !aTrigger)
+				goA->onTriggerExit(goB);
+		}
+	}
+
+	contacts = newContacts;
 }

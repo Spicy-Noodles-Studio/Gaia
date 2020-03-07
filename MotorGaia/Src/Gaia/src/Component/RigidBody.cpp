@@ -15,13 +15,13 @@ RigidBody::~RigidBody()
 {
 }
 
-void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, const Vector3& dim, bool isTrigger)
+void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, const Vector3& dim, bool isT)
 {
 	motionState = new GaiaMotionState(gameObject->transform, offset);
 	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getScale() * dim * btScaleConversion);
-	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_NO_CONTACT_RESPONSE & isTrigger));
+	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_NO_CONTACT_RESPONSE * isT));
 	body->setUserPointer(this);
-	trigger = isTrigger;
+	trigger = isT;
 }
 
 void RigidBody::handleData(ComponentData* data)

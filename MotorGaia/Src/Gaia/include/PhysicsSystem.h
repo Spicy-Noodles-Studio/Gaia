@@ -2,13 +2,16 @@
 #ifndef PHYSICS_SYSTEM_H
 #define PHYSICS_SYSTEM_H
 
-#include "Singleton.h"
 #include "btBulletDynamicsCommon.h"
+#include <map>
+
 #include "Vector3.h"
+#include "Singleton.h"
 #include"DebugDrawer.h"
 
 class Transform;
 class GaiaMotionState;
+class RigidBody;
 
 enum RB_Shape
 {
@@ -47,6 +50,8 @@ private:
 	//keep track of the shapes, we release memory at exit.
 	//make sure to re-use collision shapes among rigid bodies whenever possible!
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
+
+	std::map<std::pair<RigidBody*, RigidBody*>, bool> contacts;
 };
 
 #endif

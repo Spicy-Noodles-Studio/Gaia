@@ -26,7 +26,9 @@
     <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaInput.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\RenderComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
@@ -61,6 +63,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\GaiaComponent.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\UserComponent.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GaiaCore.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\GaiaInput.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObjectData.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Scene\Scene.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Scene\SceneData.cpp" />

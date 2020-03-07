@@ -7,6 +7,7 @@
 #include <iostream>
 // Example
 #include "RenderSystem.h"
+#include "GaiaInput.h"
 #include "Camera.h"
 #include "Light.h"
 #include "GameObject.h"
@@ -41,6 +42,7 @@ void GaiaCore::init()
 
 	// Systems initialization
 	RenderSystem::GetInstance()->init(root);
+	GaiaInput::GetInstance()->init();
 
 	// Managers initialization
 	// ResourcesManager initialization
@@ -105,7 +107,7 @@ void GaiaCore::preUpdate(float deltaTime)
 	// InterfaceSystem::GetInstance()->update(deltaTime);
 	
 	// InputSystem
-	// InputSystem::GetInstance()->update(deltaTime);
+	GaiaInput::GetInstance()->update();
 
 
 	// Managers

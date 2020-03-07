@@ -9,7 +9,6 @@
 #define GAIA_API __declspec(dllimport)
 #endif
 
-#include "GameObject.h"
 #include "Window.h"
 #include "ResourcesManager.h"
 #include "ComponentManager.h"

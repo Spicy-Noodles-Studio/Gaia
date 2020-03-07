@@ -5,14 +5,9 @@
 #include <OgreConfigFile.h>
 #include <OgreViewport.h>
 #include <iostream>
-// Example
+
 #include "RenderSystem.h"
 #include "GaiaInput.h"
-#include "Camera.h"
-#include "Light.h"
-#include "GameObject.h"
-#include "Transform.h"
-#include "MeshRenderer.h"
 
 GaiaCore::GaiaCore() : root(nullptr), win(nullptr), resourcesManager("resources.asset")
 {
@@ -47,17 +42,10 @@ void GaiaCore::init()
 	resourcesManager.init();
 
 	// TODO: ComponentManager initialization
-	// componentManager.init();
-
-	//REGISTRO DE COMPONENTES (probablemente se deberia de pasar al init de componentManager)
-	componentManager.registerComponent<Transform>("Transform");
-	componentManager.registerComponent<Camera>("Camera");
-	componentManager.registerComponent<Light>("Light");
-	componentManager.registerComponent<MeshRenderer>("MeshRenderer");
+	componentManager.init();
 
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager.init(root, win);
-
 }
 
 void GaiaCore::run()
@@ -83,6 +71,8 @@ void GaiaCore::close()
 {
 	// SceneManager termination
 	sceneManager.close();
+	// ComponentManager termination
+	componentManager.close();
 	// ResourcesManager termination
 	resourcesManager.close();
 
@@ -120,19 +110,19 @@ void GaiaCore::preUpdate(float deltaTime)
 
 
 	// Managers
-	//sceneManager.preUpdate(deltaTime);
+	sceneManager.preUpdate(deltaTime);
 }
 
 void GaiaCore::update(float deltaTime)
 {
 	// Managers
-	//sceneManager.update(deltaTime);
+	sceneManager.update(deltaTime);
 }
 
 void GaiaCore::postUpdate(float deltaTime)
 {
 	// Managers
-	//sceneManager.postUpdate(deltaTime);
+	sceneManager.postUpdate(deltaTime);
 
 	// Systems 
 	// Si es que hay

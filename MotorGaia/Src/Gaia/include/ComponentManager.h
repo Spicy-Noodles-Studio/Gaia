@@ -14,6 +14,9 @@ class ComponentManager
 public:
 	ComponentManager();
 	~ComponentManager();
+
+	void init();
+	void close();
 	
 	static const ComponentFactory& getComponentFactory(const std::string& nameID);
 

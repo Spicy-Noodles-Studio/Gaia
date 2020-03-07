@@ -21,7 +21,7 @@ void SceneManager::init(Ogre::Root* root, Window* window)
 
 	loadScene(ResourcesManager::getSceneData(0));
 	// Let it change runtime
-	// processSceneChange();
+	processSceneChange();
 }
 
 void SceneManager::close()

@@ -19,7 +19,8 @@ ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(), 
 
 ResourcesManager::~ResourcesManager()
 {
-	close();
+	// Close method should be called externally
+	// close();
 }
 
 
@@ -74,7 +75,9 @@ void ResourcesManager::close()
 	sceneData.clear();
 	blueprints.clear();
 
-	delete fileSystemLayer;
+	if(fileSystemLayer != nullptr)
+		delete fileSystemLayer;
+	fileSystemLayer = nullptr;
 
 	destroyShaderSystem();
 }

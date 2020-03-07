@@ -21,9 +21,9 @@ GaiaCore::GaiaCore() : root(nullptr), win(nullptr), resourcesManager("resources.
 
 GaiaCore::~GaiaCore()
 {
-	delete root;
 	delete obj;
     delete win;
+	delete root;
 }
 
 void GaiaCore::init()
@@ -66,7 +66,7 @@ void GaiaCore::run()
 {
 	bool exit = false;
 	float deltaTime = 1.f / 60.f;
-	while (!exit) {
+	while (!GaiaInput::GetInstance()->getKeyPress("Escape")) {
 		// Render
 		render(deltaTime);
 

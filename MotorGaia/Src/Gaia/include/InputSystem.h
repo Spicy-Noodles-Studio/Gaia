@@ -39,6 +39,8 @@ private:
     mouseButton MOUSE_BUTTON_RIGHT;
     mouseButton MOUSE_BUTTON_MIDDLE;
 
+    int MOUSE_WHEEL;
+
     void processMouseInputDown(SDL_MouseButtonEvent& e);
     void processMouseInputUp (SDL_MouseButtonEvent& e);
 
@@ -116,7 +118,10 @@ public:
     bool getMouseButtonClick(char button);
     bool getMouseButtonHold(char button);
     bool getMouseButtonRelease(char button);
+    /// Returns 1 for wheel_up, -1 for wheel_down, 0 if no movement
+    int getMouseWheel() { return MOUSE_WHEEL; }
     std::pair<int, int> getMousePosition() { return std::pair<int, int>(MOUSE_POSITION_X, MOUSE_POSITION_Y); };
+
 
     // Controller returns
     bool isButtonPressed(int controllerIndex, std::string button);

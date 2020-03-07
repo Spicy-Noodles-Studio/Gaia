@@ -91,6 +91,16 @@ void InputSystem::update()
         case SDL_MOUSEBUTTONUP:
             processMouseInputUp(event.button);
             break;
+        case SDL_MOUSEWHEEL:
+            if (event.wheel.y > 0) {
+                MOUSE_WHEEL = 1;
+                if (flags) std::cout << "Mouse wheel up" << "\n";
+            }
+            else if (event.wheel.y < 0) {
+                MOUSE_WHEEL = -1;
+                if (flags) std::cout << "Mouse wheel down" << "\n";
+            }
+            break;
 
             // Controller events
         case SDL_CONTROLLERBUTTONDOWN:
@@ -111,6 +121,8 @@ void InputSystem::update()
             if (flags) std::cout << "Controller: " << controllerIndex << " Button Up" << "\n";
 
             break;
+
+        
 
         case SDL_CONTROLLERDEVICEADDED:
             if (currentControllers < MAX_CONTROLLERS && SDL_IsGameController(event.cdevice.which)) {
@@ -557,6 +569,8 @@ void InputSystem::clearInputs()
 
     if (MOUSE_BUTTON_MIDDLE.pressed) MOUSE_BUTTON_MIDDLE.pressed = false;
     else if (MOUSE_BUTTON_MIDDLE.released)MOUSE_BUTTON_MIDDLE.released = false;
+
+    MOUSE_WHEEL = 0;
 
     for (int i = 0; i < currentControllers; i++) {
         controllers[i].buttonPress.clear();

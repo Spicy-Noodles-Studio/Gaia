@@ -64,6 +64,8 @@ void GaiaCore::init()
 	obj->transform->setPosition(Vector3(0, 0, -400));
 	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
 	obj->transform->rotate(Vector3(0, 90, 0));
+
+	sound->initSystem();
 }
 
 void GaiaCore::run()
@@ -72,12 +74,13 @@ void GaiaCore::run()
 	{
 		RenderSystem::GetInstance()->render();
 		update();
+		sound->updateSounds();
 	}
 }
 
 void GaiaCore::close()
 {
-
+	sound->destroy();
 }
 
 void GaiaCore::update()

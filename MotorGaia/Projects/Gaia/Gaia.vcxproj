@@ -36,6 +36,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\SceneData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Singleton.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\SoundListener.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Transform.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
@@ -46,6 +47,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\Camera.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Light.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\MeshRenderer.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\SoundListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />

@@ -117,6 +117,9 @@
     <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h">
       <Filter>Archivos de encabezado\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\SoundListener.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\GaiaCore.cpp">
@@ -184,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp">
       <Filter>Archivos de origen\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\SoundListener.cpp">
+      <Filter>Archivos de origen\Component</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

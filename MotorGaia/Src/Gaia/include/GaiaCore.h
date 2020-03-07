@@ -11,6 +11,7 @@
 
 #include "GameObject.h"
 #include "Window.h"
+#include "SoundSystem.h"
 
 class GAIA_API GaiaCore
 {
@@ -26,6 +27,8 @@ private:
 	Ogre::Root* root;
 	Window* win;
 	GameObject* obj;
+
+	SoundSystem* sound = SoundSystem::GetInstance();
 	
 	void update();
 };

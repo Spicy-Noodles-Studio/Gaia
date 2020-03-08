@@ -15,13 +15,13 @@ public:
 	MeshRenderer(GameObject* gameObject);
 	~MeshRenderer();
 
-	Ogre::Entity* getEntity(std::string entity);
+	Ogre::Entity* getMesh(std::string mesh);
 	
 	void setMesh(const std::string& id, const std::string& mesh);
 	void setMaterial(const std::string& id, const std::string& material);
 
-	void attachEntityToNode(std::string entity);
-	void attachEntityToBone(std::string owner, std::string bone, std::string entity);
+	void attachEntityToNode(const std::string& mesh);
+	void attachEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh);
 
 	void setVisible(bool visible);
 	bool isVisible();

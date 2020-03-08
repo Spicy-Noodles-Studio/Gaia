@@ -12,15 +12,20 @@ Animator::~Animator()
 
 }
 
-void Animator::setEntity(std::string entity)
+void Animator::setMesh(const std::string& mesh)
 {
 	MeshRenderer* mr = gameObject->getComponent<MeshRenderer>();
 
 	if (mr != nullptr)
-		animations = mr->getEntity(entity)->getAllAnimationStates()->getAnimationStates();
+		animations = mr->getMesh(mesh)->getAllAnimationStates()->getAnimationStates();
 }
 
-Ogre::AnimationState* Animator::getAnimation(std::string animation)
+Ogre::AnimationState* Animator::getAnimation(const std::string& animation)
 {
 	return animations[animation];
+}
+
+void Animator::handleData(ComponentData* data)
+{
+
 }

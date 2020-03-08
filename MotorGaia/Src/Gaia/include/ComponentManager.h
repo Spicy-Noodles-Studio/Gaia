@@ -3,9 +3,10 @@
 #ifndef COMPONENT_MANAGER_H
 #define COMPONENT_MANAGER_H
 
-#include "Component.h"
 #include <map>
 #include <functional>
+
+#include "Component.h"
 
 typedef std::function<Component* (GameObject*)> ComponentFactory;
 
@@ -39,6 +40,5 @@ static void ComponentManager::registerComponent(const std::string& nameID)
 	Component::nameID<T>.id = nameID;
 	factories[nameID] = [](GameObject* gameObject) { return new T(gameObject); };
 }
-
 
 #endif

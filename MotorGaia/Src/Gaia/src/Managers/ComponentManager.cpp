@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "MeshRenderer.h"
+#include "Animator.h"
 
 std::map<std::string, ComponentFactory> ComponentManager::factories;
 
@@ -24,6 +25,7 @@ void ComponentManager::init()
 	registerComponent<Camera>("Camera");
 	registerComponent<Light>("Light");
 	registerComponent<MeshRenderer>("MeshRenderer");
+	registerComponent<Animator>("Animator");
 }
 
 void ComponentManager::close()

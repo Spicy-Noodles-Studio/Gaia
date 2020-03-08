@@ -96,7 +96,7 @@ T* GameObject::addComponent() {
 
 template<typename T>
 bool GameObject::delComponent() {
-    const std::string key = Component::nameID<T>;
+    const std::string key = Component::nameID<T>.id;
     if (components.find(key) != components.end()) {
         printf("GAMEOBJECT: Cannot remove. Component %s does not exist in %s GameObject\n", key.c_str(), name.c_str());
         return false;

@@ -118,6 +118,7 @@ FMOD::Channel* SoundSystem::playSound(const std::string sound)
 
 	result = system->playSound(sounds[sound], soundEfects, false, &channel);
 	ERRCHECK(result);
+	channel->set3DMinMaxDistance(50, 100000);
 	return channel;
 
 }
@@ -129,6 +130,7 @@ FMOD::Channel* SoundSystem::playMusic(const std::string sound)
 
 	result = system->playSound(sounds[sound], music, false, &channel);
 	ERRCHECK(result);
+	channel->set3DMinMaxDistance(50, 100000);
 	return channel;
 
 }
@@ -181,6 +183,7 @@ void SoundSystem::setListenerAttributes(const Vector3& position, const Vector3& 
 	forward = { float(Forward.x) ,float(Forward.y) ,float(Forward.z) };
 	up = { float(Up.x) ,float(Up.y) ,float(Up.z) };
 	system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
+	
 }
 
 FMOD_VECTOR SoundSystem::vecToFMOD(const Vector3& in)

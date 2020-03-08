@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h" />
     <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ResourcesManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Scene.h" />
@@ -58,6 +59,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Managers\SceneManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Vector3.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Window.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Component.cpp" />

@@ -16,6 +16,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 
+
 GaiaCore::GaiaCore()
 {
 
@@ -47,9 +48,12 @@ void GaiaCore::init()
 
 	RenderSystem::GetInstance()->setup(root);
 
-	GameObject* aux = new GameObject("Camera", "Cam", nullptr);
+	aux = new GameObject("Camera", "Cam", nullptr);
 	Transform* transform1 = new Transform(aux);
 	Camera* cam = new Camera(aux);
+	lis = new SoundListener(aux);
+	
+	//aux->transform->rotate(Vector3(0, -90, 0));
 
 	Ogre::Viewport* vp = win->addViewport(cam->getCamera());
 
@@ -65,7 +69,12 @@ void GaiaCore::init()
 	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
 	obj->transform->rotate(Vector3(0, 90, 0));
 
+	emi = new SoundEmitter(obj);
+	
+	
+
 	sound->initSystem();
+	emi->playSound("prueba2");
 }
 
 void GaiaCore::run()
@@ -86,4 +95,13 @@ void GaiaCore::close()
 void GaiaCore::update()
 {
 	obj->transform->translate(Vector3(0.5, 0, 0));
+	//obj->getComponent<SoundEmitter>()->update(2);
+	emi->update(0);
+	lis->update(0);
+
+	aux->transform->rotate(Vector3(0, 0, 0));
+/*	SoundListener* lis = aux->getComponent<SoundListener>();
+	emi->update(0);*/
+
+
 }

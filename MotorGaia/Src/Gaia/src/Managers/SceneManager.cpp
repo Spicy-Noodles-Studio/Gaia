@@ -59,7 +59,7 @@ void SceneManager::postUpdate(float deltaTime)
 	// Destroy pending object
 	currentScene->destroyPendingGameObjects();
 	// Instantiate pending objects
-	// TODO: Instantiate stuff
+	currentScene->instantiatePendingGameObjects();
 }
 
 bool SceneManager::changeScene(const std::string& name, bool async)

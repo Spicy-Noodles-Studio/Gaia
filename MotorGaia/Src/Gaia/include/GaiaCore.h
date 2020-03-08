@@ -14,6 +14,8 @@
 #include "ComponentManager.h"
 #include "SceneManager.h"
 
+#include "UserComponent.h"
+
 class GAIA_API GaiaCore
 {
 public:
@@ -35,6 +37,8 @@ private:
 	ResourcesManager resourcesManager;
 	ComponentManager componentManager;
 	SceneManager sceneManager;
+
+	UserComponent* component;
 };
 
 #endif 

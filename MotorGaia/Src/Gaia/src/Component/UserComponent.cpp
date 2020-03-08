@@ -1,6 +1,7 @@
 #include "UserComponent.h"
 #include "GameObject.h"
 #include "Scene.h"
+#include "ResourcesManager.h"
 
 
 UserComponent::UserComponent(GameObject* gameObject) : Component(gameObject), started(false), sleeping(false)
@@ -61,6 +62,48 @@ void UserComponent::onCollisionStay(GameObject* other)
 void UserComponent::onCollisionExit(GameObject* other)
 {
 
+}
+
+
+GameObject* UserComponent::instantiate(const std::string& blueprintName, const Vector3& position)
+{
+	// check if blueprint name is valid
+	const GameObjectData* data = ResourcesManager::getBlueprint(blueprintName);
+	if (data == nullptr) return nullptr;
+	// create object and add to pending
+	GameObject* instance = instantiate(data);
+
+	if (instance->transform != nullptr)
+		instance->transform->setPosition(position);
+
+	return instance;
+}
+
+
+GameObject* UserComponent::instantiate(const GameObjectData* data)
+{
+	GameObject* instance = new GameObject(data->getName(), data->getTag(), gameObject->getScene());
+	// Component
+	for (auto compData : data->getComponentData()) {
+		ComponentData* cData = compData.second;
+		auto constructor = ComponentManager::getComponentFactory(cData->getName());
+		if (constructor != nullptr)
+		{
+			Component* comp = constructor(instance);
+			comp->handleData(cData);
+			if (!instance->addComponent(cData->getName(), comp))
+				delete comp;
+		}
+	}
+	// For each child, create the child
+	for (auto childData : data->getChildrenData()) {
+		GameObject* child = instantiate(childData.second);
+		instance->addChild(child);
+	}
+
+	gameObject->getScene()->instantiate(instance);
+
+	return instance;
 }
 
 

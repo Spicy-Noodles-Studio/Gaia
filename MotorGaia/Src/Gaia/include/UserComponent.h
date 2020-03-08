@@ -4,7 +4,9 @@
 
 #include "Component.h"
 #include <vector>
-//#include "Vector3.h"
+#include "Vector3.h"
+
+#include "GameObjectData.h"
 
 class UserComponent : public Component
 {
@@ -23,9 +25,8 @@ public:
 	virtual void onCollisionStay(GameObject* other);
 	virtual void onCollisionExit(GameObject* other);
 
+	GameObject* instantiate(const std::string& blueprintName, const Vector3& position = Vector3( 0, 0, 0));
 	void destroy(GameObject* gameObject);
-	// void instantiate(const std::string& blueprintName, const Vector3& position = Vector3( 0, 0, 0), const Vector3& rotation = Vector3(0, 0, 0));
-	// void instantiate(const GameObject* gameObject, const Vector3& position = Vector3(0, 0, 0), const Vector3& rotation = Vector3(0, 0, 0));
 
 	// Busca a partir de la referencia de Scene desde el owner un objeto en la misma escena
 	// con el nombre indicado
@@ -38,6 +39,7 @@ public:
 private:
 	bool hasStarted();
 	bool isSleeping();
+	GameObject* instantiate(const GameObjectData* data);
 
 private:
 	bool started;

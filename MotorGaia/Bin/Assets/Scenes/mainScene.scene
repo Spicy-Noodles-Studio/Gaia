@@ -28,7 +28,7 @@
         {
             "ObjectType": "BLUEPRINT",
             "ObjectName": "Nudo 1",
-            "Tag": "nudo",
+            "Tag": "nodu",
             "BlueprintPath": "Nudo",
             "Children": [
                 {

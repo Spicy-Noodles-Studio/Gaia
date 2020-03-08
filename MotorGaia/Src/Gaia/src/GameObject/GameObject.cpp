@@ -7,6 +7,7 @@ GameObject::GameObject(const std::string& name, const std::string& tag, Scene* s
 	node = scene->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 }
 
+
 GameObject::~GameObject()
 {
     node->detachAllObjects();
@@ -17,6 +18,13 @@ GameObject::~GameObject()
     }
     components.clear();
     userComponents.clear();
+
+    if (parent != nullptr)
+        parent->removeChild(this);
+
+    for (GameObject* child : children) {
+        removeChild(child);
+    }
 }
 
 GameObject* GameObject::getParent() const

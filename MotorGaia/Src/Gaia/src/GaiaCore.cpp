@@ -46,6 +46,9 @@ void GaiaCore::init()
 
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager.init(root, win);
+
+	GameObject* obj = sceneManager.getCurrentScene()->getGameObjectWithName("Nudo 1");
+	component = new UserComponent(obj);
 }
 
 void GaiaCore::run()
@@ -61,6 +64,19 @@ void GaiaCore::run()
 		
 		// Process
 		update(deltaTime);
+
+		//PRUEBAS
+		if (GaiaInput::GetInstance()->getKeyPress("Space")) {
+			double x = (rand() % 200) + 1;
+			double y = (rand() % 200) + 1;
+			Vector3 pos = { x, y, -400 };
+			component->instantiate("Nudo", pos);
+		}
+		if (GaiaInput::GetInstance()->getKeyPress("d")) {
+			auto nudos = component->findGameObjectsWithTag("nudo");
+			for (auto n : nudos)
+				component->destroy(n);
+		}
 
 		// Post-process
 		postUpdate(deltaTime);
@@ -86,6 +102,9 @@ void GaiaCore::close()
 	if (root != nullptr)
 		delete root;
 	root = nullptr;
+	if (component != nullptr)
+		delete component;
+	component = nullptr;
 }
 
 void GaiaCore::render(float deltaTime)

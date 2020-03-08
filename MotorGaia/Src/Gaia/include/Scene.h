@@ -35,6 +35,7 @@ public:
 	void setMainCamera(Camera* camera);
 	Camera* getMainCamera() const;
 
+
 private:
 	void addUserComponent(UserComponent* component);
 
@@ -42,6 +43,9 @@ private:
 
 	void destroyPendingGameObjects();
 	void destroyGameObject(GameObject* gameObject);
+
+	void instantiatePendingGameObjects();
+	void instantiate(GameObject* gameObject);
 
 	void updateAllAnimations(float deltaTime);
 
@@ -58,6 +62,7 @@ private:
 	/* Objects, no parent-child */
 	std::vector<GameObject*> sceneObjects;
 	std::vector<GameObject*> destroyQueue;
+	std::vector<GameObject*> instantiateQueue;
 
 	Camera* mainCamera;
 };

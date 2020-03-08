@@ -8,14 +8,20 @@ Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), 
 
 Scene::~Scene()
 {
-	for (GameObject* g : sceneObjects) {
-		delete g;
-		g = nullptr;
+	for (GameObject* gameObject : sceneObjects) {
+		delete gameObject;
+		gameObject = nullptr;
+	}
+
+	for (GameObject* gameObject : instantiateQueue) {
+		delete gameObject;
+		gameObject = nullptr;
 	}
 
 	sceneObjects.clear();
 	destroyQueue.clear();
-	
+	instantiateQueue.clear();
+
 	sceneManager->clearScene();
 	root->destroySceneManager(sceneManager);
 
@@ -94,6 +100,7 @@ bool Scene::addGameObject(GameObject* gameObject)
 
 	repeatedNames[gameObject->getName()] = 0;
 	sceneObjects.push_back(gameObject);
+	gameObject->myScene = this;
 	return true;
 }
 
@@ -131,10 +138,26 @@ Camera* Scene::getMainCamera() const
 	return mainCamera;
 }
 
+void Scene::instantiate(GameObject* gameObject)
+{
+	gameObject->node->setVisible(false);
+	instantiateQueue.push_back(gameObject);
+}
+
+void Scene::instantiatePendingGameObjects()
+{
+	if (!instantiateQueue.size()) return;
+
+	for (auto gameObject : instantiateQueue) {
+		gameObject->node->setVisible(true);
+		addGameObject(gameObject);
+	}
+	instantiateQueue.clear();
+}
+
 void Scene::destroyPendingGameObjects()
 {
-	if (!destroyQueue.size())
-		return;
+	if (!destroyQueue.size()) return;
 
 	for (GameObject* g : destroyQueue) {
 		// Sacarlo de almacenamiento
@@ -143,6 +166,7 @@ void Scene::destroyPendingGameObjects()
 		delete g;
 		g = nullptr;
 	}
+	destroyQueue.clear();
 }
 
 void Scene::destroyGameObject(GameObject* gameObject)

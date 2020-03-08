@@ -37,6 +37,8 @@ public:
 
 private:
 	Scene* createScene(const SceneData* data);
+	GameObject* createGameObject(const GameObjectData* data, Scene* scene);
+
 	void loadScene(const SceneData* data);
 
 	void processSceneChange();

@@ -20,8 +20,8 @@ public:
 	void init();
 	void close();
 
-	void registerSceneData(SceneData* data);
-	void registerBlueprint(GameObjectData* data);
+	bool registerSceneData(SceneData* data);
+	bool registerBlueprint(GameObjectData* data);
 
 	static const SceneData* getSceneData(const std::string& name);
 	static const SceneData* getSceneData(int index);

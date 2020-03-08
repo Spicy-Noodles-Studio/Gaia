@@ -82,11 +82,17 @@ bool Scene::addGameObject(GameObject* gameObject)
 {
 	// TODO: Antes deberia de mirar si el objeto ya existe, o si hay alguno con el mismo nombre o tag
 	/* Hacer aqui */
-	if (getGameObjectWithName(gameObject->getName()) != nullptr) {
-		printf("SCENE: Trying to add gameobject with name %s that already exists in scene %s.\n", gameObject->getName().c_str(), name.c_str());
-		return false;
+	std::string objectName = gameObject->getName();
+	if (repeatedNames.find(objectName) != repeatedNames.end()) {
+		objectName += ("(" + std::to_string(++repeatedNames[objectName]) + ")");
+		printf("SCENE: Trying to add gameobject with name %s that already exists in scene %s\n", gameObject->getName().c_str(), name.c_str());
+		printf("SCENE: Adding gameobject with name %s\n", objectName.c_str());
+		gameObject->name = objectName;
+		// Try to add again
+		return addGameObject(gameObject);
 	}
 
+	repeatedNames[gameObject->getName()] = 0;
 	sceneObjects.push_back(gameObject);
 	return true;
 }

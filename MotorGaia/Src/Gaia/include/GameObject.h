@@ -13,6 +13,7 @@
 class Scene;
 
 class GameObject {
+    friend class Scene;
     friend class SceneManager;
     friend class UserComponent;
 public:
@@ -30,6 +31,24 @@ public:
 
     template<typename T>
     T* getComponent();
+
+    /* Get parent of current gameObject, return nullptr if has no parent */
+    GameObject* getParent() const;
+
+    /* Get all children */
+    std::vector<GameObject*>& getChildren();
+
+    /* Find child with given name */
+    GameObject* findChildWithName(const std::string& name);
+    
+    /* Find children with a given tag */
+    std::vector<GameObject*> findChildrenWithTag(const std::string& tag);
+
+    /* Add children to current parent */
+    void addChild(GameObject* child);
+
+    /* Remove child from parent */
+    void removeChild(GameObject* child);
     
 	void addChildNode(GameObject* child);
     const std::string& getName() const;
@@ -42,8 +61,11 @@ private:
 
 
 private: 
-    const std::string name;
-    const std::string tag;
+    std::string name;
+    std::string tag;
+
+    GameObject* parent;
+    std::vector<GameObject*> children;
 
     Scene* myScene;
     std::map<std::string, Component*> components;

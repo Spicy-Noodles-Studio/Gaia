@@ -1,5 +1,5 @@
 {
-    "SceneName": "Scene1",
+    "SceneName": "MainScene",
     "SceneObjects": [
         {
             "ObjectType": "GAMEOBJECT",
@@ -35,50 +35,6 @@
                     "ComponentName": "Transform",
                     "ComponentProperties": {
                         "position": "0 0 -400",
-                        "scale": "0.5 0.5 0.5",
-                        "rotation": "0 90 0"
-                    }
-                },
-                {
-                    "ComponentName": "MeshRenderer",
-                    "ComponentProperties": {
-                        "mesh": "knot knot.mesh"
-                    }
-                }
-            ]
-        },
-        {
-            "ObjectType": "GAMEOBJECT",
-            "ObjectName": "Nudo1",
-            "Tag": "objeto",
-            "Components":
-            [
-                {
-                    "ComponentName": "Transform",
-                    "ComponentProperties": {
-                        "position": "-200 0 -400",
-                        "scale": "0.5 0.5 0.5",
-                        "rotation": "0 90 0"
-                    }
-                },
-                {
-                    "ComponentName": "MeshRenderer",
-                    "ComponentProperties": {
-                        "mesh": "knot knot.mesh"
-                    }
-                }
-            ]
-        },
-        {
-            "ObjectType": "GAMEOBJECT",
-            "ObjectName": "Nudo2",
-            "Tag": "objeto",
-            "Components":
-            [
-                {
-                    "ComponentName": "Transform",
-                    "ComponentProperties": {
-                        "position": "200 0 -400",
                         "scale": "0.5 0.5 0.5",
                         "rotation": "0 90 0"
                     }

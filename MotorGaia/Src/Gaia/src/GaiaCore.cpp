@@ -41,7 +41,7 @@ void GaiaCore::init()
 	// ResourcesManager initialization
 	resourcesManager.init();
 
-	// TODO: ComponentManager initialization
+	// ComponentManager initialization
 	componentManager.init();
 
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)

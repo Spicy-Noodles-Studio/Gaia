@@ -26,23 +26,39 @@
             ]
         },
         {
-            "ObjectType": "GAMEOBJECT",
-            "ObjectName": "Nudo",
-            "Tag": "objeto",
-            "Components":
-            [
+            "ObjectType": "BLUEPRINT",
+            "ObjectName": "Nudo 1",
+            "Tag": "nudo",
+            "BlueprintPath": "Nudo",
+            "Children": [
+                {
+                    "ObjectType": "BLUEPRINT",
+                    "ObjectName": "Nudo 2",
+                    "Tag": "nudo",
+                    "BlueprintPath": "Nudo",
+                    "ComponentModifications": [
+                        {
+                            "ComponentName": "Transform",
+                            "ComponentProperties":{
+                                "position" : "-150 0 0",
+                                "scale" : "1 1 1"
+                            }
+                        }
+                    ]
+                }
+            ]
+            
+        },
+        {
+            "ObjectType": "BLUEPRINT",
+            "ObjectName": "Nudo 2",
+            "Tag": "nudo",
+            "BlueprintPath": "Nudo",
+            "ComponentModifications": [
                 {
                     "ComponentName": "Transform",
-                    "ComponentProperties": {
-                        "position": "0 0 -400",
-                        "scale": "0.5 0.5 0.5",
-                        "rotation": "0 90 0"
-                    }
-                },
-                {
-                    "ComponentName": "MeshRenderer",
-                    "ComponentProperties": {
-                        "mesh": "knot knot.mesh"
+                    "ComponentProperties":{
+                        "position" : "200 0 -400"
                     }
                 }
             ]

@@ -77,22 +77,35 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 Scene* SceneManager::createScene(const SceneData* data)
 {
 	Scene* myScene = new Scene(data->name, root);
+	// For each GameObjectData, create the gameObject
 	for (GameObjectData* gData : data->getGameObjectsData()) {
-		GameObject* gameObject = new GameObject(gData->getName(), gData->getTag(), myScene);
-		for (auto it : gData->getComponentData()) {
-			ComponentData* cData = it.second;
-			auto constructor = ComponentManager::getComponentFactory(cData->getName());
-			if (constructor != nullptr) 
-			{
-				Component* comp = constructor(gameObject);
-				comp->handleData(cData);
-				if (!gameObject->addComponent(cData->getName(), comp))
-					delete comp;
-			}
-		}
-		myScene->addGameObject(gameObject);
+		createGameObject(gData, myScene);
 	}
 	return myScene;
+}
+
+GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* scene)
+{
+	GameObject* gameObject = new GameObject(data->getName(), data->getTag(), scene);
+	scene->addGameObject(gameObject);
+	// Component
+	for (auto compData : data->getComponentData()) {
+		ComponentData* cData = compData.second;
+		auto constructor = ComponentManager::getComponentFactory(cData->getName());
+		if (constructor != nullptr)
+		{
+			Component* comp = constructor(gameObject);
+			comp->handleData(cData);
+			if (!gameObject->addComponent(cData->getName(), comp))
+				delete comp;
+		}
+	}
+	// For each child, create the child
+	for (auto childData : data->getChildrenData()) {
+		GameObject* child = createGameObject(childData.second, scene);
+		gameObject->addChild(child);
+	}
+	return gameObject;
 }
 
 void SceneManager::loadScene(const SceneData* data)

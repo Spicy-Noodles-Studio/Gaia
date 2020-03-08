@@ -85,7 +85,8 @@ void ResourcesManager::close()
 void ResourcesManager::loadScene(const std::string& filename)
 {
 	bool loaded = true;
-	registerSceneData(dataLoader.loadScene(filename, loaded));
+	SceneData* data = dataLoader.loadScene(filename, loaded);
+	if (!registerSceneData(data)) { delete data; loaded = false; }
 	if (!loaded)
 		printf("RESOURCES MANAGER: invalid Scene, filename %s.\n", filename.c_str());
 }
@@ -93,7 +94,8 @@ void ResourcesManager::loadScene(const std::string& filename)
 void ResourcesManager::loadBlueprint(const std::string& filename)
 {
 	bool loaded = true;
-	registerBlueprint(dataLoader.loadBlueprint(filename, loaded));
+	GameObjectData* data = dataLoader.loadBlueprint(filename, loaded);
+	if (!registerBlueprint(data)) { delete data; loaded = false; }
 	if (!loaded)
 		printf("RESOURCES MANAGER: invalid Blueprint, filename %s.\n", filename.c_str());
 }
@@ -139,22 +141,24 @@ void ResourcesManager::destroyShaderSystem()
 	}
 }
 
-void ResourcesManager::registerSceneData(SceneData* data)
+bool ResourcesManager::registerSceneData(SceneData* data)
 {
 	if (sceneData.find(data->name) != sceneData.end()) {
 		printf("RESOURCES MANAGER: trying to add an already existing SceneData: %s.\n", data->name.c_str());
-		return;
+		return false;
 	}
 	sceneData[data->name] = data;
+	return true;
 }
 
-void ResourcesManager::registerBlueprint(GameObjectData* data)
+bool ResourcesManager::registerBlueprint(GameObjectData* data)
 {
 	if (blueprints.find(data->name) != blueprints.end()) {
 		printf("RESOURCES MANAGER: trying to add an already existing Blueprint: %s.\n", data->name.c_str());
-		return;
+		return false;
 	}
 	blueprints[data->name] = data;
+	return true;
 }
 
 const SceneData* ResourcesManager::getSceneData(const std::string& name)

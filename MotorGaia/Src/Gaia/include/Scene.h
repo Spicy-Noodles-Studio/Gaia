@@ -52,6 +52,10 @@ private:
 
 	std::vector<UserComponent*> userComponents;
 
+	/* Name - Number of instances */
+	std::map<std::string, int> repeatedNames;
+
+	/* Objects, no parent-child */
 	std::vector<GameObject*> sceneObjects;
 	std::vector<GameObject*> destroyQueue;
 

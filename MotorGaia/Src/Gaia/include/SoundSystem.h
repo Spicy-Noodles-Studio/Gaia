@@ -45,6 +45,9 @@ public:
 	void setGeneralVolume(float volume);
 	void setListenerAttributes(const Vector3& position, const Vector3& Forward, const Vector3& Up);
 
+
+	// Utils
+	FMOD_VECTOR vecToFMOD(const Vector3 &in);
 };
 
 #endif

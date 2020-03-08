@@ -105,7 +105,9 @@ bool SoundSystem::createSounds(const std::string filename)
 	stream.close();
 
 	std::cout << "All done" << "\n\n";
-	playMusic("prueba2");
+	/*FMOD_VECTOR pos = { 10,0,0 };
+	FMOD_VECTOR vel = { 0,0,0 };
+	playMusic("prueba2")->set3DAttributes(&pos,&vel);*/
 	return true;
 }
 
@@ -179,6 +181,16 @@ void SoundSystem::setListenerAttributes(const Vector3& position, const Vector3& 
 	forward = { float(Forward.x) ,float(Forward.y) ,float(Forward.z) };
 	up = { float(Up.x) ,float(Up.y) ,float(Up.z) };
 	system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
+}
+
+FMOD_VECTOR SoundSystem::vecToFMOD(const Vector3& in)
+{
+	FMOD_VECTOR result;
+	result.x = in.x;
+	result.y = in.y;
+	result.z = in.z;
+
+	return result;
 }
 
 void SoundSystem::ERRCHECK(FMOD_RESULT result)

@@ -52,7 +52,7 @@ void GaiaCore::init()
 	RenderSystem::GetInstance()->setup(root);
 	GaiaInput::GetInstance()->init();
 	PhysicsSystem::GetInstance()->setup();
-	PhysicsSystem::GetInstance()->setWorldGravity({0, -0.5f, 0});
+	PhysicsSystem::GetInstance()->setWorldGravity({0, -1.0f, 0});
 	gTime::GetInstance()->setup();
 
 	GameObject *aux = new GameObject("Camera", "Cam", nullptr);
@@ -75,13 +75,15 @@ void GaiaCore::init()
 	obj->transform->rotate(Vector3(0, 90, 0));
 	MeshRenderer *ms = new MeshRenderer(obj);
 	ms->createEntity("knot", "knot.mesh");
-	RigidBody *rb = new RigidBody(obj);
+	RigidBody* rb = new RigidBody(obj);
 	rb->setRigidBody(1.0, SPHERE_RB_SHAPE, {}, { 2,2,2 });
+	rb->addImpulse({ 1.0f, 10.0f,0.0f });
+	rb->addImpulse({ -50.0f, 500.0f,0.0f }, TORQUE);
 
 	GameObject *obj1 = new GameObject("Cubo", "Cu", nullptr);
 	Transform *transform3 = new Transform(obj1);
 	obj1->transform->setPosition(Vector3(25, 0, -400));
-	obj1->transform->setScale(Vector3(1, 0.05, 1));
+	obj1->transform->setScale(Vector3(4, 0.05, 1));
 	obj1->transform->rotate(Vector3(0, 0, 0));
 	MeshRenderer *ms1 = new MeshRenderer(obj1);
 	ms1->createEntity("cube", "cube.mesh");

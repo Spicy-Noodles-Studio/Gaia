@@ -3,6 +3,8 @@
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 
+#include "Singleton.h"
+
 #include <string>
 #include <map>
 
@@ -14,7 +16,7 @@
 #include "Camera.h"
 
 
-class SceneManager
+class SceneManager : public Singleton<SceneManager>
 {
 public:
 	SceneManager();

@@ -9,12 +9,15 @@
 #define GAIA_API __declspec(dllimport)
 #endif
 
+#include <OgreRoot.h>
 #include "Window.h"
+
+#include "RenderSystem.h"
+#include "GaiaInput.h"
+
 #include "ResourcesManager.h"
 #include "ComponentManager.h"
 #include "SceneManager.h"
-
-#include "UserComponent.h"
 
 class GAIA_API GaiaCore
 {
@@ -34,11 +37,15 @@ private:
 
 	Ogre::Root* root;
 	Window* win;
+
+	//Systems
+	RenderSystem* renderSystem;
+	GaiaInput* inputSystem;
+
+	//Managers
 	ResourcesManager resourcesManager;
 	ComponentManager componentManager;
-	SceneManager sceneManager;
-
-	UserComponent* component;
+	SceneManager* sceneManager;
 };
 
 #endif 

@@ -109,6 +109,13 @@ Scene* GameObject::getScene() const
 	return myScene;
 }
 
+void GameObject::setActive(bool active)
+{
+    for (auto comp : components) {
+        comp.second->setActive(active);
+    }
+}
+
 bool GameObject::addComponent(const std::string& componentName, Component* component)
 {
     if (components.find(componentName) != components.end()) {

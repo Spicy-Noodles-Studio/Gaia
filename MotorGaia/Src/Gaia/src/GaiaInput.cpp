@@ -62,7 +62,7 @@ void GaiaInput::close()
         }
     }
 
-
+    destroy();
 }
 
 /// MAIN LOOP

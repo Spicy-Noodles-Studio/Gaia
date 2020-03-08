@@ -1,5 +1,5 @@
 {
-    "SceneName": "MainScene",
+    "SceneName": "Scene1",
     "SceneObjects": [
         {
             "ObjectType": "GAMEOBJECT",

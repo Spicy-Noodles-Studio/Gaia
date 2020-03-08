@@ -11,7 +11,7 @@ SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(
 
 SceneManager::~SceneManager()
 {
-	close();
+	
 }
 
 void SceneManager::init(Ogre::Root* root, Window* window)
@@ -33,6 +33,8 @@ void SceneManager::close()
 
 	currentScene = nullptr;
 	stackScene = nullptr;
+
+	destroy();
 }
 
 void SceneManager::preUpdate(float deltaTime)
@@ -58,6 +60,7 @@ void SceneManager::postUpdate(float deltaTime)
 {
 	// Destroy pending object
 	currentScene->destroyPendingGameObjects();
+
 	// Instantiate pending objects
 	currentScene->instantiatePendingGameObjects();
 }

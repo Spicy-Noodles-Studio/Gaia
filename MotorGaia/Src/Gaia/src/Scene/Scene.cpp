@@ -141,6 +141,7 @@ Camera* Scene::getMainCamera() const
 void Scene::instantiate(GameObject* gameObject)
 {
 	gameObject->node->setVisible(false);
+	gameObject->setActive(false);
 	instantiateQueue.push_back(gameObject);
 }
 
@@ -150,6 +151,7 @@ void Scene::instantiatePendingGameObjects()
 
 	for (auto gameObject : instantiateQueue) {
 		gameObject->node->setVisible(true);
+		gameObject->setActive(true);
 		addGameObject(gameObject);
 	}
 	instantiateQueue.clear();

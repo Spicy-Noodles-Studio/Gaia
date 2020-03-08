@@ -17,10 +17,10 @@ void RenderSystem::init(Ogre::Root* root)
 
 void RenderSystem::render(float deltaTime)
 {
-	root->renderOneFrame(deltaTime);
+	root->renderOneFrame();
 }
 
 void RenderSystem::close()
 {
-	
+	destroy();
 }

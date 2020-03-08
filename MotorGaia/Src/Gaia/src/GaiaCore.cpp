@@ -1,22 +1,16 @@
 #include "GaiaCore.h"
 
-#include <OgreRoot.h>
-#include <OgreException.h>
-#include <OgreConfigFile.h>
-#include <OgreViewport.h>
-#include <iostream>
 
-#include "RenderSystem.h"
-#include "GaiaInput.h"
-
-GaiaCore::GaiaCore() : root(nullptr), win(nullptr), resourcesManager("resources.asset")
+GaiaCore::GaiaCore() :	root(nullptr), win(nullptr), 
+						renderSystem(nullptr), inputSystem(nullptr),
+						resourcesManager("resources.asset"), sceneManager(nullptr)
 {
 
 }
 
 GaiaCore::~GaiaCore()
 {
-	close();
+	// Call close before GaiaCore destructor
 }
 
 void GaiaCore::init()
@@ -34,8 +28,13 @@ void GaiaCore::init()
 	win = new Window(root, "Ventana de Prueba");
 
 	// Systems initialization
-	RenderSystem::GetInstance()->init(root);
-	GaiaInput::GetInstance()->init();
+	// RenderSystem
+	renderSystem = RenderSystem::GetInstance();
+	renderSystem->init(root);
+
+	//InputSystem
+	inputSystem = GaiaInput::GetInstance();
+	inputSystem->init();
 
 	// Managers initialization
 	// ResourcesManager initialization
@@ -45,17 +44,16 @@ void GaiaCore::init()
 	componentManager.init();
 
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
-	sceneManager.init(root, win);
+	sceneManager = SceneManager::GetInstance();
+	sceneManager->init(root, win);
 
-	GameObject* obj = sceneManager.getCurrentScene()->getGameObjectWithName("Nudo 1");
-	component = new UserComponent(obj);
 }
 
 void GaiaCore::run()
 {
 	bool exit = false;
 	float deltaTime = 1.f / 60.f;
-	while (!GaiaInput::GetInstance()->getKeyPress("Escape")) {
+	while (!inputSystem->getKeyPress("Escape")) {
 		// Render
 		render(deltaTime);
 
@@ -65,19 +63,6 @@ void GaiaCore::run()
 		// Process
 		update(deltaTime);
 
-		//PRUEBAS
-		if (GaiaInput::GetInstance()->getKeyPress("Space")) {
-			double x = (rand() % 200) + 1;
-			double y = (rand() % 200) + 1;
-			Vector3 pos = { x, y, -400 };
-			component->instantiate("Nudo", pos);
-		}
-		if (GaiaInput::GetInstance()->getKeyPress("d")) {
-			auto nudos = component->findGameObjectsWithTag("nudo");
-			for (auto n : nudos)
-				component->destroy(n);
-		}
-
 		// Post-process
 		postUpdate(deltaTime);
 	}
@@ -86,15 +71,15 @@ void GaiaCore::run()
 void GaiaCore::close()
 {
 	// SceneManager termination
-	sceneManager.close();
+	sceneManager->close();
 	// ComponentManager termination
 	componentManager.close();
 	// ResourcesManager termination
 	resourcesManager.close();
 
 	//Systems termination
-	GaiaInput::destroy();
-	RenderSystem::destroy();
+	inputSystem->close();
+	renderSystem->close();
 
 	if (win != nullptr)
 		delete win;
@@ -102,15 +87,12 @@ void GaiaCore::close()
 	if (root != nullptr)
 		delete root;
 	root = nullptr;
-	if (component != nullptr)
-		delete component;
-	component = nullptr;
 }
 
 void GaiaCore::render(float deltaTime)
 {
 	// RenderSystem
-	RenderSystem::GetInstance()->render(deltaTime);
+	renderSystem->render(deltaTime);
 	// InterfaceSystem
 	// InterfaceSystem::GetInstance()->render(deltaTime);
 }
@@ -119,29 +101,28 @@ void GaiaCore::preUpdate(float deltaTime)
 {
 	// Systems TODO:
 	// RenderSystem (animations)
-	// RenderSystem::GetInstance()->update(deltaTime);
+	// renderSystem->update(deltaTime);
 
 	// InterfaceSystem
 	// InterfaceSystem::GetInstance()->update(deltaTime);
 	
 	// InputSystem
-	GaiaInput::GetInstance()->update();
-
+	inputSystem->update();
 
 	// Managers
-	sceneManager.preUpdate(deltaTime);
+	sceneManager->preUpdate(deltaTime);
 }
 
 void GaiaCore::update(float deltaTime)
 {
 	// Managers
-	sceneManager.update(deltaTime);
+	sceneManager->update(deltaTime);
 }
 
 void GaiaCore::postUpdate(float deltaTime)
 {
 	// Managers
-	sceneManager.postUpdate(deltaTime);
+	sceneManager->postUpdate(deltaTime);
 
 	// Systems 
 	// Si es que hay

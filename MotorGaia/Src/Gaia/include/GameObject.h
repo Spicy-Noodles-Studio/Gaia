@@ -20,9 +20,6 @@ public:
     GameObject(const std::string& name, const std::string& tag, Scene* scene);
     ~GameObject();
 
-	Ogre::SceneNode* node = nullptr;
-	Transform* transform = nullptr;
-
     template<typename T>
     T* addComponent();
 
@@ -55,10 +52,15 @@ public:
     const std::string& getTag() const;
     Scene* getScene() const;
 
+    void setActive(bool active);
+
 private:
     void addUserComponent(UserComponent* component);
     bool addComponent(const std::string& name, Component* component);
 
+public:
+	Ogre::SceneNode* node = nullptr;
+	Transform* transform = nullptr;
 
 private: 
     std::string name;

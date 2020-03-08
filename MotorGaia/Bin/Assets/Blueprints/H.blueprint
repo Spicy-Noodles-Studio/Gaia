@@ -37,7 +37,7 @@
             "ObjectType": "BLUEPRINT",
             "ObjectName": "O3",
             "Tag": "t2",
-            "BlueprintPath": "B1",
+            "BlueprintPath": "Nudo",
             "Components": [
                 {
                     "ComponentName": "Transform",

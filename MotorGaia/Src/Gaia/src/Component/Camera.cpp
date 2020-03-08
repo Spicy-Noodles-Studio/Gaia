@@ -1,17 +1,21 @@
 #include "Camera.h"
 #include "GameObject.h"
+#include "Scene.h"
+#include "ComponentData.h"
+#include <sstream>
 
-Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject)
+Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera(false)
 {
-	cam = RenderSystem::GetInstance()->getSceneManager()->createCamera(gameObject->getName() + "Cam");
+	camera = gameObject->getScene()->getSceneManager()->createCamera(gameObject->getName() + "Cam");
 
-	cam->setAutoAspectRatio(true);
-	gameObject->node->attachObject(cam);
+	camera->setAutoAspectRatio(true);
+	gameObject->node->attachObject(camera);
 }
 
 Camera::~Camera()
 {
-	
+	gameObject->getScene()->getSceneManager()->destroyCamera(camera);
+	camera = nullptr;
 }
 
 void Camera::lookAt(const Vector3& pos, SpaceReference space)
@@ -39,11 +43,37 @@ void Camera::setDirection(const Vector3& dir)
 
 Ogre::Camera* Camera::getCamera()
 {
-	return cam;
+	return camera;
 }
 
 void Camera::setClipDistances(double near, double far)
 {
-	cam->setNearClipDistance(near);
-	cam->setFarClipDistance(far);
+	camera->setNearClipDistance(near);
+	camera->setFarClipDistance(far);
+}
+
+void Camera::handleData(ComponentData* data)
+{
+	for (auto prop : data->getProperties()) {
+		if (prop.first == "main") {
+			if (prop.second == "true") {
+				if (gameObject->getScene()->getMainCamera() == nullptr) {
+					isMainCamera = true;
+					gameObject->getScene()->setMainCamera(this);
+				}
+				else {
+					printf("CAMERA: there's already a main Camera\n");
+				}
+			}
+			else if (prop.second == "false") {
+				isMainCamera = false;
+			}
+			else {
+				printf("CAMERA: %s value not valid for \"main\" property\n", prop.second.c_str());
+			}
+		}
+		else {
+			printf("CAMERA: %s is not a valid property name\n", prop.first.c_str());
+		}
+	}
 }

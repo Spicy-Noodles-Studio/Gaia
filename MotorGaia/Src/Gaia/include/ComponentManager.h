@@ -14,8 +14,11 @@ class ComponentManager
 public:
 	ComponentManager();
 	~ComponentManager();
+
+	void init();
+	void close();
 	
-	static const ComponentFactory getComponentFactory(const std::string& nameID);
+	static const ComponentFactory& getComponentFactory(const std::string& nameID);
 
 	template<typename T>
 	static void registerComponent(const std::string& nameID);

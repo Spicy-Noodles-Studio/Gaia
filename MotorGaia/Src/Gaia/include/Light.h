@@ -26,6 +26,8 @@ public:
 
 	void setVisible(bool invisible);
 	bool isVisible();
+
+	virtual void handleData(ComponentData* data);
 };
 
 #endif

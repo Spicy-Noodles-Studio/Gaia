@@ -118,7 +118,7 @@ FMOD::Channel* SoundSystem::playSound(const std::string sound)
 
 	result = system->playSound(sounds[sound], soundEfects, false, &channel);
 	ERRCHECK(result);
-	channel->set3DMinMaxDistance(50, 100000);
+	channel->set3DMinMaxDistance(1000, 100000);
 	return channel;
 
 }
@@ -130,7 +130,7 @@ FMOD::Channel* SoundSystem::playMusic(const std::string sound)
 
 	result = system->playSound(sounds[sound], music, false, &channel);
 	ERRCHECK(result);
-	channel->set3DMinMaxDistance(50, 100000);
+	channel->set3DMinMaxDistance(1000, 100000);
 	return channel;
 
 }
@@ -196,9 +196,12 @@ FMOD_VECTOR SoundSystem::vecToFMOD(const Vector3& in)
 	return result;
 }
 
-void SoundSystem::createReverb(FMOD::Reverb3D* reverb)
+FMOD::Reverb3D*  SoundSystem::createReverb()
 {
-	system->createReverb3D(&reverb);
+	FMOD::Reverb3D* reverb;
+	result=system->createReverb3D(&reverb);
+	ERRCHECK(result);
+	return reverb;
 }
 
 void SoundSystem::ERRCHECK(FMOD_RESULT result)

@@ -71,12 +71,12 @@ void GaiaCore::init()
 
 	emi = new SoundEmitter(obj);
 	
-
-	Reverb* rev = new Reverb(aux);
-	rev->setReverbMaxDistance(200.0f);
-	rev->setReverbPreset(rev->CAVE);
 	sound->initSystem();
-	emi->playSound("prueba2");
+	Reverb* rev = new Reverb(aux);
+	rev->setReverbMaxDistance(100000);
+	rev->setReverbPreset(rev->MOUNTAINS);
+	
+	emi->playSound("prueba3",true);
 }
 
 void GaiaCore::run()

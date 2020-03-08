@@ -5,11 +5,11 @@ Reverb::Reverb(GameObject* gameObject) : GaiaComponent(gameObject)
 {
 	active = true;
 	minDistance = 0.0f;
-	maxDistance = 20.0f;
+	maxDistance = 10000.0f;
 
 	reverbProperties = FMOD_PRESET_OFF;
 
-	SoundSystem::GetInstance()->createReverb(reverb);
+	reverb=SoundSystem::GetInstance()->createReverb();
 
     pos = SoundSystem::GetInstance()->vecToFMOD(gameObject->transform->getPosition());
 	reverb->set3DAttributes(&pos, minDistance, maxDistance);
@@ -125,7 +125,6 @@ void Reverb::setReverbPreset(PRESET type)
 	default:
 		reverbProperties = FMOD_PRESET_OFF;
 		break;
-
-		reverb->setProperties(&reverbProperties);
 	}
+	reverb->setProperties(&reverbProperties);
 }

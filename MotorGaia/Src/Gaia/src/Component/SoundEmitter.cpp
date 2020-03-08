@@ -32,6 +32,7 @@ void SoundEmitter::playSound(std::string soundName, bool reverb)
     channel->set3DAttributes(&pos, &zero);
     channel->setPitch(pitch);
     channel->setVolume(volume);
+  
     if (!reverb){
         channel->setReverbProperties(0,0);
     }

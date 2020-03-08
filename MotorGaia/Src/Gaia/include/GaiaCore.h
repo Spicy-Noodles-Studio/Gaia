@@ -15,6 +15,7 @@
 #include "SoundEmitter.h"
 #include "SoundListener.h"
 
+
 class GAIA_API GaiaCore
 {
 public:

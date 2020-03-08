@@ -7,6 +7,7 @@ SoundEmitter::SoundEmitter(GameObject* gameObject) : GaiaComponent(gameObject)
     pos = SoundSystem::GetInstance()->vecToFMOD(gameObject->transform->getPosition());
     channel = nullptr;
     pitch = 1.0f;
+    volume = 1.0f;
     paused = true;
 }
 
@@ -30,7 +31,7 @@ void SoundEmitter::playSound(std::string soundName, bool reverb)
     channel = SoundSystem::GetInstance()->playSound(soundName);
     channel->set3DAttributes(&pos, &zero);
     channel->setPitch(pitch);
-
+    channel->setVolume(volume);
     if (!reverb){
         channel->setReverbProperties(0,0);
     }
@@ -47,7 +48,7 @@ void SoundEmitter::playMusic(std::string soundName, bool reverb)
     channel = SoundSystem::GetInstance()->playMusic(soundName);
     channel->set3DAttributes(&pos, &zero);
     channel->setPitch(pitch);
-
+    channel->setVolume(volume);
     if (!reverb) {
         channel->setReverbProperties(0, 0);
     }
@@ -75,6 +76,12 @@ void SoundEmitter::resume()
             paused = false;
         }
     }
+}
+
+void SoundEmitter::setVolume(float _volume)
+{
+    volume = _volume;
+    if (channel) channel->setVolume(volume);
 }
 
 void SoundEmitter::setEmitterPitch(float _pitch)

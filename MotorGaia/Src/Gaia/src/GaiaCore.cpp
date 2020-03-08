@@ -15,7 +15,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
-
+#include "Reverb.h"
 
 GaiaCore::GaiaCore()
 {
@@ -71,8 +71,10 @@ void GaiaCore::init()
 
 	emi = new SoundEmitter(obj);
 	
-	
 
+	Reverb* rev = new Reverb(aux);
+	rev->setReverbMaxDistance(200.0f);
+	rev->setReverbPreset(rev->CAVE);
 	sound->initSystem();
 	emi->playSound("prueba2");
 }
@@ -94,7 +96,7 @@ void GaiaCore::close()
 
 void GaiaCore::update()
 {
-	obj->transform->translate(Vector3(0.5, 0, 0));
+	obj->transform->translate(Vector3(0, 0, 0));
 	//obj->getComponent<SoundEmitter>()->update(2);
 	emi->update(0);
 	lis->update(0);

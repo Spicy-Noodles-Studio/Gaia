@@ -33,6 +33,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h" />
     <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ResourcesManager.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Reverb.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Scene.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h" />
@@ -49,6 +50,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\Camera.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Light.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\MeshRenderer.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Reverb.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\SoundEmitter.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\SoundListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />

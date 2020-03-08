@@ -196,6 +196,11 @@ FMOD_VECTOR SoundSystem::vecToFMOD(const Vector3& in)
 	return result;
 }
 
+void SoundSystem::createReverb(FMOD::Reverb3D* reverb)
+{
+	system->createReverb3D(&reverb);
+}
+
 void SoundSystem::ERRCHECK(FMOD_RESULT result)
 {
 	if (result != FMOD_RESULT::FMOD_OK)

@@ -48,6 +48,7 @@ public:
 
 	// Utils
 	FMOD_VECTOR vecToFMOD(const Vector3 &in);
+	void createReverb(FMOD::Reverb3D* reverb);
 };
 
 #endif

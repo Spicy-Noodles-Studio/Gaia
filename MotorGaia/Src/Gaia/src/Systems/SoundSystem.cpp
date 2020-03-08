@@ -105,9 +105,7 @@ bool SoundSystem::createSounds(const std::string filename)
 	stream.close();
 
 	std::cout << "All done" << "\n\n";
-	/*FMOD_VECTOR pos = { 10,0,0 };
-	FMOD_VECTOR vel = { 0,0,0 };
-	playMusic("prueba2")->set3DAttributes(&pos,&vel);*/
+	
 	return true;
 }
 
@@ -118,7 +116,7 @@ FMOD::Channel* SoundSystem::playSound(const std::string sound)
 
 	result = system->playSound(sounds[sound], soundEfects, false, &channel);
 	ERRCHECK(result);
-	channel->set3DMinMaxDistance(1000, 100000);
+	channel->set3DMinMaxDistance(50, 10000);
 	return channel;
 
 }
@@ -130,7 +128,8 @@ FMOD::Channel* SoundSystem::playMusic(const std::string sound)
 
 	result = system->playSound(sounds[sound], music, false, &channel);
 	ERRCHECK(result);
-	channel->set3DMinMaxDistance(1000, 100000);
+	
+	channel->set3DMinMaxDistance(50, 10000);
 	return channel;
 
 }

@@ -68,7 +68,7 @@ void GaiaCore::init()
 	obj->transform->setPosition(Vector3(0, 0, -400));
 	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
 	obj->transform->rotate(Vector3(0, 90, 0));
-
+	
 	emi = new SoundEmitter(obj);
 	
 	sound->initSystem();
@@ -76,7 +76,7 @@ void GaiaCore::init()
 	rev->setReverbMaxDistance(100000);
 	rev->setReverbPreset(rev->MOUNTAINS);
 	
-	emi->playSound("prueba3",true);
+	emi->playSound("prueba2",true);
 }
 
 void GaiaCore::run()
@@ -101,7 +101,7 @@ void GaiaCore::update()
 	emi->update(0);
 	lis->update(0);
 
-	aux->transform->rotate(Vector3(0, 0, 0));
+	aux->transform->rotate(Vector3(0, 0.2, 0));
 /*	SoundListener* lis = aux->getComponent<SoundListener>();
 	emi->update(0);*/
 

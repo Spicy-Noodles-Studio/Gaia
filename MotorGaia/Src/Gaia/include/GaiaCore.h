@@ -30,8 +30,9 @@ private:
 	Ogre::Root* root;
 	Window* win;
 	GameObject* obj,* aux;
-	SoundEmitter* emi;
+	
 	SoundListener* lis;
+	SoundEmitter* emi;
 	SoundSystem* sound = SoundSystem::GetInstance();
 	
 	void update();

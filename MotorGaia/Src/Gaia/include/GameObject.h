@@ -77,12 +77,12 @@ private:
 
 template<typename T>
 T* GameObject::addComponent() {
-    const std::string key = Component::nameID<T>.id;
+    const std::string key = ComponentManager::GetInstance()->getID<T>();
     if (components.find(key) != components.end()) {
         printf("GAMEOBJECT: Component %s already exists in %s GameObject\n", key.c_str(), name.c_str());
         return (T*)components[key]; // Return the exiting one.
     }
-    auto constructor = ComponentManager::getComponentFactory(Component::nameID<T>.id);
+    auto constructor = ComponentManager::GetInstance()->getComponentFactory(key);
 
     if (constructor == nullptr) {
         printf("GAMEOBJECT: Component %s not attached to %s GameObject. Constructor not found\n", key.c_str(), name.c_str());
@@ -96,7 +96,7 @@ T* GameObject::addComponent() {
 
 template<typename T>
 bool GameObject::delComponent() {
-    const std::string key = Component::nameID<T>;
+    const std::string key = ComponentManager::GetInstance()->getID<T>();
     if (components.find(key) != components.end()) {
         printf("GAMEOBJECT: Cannot remove. Component %s does not exist in %s GameObject\n", key.c_str(), name.c_str());
         return false;
@@ -111,7 +111,7 @@ bool GameObject::delComponent() {
 
 template<typename T>
 T* GameObject::getComponent() {
-    const std::string key = Component::nameID<T>.id;
+    const std::string key = ComponentManager::GetInstance()->getID<T>();
     if (components.find(key) == components.end())
         return nullptr;
 

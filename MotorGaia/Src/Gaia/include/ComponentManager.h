@@ -3,13 +3,15 @@
 #ifndef COMPONENT_MANAGER_H
 #define COMPONENT_MANAGER_H
 
-#include "Component.h"
+#include <Singleton.h>
 #include <map>
 #include <functional>
+#include "Component.h"
 
 typedef std::function<Component* (GameObject*)> ComponentFactory;
 
-class ComponentManager
+
+class ComponentManager : public Singleton<ComponentManager>
 {
 public:
 	ComponentManager();
@@ -18,27 +20,35 @@ public:
 	void init();
 	void close();
 	
-	static const ComponentFactory& getComponentFactory(const std::string& nameID);
+	const ComponentFactory& getComponentFactory(const std::string& nameID);
 
 	template<typename T>
-	static void registerComponent(const std::string& nameID);
+	void registerComponent(const std::string& nameID);
+
+	template<typename T>
+	const std::string& getID();
 	
 private:
-	static std::map<std::string, ComponentFactory> factories;
-
+	std::map<std::string, ComponentFactory> factories;
+	std::map<std::string, std::string> ids;
 };
 
+#endif
+
 template<typename T>
-static void ComponentManager::registerComponent(const std::string& nameID)
+void ComponentManager::registerComponent(const std::string& nameID)
 {
 	if (factories.find(nameID) != factories.end())
 	{
 		printf("COMPONENT MANAGER: trying to register a ComponentFactory ID: %s, there is already an existing one.\n", nameID.c_str());
 		return;
 	}
-	Component::nameID<T>.id = nameID;
+	ids[typeid(T).name()] = nameID;
 	factories[nameID] = [](GameObject* gameObject) { return new T(gameObject); };
 }
 
-
-#endif
+template<typename T>
+inline const std::string& ComponentManager::getID()
+{
+	return ids[typeid(T).name()];
+}

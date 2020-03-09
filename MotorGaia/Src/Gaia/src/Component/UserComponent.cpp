@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "ResourcesManager.h"
+#include "ComponentManager.h"
 
 
 UserComponent::UserComponent(GameObject* gameObject) : Component(gameObject), started(false), sleeping(false)
@@ -86,7 +87,7 @@ GameObject* UserComponent::instantiate(const GameObjectData* data)
 	// Component
 	for (auto compData : data->getComponentData()) {
 		ComponentData* cData = compData.second;
-		auto constructor = ComponentManager::getComponentFactory(cData->getName());
+		auto constructor = ComponentManager::GetInstance()->getComponentFactory(cData->getName());
 		if (constructor != nullptr)
 		{
 			Component* comp = constructor(instance);

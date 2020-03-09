@@ -5,17 +5,18 @@
 #include "Light.h"
 #include "MeshRenderer.h"
 
-std::map<std::string, ComponentFactory> ComponentManager::factories;
 
 ComponentManager::ComponentManager()
 {
 
 }
 
+
 ComponentManager::~ComponentManager()
 {
-	close();
+
 }
+
 
 void ComponentManager::init()
 {
@@ -29,6 +30,7 @@ void ComponentManager::init()
 void ComponentManager::close()
 {
 	factories.clear();
+	destroy();
 }
 
 const ComponentFactory& ComponentManager::getComponentFactory(const std::string& nameID)

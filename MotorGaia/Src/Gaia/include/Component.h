@@ -7,18 +7,12 @@
 class GameObject;
 class ComponentData;
 
+
 class Component
 {
 friend class ComponentManager;
 friend class GameObject;
 public:
-
-	template<typename T>
-	struct ComponentID
-	{
-		std::string id;
-	};
-
 
 	Component(GameObject* gameObject);
 	virtual ~Component();
@@ -31,27 +25,12 @@ public:
 	void setActive(bool active);
 	bool isActive();
 
-	template<typename T>
-	static const std::string& getID();
-
 public:
 	GameObject* gameObject;
 
 private:
-	template<typename T>
-	static ComponentID<T> nameID;
-
 	bool active;
 };
 
-template<typename T>
-Component::ComponentID<T> Component::nameID = { "not assigned" };
-
-
-template<typename T>
-inline const std::string& Component::getID()
-{
-	return nameID<T>.id;
-}
 
 #endif

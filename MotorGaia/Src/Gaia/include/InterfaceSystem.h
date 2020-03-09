@@ -15,21 +15,20 @@ class InterfaceSystem : public Singleton<InterfaceSystem>
 {
 private:
 	CEGUI::OgreRenderer* mRenderer;
-
 	UIElement* root;
 
 	void setupResources();
 
 	bool clicked(const CEGUI::EventArgs& args);
 
-
 public:
 	InterfaceSystem();
 	~InterfaceSystem();
 
-	void setup(Window* window);
+	void init(Window* window);
 	void render();
 	void update(float deltaTime);
+	void close();
 
 	void createRoot();
 	UIElement* getRoot();

@@ -3,30 +3,68 @@
 #define SCENE_H
 
 #include <vector>
+#include <OgreRoot.h>
 #include "GameObject.h"
+#include "Camera.h"
 
-class Scene
-{
+#include "GaiaComponent.h"
+#include "UserComponent.h"
+
+class Scene {
+	friend class SceneManager;
+	friend class UserComponent;
 public:
-	Scene(std::string sceneName);
+	Scene(const std::string& sceneName, Ogre::Root* root);
 	~Scene();
+
+	//Component Calls
+	void awake();
+	void start();
+	void preUpdate(float deltaTime);
+	void update(float deltaTime);
+	void postUpdate(float deltaTime);
+	
+	const std::string& getName();
+	Ogre::SceneManager* getSceneManager() const;
+
+	Ogre::Entity* createEntity(const std::string& name);
+
+	GameObject* getGameObjectWithName(const std::string& name);
+	std::vector<GameObject*> getGameObjectsWithTag(const std::string& tag);
+
+	void setMainCamera(Camera* camera);
+	Camera* getMainCamera() const;
+
+
+private:
+	void addUserComponent(UserComponent* component);
 
 	bool addGameObject(GameObject* gameObject);
 
-private:
-	bool delGameObjectWithName(const std::string& name);
-	bool delGameObjectWithTag(const std::string& tag);
+	void destroyPendingGameObjects();
+	void destroyGameObject(GameObject* gameObject);
 
-	GameObject* findGameObjectWithName(const std::string& name);
-	GameObject* findGameObjectWithTag(const std::string& tag);
+	void instantiatePendingGameObjects();
+	void instantiate(GameObject* gameObject);
 
-public:
-	inline std::string getSceneName();
+	void updateAllAnimations(float deltaTime);
 
 private:
-	std::string name;
+	const std::string name;
+	Ogre::Root* root;
+	Ogre::SceneManager* sceneManager;
+
+	std::vector<UserComponent*> userComponents;
+
+	/* Name - Number of instances */
+	std::map<std::string, int> repeatedNames;
+
+	/* Objects, no parent-child */
 	std::vector<GameObject*> sceneObjects;
+	std::vector<GameObject*> destroyQueue;
+	std::vector<GameObject*> instantiateQueue;
 
+	Camera* mainCamera;
 };
 
 #endif

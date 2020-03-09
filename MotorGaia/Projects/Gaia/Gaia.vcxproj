@@ -26,7 +26,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
-    <ClInclude Include="..\..\Src\Gaia\include\GaiaInput.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InterfaceSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
@@ -37,6 +37,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\Scene.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\ShaderTechniqueResolver.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Singleton.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Transform.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UILayout.h" />
@@ -56,6 +57,8 @@
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ResourcesManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\SceneManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\InterfaceSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\ShaderTechniqueResolver.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Systems\InputSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Vector3.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Window.cpp" />
@@ -64,7 +67,6 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\GaiaComponent.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\UserComponent.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GaiaCore.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\GaiaInput.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObjectData.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Scene\Scene.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Scene\SceneData.cpp" />
@@ -162,12 +164,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GAIA_EXPORTS;WIN32;_DEBUG;_CONSOLE;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\include;$(SolutionDir)Src\Gaia\src;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\Bites\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\include;$(SolutionDir)Dependencies\json-3.7.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\include;$(SolutionDir)Src\Gaia\src;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\include;$(SolutionDir)Dependencies\json-3.7.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;OgreBites_d.lib;OgreRTShaderSystem_d.lib;fmodL_vc.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain_d.lib;OgreRTShaderSystem_d.lib;fmodL_vc.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -176,14 +178,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GAIA_EXPORTS;_DEBUG;_CONSOLE;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GAIA_EXPORTS;_DEBUG;_CONSOLE;SDL_MAIN_HANDLED;HAVE_SNPRINTF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\src;$(SolutionDir)Src\Gaia\include;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\Bites\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\cegui-0.8.7\cegui\include;$(SolutionDir)Dependencies\json-3.7.3\include;$(SolutionDir)Dependencies\cegui-0.8.7\Build\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\src;$(SolutionDir)Src\Gaia\include;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\cegui-0.8.7\cegui\include;$(SolutionDir)Dependencies\json-3.7.3\include;$(SolutionDir)Dependencies\cegui-0.8.7\Build\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;OgreBites_d.lib;OgreRTShaderSystem_d.lib;fmodL_vc.lib;SDL2.lib;SDL2main.lib;CEGUIBase-0_d.lib;CEGUIExpatParser_d.lib;CEGUIOgreRenderer-0_d.lib;CEGUISILLYImageCodec_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain_d.lib;OgreRTShaderSystem_d.lib;fmodL_vc.lib;SDL2.lib;SDL2main.lib;CEGUIBase-0_d.lib;CEGUIExpatParser_d.lib;CEGUIOgreRenderer-0_d.lib;CEGUISILLYImageCodec_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -196,14 +198,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GAIA_EXPORTS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\include;$(SolutionDir)Src\Gaia\src;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\Bites\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Dependencies\json-3.7.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\include;$(SolutionDir)Src\Gaia\src;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Dependencies\json-3.7.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain.lib;OgreBites.lib;OgreRTShaderSystem.lib;fmod_vc.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain.lib;OgreRTShaderSystem.lib;fmod_vc.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -216,14 +218,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GAIA_EXPORTS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Src\Gaia\include;$(SolutionDir)Src\Gaia\src;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\Bites\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\json-3.7.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Src\Gaia\include;$(SolutionDir)Src\Gaia\src;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\json-3.7.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain.lib;OgreBites.lib;OgreRTShaderSystem.lib;fmod_vc.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain.lib;OgreRTShaderSystem.lib;fmod_vc.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

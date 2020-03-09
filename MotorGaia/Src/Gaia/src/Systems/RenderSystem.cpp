@@ -1,6 +1,6 @@
 #include "RenderSystem.h"
 
-RenderSystem::RenderSystem()
+RenderSystem::RenderSystem() : root(nullptr)
 {
 
 }
@@ -10,29 +10,17 @@ RenderSystem::~RenderSystem()
 
 }
 
-void RenderSystem::setup(Ogre::Root* _root)
+void RenderSystem::init(Ogre::Root* root)
 {
-	root = _root;
-	sceneManager = _root->createSceneManager();
+	this->root = root;
 }
 
-void RenderSystem::render()
+void RenderSystem::render(float deltaTime)
 {
 	root->renderOneFrame();
 }
 
-void RenderSystem::shutDown()
+void RenderSystem::close()
 {
-	if (root != nullptr)
-		root->destroySceneManager(sceneManager);
-}
-
-Ogre::SceneManager* RenderSystem::getSceneManager()
-{
-	return sceneManager;
-}
-
-Ogre::Entity* RenderSystem::createEntity(std::string mesh)
-{
-	return sceneManager->createEntity(mesh);
+	destroy();
 }

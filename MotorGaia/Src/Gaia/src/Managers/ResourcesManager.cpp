@@ -11,31 +11,25 @@
 std::map<std::string, SceneData*> ResourcesManager::sceneData;
 std::map<std::string, GameObjectData*> ResourcesManager::blueprints;
 
-ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(), resourcesPath(filePath)
+ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(), resourcesPath(filePath), fileSystemLayer(nullptr), 
+																	shaderLibPath(""), shaderGenerator(nullptr), shaderTechniqueResolver(nullptr)
 {
-	fileSystemLayer = new Ogre::FileSystemLayer("./");
 
-	initShaderSystem();
 }
 
 ResourcesManager::~ResourcesManager()
 {
-	for (auto s : sceneData)
-		delete s.second;
-	for (auto b : blueprints)
-		delete b.second;
-
-	sceneData.clear();
-	blueprints.clear();
-
-	delete fileSystemLayer;
-
-	destroyShaderSystem();
+	// Close method should be called externally
+	close();
 }
 
 
 void ResourcesManager::init()
 {
+	// Init Ogre SubSystem
+	fileSystemLayer = new Ogre::FileSystemLayer("./");
+	initShaderSystem();
+
 	// Pair: (Types, Filepath)
 	std::vector<std::pair<std::string, std::string>> filePaths;
 	// Reads all file paths
@@ -71,14 +65,28 @@ void ResourcesManager::init()
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 }
 
-void ResourcesManager::clean()
+void ResourcesManager::close()
 {
+	for (auto s : sceneData)
+		delete s.second;
+	for (auto b : blueprints)
+		delete b.second;
+
+	sceneData.clear();
+	blueprints.clear();
+
+	if(fileSystemLayer != nullptr)
+		delete fileSystemLayer;
+	fileSystemLayer = nullptr;
+
+	destroyShaderSystem();
 }
 
 void ResourcesManager::loadScene(const std::string& filename)
 {
 	bool loaded = true;
-	registerSceneData(dataLoader.loadScene(filename, loaded));
+	SceneData* data = dataLoader.loadScene(filename, loaded);
+	if (!registerSceneData(data)) { delete data; loaded = false; }
 	if (!loaded)
 		printf("RESOURCES MANAGER: invalid Scene, filename %s.\n", filename.c_str());
 }
@@ -86,7 +94,8 @@ void ResourcesManager::loadScene(const std::string& filename)
 void ResourcesManager::loadBlueprint(const std::string& filename)
 {
 	bool loaded = true;
-	registerBlueprint(dataLoader.loadBlueprint(filename, loaded));
+	GameObjectData* data = dataLoader.loadBlueprint(filename, loaded);
+	if (!registerBlueprint(data)) { delete data; loaded = false; }
 	if (!loaded)
 		printf("RESOURCES MANAGER: invalid Blueprint, filename %s.\n", filename.c_str());
 }
@@ -95,16 +104,16 @@ bool ResourcesManager::initShaderSystem()
 {
 	if (Ogre::RTShader::ShaderGenerator::initialize())
 	{
-		mShaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+		shaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 		// Core shader libs not found -> shader generating will fail.
-		if (mRTShaderLibPath.empty()) {
+		if (shaderLibPath.empty()) {
 			printf("RESOURCES MANAGER: Shader libs not found.\n");
 			return false;
 		}
 		// Create and register the material manager listener if it doesn't exist yet.
-		if (!mMaterialMgrListener) {
-			mMaterialMgrListener = new OgreBites::SGTechniqueResolverListener(mShaderGenerator);
-			Ogre::MaterialManager::getSingleton().addListener(mMaterialMgrListener);
+		if (!shaderTechniqueResolver) {
+			shaderTechniqueResolver = new ShaderTechniqueResolver(shaderGenerator);
+			Ogre::MaterialManager::getSingleton().addListener(shaderTechniqueResolver);
 		}
 	}
 	return true;
@@ -113,40 +122,43 @@ bool ResourcesManager::initShaderSystem()
 void ResourcesManager::destroyShaderSystem()
 {
 	// Restore default scheme.
-	Ogre::MaterialManager::getSingleton().setActiveScheme(Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
+	if(Ogre::MaterialManager::getSingletonPtr() != nullptr)
+		Ogre::MaterialManager::getSingleton().setActiveScheme(Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
 
 	// Unregister the material manager listener.
-	if (mMaterialMgrListener != nullptr)
+	if (shaderTechniqueResolver != nullptr)
 	{
-		Ogre::MaterialManager::getSingleton().removeListener(mMaterialMgrListener);
-		delete mMaterialMgrListener;
-		mMaterialMgrListener = nullptr;
+		Ogre::MaterialManager::getSingleton().removeListener(shaderTechniqueResolver);
+		delete shaderTechniqueResolver;
+		shaderTechniqueResolver = nullptr;
 	}
 
 	// Destroy RTShader system.
-	if (mShaderGenerator != nullptr)
+	if (shaderGenerator != nullptr)
 	{
 		Ogre::RTShader::ShaderGenerator::destroy();
-		mShaderGenerator = nullptr;
+		shaderGenerator = nullptr;
 	}
 }
 
-void ResourcesManager::registerSceneData(SceneData* data)
+bool ResourcesManager::registerSceneData(SceneData* data)
 {
 	if (sceneData.find(data->name) != sceneData.end()) {
 		printf("RESOURCES MANAGER: trying to add an already existing SceneData: %s.\n", data->name.c_str());
-		return;
+		return false;
 	}
 	sceneData[data->name] = data;
+	return true;
 }
 
-void ResourcesManager::registerBlueprint(GameObjectData* data)
+bool ResourcesManager::registerBlueprint(GameObjectData* data)
 {
 	if (blueprints.find(data->name) != blueprints.end()) {
 		printf("RESOURCES MANAGER: trying to add an already existing Blueprint: %s.\n", data->name.c_str());
-		return;
+		return false;
 	}
 	blueprints[data->name] = data;
+	return true;
 }
 
 const SceneData* ResourcesManager::getSceneData(const std::string& name)
@@ -156,6 +168,17 @@ const SceneData* ResourcesManager::getSceneData(const std::string& name)
 		return nullptr;
 	}
 	return sceneData[name];
+}
+
+const SceneData* ResourcesManager::getSceneData(int index)
+{
+	if (index >= sceneData.size()) {
+		printf("RESOURCES MANAGER: trying to get not existing SceneData index: %i.\n", index);
+		return nullptr;
+	}
+	auto it = sceneData.begin(); 
+	std::advance(it, index);
+	return (*it).second;
 }
 
 const GameObjectData* ResourcesManager::getBlueprint(const std::string& name)

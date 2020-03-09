@@ -30,6 +30,8 @@ public:
 
 	void translate(const Vector3& pos);
 	void rotate(const Vector3& rot);
+
+	virtual void handleData(ComponentData* data);
 };
 
 #endif

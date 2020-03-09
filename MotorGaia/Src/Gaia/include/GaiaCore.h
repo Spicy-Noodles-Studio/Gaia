@@ -9,8 +9,16 @@
 #define GAIA_API __declspec(dllimport)
 #endif
 
-#include "GameObject.h"
+#include <OgreRoot.h>
 #include "Window.h"
+
+#include "RenderSystem.h"
+#include "InputSystem.h"
+#include "InterfaceSystem.h"
+
+#include "ResourcesManager.h"
+#include "ComponentManager.h"
+#include "SceneManager.h"
 
 class GAIA_API GaiaCore
 {
@@ -23,11 +31,23 @@ public:
 	void close();
 
 private:
+	void render(float deltaTime);
+	void preUpdate(float deltaTime);
+	void update(float deltaTime);
+	void postUpdate(float deltaTime);
+
 	Ogre::Root* root;
 	Window* win;
-	GameObject* obj;
 
-	void update();
+	//Systems
+	RenderSystem* renderSystem;
+	InputSystem* inputSystem;
+	InterfaceSystem* interfaceSystem;
+
+	//Managers
+	ResourcesManager resourcesManager;
+	ComponentManager* componentManager;
+	SceneManager* sceneManager;
 };
 
 #endif 

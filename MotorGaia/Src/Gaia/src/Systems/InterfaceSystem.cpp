@@ -5,12 +5,17 @@
 InterfaceSystem::InterfaceSystem()
 {
 
-
 }
 
 InterfaceSystem::~InterfaceSystem()
 {
+	
+}
+
+void InterfaceSystem::close()
+{
 	CEGUI::WindowManager::getSingleton().destroyAllWindows();
+	destroy();
 }
 
 void InterfaceSystem::setupResources()
@@ -56,7 +61,7 @@ void InterfaceSystem::createRoot()
 	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(root);
 }
 
-void InterfaceSystem::setup(Window* window)
+void InterfaceSystem::init(Window* window)
 {
 	// init
 	mRenderer = &CEGUI::OgreRenderer::create(*window->mWindow);

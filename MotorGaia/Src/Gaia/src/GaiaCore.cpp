@@ -16,7 +16,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 
-#include "GaiaInput.h"
+#include "InputSystem.h"
 
 GaiaCore::GaiaCore()
 {
@@ -67,7 +67,7 @@ void GaiaCore::init()
 	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
 	obj->transform->rotate(Vector3(0, 90, 0));
 
-	GaiaInput::GetInstance()->init();
+	InputSystem::GetInstance()->init();
 	
 }
 
@@ -78,7 +78,7 @@ void GaiaCore::run()
 		RenderSystem::GetInstance()->render();
 		update();
 
-		GaiaInput::GetInstance()->update();
+		InputSystem::GetInstance()->update();
 	}
 }
 

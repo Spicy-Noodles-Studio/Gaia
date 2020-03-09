@@ -1,11 +1,5 @@
 #include "InterfaceSystem.h"
 
-//#include <CEGUI/RendererModules/Ogre/Renderer.h>
-//#include <CEGUI/Renderer.h>
-//#include <CEGUI/CEGUI.h>
-//#include <CEGUI/ImageCodec.h>
-//#include <CEGUI/RendererModules/OpenGL/GLRenderer.h>
-
 #include <CEGUI/Event.h>
 
 InterfaceSystem::InterfaceSystem()
@@ -16,23 +10,11 @@ InterfaceSystem::InterfaceSystem()
 
 InterfaceSystem::~InterfaceSystem()
 {
-
+	CEGUI::WindowManager::getSingleton().destroyAllWindows();
 }
 
-bool InterfaceSystem::clicked(const CEGUI::EventArgs& args)
+void InterfaceSystem::setupResources()
 {
-	printf("jumpedd");
-	return false;
-}
-
-void InterfaceSystem::setup(Ogre::Root* _root, Window* window)
-{
-	root = _root;
-	
-	// init
-	mRenderer = &CEGUI::OgreRenderer::create(*window->mWindow);
-	CEGUI::System::create(*mRenderer);
-
 	CEGUI::DefaultResourceProvider* rp =
 		static_cast<CEGUI::DefaultResourceProvider*>
 		(CEGUI::System::getSingleton().getResourceProvider());
@@ -53,36 +35,37 @@ void InterfaceSystem::setup(Ogre::Root* _root, Window* window)
 	CEGUI::WidgetLookManager::setDefaultResourceGroup("looknfeels");
 	CEGUI::WindowManager::setDefaultResourceGroup("layouts");
 
-	// load theme
+	// load themes
 	CEGUI::SchemeManager::getSingleton().createFromFile("VanillaSkin.scheme");
 	CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
 	CEGUI::SchemeManager::getSingleton().createFromFile("Generic.scheme");
 	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
-	// load font
+	// load fonts
 	CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang", 12, true, "batang.ttf", "fonts");
+}
 
-	// test panel with text
-	CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-	myRoot = wmgr.createWindow("TaharezLook/StaticText", "staticText");
-	myRoot->setFont("Batang");
-	myRoot->setText("christian tenllado hijo de puta");
+UIElement* InterfaceSystem::getRoot()
+{
+	return root;
+}
 
-	myRoot->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
-	myRoot->setSize(CEGUI::USize(CEGUI::UDim(0.5, 0), CEGUI::UDim(0.5, 0)));
+void InterfaceSystem::createRoot()
+{
+	root = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root");
+	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(root);
+}
 
-	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(myRoot);
+void InterfaceSystem::setup(Window* window)
+{
+	// init
+	mRenderer = &CEGUI::OgreRenderer::create(*window->mWindow);
+	CEGUI::System::create(*mRenderer);
 
-	// test button
-	CEGUI::Window* button = NULL;
-	button = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button", "JumpPushButton");  // Create Window
-	CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(button);
-	button->setPosition(CEGUI::UVector2(CEGUI::UDim(0.4, 0), CEGUI::UDim(0.4, 0)));
-	button->setText("Jump!");
-	button->subscribeEvent(CEGUI::PushButton::EventMouseButtonDown, CEGUI::Event::Subscriber(&InterfaceSystem::clicked,this));
-	
+	// esto deberia ir en el ResourceManager!!
+	setupResources();
 
-	
+	createRoot();
 }
 
 void InterfaceSystem::render()
@@ -95,5 +78,16 @@ void InterfaceSystem::render()
 void InterfaceSystem::update(float deltaTime)
 {
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectTimePulse(deltaTime);
+}
+
+UIElement* InterfaceSystem::loadLayout(const std::string& filename)
+{
+	return CEGUI::WindowManager::getSingleton().loadLayoutFromFile(filename);
+}
+
+bool InterfaceSystem::clicked(const CEGUI::EventArgs& args)
+{
+	printf("jumpedd");
+	return false;
 }
 

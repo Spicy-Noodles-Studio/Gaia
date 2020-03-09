@@ -120,6 +120,9 @@
     <ClInclude Include="..\..\Src\Gaia\include\GaiaInput.h">
       <Filter>Archivos de encabezado\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\UILayout.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\GaiaCore.cpp">
@@ -190,6 +193,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\GaiaInput.cpp">
       <Filter>Archivos de origen\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\UILayout.cpp">
+      <Filter>Archivos de origen\Component</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

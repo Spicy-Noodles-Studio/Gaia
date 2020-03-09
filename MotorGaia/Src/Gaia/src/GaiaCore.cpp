@@ -15,6 +15,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
+#include "UILayout.h"
 
 #include "InterfaceSystem.h"
 #include "GaiaInput.h"
@@ -26,9 +27,9 @@ GaiaCore::GaiaCore()
 
 GaiaCore::~GaiaCore()
 {
+	delete win;
 	delete root;
 	delete obj;
-    delete win;
 }
 
 void GaiaCore::init()
@@ -70,10 +71,10 @@ void GaiaCore::init()
 
 	GaiaInput::GetInstance()->init();
 
-
-	InterfaceSystem::GetInstance()->setup(root, win);
+	InterfaceSystem::GetInstance()->setup(win);
 	
-	
+	UILayout* uilayout = new UILayout(obj);
+	uilayout->setLayout("TaharezLookOverview.layout");
 }
 
 void GaiaCore::run()

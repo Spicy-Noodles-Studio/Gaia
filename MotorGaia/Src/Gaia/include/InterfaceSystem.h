@@ -9,15 +9,16 @@
 
 #include "Window.h"
 
+typedef CEGUI::Window UIElement;
+
 class InterfaceSystem : public Singleton<InterfaceSystem>
 {
 private:
-	Ogre::Root* root;
-
 	CEGUI::OgreRenderer* mRenderer;
 
-	CEGUI::Window* myRoot;
+	UIElement* root;
 
+	void setupResources();
 
 	bool clicked(const CEGUI::EventArgs& args);
 
@@ -26,8 +27,14 @@ public:
 	InterfaceSystem();
 	~InterfaceSystem();
 
-	void setup(Ogre::Root* _root, Window* window);
+	void setup(Window* window);
 	void render();
 	void update(float deltaTime);
+
+	void createRoot();
+	UIElement* getRoot();
+
+	UIElement* loadLayout(const std::string& filename);
+
 };
 

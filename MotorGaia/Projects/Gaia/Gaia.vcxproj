@@ -39,6 +39,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Singleton.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Transform.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\UILayout.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Vector3.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Window.h" />
@@ -48,6 +49,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\Light.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\MeshRenderer.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\UILayout.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\DataLoader.cpp" />

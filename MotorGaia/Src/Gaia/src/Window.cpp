@@ -53,8 +53,8 @@ Window::Window(Ogre::Root* root, std::string windowTitle) : root(root)
 
 Window::~Window()
 {
-	SDL_DestroyWindow(sdlWindow);
 	root->destroyRenderTarget(mWindow);
+	SDL_DestroyWindow(sdlWindow);
 }
 
 void Window::displayConfig(Ogre::RenderSystem* rs)

@@ -17,6 +17,8 @@ public:
 	~Animator();
 
 	void setMesh(const std::string& mesh);
+	void storeInScene();
+
 	Ogre::AnimationState* getAnimation(const std::string& animation);
 
 	virtual void handleData(ComponentData* data);

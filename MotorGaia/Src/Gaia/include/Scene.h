@@ -35,6 +35,7 @@ public:
 	void setMainCamera(Camera* camera);
 	Camera* getMainCamera() const;
 
+	std::map<std::string, Ogre::AnimationState*> getAnimations();
 
 private:
 	void addUserComponent(UserComponent* component);
@@ -65,6 +66,8 @@ private:
 	std::vector<GameObject*> instantiateQueue;
 
 	Camera* mainCamera;
+
+	std::map<std::string, Ogre::AnimationState*> animations;
 };
 
 #endif

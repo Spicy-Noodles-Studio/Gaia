@@ -117,7 +117,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\ShaderTechniqueResolver.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\GaiaInput.h">
+    <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h">
       <Filter>Archivos de encabezado\Systems</Filter>
     </ClInclude>
   </ItemGroup>
@@ -188,7 +188,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\ShaderTechniqueResolver.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\GaiaInput.cpp">
+    <ClCompile Include="..\..\Src\Gaia\src\Systems\InputSystem.cpp">
       <Filter>Archivos de origen\Systems</Filter>
     </ClCompile>
   </ItemGroup>

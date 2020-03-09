@@ -1,7 +1,7 @@
-#include "GaiaInput.h"
+#include "InputSystem.h"
 
 // Initialization
-void GaiaInput::init()
+void InputSystem::init()
 {
     // MOUSE
     MOUSE_POSITION_X = 0;
@@ -22,42 +22,19 @@ void GaiaInput::init()
 
     SDL_GameControllerEventState(true);
 
-    int MaxJoysticks = SDL_NumJoysticks();
-    int ControllerIndex = 0;
-    for (int JoystickIndex = 0; JoystickIndex < MaxJoysticks; ++JoystickIndex)
-    {
-        if (SDL_IsGameController(JoystickIndex) && ControllerIndex < MAX_CONTROLLERS)
-        {
-            ControllerHandles[ControllerIndex] = SDL_GameControllerOpen(JoystickIndex);
-
-            // Data pass to internal controller struct
-            controllers[currentControllers].controller = ControllerHandles[ControllerIndex];
-            controllers[currentControllers].isConected = true;
-
-            // Checks if controller has rumble device & asigns it
-            SDL_Joystick* JoystickHandle = SDL_GameControllerGetJoystick(ControllerHandles[ControllerIndex]);
-            if ((RumbleHandles[ControllerIndex] = SDL_HapticOpenFromJoystick(JoystickHandle)) != NULL) {
-                controllers[currentControllers].controllerRumble = RumbleHandles[ControllerIndex];
-            }
-            std::cout << "ANADIDO MANDO " << currentControllers << "\n";
-            ControllerIndex++;
-            currentControllers++;
-        }
-        
-    }
 }
 
 // Closing
-void GaiaInput::close()
+void InputSystem::close()
 {
 
     // CONTROLLER SYSTEM
     for (int ControllerIndex = 0; ControllerIndex < MAX_CONTROLLERS; ++ControllerIndex)
     {
-        if (ControllerHandles[ControllerIndex])
+        if (controllers[ControllerIndex].controller)
         {
-            SDL_GameControllerClose(ControllerHandles[ControllerIndex]);
-            if (RumbleHandles[ControllerIndex]) SDL_HapticClose(RumbleHandles[ControllerIndex]);
+            SDL_GameControllerClose(controllers[ControllerIndex].controller);
+            if (controllers[ControllerIndex].controllerRumble) SDL_HapticClose(controllers[ControllerIndex].controllerRumble);
             controllers[ControllerIndex].isConected = false;
         }
     }
@@ -67,7 +44,7 @@ void GaiaInput::close()
 
 /// MAIN LOOP
 
-void GaiaInput::update()
+void InputSystem::update()
 {
     // Clear previous frame press/release events
     clearInputs();
@@ -87,14 +64,18 @@ void GaiaInput::update()
         case SDL_KEYDOWN:
             key = SDL_GetKeyName(event.key.keysym.sym);
             std::transform(key.begin(), key.end(), key.begin(), ::toupper);
-            keyPress.emplace(key);
-            keyHold.emplace(key);
+            if (!isKeyPressed(key)) {
+                keyPress.emplace(key);
+                keyHold.emplace(key);
+                if (flags) std::cout << "Key down: " << key << "\n";
+            }  
             break;
         case SDL_KEYUP:
             key = SDL_GetKeyName(event.key.keysym.sym);
             std::transform(key.begin(), key.end(), key.begin(), ::toupper);
             keyRelease.emplace(key);
             keyHold.erase(key);
+            if (flags) std::cout << "Key up: " << key << "\n";
             break;
         case SDL_TEXTINPUT:
             break;
@@ -105,67 +86,67 @@ void GaiaInput::update()
             break;
         case SDL_MOUSEBUTTONDOWN:
             processMouseInputDown(event.button);
-            std::cout << MOUSE_POSITION_X << " " << MOUSE_POSITION_Y << "\n";
+            if(flags) std::cout << "Mouse X: " << MOUSE_POSITION_X << " | Mouse Y: " << MOUSE_POSITION_Y << "\n";
             break;
         case SDL_MOUSEBUTTONUP:
             processMouseInputUp(event.button);
+            break;
+        case SDL_MOUSEWHEEL:
+            if (event.wheel.y > 0) {
+                MOUSE_WHEEL = 1;
+                if (flags) std::cout << "Mouse wheel up" << "\n";
+            }
+            else if (event.wheel.y < 0) {
+                MOUSE_WHEEL = -1;
+                if (flags) std::cout << "Mouse wheel down" << "\n";
+            }
             break;
 
             // Controller events
         case SDL_CONTROLLERBUTTONDOWN:
 
-            if ((controllerIndex = getControllerByReference(ControllerHandles[event.cdevice.which])) == -1) break;
+            if ( (controllerIndex = getControllerFromEvent(&event) ) == -1) break;
 
             if (controllers[controllerIndex].isConected) controllerInputDown(controllerIndex);
 
-            std::cout << "MANDO DOWN | Index = ";
-            std::cout << event.cdevice.which << "\n";
+            if (flags) std::cout << "Controller: " << controllerIndex << " Button Down" << "\n";
 
             break;
         case SDL_CONTROLLERBUTTONUP:
 
-            if ((controllerIndex = getControllerByReference(ControllerHandles[event.cdevice.which])) == -1) break;
+            if ((controllerIndex = getControllerFromEvent(&event)) == -1) break;
 
             if (controllers[controllerIndex].isConected) controllerInputUp(controllerIndex);
-            break;
-        
-        case SDL_CONTROLLERAXISMOTION:
+
+            if (flags) std::cout << "Controller: " << controllerIndex << " Button Up" << "\n";
+
             break;
 
-        case SDL_JOYAXISMOTION:
-            break;
+        
 
         case SDL_CONTROLLERDEVICEADDED:
             if (currentControllers < MAX_CONTROLLERS && SDL_IsGameController(event.cdevice.which)) {
 
                 index = event.cdevice.which;
 
-                ControllerHandles[index] = SDL_GameControllerOpen(index);
-
                 if ((controllerIndex = getFirstFreeController()) == -1) break;
 
-                controllers[controllerIndex].controller = ControllerHandles[index];
+                controllers[controllerIndex].controller = SDL_GameControllerOpen(index);
                 controllers[controllerIndex].isConected = true;
+                controllers[controllerIndex].ID = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controllers[controllerIndex].controller));
 
-                // Checks if controller has rumble device & asigns it
+                 // Checks if controller has rumble device & asigns it
+                SDL_Joystick* JoystickHandle = SDL_GameControllerGetJoystick(controllers[controllerIndex].controller);
+                controllers[controllerIndex].controllerRumble = SDL_HapticOpenFromJoystick(JoystickHandle);
 
-                SDL_Joystick* JoystickHandle = SDL_GameControllerGetJoystick(ControllerHandles[index]);
-                if ((RumbleHandles[index] = SDL_HapticOpenFromJoystick(JoystickHandle)) != NULL) {
-                    controllers[controllerIndex].controllerRumble = RumbleHandles[index];
-                }
-
-
-                // Checks if rumble device is compatible with basic rumble features
-                if (SDL_HapticRumbleInit(RumbleHandles[index]) != 0)
+                if (SDL_HapticRumbleInit(controllers[controllerIndex].controllerRumble) != 0)
                 {
-                    SDL_HapticClose(RumbleHandles[index]);
-                    RumbleHandles[index] = 0;
+                    SDL_HapticClose(controllers[controllerIndex].controllerRumble);
                 }
 
                 currentControllers++;
 
-                std::cout << "MANDO ADDED | Index = ";
-                std::cout << controllerIndex << "\n";
+                if (flags) std::cout << "Controller: " << controllerIndex << " added" << "\n";
             }
             break;
         case SDL_CONTROLLERDEVICEREMOVED:
@@ -173,26 +154,24 @@ void GaiaInput::update()
 
             if (index < 0) return; // unknown controller?
 
-            if ((controllerIndex = getControllerByReference(ControllerHandles[index])) == -1) break;
+            if ((controllerIndex = getControllerRemovedIndex(&event) ) == -1) break;
 
-            SDL_GameControllerClose(ControllerHandles[index]);
+            SDL_GameControllerClose(controllers[controllerIndex].controller);
 
-            if (RumbleHandles[index]) {
+            if (controllers[controllerIndex].controllerRumble) {
+                SDL_HapticClose(controllers[controllerIndex].controllerRumble);
                 controllers[controllerIndex].controllerRumble = nullptr;
-                SDL_HapticClose(RumbleHandles[index]);
             }
 
-            ControllerHandles[index] = NULL;
-           
             controllers[controllerIndex].controller = nullptr;
             controllers[controllerIndex].isConected = false;
 
             currentControllers--;
 
-            std::cout << "MANDO REMOVED | Index = ";
-            std::cout << controllerIndex << "\n";
+            if (flags) std::cout << "Controller: " << controllerIndex << " removed" << "\n";
 
             break;
+
         case SDL_CONTROLLERDEVICEREMAPPED:
             break;
 
@@ -203,9 +182,26 @@ void GaiaInput::update()
         case SDL_WINDOWEVENT:
             break;
 
+            // UNUSED
+        case SDL_CONTROLLERAXISMOTION:
+            break;
+        case SDL_JOYAXISMOTION:
+            break;
+        case SDL_JOYBUTTONDOWN:
+            break;
+        case SDL_JOYBUTTONUP:
+            break;
+        case SDL_JOYDEVICEADDED:
+            break;
+        case SDL_JOYDEVICEREMOVED:
+            break;
+        case SDL_JOYHATMOTION:
+            break;
+
+            // Default
         default:
-            std::cout << "Unknown event\n";
-            std::cout << event.type << "\n";
+            if(flags) std::cout << "Unknown event: " << event.type <<"\n";
+            break;
         }
 
         // Save current keyboard state
@@ -216,15 +212,15 @@ void GaiaInput::update()
             if (controllers[i].isConected)
             {
                 // Left joystick
-                controllers[i].LeftStickX = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTX)) > JOYSTICK_DEAD_ZONE ?
+                controllers[i].LeftStickX = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTX)) > controllers[i].JOYSTICK_DEAD_ZONE ?
                     SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTX) : 0;
-                controllers[i].LeftStickY = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTY)) > JOYSTICK_DEAD_ZONE ?
+                controllers[i].LeftStickY = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTY)) > controllers[i].JOYSTICK_DEAD_ZONE ?
                     SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTY) : 0;
 
                 // Right joystick
-                controllers[i].RightStickX = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTX)) > JOYSTICK_DEAD_ZONE ?
+                controllers[i].RightStickX = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTX)) > controllers[i].JOYSTICK_DEAD_ZONE ?
                     SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTX) : 0;
-                controllers[i].RightStickY = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTY)) > JOYSTICK_DEAD_ZONE ?
+                controllers[i].RightStickY = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTY)) > controllers[i].JOYSTICK_DEAD_ZONE ?
                     SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTY) : 0;
 
                 // Triggers
@@ -240,10 +236,17 @@ void GaiaInput::update()
     }
 }
 
+void InputSystem::setDeadZone(int controller, int zone)
+{
+    if (controller > 0 && controller < 4)
+        controllers[controller].JOYSTICK_DEAD_ZONE = zone;
+    if(flags) std::cout << "Controller: " << controller << " | Deadzone: " << zone << "\n";
+}
+
 // KEYBOARD
 
 /// Returns "true" while "key" is hold
-bool GaiaInput::isKeyPressed(std::string key)
+bool InputSystem::isKeyPressed(std::string key)
 {
     std::transform(key.begin(), key.end(), key.begin(), ::toupper);
     const bool is_in = keyHold.find(key) != keyHold.end();
@@ -251,7 +254,7 @@ bool GaiaInput::isKeyPressed(std::string key)
 }
 
 /// Returns "true" if "key" has been pressed on latest frame
-bool GaiaInput::getKeyPress(std::string key)
+bool InputSystem::getKeyPress(std::string key)
 {
     std::transform(key.begin(), key.end(), key.begin(), ::toupper);
     const bool is_in = keyPress.find(key) != keyPress.end();
@@ -259,7 +262,7 @@ bool GaiaInput::getKeyPress(std::string key)
 }
 
 /// Returns "true" if "key" has been released on latest frame
-bool GaiaInput::getKeyRelease(std::string key)
+bool InputSystem::getKeyRelease(std::string key)
 {
     std::transform(key.begin(), key.end(), key.begin(), ::toupper);
     const bool is_in = keyRelease.find(key) != keyRelease.end();
@@ -268,7 +271,7 @@ bool GaiaInput::getKeyRelease(std::string key)
 
 // MOUSE
 
-void GaiaInput::processMouseInputDown (SDL_MouseButtonEvent& e)
+void InputSystem::processMouseInputDown (SDL_MouseButtonEvent& e)
 {
     switch (e.button) {
     case SDL_BUTTON_LEFT:
@@ -288,7 +291,7 @@ void GaiaInput::processMouseInputDown (SDL_MouseButtonEvent& e)
     }
 }
 
-void GaiaInput::processMouseInputUp(SDL_MouseButtonEvent& e)
+void InputSystem::processMouseInputUp(SDL_MouseButtonEvent& e)
 {
     switch (e.button) {
     case SDL_BUTTON_LEFT:
@@ -309,7 +312,7 @@ void GaiaInput::processMouseInputUp(SDL_MouseButtonEvent& e)
 }
 
 /// 'l' = left button | 'r' = right button | 'm' = middle button
-bool GaiaInput::getMouseButtonClick(char button)
+bool InputSystem::getMouseButtonClick(char button)
 {
     switch (button) {
     case 'l':
@@ -329,7 +332,7 @@ bool GaiaInput::getMouseButtonClick(char button)
 }
 
 /// 'l' = left button | 'r' = right button | 'm' = middle button
-bool GaiaInput::getMouseButtonHold(char button)
+bool InputSystem::getMouseButtonHold(char button)
 {
     switch (button) {
     case 'l':
@@ -349,7 +352,7 @@ bool GaiaInput::getMouseButtonHold(char button)
 }
 
 /// 'l' = left button | 'r' = right button | 'm' = middle button
-bool GaiaInput::getMouseButtonRelease(char button)
+bool InputSystem::getMouseButtonRelease(char button)
 {
     switch (button) {
     case 'l':
@@ -371,7 +374,7 @@ bool GaiaInput::getMouseButtonRelease(char button)
 
 // CONTROLLER
 
-void GaiaInput::controllerInputDown(int index)
+void InputSystem::controllerInputDown(int index)
 {
     if (!controllers[index].isConected)return;
 
@@ -425,7 +428,7 @@ void GaiaInput::controllerInputDown(int index)
     }
 }
 
-void GaiaInput::controllerInputUp(int index)
+void InputSystem::controllerInputUp(int index)
 {
     if (!controllers[index].isConected)return;
 
@@ -479,7 +482,7 @@ void GaiaInput::controllerInputUp(int index)
     }
 }
 
-bool GaiaInput::isButtonPressed(int controllerIndex, std::string button)
+bool InputSystem::isButtonPressed(int controllerIndex, std::string button)
 {
     if (!controllers[controllerIndex].isConected) return false;
 
@@ -524,18 +527,18 @@ bool GaiaInput::isButtonPressed(int controllerIndex, std::string button)
     else return false;
 }
 
-bool GaiaInput::getButtonPress(int controllerIndex, std::string button)
+bool InputSystem::getButtonPress(int controllerIndex, std::string button)
 {
-    if (controllerIndex >= currentControllers) return false;
+    if (!controllers[controllerIndex].isConected) return false;
 
     std::transform(button.begin(), button.end(), button.begin(), ::toupper);
     const bool is_in = controllers[controllerIndex].buttonPress.find(button) != controllers[controllerIndex].buttonPress.end();
     return is_in;
 }
 
-bool GaiaInput::getButtonRelease(int controllerIndex, std::string button)
+bool InputSystem::getButtonRelease(int controllerIndex, std::string button)
 {
-    if (controllerIndex >= currentControllers) return false;
+    if (!controllers[controllerIndex].isConected) return false;
 
     std::transform(button.begin(), button.end(), button.begin(), ::toupper);
     const bool is_in = controllers[controllerIndex].buttonRelease.find(button) != controllers[controllerIndex].buttonRelease.end();
@@ -543,17 +546,17 @@ bool GaiaInput::getButtonRelease(int controllerIndex, std::string button)
 }
 
 /// strength = rumble strength percentage [0.0 , 1.0] | length = duration of effect in miliseconds
-void GaiaInput::controllerRumble(int controllerIndex, float strength, int length)
+void InputSystem::controllerRumble(int controllerIndex, float strength, int length)
 {
     if (strength > 1.0f) strength = 1.0f;
     if (length > 10000) length = 10000;
-    if (RumbleHandles[controllerIndex])
+    if (controllers[controllerIndex].isConected && controllers[controllerIndex].controllerRumble)
     {
-        SDL_HapticRumblePlay(RumbleHandles[controllerIndex], strength, length);
+        SDL_HapticRumblePlay(controllers[controllerIndex].controllerRumble, strength, length);
     }
 }
 #pragma region UTILS
-void GaiaInput::clearInputs()
+void InputSystem::clearInputs()
 {
     keyPress.clear();
     keyRelease.clear();
@@ -567,22 +570,38 @@ void GaiaInput::clearInputs()
     if (MOUSE_BUTTON_MIDDLE.pressed) MOUSE_BUTTON_MIDDLE.pressed = false;
     else if (MOUSE_BUTTON_MIDDLE.released)MOUSE_BUTTON_MIDDLE.released = false;
 
+    MOUSE_WHEEL = 0;
+
     for (int i = 0; i < currentControllers; i++) {
         controllers[i].buttonPress.clear();
         controllers[i].buttonRelease.clear();
     }
 }
-int GaiaInput::getFirstFreeController()
+int InputSystem::getFirstFreeController()
 {
     for (int i = 0; i < 4; i++) {
         if (!controllers[i].isConected) return i;
     }
     return -1;
 }
-int GaiaInput::getControllerByReference(SDL_GameController* handle)
+int InputSystem::getControllerByReference(SDL_GameController* handle)
 {
     for (int i = 0; i < 4; i++) {
         if (controllers[i].controller == handle) return i;
+    }
+    return -1;
+}
+int InputSystem::getControllerFromEvent(SDL_Event* e)
+{
+    for (int i = 0; i < 4; i++) {
+        if (controllers[i].ID == e->cbutton.which) return i;
+    }
+    return -1;
+}
+int InputSystem::getControllerRemovedIndex(SDL_Event* e)
+{
+    for (int i = 0; i < 4; i++) {
+        if (controllers[i].ID == e->cdevice.which) return i;
     }
     return -1;
 }

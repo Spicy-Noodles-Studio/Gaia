@@ -13,7 +13,7 @@
 #include "Window.h"
 
 #include "RenderSystem.h"
-#include "GaiaInput.h"
+#include "InputSystem.h"
 
 #include "ResourcesManager.h"
 #include "ComponentManager.h"
@@ -40,7 +40,7 @@ private:
 
 	//Systems
 	RenderSystem* renderSystem;
-	GaiaInput* inputSystem;
+	InputSystem* inputSystem;
 
 	//Managers
 	ResourcesManager resourcesManager;

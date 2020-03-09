@@ -33,7 +33,7 @@ void GaiaCore::init()
 	renderSystem->init(root);
 
 	//InputSystem
-	inputSystem = GaiaInput::GetInstance();
+	inputSystem = InputSystem::GetInstance();
 	inputSystem->init();
 
 	// Managers initialization

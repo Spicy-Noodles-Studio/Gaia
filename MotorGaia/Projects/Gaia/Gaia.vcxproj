@@ -28,6 +28,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaInput.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\ParticleEmitter.h" />
     <ClInclude Include="..\..\Src\Gaia\include\RenderComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
@@ -47,6 +48,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\Camera.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Light.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\MeshRenderer.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\ParticleEmitter.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />

@@ -21,12 +21,13 @@ private:
 
 	// Turns a Gaia Vector3 into a Bullet Physics Vector3
 	const btVector3 parseToBulletVector(const Vector3& v) const;
+	const Vector3 parseFromBulletVector(const btVector3& v) const;
 
 public:
 	RigidBody(GameObject* gameObject);
 	~RigidBody();
 
-	void setRigidBody(float mass, RB_Shape shape, const Vector3& offset = { 0.0f, 0.0f, 0.0f }, const Vector3& dim = { 1,1,1 }, bool isTrigger = false);
+	void setRigidBody(float mass, RB_Shape shape, const Vector3& offset = { 0.0f, 0.0f, 0.0f }, const Vector3& dim = { 1,1,1 }, bool isTrigger = false, uint16_t myGroup = DEFAULT, uint16_t collidesWith = ALL);
 	void handleData(ComponentData* data);
 	bool isTrigger() const;
 

@@ -18,6 +18,14 @@ enum RB_Shape
 	BOX_RB_SHAPE, SPHERE_RB_SHAPE
 };
 
+//Potencias de 2 hasta 2^15
+enum Col_Filters
+{
+	NONE = -1,
+	DEFAULT = (1 << 0),
+	ALL = (1<<15)
+};
+
 class PhysicsSystem : public Singleton<PhysicsSystem> 
 {
 public:
@@ -28,13 +36,16 @@ public:
 	void update();
 	void shutDown();
 
+	void clearWorld();
+
 	// World config methods
 	void setWorldGravity(Vector3 gravity);
 
 	void setDebugDrawer(DebugDrawer* debugDrawer);
 
 	// Rigid Body methods
-	btRigidBody* createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim);
+	btRigidBody* createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim, uint16_t myGroup=DEFAULT, uint16_t mask=ALL);
+	void deleteRigidBody(btRigidBody* body);
 	// Turns a Gaia Transform into a Bullet Physics Transform
 	btTransform parseToBulletTransform(Transform* transform);
 

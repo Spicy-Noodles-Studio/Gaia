@@ -72,13 +72,14 @@ void GaiaCore::init()
 	Transform *transform2 = new Transform(obj);
 	obj->transform->setPosition(Vector3(25, 100, -400));
 	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
-	obj->transform->rotate(Vector3(0, 90, 0));
+	obj->transform->rotate(Vector3(0, 0, 0));
 	MeshRenderer *ms = new MeshRenderer(obj);
 	ms->createEntity("knot", "knot.mesh");
 	RigidBody* rb = new RigidBody(obj);
 	rb->setRigidBody(1.0, SPHERE_RB_SHAPE, {}, { 2,2,2 });
-	rb->addImpulse({ 1.0f, 10.0f,0.0f });
-	rb->addImpulse({ -50.0f, 500.0f,0.0f }, TORQUE);
+	rb->addImpulse({ 10.0f, 0.0f,0.0f });
+	rb->addImpulse({ 0.0f, 500.0f,0.0f }, TORQUE);
+	
 
 	GameObject *obj1 = new GameObject("Cubo", "Cu", nullptr);
 	Transform *transform3 = new Transform(obj1);
@@ -108,4 +109,6 @@ void GaiaCore::close()
 
 void GaiaCore::update()
 {
+	if (GaiaInput::GetInstance()->getKeyPress("D"))
+		PhysicsSystem::GetInstance()->clearWorld();
 }

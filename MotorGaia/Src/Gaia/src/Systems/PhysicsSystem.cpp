@@ -49,7 +49,28 @@ void PhysicsSystem::update()
 void PhysicsSystem::shutDown()
 {
 	///-----cleanup_start-----
+	clearWorld();
 
+	//delete dynamics world
+	delete dynamicsWorld;
+
+	//delete solver
+	delete solver;
+
+	//delete broadphase
+	delete overlappingPairCache;
+
+	//delete dispatcher
+	delete dispatcher;
+
+	delete collisionConfiguration;
+
+	//next line is optional: it will be cleared by the destructor when the array goes out of scope
+	collisionShapes.clear();
+}
+
+void PhysicsSystem::clearWorld()
+{
 	//remove the rigidbodies from the dynamics world and delete them
 	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
@@ -70,23 +91,6 @@ void PhysicsSystem::shutDown()
 		collisionShapes[j] = 0;
 		delete shape;
 	}
-
-	//delete dynamics world
-	delete dynamicsWorld;
-
-	//delete solver
-	delete solver;
-
-	//delete broadphase
-	delete overlappingPairCache;
-
-	//delete dispatcher
-	delete dispatcher;
-
-	delete collisionConfiguration;
-
-	//next line is optional: it will be cleared by the destructor when the array goes out of scope
-	collisionShapes.clear();
 }
 
 
@@ -105,7 +109,7 @@ void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
 
 // Creates a btRigidBody with the specified properties, adds it to the dynamicWorld
 // and returns a reference to it
-btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim)
+btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim, uint16_t myGroup, uint16_t mask)
 {
 	btCollisionShape* colShape;
 	switch (shape)
@@ -140,6 +144,24 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	dynamicsWorld->addRigidBody(body);
 
 	return body;
+}
+
+void PhysicsSystem::deleteRigidBody(btRigidBody* body)
+{
+	btCollisionObject* obj = body;
+	btCollisionShape* shape = obj->getCollisionShape();
+	if (body && body->getMotionState())
+	{
+		delete body->getMotionState();
+	}
+	dynamicsWorld->removeCollisionObject(obj);
+	delete obj;
+
+	int i = collisionShapes.findBinarySearch(shape);
+	if (i >= 0 && i < collisionShapes.size()) {
+		collisionShapes[i] = 0;
+		delete shape;
+	}
 }
 
 btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)

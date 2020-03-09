@@ -6,17 +6,18 @@
 #include "MeshRenderer.h"
 #include "Animator.h"
 
-std::map<std::string, ComponentFactory> ComponentManager::factories;
 
 ComponentManager::ComponentManager()
 {
 
 }
 
+
 ComponentManager::~ComponentManager()
 {
-	close();
+
 }
+
 
 void ComponentManager::init()
 {
@@ -31,6 +32,7 @@ void ComponentManager::init()
 void ComponentManager::close()
 {
 	factories.clear();
+	destroy();
 }
 
 const ComponentFactory& ComponentManager::getComponentFactory(const std::string& nameID)

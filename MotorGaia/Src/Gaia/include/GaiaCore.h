@@ -44,7 +44,7 @@ private:
 
 	//Managers
 	ResourcesManager resourcesManager;
-	ComponentManager componentManager;
+	ComponentManager* componentManager;
 	SceneManager* sceneManager;
 };
 

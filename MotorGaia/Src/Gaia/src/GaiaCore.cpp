@@ -3,7 +3,7 @@
 
 GaiaCore::GaiaCore() :	root(nullptr), win(nullptr), 
 						renderSystem(nullptr), inputSystem(nullptr),
-						resourcesManager("resources.asset"), sceneManager(nullptr)
+						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
 {
 
 }
@@ -41,7 +41,8 @@ void GaiaCore::init()
 	resourcesManager.init();
 
 	// ComponentManager initialization
-	componentManager.init();
+	componentManager = ComponentManager::GetInstance();
+	componentManager->init();
 
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
@@ -73,7 +74,7 @@ void GaiaCore::close()
 	// SceneManager termination
 	sceneManager->close();
 	// ComponentManager termination
-	componentManager.close();
+	componentManager->close();
 	// ResourcesManager termination
 	resourcesManager.close();
 

@@ -94,7 +94,7 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 	// Component
 	for (auto compData : data->getComponentData()) {
 		ComponentData* cData = compData.second;
-		auto constructor = ComponentManager::getComponentFactory(cData->getName());
+		auto constructor = ComponentManager::GetInstance()->getComponentFactory(cData->getName());
 		if (constructor != nullptr)
 		{
 			Component* comp = constructor(gameObject);

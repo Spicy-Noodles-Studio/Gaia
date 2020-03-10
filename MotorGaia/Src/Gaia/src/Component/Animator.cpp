@@ -12,7 +12,7 @@ Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject)
 
 Animator::~Animator()
 {
-
+	delete animations;
 }
 
 void Animator::setMesh(const std::string& mesh)

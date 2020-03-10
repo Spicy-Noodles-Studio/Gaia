@@ -26,6 +26,11 @@ Scene::~Scene()
 	root->destroySceneManager(sceneManager);
 
 	mainCamera = nullptr;
+
+	for (auto set : animationSets)
+		delete set.second;
+
+	animationSets.clear();
 }
 
 

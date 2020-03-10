@@ -18,7 +18,7 @@
 #include "RigidBody.h"
 #include "DebugDrawer.h"
 #include "gTime.h"
-#include "GaiaInput.h"
+#include "InputSystem.h"
 
 GaiaCore::GaiaCore()
 {
@@ -50,7 +50,7 @@ void GaiaCore::init()
 	rManager->init();
 
 	RenderSystem::GetInstance()->setup(root);
-	GaiaInput::GetInstance()->init();
+	InputSystem::GetInstance()->init();
 	PhysicsSystem::GetInstance()->setup();
 	PhysicsSystem::GetInstance()->setWorldGravity({0, -1.0f, 0});
 	gTime::GetInstance()->setup();
@@ -79,7 +79,6 @@ void GaiaCore::init()
 	rb->setRigidBody(1.0, SPHERE_RB_SHAPE, {}, { 2,2,2 });
 	rb->addImpulse({ 10.0f, 0.0f,0.0f });
 	rb->addImpulse({ 0.0f, 500.0f,0.0f }, TORQUE);
-	
 
 	GameObject *obj1 = new GameObject("Cubo", "Cu", nullptr);
 	Transform *transform3 = new Transform(obj1);
@@ -100,6 +99,8 @@ void GaiaCore::run()
 		GaiaInput::GetInstance()->update();
 		RenderSystem::GetInstance()->render();
 		update();
+
+		InputSystem::GetInstance()->update();
 	}
 }
 

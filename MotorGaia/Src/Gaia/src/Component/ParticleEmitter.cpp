@@ -18,4 +18,15 @@ ParticleEmitter::~ParticleEmitter()
 void ParticleEmitter::newEmitter(Ogre::String name, Ogre::String source)
 {
 	ps = sm->createParticleSystem(name,source);
+	ps->setEmitting(false);
+}
+
+void ParticleEmitter::start()
+{
+	ps->setEmitting(true);
+}
+
+void ParticleEmitter::stop()
+{
+	ps->setEmitting(false);
 }

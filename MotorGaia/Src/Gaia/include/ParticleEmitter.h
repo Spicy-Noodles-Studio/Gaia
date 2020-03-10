@@ -21,7 +21,8 @@ public:
 	ParticleEmitter(GameObject* gameObject);
 	~ParticleEmitter();
 	void newEmitter(Ogre::String name, Ogre::String source);
-	
+	void start();
+	void stop();
 };
 
 #endif

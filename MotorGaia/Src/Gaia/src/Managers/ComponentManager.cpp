@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "MeshRenderer.h"
-
+#include "UILayout.h"
 
 ComponentManager::ComponentManager()
 {
@@ -25,6 +25,7 @@ void ComponentManager::init()
 	registerComponent<Camera>("Camera");
 	registerComponent<Light>("Light");
 	registerComponent<MeshRenderer>("MeshRenderer");
+	registerComponent<UILayout>("UILayout");
 }
 
 void ComponentManager::close()

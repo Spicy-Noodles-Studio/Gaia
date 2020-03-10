@@ -10,6 +10,7 @@
 #endif
 
 #include "GameObject.h"
+#include "ResourcesManager.h"
 #include "Window.h"
 #include "SoundSystem.h"
 #include "SoundEmitter.h"
@@ -33,8 +34,10 @@ private:
 	
 	SoundListener* lis;
 	SoundEmitter* emi;
-	SoundSystem* sound = SoundSystem::GetInstance();
+	ResourcesManager* rManager;
+
 	
+
 	void update();
 };
 

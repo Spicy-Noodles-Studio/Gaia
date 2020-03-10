@@ -114,21 +114,6 @@
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h">
       <Filter>Archivos de encabezado\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h">
-      <Filter>Archivos de encabezado\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\SoundListener.h">
-      <Filter>Archivos de encabezado\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h">
-      <Filter>Archivos de encabezado\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\SoundEmitter.h">
-      <Filter>Archivos de encabezado\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\Reverb.h">
-      <Filter>Archivos de encabezado\Component</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsSystem.h">
       <Filter>Archivos de encabezado\Systems</Filter>
     </ClInclude>
@@ -149,6 +134,21 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h">
       <Filter>Archivos de encabezado\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\SoundListener.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\SoundEmitter.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Reverb.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h">
+      <Filter>Archivos de encabezado\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -215,20 +215,6 @@
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp">
       <Filter>Archivos de origen\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp">
-      <Filter>Archivos de origen\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Component\SoundListener.cpp">
-      <Filter>Archivos de origen\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp">
-      <Filter>Archivos de origen\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Component\SoundEmitter.cpp">
-      <Filter>Archivos de origen\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Component\Reverb.cpp">
-      <Filter>Archivos de origen\Component</Filter>
     <ClCompile Include="..\..\Src\Gaia\src\Systems\PhysicsSystem.cpp">
       <Filter>Archivos de origen\Systems</Filter>
     </ClCompile>
@@ -246,6 +232,21 @@
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Systems\InputSystem.cpp">
       <Filter>Archivos de origen\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp">
+      <Filter>Archivos de origen\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Reverb.cpp">
+      <Filter>Archivos de origen\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\SoundEmitter.cpp">
+      <Filter>Archivos de origen\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\SoundListener.cpp">
+      <Filter>Archivos de origen\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp">
+      <Filter>Archivos de origen\Managers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@ public:
 	SoundListener(GameObject* gameObject);
 	~SoundListener();
 
-	virtual void update(float deltaTime);
+	virtual void update();
 };
 
 #endif

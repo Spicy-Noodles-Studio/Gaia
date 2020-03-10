@@ -50,7 +50,7 @@ void GaiaCore::init()
 	rManager = new ResourcesManager("resources.asset");
 	rManager->init();
  
-  SoundSystem::GetInstance()->initSystem();
+	SoundSystem::GetInstance()->initSystem();
 	RenderSystem::GetInstance()->setup(root);
 	InputSystem::GetInstance()->init();
 	PhysicsSystem::GetInstance()->setup();
@@ -60,7 +60,7 @@ void GaiaCore::init()
 	aux = new GameObject("Camera", "Cam", nullptr);
 	Transform* transform1 = new Transform(aux);
 	Camera* cam = new Camera(aux);
-	lis = new SoundListener(aux);
+	SoundListener* lis = new SoundListener(aux);
 	
 	//aux->transform->rotate(Vector3(0, -90, 0));
 
@@ -81,7 +81,7 @@ void GaiaCore::init()
 	MeshRenderer* ms = new MeshRenderer(obj);
 	ms->createEntity("knot", "knot.mesh");
 	
-	emi = new SoundEmitter(obj);
+	SoundEmitter* emi = new SoundEmitter(obj);
 	
 	
 	Reverb* rev = new Reverb(aux);
@@ -130,10 +130,11 @@ void GaiaCore::update()
 {
 	obj->transform->translate(Vector3(0, 0, 0));
 	//obj->getComponent<SoundEmitter>()->update(2);
-	emi->update(0);
-	lis->update(0);
 
-	aux->transform->rotate(Vector3(0, 0.2, 0));
+	SoundSystem::GetInstance()->update();
+
+
+	aux->transform->rotate(Vector3(0, 0, 0));
 /*	SoundListener* lis = aux->getComponent<SoundListener>();
 	emi->update(0);*/
 

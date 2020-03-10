@@ -5,14 +5,14 @@
 
 SoundListener::SoundListener(GameObject* gameObject) : GaiaComponent(gameObject)
 {
-
+    SoundSystem::GetInstance()->initListener(this);
 }
 
 SoundListener::~SoundListener()
 {
 }
 
-void SoundListener::update(float deltaTime)
+void SoundListener::update()
 {
     Vector3 pos, forward, up;
     //std::cout << forward.x << " " << forward.y << " " << forward.z << std::endl;
@@ -21,5 +21,6 @@ void SoundListener::update(float deltaTime)
     up = gameObject->transform->getUpVector();
 
     SoundSystem::GetInstance()->setListenerAttributes(pos, forward, up);
-   // std::cout << forward.x << " " << forward.y << " " << forward.z << std::endl;
+    // std::cout << forward.x << " " << forward.y << " " << forward.z << std::endl;
 }
+

@@ -6,6 +6,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "SoundListener.h"
+#include "SoundEmitter.h"
 
 SoundSystem::SoundSystem()
 {
@@ -41,6 +43,8 @@ void SoundSystem::initSystem()
 	std::cout << "\nSound system started" << "\n";
 
 	createSounds(".//Assets//Sounds//sounds.asset");
+
+	emitters = new std::vector<SoundEmitter*>();
 }
 
 bool SoundSystem::createSounds(const std::string filename)
@@ -183,6 +187,25 @@ void SoundSystem::setListenerAttributes(const Vector3& position, const Vector3& 
 	up = { float(Up.x) ,float(Up.y) ,float(Up.z) };
 	system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
 	
+}
+
+void SoundSystem::initListener(SoundListener* listener)
+{
+	_listener = listener;
+}
+
+void SoundSystem::addEmitter(SoundEmitter* emitter)
+{
+	emitters->push_back(emitter);
+}
+
+void SoundSystem::update()
+{
+	_listener->update();
+	for (int i = 0; i < emitters->size(); i++)
+	{
+		emitters->at(i)->update();
+	}
 }
 
 FMOD_VECTOR SoundSystem::vecToFMOD(const Vector3& in)

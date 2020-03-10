@@ -5,6 +5,7 @@
 SoundEmitter::SoundEmitter(GameObject* gameObject) : GaiaComponent(gameObject)
 {
     pos = SoundSystem::GetInstance()->vecToFMOD(gameObject->transform->getPosition());
+    SoundSystem::GetInstance()->addEmitter(this);
     channel = nullptr;
     pitch = 1.0f;
     volume = 1.0f;
@@ -15,13 +16,14 @@ SoundEmitter::~SoundEmitter()
 {
 }
 
-void SoundEmitter::update(float deltaTime)
+void SoundEmitter::update()
 {
     if (channel && !paused) {
         pos = SoundSystem::GetInstance()->vecToFMOD(gameObject->transform->getPosition());
         channel->set3DAttributes(&pos, &zero);
     }
 }
+
 
 void SoundEmitter::playSound(std::string soundName, bool reverb)
 {

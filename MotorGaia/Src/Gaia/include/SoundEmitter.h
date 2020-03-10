@@ -24,7 +24,7 @@ public:
     SoundEmitter(GameObject* gameObject);
 	~SoundEmitter();
 
-	virtual void update(float deltaTime);
+	virtual void update();
 
 	void playSound(std::string soundName, bool reverb = false);
 	void playMusic(std::string soundName, bool reverb = false);

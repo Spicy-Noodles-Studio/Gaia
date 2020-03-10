@@ -31,9 +31,7 @@ private:
 	Ogre::Root* root;
 	Window* win;
 	GameObject* obj,* aux;
-	
-	SoundListener* lis;
-	SoundEmitter* emi;
+
 	ResourcesManager* rManager;
 
 	

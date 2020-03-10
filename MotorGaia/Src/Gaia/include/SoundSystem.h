@@ -12,6 +12,10 @@
 #include <string.h>
 #include <string>
 
+#include <vector>
+
+class SoundEmitter;
+class SoundListener;
 
 class SoundSystem : public Singleton<SoundSystem>
 {
@@ -23,6 +27,9 @@ private:
 
 	FMOD::ChannelGroup* music;
 	FMOD::ChannelGroup* soundEfects;
+
+	std::vector<SoundEmitter*> *emitters;
+	SoundListener *_listener =nullptr;
 	
 
 	void ERRCHECK(FMOD_RESULT result);
@@ -45,7 +52,10 @@ public:
 	void setGeneralVolume(float volume);
 	void setListenerAttributes(const Vector3& position, const Vector3& Forward, const Vector3& Up);
 
+	void initListener(SoundListener* listener);
+	void addEmitter(SoundEmitter* emitter);
 
+	void update();
 	// Utils
 	FMOD_VECTOR vecToFMOD(const Vector3 &in);
 	FMOD::Reverb3D* createReverb();

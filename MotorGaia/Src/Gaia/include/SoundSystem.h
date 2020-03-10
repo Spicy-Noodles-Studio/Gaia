@@ -42,8 +42,6 @@ public:
 	
 	FMOD::Channel* playSound(const std::string sound);
 	FMOD::Channel* playMusic(const std::string sound);
-	
-	void updateSounds();
 
 	void setPauseAllSounds(bool pause);
 

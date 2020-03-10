@@ -115,7 +115,7 @@ void GaiaCore::run()
 		RenderSystem::GetInstance()->render();
 		update();
 
-		 SoundSystem::GetInstance()->updateSounds();
+		SoundSystem::GetInstance()->update();
 		InputSystem::GetInstance()->update();
 
 	}
@@ -129,14 +129,12 @@ void GaiaCore::close()
 void GaiaCore::update()
 {
 	obj->transform->translate(Vector3(0, 0, 0));
-	//obj->getComponent<SoundEmitter>()->update(2);
 
-	SoundSystem::GetInstance()->update();
+	
 
 
 	aux->transform->rotate(Vector3(0, 0, 0));
-/*	SoundListener* lis = aux->getComponent<SoundListener>();
-	emi->update(0);*/
+
 
 	if (InputSystem::GetInstance()->getKeyPress("D"))
 		PhysicsSystem::GetInstance()->clearWorld();

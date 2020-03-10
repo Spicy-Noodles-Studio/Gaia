@@ -138,10 +138,6 @@ FMOD::Channel* SoundSystem::playMusic(const std::string sound)
 
 }
 
-void SoundSystem::updateSounds()
-{
-	result = system->update();
-}
 
 void SoundSystem::setPauseAllSounds(bool pause)
 {
@@ -206,6 +202,9 @@ void SoundSystem::update()
 	{
 		emitters->at(i)->update();
 	}
+
+	result = system->update();
+	ERRCHECK(result);
 }
 
 FMOD_VECTOR SoundSystem::vecToFMOD(const Vector3& in)

@@ -7,6 +7,7 @@
 #include <map>
 
 #include "Transform.h"
+#include "UserComponent.h"
 
 class Scene;
 
@@ -36,12 +37,22 @@ public:
     const std::string& getTag() const ;
 	const Scene* getScene() const;
 
+    void onCollisionEnter(GameObject* other);
+    void onTriggerEnter(GameObject* other);
+
+    void onCollisionStay(GameObject* other);
+    void onTriggerStay(GameObject* other);
+
+    void onCollisionExit(GameObject* other);
+    void onTriggerExit(GameObject* other);
+
 private: 
     std::string name;
     std::string tag;
 
     Scene* myScene;
     std::map<std::string, Component*> components;
+    std::vector<UserComponent*> userComponents;
 };
 
 #endif

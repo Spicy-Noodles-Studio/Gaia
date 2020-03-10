@@ -50,3 +50,15 @@ void UserComponent::onCollisionExit(GameObject* other)
 {
 
 }
+
+void UserComponent::onTriggerEnter(GameObject* other)
+{
+}
+
+void UserComponent::onTriggerStay(GameObject* other)
+{
+}
+
+void UserComponent::onTriggerExit(GameObject* other)
+{
+}

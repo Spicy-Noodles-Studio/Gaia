@@ -10,6 +10,7 @@
 #endif
 
 #include "GameObject.h"
+#include "ResourcesManager.h"
 #include "Window.h"
 
 class GAIA_API GaiaCore
@@ -26,6 +27,8 @@ private:
 	Ogre::Root* root;
 	Window* win;
 	GameObject* obj;
+	ResourcesManager* rManager;
+	
 
 	void update();
 };

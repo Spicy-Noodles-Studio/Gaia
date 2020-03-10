@@ -4,6 +4,7 @@
 
 #include "GaiaComponent.h"
 #include "Vector3.h"
+#include "OgreBulletUtils.h"
 
 class Transform : public GaiaComponent
 {
@@ -23,6 +24,7 @@ public:
 	void setPosition(const Vector3& pos);
 	void setScale(const Vector3& scale);
 	void setRotation(const Vector3& rot);
+	void setOrientation(const Ogre::Quaternion& rot);
 
 	const Vector3& getPosition() const;
 	const Vector3& getScale() const;

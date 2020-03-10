@@ -33,6 +33,8 @@
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Reverb.h" />
     <ClInclude Include="..\..\Src\Gaia\include\OgreBulletUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h" />
@@ -42,6 +44,9 @@
     <ClInclude Include="..\..\Src\Gaia\include\SceneData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Singleton.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\SoundEmitter.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\SoundListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\gTime.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Transform.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
@@ -53,6 +58,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\GaiaMotionState.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Light.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\MeshRenderer.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Reverb.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\SoundEmitter.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\SoundListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\RigidBody.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
@@ -63,6 +71,8 @@
     <ClCompile Include="..\..\Src\Gaia\src\Systems\PhysicsSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\InputSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\DebugDrawer.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\gTime.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Vector3.cpp" />

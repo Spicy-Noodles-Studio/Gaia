@@ -12,6 +12,10 @@
 #include "GameObject.h"
 #include "ResourcesManager.h"
 #include "Window.h"
+#include "SoundSystem.h"
+#include "SoundEmitter.h"
+#include "SoundListener.h"
+
 
 class GAIA_API GaiaCore
 {
@@ -26,8 +30,10 @@ public:
 private:
 	Ogre::Root* root;
 	Window* win;
-	GameObject* obj;
+	GameObject* obj,* aux;
+
 	ResourcesManager* rManager;
+
 	
 
 	void update();

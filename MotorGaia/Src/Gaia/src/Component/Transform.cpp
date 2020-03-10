@@ -58,6 +58,9 @@ void Transform::setRotation(double x, double y, double z)
 		gameObject->node->yaw(Ogre::Radian(Ogre::Degree(y)));
 		gameObject->node->roll(Ogre::Radian(Ogre::Degree(z)));
 	}
+
+	//quaternion = ToQuaternion(y, x, z);
+	quaternion = ToQuaternion(z, y, x);
 }
 
 void Transform::setPosition(const Vector3& pos)
@@ -93,6 +96,21 @@ const Vector3& Transform::getScale() const
 const Vector3& Transform::getRotation() const
 {
 	return rotation;
+}
+
+const Vector3& Transform::getForwardVector() const
+{
+	return GetForwardVector(quaternion);
+}
+
+const Vector3& Transform::getUpVector() const
+{
+	return GetUpVector(quaternion);
+}
+
+const Vector3& Transform::getLeftVector() const
+{
+	return GetLeftVector(quaternion);
 }
 
 void Transform::translate(const Vector3& pos)

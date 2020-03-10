@@ -20,38 +20,30 @@ void Animator::setMesh(const std::string& mesh)
 	MeshRenderer* aux = gameObject->getComponent<MeshRenderer>();
 
 	if (aux != nullptr)
-		animations = aux->getMesh(mesh)->getAllAnimationStates()->getAnimationStates();
-}
-
-void Animator::storeInScene()
-{
-	for (auto anim : animations)
-		gameObject->getScene()->getAnimations()[anim.first + " " + gameObject->getName()] = anim.second;
+	{
+		animations = aux->getMesh(mesh)->getAllAnimationStates();
+		gameObject->getScene()->addAnimationSet(gameObject->getName(), animations);
+	}
 }
 
 Ogre::AnimationState* Animator::getAnimation(const std::string& animation)
 {
-	return animations[animation];
+	return animations->getAnimationState(animation);
 }
 
 void Animator::handleData(ComponentData* data)
 {
 	for (auto prop : data->getProperties())
 	{
-		Ogre::AnimationState* aux = nullptr;
-
 		std::stringstream ss(prop.second);
 
 		if (prop.first == "anim")
 		{
 			std::string anim, mesh; ss >> anim >> mesh;
 			setMesh(mesh);
-			storeInScene();
 
-			aux = getAnimation(anim);
+			Ogre::AnimationState* aux = getAnimation(anim);
 			aux->setEnabled(true);
 		}
-		else if (prop.first == "loop")
-			aux->setLoop(true);
 	}
 }

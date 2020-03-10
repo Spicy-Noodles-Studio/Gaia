@@ -27,41 +27,9 @@
         },
         {
             "ObjectType": "BLUEPRINT",
-            "ObjectName": "Nudo 1",
-            "Tag": "nodu",
-            "BlueprintPath": "Nudo",
-            "Children": [
-                {
-                    "ObjectType": "BLUEPRINT",
-                    "ObjectName": "Nudo 2",
-                    "Tag": "nudo",
-                    "BlueprintPath": "Nudo",
-                    "ComponentModifications": [
-                        {
-                            "ComponentName": "Transform",
-                            "ComponentProperties":{
-                                "position" : "-150 0 0",
-                                "scale" : "1 1 1"
-                            }
-                        }
-                    ]
-                }
-            ]
-            
-        },
-        {
-            "ObjectType": "BLUEPRINT",
-            "ObjectName": "Nudo 2",
-            "Tag": "nudo",
-            "BlueprintPath": "Nudo",
-            "ComponentModifications": [
-                {
-                    "ComponentName": "Transform",
-                    "ComponentProperties":{
-                        "position" : "200 0 -400"
-                    }
-                }
-            ]
+            "ObjectName": "Sinbad",
+            "Tag": "sinbad",
+            "BlueprintPath": "Sinbad"
         }
     ]
 }

@@ -10,14 +10,13 @@
 class Animator : public GaiaComponent
 {
 private:
-	std::map<std::string, Ogre::AnimationState*> animations;
+	Ogre::AnimationStateSet* animations;
 
 public:
 	Animator(GameObject* gameObject);
 	~Animator();
 
 	void setMesh(const std::string& mesh);
-	void storeInScene();
 
 	Ogre::AnimationState* getAnimation(const std::string& animation);
 

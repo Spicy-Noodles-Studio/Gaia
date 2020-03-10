@@ -4,6 +4,7 @@
 #define GAMEOBJECT_DATA_H
 
 #include <map>
+#include <unordered_map>
 #include <string>
 #include "ComponentData.h"
 
@@ -24,7 +25,7 @@ public:
 
 	const std::string& getName() const;
 	const std::string& getTag() const;
-	const std::map<std::string, ComponentData*>& getComponentData() const;
+	const std::unordered_map<std::string, ComponentData*>& getComponentData() const;
 	const std::map<std::string, GameObjectData*>& getChildrenData() const;
 	GameObjectData* getChild(const std::string& childName, bool& exists);
 	ComponentData* getComponent(const std::string& componentName, bool& exists);
@@ -35,7 +36,7 @@ public:
 	std::string name;
 	std::string tag;
 
-	std::map<std::string, ComponentData*> componentData;
+	std::unordered_map<std::string, ComponentData*> componentData;
 	std::map<std::string, GameObjectData*> childrenData;
 };
 

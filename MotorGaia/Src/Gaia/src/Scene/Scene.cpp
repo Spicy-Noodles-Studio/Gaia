@@ -138,9 +138,9 @@ Camera* Scene::getMainCamera() const
 	return mainCamera;
 }
 
-std::map<std::string, Ogre::AnimationState*> Scene::getAnimations()
+void Scene::addAnimationSet(std::string id, Ogre::AnimationStateSet* anims)
 {
-	return animations;
+	animationSets[id] = anims;
 }
 
 void Scene::instantiate(GameObject* gameObject)
@@ -183,10 +183,10 @@ void Scene::destroyGameObject(GameObject* gameObject)
 
 void Scene::updateAllAnimations(float deltaTime)
 {
-	for (auto anim : animations) 
+	for (auto set : animationSets) 
 	{
-		if (anim.second->getEnabled())
-			anim.second->addTime(deltaTime);
+		for (auto anim : set.second->getEnabledAnimationStates())
+			anim->addTime(deltaTime);
 	}
 }
 

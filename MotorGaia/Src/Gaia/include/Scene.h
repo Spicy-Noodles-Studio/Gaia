@@ -35,7 +35,7 @@ public:
 	void setMainCamera(Camera* camera);
 	Camera* getMainCamera() const;
 
-	std::map<std::string, Ogre::AnimationState*> getAnimations();
+	void addAnimationSet(std::string id, Ogre::AnimationStateSet* anims);
 
 private:
 	void addUserComponent(UserComponent* component);
@@ -67,7 +67,7 @@ private:
 
 	Camera* mainCamera;
 
-	std::map<std::string, Ogre::AnimationState*> animations;
+	std::map<std::string, Ogre::AnimationStateSet*> animationSets;
 };
 
 #endif

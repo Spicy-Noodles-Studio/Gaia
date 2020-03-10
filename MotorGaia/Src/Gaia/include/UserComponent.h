@@ -3,12 +3,17 @@
 #define USER_COMPONENT_H
 
 #include "Component.h"
+#include <vector>
+#include "Vector3.h"
+
+#include "GameObjectData.h"
 
 class UserComponent : public Component
 {
+	friend class Scene;
 public:
 	UserComponent(GameObject* gameObject);
-	~UserComponent();
+	virtual ~UserComponent();
 
 	virtual void awake();
 	virtual void start();
@@ -23,6 +28,26 @@ public:
 	virtual void onTriggerEnter(GameObject* other);
 	virtual void onTriggerStay(GameObject* other);
 	virtual void onTriggerExit(GameObject* other);
+
+	GameObject* instantiate(const std::string& blueprintName, const Vector3& position = Vector3( 0, 0, 0));
+	void destroy(GameObject* gameObject);
+
+	// Busca a partir de la referencia de Scene desde el owner un objeto en la misma escena
+	// con el nombre indicado
+	GameObject* findGameObjectWithName(const std::string& name);
+
+	// Busca a partir de la referencia de Scene desde el owner un objeto en la misma escena
+	// con el tag indicado
+	std::vector<GameObject*> findGameObjectsWithTag(const std::string& tag);
+
+private:
+	bool hasStarted();
+	bool isSleeping();
+	GameObject* instantiate(const GameObjectData* data);
+
+private:
+	bool started;
+	bool sleeping;
 };
 
 #endif

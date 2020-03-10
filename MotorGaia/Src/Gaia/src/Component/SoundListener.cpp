@@ -12,7 +12,7 @@ SoundListener::~SoundListener()
 {
 }
 
-void SoundListener::update()
+void SoundListener::update(float deltaTime)
 {
     Vector3 pos, forward, up;
     //std::cout << forward.x << " " << forward.y << " " << forward.z << std::endl;

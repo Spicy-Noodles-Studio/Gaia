@@ -8,7 +8,7 @@ class GaiaComponent : public Component
 {
 public:
 	GaiaComponent(GameObject* gameObject);
-	~GaiaComponent();
+	virtual ~GaiaComponent();
 };
 
 #endif

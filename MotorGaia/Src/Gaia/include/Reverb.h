@@ -6,6 +6,11 @@
 #include "SoundSystem.h"
 #include "Vector3.h"
 
+enum PRESET {
+	OFF, GENERIC, PADDEDCELL, ROOM, BATHROOM, LIVINGROOM, STONEROOM, AUDITORIUM, CONCERTHALL,
+	CAVE, ARENA, HANGAR, CARPETTEDHALLWAY, HALLWAY, STONECORRIDOR, ALLEY, FOREST, CITY, MOUNTAINS, QUARRY,
+	PLAIN, PARKINGLOT, SEWERPIPE, UNDERWATER
+};
 
 class Reverb : public GaiaComponent
 {
@@ -25,11 +30,6 @@ public:
 	Reverb(GameObject* gameObject);
 	~Reverb();
 
-	enum PRESET {OFF, GENERIC, PADDEDCELL, ROOM, BATHROOM, LIVINGROOM, STONEROOM, AUDITORIUM, CONCERTHALL,
-	CAVE, ARENA, HANGAR, CARPETTEDHALLWAY, HALLWAY, STONECORRIDOR, ALLEY, FOREST, CITY, MOUNTAINS, QUARRY,
-	PLAIN, PARKINGLOT, SEWERPIPE, UNDERWATER};
-
-
 	virtual void update(float deltaTime);
 
 	void setReverbPreset(PRESET type);
@@ -37,6 +37,8 @@ public:
 	void setReverbMinDistance(float distance);
 
 	void setReverbActive(bool _active);
+
+	void handleData(ComponentData* data);
 };
 
 #endif

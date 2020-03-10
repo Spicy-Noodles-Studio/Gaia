@@ -28,18 +28,19 @@ private:
 	FMOD::ChannelGroup* music;
 	FMOD::ChannelGroup* soundEfects;
 
-	std::vector<SoundEmitter*> *emitters;
-	SoundListener *_listener =nullptr;
-	
+	std::vector<SoundEmitter*>* emitters;
+	SoundListener* _listener = nullptr;
 
 	void ERRCHECK(FMOD_RESULT result);
 public:
 	SoundSystem();
 	~SoundSystem();
 
-	void initSystem();
+	void init();
+	void close();
+
 	bool createSounds(const std::string filename);
-	
+
 	FMOD::Channel* playSound(const std::string sound);
 	FMOD::Channel* playMusic(const std::string sound);
 
@@ -53,9 +54,10 @@ public:
 	void initListener(SoundListener* listener);
 	void addEmitter(SoundEmitter* emitter);
 
-	void update();
+	void update(float deltaTime);
+
 	// Utils
-	FMOD_VECTOR vecToFMOD(const Vector3 &in);
+	FMOD_VECTOR vecToFMOD(const Vector3& in);
 	FMOD::Reverb3D* createReverb();
 };
 

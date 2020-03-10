@@ -8,8 +8,8 @@ Vector3 RigidBody::btScaleConversion = { 50,50,50 };
 
 RigidBody::RigidBody(GameObject* gameObject) : GaiaComponent(gameObject)
 {
-}
 
+}
 
 RigidBody::~RigidBody()
 {

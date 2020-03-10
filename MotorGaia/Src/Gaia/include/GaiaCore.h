@@ -9,13 +9,18 @@
 #define GAIA_API __declspec(dllimport)
 #endif
 
-#include "GameObject.h"
-#include "ResourcesManager.h"
+#include <OgreRoot.h>
 #include "Window.h"
-#include "SoundSystem.h"
-#include "SoundEmitter.h"
-#include "SoundListener.h"
 
+#include "RenderSystem.h"
+#include "InputSystem.h"
+#include "InterfaceSystem.h"
+#include "SoundSystem.h"
+#include "PhysicsSystem.h"
+
+#include "ResourcesManager.h"
+#include "ComponentManager.h"
+#include "SceneManager.h"
 
 class GAIA_API GaiaCore
 {
@@ -28,15 +33,25 @@ public:
 	void close();
 
 private:
+	void render(float deltaTime);
+	void preUpdate(float deltaTime);
+	void update(float deltaTime);
+	void postUpdate(float deltaTime);
+
 	Ogre::Root* root;
 	Window* win;
-	GameObject* obj,* aux;
 
-	ResourcesManager* rManager;
+	//Systems
+	RenderSystem* renderSystem;
+	InputSystem* inputSystem;
+	InterfaceSystem* interfaceSystem;
+	PhysicsSystem* physicsSystem;
+	SoundSystem* soundSystem;
 
-	
-
-	void update();
+	//Managers
+	ResourcesManager resourcesManager;
+	ComponentManager* componentManager;
+	SceneManager* sceneManager;
 };
 
 #endif 

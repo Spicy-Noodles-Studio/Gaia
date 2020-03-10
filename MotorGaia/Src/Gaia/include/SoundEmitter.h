@@ -6,12 +6,11 @@
 #include "SoundSystem.h"
 #include "Vector3.h"
 
-
 class SoundEmitter : public GaiaComponent
 {
 private:
 
-    FMOD_VECTOR pos;
+	FMOD_VECTOR pos;
 	FMOD_VECTOR zero = { 0,0,0 };
 
 	FMOD::Channel* channel;
@@ -21,7 +20,7 @@ private:
 	bool paused;
 
 public:
-    SoundEmitter(GameObject* gameObject);
+	SoundEmitter(GameObject* gameObject);
 	~SoundEmitter();
 
 	virtual void update();
@@ -30,9 +29,11 @@ public:
 	void playMusic(std::string soundName, bool reverb = false);
 	void pause();
 	void resume();
-	void setVolume(float _volume);
 
-	void setEmitterPitch(float _pitch);
+	void setVolume(float volume);
+	void setPitch(float pitch);
+
+	void handleData(ComponentData* data);
 };
 
 #endif

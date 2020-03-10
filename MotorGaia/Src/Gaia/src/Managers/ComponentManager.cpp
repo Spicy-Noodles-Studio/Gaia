@@ -1,16 +1,46 @@
 #include "ComponentManager.h"
 
-std::map<std::string, ComponentFactory> ComponentManager::factories;
+#include "Transform.h"
+#include "Camera.h"
+#include "Light.h"
+#include "MeshRenderer.h"
+#include "UILayout.h"
+#include "SoundEmitter.h"
+#include "SoundListener.h"
+#include "Reverb.h"
+#include "RigidBody.h"
 
 ComponentManager::ComponentManager()
 {
+
 }
 
 ComponentManager::~ComponentManager()
 {
+
 }
 
-const ComponentFactory ComponentManager::getComponentFactory(const std::string& nameID)
+void ComponentManager::init()
+{
+	// Register Gaia base components 
+	registerComponent<Transform>("Transform");
+	registerComponent<Camera>("Camera");
+	registerComponent<Light>("Light");
+	registerComponent<MeshRenderer>("MeshRenderer");
+	registerComponent<UILayout>("UILayout");
+	registerComponent<RigidBody>("RigidBody");
+	registerComponent<SoundEmitter>("SoundEmitter");
+	registerComponent<SoundListener>("SoundListener");
+	registerComponent<Reverb>("Reverb");
+}
+
+void ComponentManager::close()
+{
+	factories.clear();
+	destroy();
+}
+
+const ComponentFactory& ComponentManager::getComponentFactory(const std::string& nameID)
 {
 	if (factories.find(nameID) == factories.end())
 	{

@@ -9,7 +9,8 @@
 class Camera : public GaiaComponent
 {
 private:
-	Ogre::Camera* cam;
+	Ogre::Camera* camera;
+	bool isMainCamera;
 
 public:
 	Camera(GameObject* gameObject);
@@ -23,6 +24,8 @@ public:
 	Ogre::Camera* getCamera();
 
 	void setClipDistances(double near, double far);
+
+	virtual void handleData(ComponentData* data);
 };
 
 #endif

@@ -32,9 +32,9 @@ public:
 	PhysicsSystem();
 	~PhysicsSystem();
 
-	void setup();
+	void init();
 	void update();
-	void shutDown();
+	void close();
 
 	void clearWorld();
 

@@ -16,7 +16,7 @@ PhysicsSystem::~PhysicsSystem()
 {
 }
 
-void PhysicsSystem::setup()
+void PhysicsSystem::init()
 {
 	///-----initialization_start-----
 
@@ -46,7 +46,7 @@ void PhysicsSystem::update()
 	checkCollisions();
 }
 
-void PhysicsSystem::shutDown()
+void PhysicsSystem::close()
 {
 	///-----cleanup_start-----
 	clearWorld();

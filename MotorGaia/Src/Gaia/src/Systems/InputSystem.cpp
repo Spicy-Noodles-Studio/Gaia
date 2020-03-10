@@ -1,5 +1,8 @@
 #include "InputSystem.h"
 
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/System.h>
+
 // Initialization
 void InputSystem::init()
 {
@@ -14,9 +17,7 @@ void InputSystem::init()
     SDL_GetMouseState(&MOUSE_POSITION_X, &MOUSE_POSITION_Y);
 
     // CONTROLLER SYSTEM
-
     for (int i = 0; i < 4; i++) controllers[i].controllerIndex = i;
-
 
     if (!SDL_WasInit(SDL_INIT_JOYSTICK)) SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
 
@@ -27,7 +28,6 @@ void InputSystem::init()
 // Closing
 void InputSystem::close()
 {
-
     // CONTROLLER SYSTEM
     for (int ControllerIndex = 0; ControllerIndex < MAX_CONTROLLERS; ++ControllerIndex)
     {
@@ -39,7 +39,7 @@ void InputSystem::close()
         }
     }
 
-
+    destroy();
 }
 
 /// MAIN LOOP
@@ -56,7 +56,6 @@ void InputSystem::update()
 
     while (SDL_PollEvent(&event))
     {
-
         /*SDL_JoystickUpdate();*/
         switch (event.type)
         {
@@ -83,6 +82,10 @@ void InputSystem::update()
             // Mouse events
         case SDL_MOUSEMOTION:
             SDL_GetMouseState(&MOUSE_POSITION_X, &MOUSE_POSITION_Y);
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(
+                static_cast<float>(MOUSE_POSITION_X),
+                static_cast<float>(MOUSE_POSITION_Y)
+            );
             break;
         case SDL_MOUSEBUTTONDOWN:
             processMouseInputDown(event.button);
@@ -177,6 +180,7 @@ void InputSystem::update()
 
             // System events
         case SDL_QUIT:
+            exit = true;
             break;
 
         case SDL_WINDOWEVENT:
@@ -277,14 +281,19 @@ void InputSystem::processMouseInputDown (SDL_MouseButtonEvent& e)
     case SDL_BUTTON_LEFT:
         MOUSE_BUTTON_LEFT.hold = true;
         MOUSE_BUTTON_LEFT.pressed = true;
+
+        CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
         break;
     case SDL_BUTTON_RIGHT:
         MOUSE_BUTTON_RIGHT.hold = true;
         MOUSE_BUTTON_RIGHT.pressed = true;
+
+        CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::RightButton);
         break;
     case SDL_BUTTON_MIDDLE:
         MOUSE_BUTTON_MIDDLE.hold = true;
         MOUSE_BUTTON_MIDDLE.pressed = true;
+        CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::MiddleButton);
         break;
     default:
         break;

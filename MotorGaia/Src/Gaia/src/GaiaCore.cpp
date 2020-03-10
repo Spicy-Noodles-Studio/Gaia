@@ -1,36 +1,16 @@
 #include "GaiaCore.h"
 
-#include <OgreRoot.h>
-#include <OgreException.h>
-#include <OgreConfigFile.h>
-#include <OgreViewport.h>
-#include <iostream>
 
-#include "RenderSystem.h"
-#include "Window.h"
-#include "Camera.h"
-#include "Light.h"
-
-#include "GameObject.h"
-#include "Transform.h"
-#include "MeshRenderer.h"
-#include "Reverb.h"
-
-#include "RigidBody.h"
-#include "DebugDrawer.h"
-#include "gTime.h"
-#include "InputSystem.h"
-
-GaiaCore::GaiaCore()
+GaiaCore::GaiaCore() : root(nullptr), win(nullptr),
+	renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr),
+	resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
 {
+
 }
 
 GaiaCore::~GaiaCore()
 {
-	delete root;
-	delete obj;
-	delete win;
-	delete rManager;
+	// Call close before GaiaCore destructor
 }
 
 void GaiaCore::init()
@@ -45,97 +25,127 @@ void GaiaCore::init()
 		return;
 
 	// Setup window
-	Window* win = new Window(root, "Test window - 2020 (c) Gaia ");
+	win = new Window(root, "Test window - 2020 (c) Gaia ");
 
-	rManager = new ResourcesManager("resources.asset");
-	rManager->init();
- 
-	SoundSystem::GetInstance()->initSystem();
-	RenderSystem::GetInstance()->setup(root);
-	InputSystem::GetInstance()->init();
-	PhysicsSystem::GetInstance()->setup();
-	PhysicsSystem::GetInstance()->setWorldGravity({ 0, -1.0f, 0 });
-	gTime::GetInstance()->setup();
+	// Systems initialization
+	// RenderSystem
+	renderSystem = RenderSystem::GetInstance();
+	renderSystem->init(root);
 
-	aux = new GameObject("Camera", "Cam", nullptr);
-	Transform* transform1 = new Transform(aux);
-	Camera* cam = new Camera(aux);
-	SoundListener* lis = new SoundListener(aux);
-	
-	//aux->transform->rotate(Vector3(0, -90, 0));
+	// InputSystem
+	inputSystem = InputSystem::GetInstance();
+	inputSystem->init();
 
-	Ogre::Viewport* vp = win->addViewport(cam->getCamera());
+	// InterfaceSystem
+	interfaceSystem = InterfaceSystem::GetInstance();
+	interfaceSystem->init(win);
 
-	Light* lz = new Light(aux);
-	lz->setType(Light::Point);
-	lz->setColour(0.7, 0.1, 0.7);
+	// PhysicsSystem
+	physicsSystem = PhysicsSystem::GetInstance();
+	physicsSystem->init();
 
-	DebugDrawer* db = new DebugDrawer(RenderSystem::GetInstance()->getSceneManager());
-	PhysicsSystem::GetInstance()->setDebugDrawer(db);
+	// SoundSystem
+	soundSystem = SoundSystem::GetInstance();
+	soundSystem->init();
 
-	obj = new GameObject("Churro", "Ch", nullptr);
-	Transform* transform2 = new Transform(obj);
-	obj->transform->setPosition(Vector3(25, 100, -400));
-	obj->transform->setScale(Vector3(0.5, 0.5, 0.5));
-	obj->transform->rotate(Vector3(0, 0, 0));
-	MeshRenderer* ms = new MeshRenderer(obj);
-	ms->createEntity("knot", "knot.mesh");
-	
-	SoundEmitter* emi = new SoundEmitter(obj);
-	
-	
-	Reverb* rev = new Reverb(aux);
-	rev->setReverbMaxDistance(100000);
-	rev->setReverbPreset(rev->MOUNTAINS);
-	
-	emi->playSound("prueba2",true);
-  
-	RigidBody* rb = new RigidBody(obj);
-	rb->setRigidBody(1.0, SPHERE_RB_SHAPE, {}, { 2,2,2 });
-	rb->addImpulse({ 10.0f, 0.0f,0.0f });
-	rb->addImpulse({ 0.0f, 500.0f,0.0f }, TORQUE);
+	// Managers initialization
+	// ResourcesManager initialization
+	resourcesManager.init();
 
-	GameObject* obj1 = new GameObject("Cubo", "Cu", nullptr);
-	Transform* transform3 = new Transform(obj1);
-	obj1->transform->setPosition(Vector3(25, 0, -400));
-	obj1->transform->setScale(Vector3(4, 0.05, 1));
-	obj1->transform->rotate(Vector3(0, 0, 0));
-	MeshRenderer* ms1 = new MeshRenderer(obj1);
-	ms1->createEntity("cube", "cube.mesh");
-	RigidBody* rb2 = new RigidBody(obj1);
-	rb2->setRigidBody(0, BOX_RB_SHAPE);
+	// ComponentManager initialization
+	componentManager = ComponentManager::GetInstance();
+	componentManager->init();
+
+	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
+	sceneManager = SceneManager::GetInstance();
+	sceneManager->init(root, win);
 
 }
 
 void GaiaCore::run()
 {
-	while (true)
-	{
-		PhysicsSystem::GetInstance()->update();
-		RenderSystem::GetInstance()->render();
-		update();
+	bool exit = false;
+	float deltaTime = 1.f / 60.f;
+	while (!inputSystem->getKeyPress("Escape")) {
+		// Render
+		render(deltaTime);
 
-		SoundSystem::GetInstance()->update();
-		InputSystem::GetInstance()->update();
+		// Pre-process
+		preUpdate(deltaTime);
 
+		// Process
+		update(deltaTime);
+
+		// Post-process
+		postUpdate(deltaTime);
 	}
 }
 
 void GaiaCore::close()
 {
-	 SoundSystem::GetInstance()->destroy();
+	// SceneManager termination
+	sceneManager->close();
+	// ComponentManager termination
+	componentManager->close();
+	// ResourcesManager termination
+	resourcesManager.close();
+
+	//Systems termination
+	soundSystem->close();
+	physicsSystem->close();
+	interfaceSystem->close();
+	inputSystem->close();
+	renderSystem->close();
+
+	if (win != nullptr)
+		delete win;
+	win = nullptr;
+	if (root != nullptr)
+		delete root;
+	root = nullptr;
 }
 
-void GaiaCore::update()
+void GaiaCore::render(float deltaTime)
 {
-	obj->transform->translate(Vector3(0, 0, 0));
+	// RenderSystem
+	renderSystem->render(deltaTime);
+	// InterfaceSystem
+	interfaceSystem->render();
+}
 
-	
+void GaiaCore::preUpdate(float deltaTime)
+{
+	// Systems TODO:
+	// RenderSystem (animations)
+	// renderSystem->update(deltaTime);
 
+	// InterfaceSystem
+	interfaceSystem->update(deltaTime);
 
-	aux->transform->rotate(Vector3(0, 0, 0));
+	// InputSystem
+	inputSystem->update();
 
+	// PhysicsSystem
+	physicsSystem->update();
 
-	if (InputSystem::GetInstance()->getKeyPress("D"))
-		PhysicsSystem::GetInstance()->clearWorld();
+	// SoundSystem
+	soundSystem->update(deltaTime);
+
+	// Managers
+	sceneManager->preUpdate(deltaTime);
+}
+
+void GaiaCore::update(float deltaTime)
+{
+	// Managers
+	sceneManager->update(deltaTime);
+}
+
+void GaiaCore::postUpdate(float deltaTime)
+{
+	// Managers
+	sceneManager->postUpdate(deltaTime);
+
+	// Systems 
+	// Si es que hay
 }

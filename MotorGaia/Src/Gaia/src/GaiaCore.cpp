@@ -2,8 +2,8 @@
 
 
 GaiaCore::GaiaCore() : root(nullptr), win(nullptr),
-renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr),
-resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
+	renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr),
+	resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
 {
 
 }
@@ -39,6 +39,14 @@ void GaiaCore::init()
 	// InterfaceSystem
 	interfaceSystem = InterfaceSystem::GetInstance();
 	interfaceSystem->init(win);
+
+	// PhysicsSystem
+	physicsSystem = PhysicsSystem::GetInstance();
+	physicsSystem->init();
+
+	// SoundSystem
+	soundSystem = SoundSystem::GetInstance();
+	soundSystem->init();
 
 	// Managers initialization
 	// ResourcesManager initialization
@@ -83,6 +91,8 @@ void GaiaCore::close()
 	resourcesManager.close();
 
 	//Systems termination
+	soundSystem->close();
+	physicsSystem->close();
 	interfaceSystem->close();
 	inputSystem->close();
 	renderSystem->close();
@@ -114,6 +124,12 @@ void GaiaCore::preUpdate(float deltaTime)
 
 	// InputSystem
 	inputSystem->update();
+
+	// PhysicsSystem
+	physicsSystem->update();
+
+	// SoundSystem
+	soundSystem->update(deltaTime);
 
 	// Managers
 	sceneManager->preUpdate(deltaTime);

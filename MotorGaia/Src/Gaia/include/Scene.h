@@ -6,6 +6,7 @@
 #include <OgreRoot.h>
 #include "GameObject.h"
 #include "Camera.h"
+#include "DebugDrawer.h"
 
 #include "GaiaComponent.h"
 #include "UserComponent.h"
@@ -65,6 +66,8 @@ private:
 	std::vector<GameObject*> instantiateQueue;
 
 	Camera* mainCamera;
+
+	DebugDrawer* debugDrawer;
 };
 
 #endif

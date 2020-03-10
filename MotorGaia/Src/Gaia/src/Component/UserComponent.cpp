@@ -4,67 +4,56 @@
 #include "ResourcesManager.h"
 #include "ComponentManager.h"
 
-
 UserComponent::UserComponent(GameObject* gameObject) : Component(gameObject), started(false), sleeping(false)
 {
 	gameObject->addUserComponent(this);
 	gameObject->myScene->addUserComponent(this);
 }
 
-
 UserComponent::~UserComponent()
 {
 
 }
-
 
 void UserComponent::awake()
 {
 
 }
 
-
 void UserComponent::start()
 {
 
 }
-
 
 void UserComponent::preUpdate(float deltaTime)
 {
 
 }
 
-
 void UserComponent::update(float deltaTime)
 {
 
 }
-
 
 void UserComponent::postUpdate(float deltaTime)
 {
 
 }
 
-
 void UserComponent::onCollisionEnter(GameObject* other)
 {
 
 }
-
 
 void UserComponent::onCollisionStay(GameObject* other)
 {
 
 }
 
-
 void UserComponent::onCollisionExit(GameObject* other)
 {
 
 }
-
 
 GameObject* UserComponent::instantiate(const std::string& blueprintName, const Vector3& position)
 {
@@ -79,7 +68,6 @@ GameObject* UserComponent::instantiate(const std::string& blueprintName, const V
 
 	return instance;
 }
-
 
 GameObject* UserComponent::instantiate(const GameObjectData* data)
 {
@@ -107,32 +95,42 @@ GameObject* UserComponent::instantiate(const GameObjectData* data)
 	return instance;
 }
 
-
 void UserComponent::destroy(GameObject* gameObject)
 {
 	gameObject->myScene->destroyGameObject(gameObject);
 }
-
 
 GameObject* UserComponent::findGameObjectWithName(const std::string& name)
 {
 	return gameObject->myScene->getGameObjectWithName(name);
 }
 
-
 std::vector<GameObject*> UserComponent::findGameObjectsWithTag(const std::string& tag)
 {
 	return gameObject->myScene->getGameObjectsWithTag(tag);
 }
-
 
 bool UserComponent::hasStarted()
 {
 	return started;
 }
 
-
 bool UserComponent::isSleeping()
 {
 	return sleeping;
+}
+
+void UserComponent::onTriggerEnter(GameObject* other)
+{
+
+}
+
+void UserComponent::onTriggerStay(GameObject* other)
+{
+
+}
+
+void UserComponent::onTriggerExit(GameObject* other)
+{
+
 }

@@ -22,6 +22,16 @@
                         "type": "Point",
                         "colour": "0.7 0.1 0.7"
                     }
+                },
+                {
+                    "ComponentName": "SoundListener"
+                },
+                {
+                    "ComponentName": "Reverb",
+                    "ComponentProperties": {
+                        "preset" : "mountains",
+                        "maxDistance" : "100000"
+                    }
                 }
             ]
         },
@@ -58,6 +68,29 @@
                 {
                     "ComponentName": "Transform",
                     "ComponentProperties":{
+                        "position" : "200 0 -400"
+                    }
+                }
+            ]
+        },
+        {
+            "ObjectType": "BLUEPRINT",
+            "ObjectName": "Nudo 3",
+            "Tag": "nudo",
+            "BlueprintPath": "Nudo",
+            "Components" : [
+                {
+                    "ComponentName": "SoundEmitter",
+                    "ComponentProperties": {
+                        "volume" : "1",
+                        "pitch" : "1"
+                    }
+                }
+            ],
+            "ComponentModifications": [
+                {
+                    "ComponentName": "Transform",
+                    "ComponentProperties": {
                         "position" : "200 0 -400"
                     }
                 }

@@ -5,18 +5,20 @@
 #include "Light.h"
 #include "MeshRenderer.h"
 #include "UILayout.h"
+#include "SoundEmitter.h"
+#include "SoundListener.h"
+#include "Reverb.h"
+#include "RigidBody.h"
 
 ComponentManager::ComponentManager()
 {
 
 }
 
-
 ComponentManager::~ComponentManager()
 {
 
 }
-
 
 void ComponentManager::init()
 {
@@ -26,6 +28,10 @@ void ComponentManager::init()
 	registerComponent<Light>("Light");
 	registerComponent<MeshRenderer>("MeshRenderer");
 	registerComponent<UILayout>("UILayout");
+	registerComponent<RigidBody>("RigidBody");
+	registerComponent<SoundEmitter>("SoundEmitter");
+	registerComponent<SoundListener>("SoundListener");
+	registerComponent<Reverb>("Reverb");
 }
 
 void ComponentManager::close()

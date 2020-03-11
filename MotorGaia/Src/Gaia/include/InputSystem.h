@@ -102,7 +102,7 @@ private:
 
 public:
 
-    // está feo...
+    // estï¿½ feo...
     bool exit = false;
 
     void init();

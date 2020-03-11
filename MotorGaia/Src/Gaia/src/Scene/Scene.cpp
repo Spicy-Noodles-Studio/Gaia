@@ -4,8 +4,8 @@
 
 Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager()), mainCamera(nullptr)
 {
-	//debugDrawer = new DebugDrawer(sceneManager);
-	//PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
+	debugDrawer = new DebugDrawer(sceneManager);
+	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
 }
 
 

@@ -60,6 +60,7 @@ void SoundSystem::close()
 	destroy();
 }
 
+
 bool SoundSystem::createSounds(const std::string filename)
 {
 	std::fstream stream;
@@ -88,7 +89,7 @@ bool SoundSystem::createSounds(const std::string filename)
 	int i = 0;
 	while (std::getline(stream, line)) {
 
-		// Lectura de línea
+		// Lectura de lï¿½nea
 		std::istringstream iss(line);
 		iss >> soundfile_name;
 		iss >> sound_name;

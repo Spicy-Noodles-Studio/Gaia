@@ -12,18 +12,14 @@ class RenderSystem : public Singleton<RenderSystem>
 {
 private:
 	Ogre::Root* root;
-	Ogre::SceneManager* sceneManager;
 
 public:
 	RenderSystem();
 	~RenderSystem();
 
-	void setup(Ogre::Root* _root);
-	void render();
-	void shutDown();
-
-	Ogre::SceneManager* getSceneManager();
-	Ogre::Entity* createEntity(std::string mesh);
+	void init(Ogre::Root* root);
+	void render(float deltaTime);
+	void close();
 };
 
 #endif

@@ -9,17 +9,19 @@ class MeshRenderer : public GaiaComponent
 {
 private:
 	std::map<std::string, Ogre::Entity*> entities;
-	bool visible = true;
+	bool visible;
 
 public:
 	MeshRenderer(GameObject* gameObject);
 	~MeshRenderer();
 
-	void createEntity(std::string id, std::string mesh);
-	void setMaterial(std::string id, std::string material);
+	void setMesh(const std::string& id, const std::string& mesh);
+	void setMaterial(const std::string& id, const std::string& material);
 
 	void setVisible(bool visible);
 	bool isVisible();
+
+	virtual void handleData(ComponentData* data);
 };
 
 #endif

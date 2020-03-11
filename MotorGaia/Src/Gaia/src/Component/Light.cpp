@@ -1,15 +1,19 @@
 #include "Light.h"
 #include "GameObject.h"
+#include "Scene.h"
+#include "ComponentData.h"
+#include <sstream>
 
 Light::Light(GameObject* gameObject) : GaiaComponent(gameObject)
 {
-	light = RenderSystem::GetInstance()->getSceneManager()->createLight(gameObject->getName() + " -L");
+	light = gameObject->getScene()->getSceneManager()->createLight(gameObject->getName() + " -L");
 	gameObject->node->attachObject(light);
 }
 
 Light::~Light()
 {
-
+	gameObject->getScene()->getSceneManager()->destroyLight(light);
+	light = nullptr;
 }
 
 /*
@@ -71,4 +75,26 @@ void Light::setVisible(bool visible)
 bool Light::isVisible()
 {
 	return light->isVisible();
+}
+
+void Light::handleData(ComponentData* data)
+{
+	for (auto prop : data->getProperties()) {
+		std::stringstream ss(prop.second);
+
+		if (prop.first == "type") {
+			if (prop.second == "Point")
+				setType(Point);
+			else if (prop.second == "Spotlight")
+				setType(Spotlight);
+			else if (prop.second == "Directional")
+				setType(Directional);
+			else
+				printf("LIGHT: %s not valid light type\n", prop.second.c_str());
+		}
+		else if (prop.first == "colour") {
+			double x, y, z; ss >> x >> y >> z;
+			setColour(x, y, z);
+		}
+	}
 }

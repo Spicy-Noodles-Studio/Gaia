@@ -46,15 +46,19 @@ void GameObjectData::setTag(const std::string& gameObjectTag)
 
 void GameObjectData::addComponentData(const std::string& componentName, ComponentData* data)
 {
-	if (componentData.find(componentName) != componentData.end())
+	if (componentData.find(componentName) != componentData.end()) {
 		printf("GAMEOBJECT DATA: object %s component %s data has been overwritten\n", name.c_str(), componentName.c_str());
+		delete componentData[componentName];
+	}
 	componentData[componentName] = data;
 }
 
 void GameObjectData::addChildrenData(const std::string& childrenName, GameObjectData* data)
 {
-	if (componentData.find(childrenName) != componentData.end())
+	if (componentData.find(childrenName) != componentData.end()) {
 		printf("GAMEOBJECT DATA: object %s child %s data has been overwritten\n", name.c_str(), childrenName.c_str());
+		delete childrenData[childrenName];
+	}
 	childrenData[childrenName] = data;
 }
 
@@ -88,7 +92,7 @@ const std::string& GameObjectData::getTag() const
 	return tag;
 }
 
-const std::map<std::string, ComponentData*>& GameObjectData::getComponentData() const
+const std::unordered_map<std::string, ComponentData*>& GameObjectData::getComponentData() const
 {
 	return componentData;
 }

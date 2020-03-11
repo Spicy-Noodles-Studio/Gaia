@@ -9,11 +9,14 @@
 
 class Window
 {
+	friend class InterfaceSystem;
 public:
 	Window(Ogre::Root* root, std::string windowTitle);
 	~Window();
 
 	Ogre::Viewport* addViewport(Ogre::Camera* cam);
+
+	void removeAllViewports();
 
 	void setFullscreen(bool fullscreen);
 	void setFSAA(unsigned int fsaa);

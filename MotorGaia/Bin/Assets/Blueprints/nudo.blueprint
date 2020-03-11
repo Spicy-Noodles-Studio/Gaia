@@ -1,0 +1,28 @@
+{
+    "ObjectType": "GAMEOBJECT",
+    "ObjectName": "Nudo",
+    "Tag": "nudo",
+    "Components":
+    [
+        {
+            "ComponentName": "Transform",
+            "ComponentProperties": {
+                "position": "0 0 -400",
+                "scale": "0.5 0.5 0.5"
+            }
+        },
+        {
+            "ComponentName": "MeshRenderer",
+            "ComponentProperties": {
+                "mesh": "knot knot.mesh"
+            }
+        },
+        {
+            "ComponentName": "RigidBody",
+            "ComponentProperties": {
+                "shape": "Box",
+                "mass": "3"
+            }
+        }
+    ]
+}

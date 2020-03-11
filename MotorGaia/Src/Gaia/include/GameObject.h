@@ -10,6 +10,8 @@
 #include "UserComponent.h"
 #include "Transform.h"
 
+class Scene;
+
 class GameObject {
     friend class Scene;
     friend class SceneManager;
@@ -51,6 +53,15 @@ public:
 
     void setActive(bool active);
 
+	void onCollisionEnter(GameObject* other);
+	void onTriggerEnter(GameObject* other);
+
+	void onCollisionStay(GameObject* other);
+	void onTriggerStay(GameObject* other);
+
+	void onCollisionExit(GameObject* other);
+	void onTriggerExit(GameObject* other);
+
 private:
     void addUserComponent(UserComponent* component);
     bool addComponent(const std::string& name, Component* component);
@@ -59,23 +70,14 @@ public:
 	Ogre::SceneNode* node = nullptr;
 	Transform* transform = nullptr;
 
-    void onCollisionEnter(GameObject* other);
-    void onTriggerEnter(GameObject* other);
-
-    void onCollisionStay(GameObject* other);
-    void onTriggerStay(GameObject* other);
-
-    void onCollisionExit(GameObject* other);
-    void onTriggerExit(GameObject* other);
-
 private: 
     std::string name;
     std::string tag;
 
-    GameObject* parent;
+    GameObject* parent = nullptr;
     std::vector<GameObject*> children;
 
-    Scene* myScene;
+    Scene* myScene = nullptr;
     std::map<std::string, Component*> components;
     std::vector<UserComponent*> userComponents;
 };

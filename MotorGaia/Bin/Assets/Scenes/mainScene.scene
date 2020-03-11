@@ -64,15 +64,6 @@
             "ObjectName": "Nudo 3",
             "Tag": "nudo3",
             "BlueprintPath": "Nudo",
-            "Components" : [
-                {
-                    "ComponentName": "SoundEmitter",
-                    "ComponentProperties": {
-                        "volume" : "1",
-                        "pitch" : "1"
-                    }
-                }
-            ],
             "ComponentModifications": [
                 {
                     "ComponentName": "Transform",
@@ -100,7 +91,16 @@
             "ObjectType": "BLUEPRINT",
             "ObjectName": "Sinbad",
             "Tag": "sinbad",
-            "BlueprintPath": "Sinbad"
+            "BlueprintPath": "Sinbad",
+            "Components" : [
+                {
+                    "ComponentName": "SoundEmitter",
+                    "ComponentProperties": {
+                        "volume" : "1",
+                        "pitch" : "1"
+                    }
+                }
+            ]
         }
     ]
 }

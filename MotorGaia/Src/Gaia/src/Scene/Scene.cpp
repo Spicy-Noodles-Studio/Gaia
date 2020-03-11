@@ -86,24 +86,19 @@ void Scene::postUpdate(float deltaTime)
 	}
 }
 
-bool Scene::addGameObject(GameObject* gameObject)
+const std::string& Scene::getName()
 {
-	// TODO: Antes deberia de mirar si el objeto ya existe, o si hay alguno con el mismo nombre o tag
-	/* Hacer aqui */
-	std::string objectName = gameObject->getName();
-	if (repeatedNames.find(objectName) != repeatedNames.end()) {
-		objectName += ("(" + std::to_string(++repeatedNames[objectName]) + ")");
-		printf("SCENE: Trying to add gameobject with name %s that already exists in scene %s\n", gameObject->getName().c_str(), name.c_str());
-		printf("SCENE: Adding gameobject with name %s\n", objectName.c_str());
-		gameObject->name = objectName;
-		// Try to add again
-		return addGameObject(gameObject);
-	}
+	return name;
+}
 
-	repeatedNames[gameObject->getName()] = 0;
-	sceneObjects.push_back(gameObject);
-	gameObject->myScene = this;
-	return true;
+Ogre::SceneManager* Scene::getSceneManager() const
+{
+	return sceneManager;
+}
+
+Ogre::Entity* Scene::createEntity(const std::string& name)
+{
+	return sceneManager->createEntity(name);
 }
 
 GameObject* Scene::getGameObjectWithName(const std::string& name)
@@ -118,7 +113,7 @@ GameObject* Scene::getGameObjectWithName(const std::string& name)
 std::vector<GameObject*> Scene::getGameObjectsWithTag(const std::string& tag)
 {
 	std::vector<GameObject*> result;
-	
+
 	for (auto g : sceneObjects) {
 		if (g->getTag() == tag) {
 			result.push_back(g);
@@ -138,28 +133,34 @@ Camera* Scene::getMainCamera() const
 	return mainCamera;
 }
 
-void Scene::addAnimationSet(std::string id, Ogre::AnimationStateSet* anims)
+void Scene::addAnimationSet(const std::string& id, Ogre::AnimationStateSet* anims)
 {
 	animationSets[id] = anims;
 }
 
-void Scene::instantiate(GameObject* gameObject)
+void Scene::addUserComponent(UserComponent* component)
 {
-	gameObject->node->setVisible(false);
-	gameObject->setActive(false);
-	instantiateQueue.push_back(gameObject);
+	userComponents.push_back(component);
 }
 
-void Scene::instantiatePendingGameObjects()
+bool Scene::addGameObject(GameObject* gameObject)
 {
-	if (!instantiateQueue.size()) return;
-
-	for (auto gameObject : instantiateQueue) {
-		gameObject->node->setVisible(true);
-		gameObject->setActive(true);
-		addGameObject(gameObject);
+	// TODO: Antes deberia de mirar si el objeto ya existe, o si hay alguno con el mismo nombre o tag
+	/* Hacer aqui */
+	std::string objectName = gameObject->getName();
+	if (repeatedNames.find(objectName) != repeatedNames.end()) {
+		objectName += ("(" + std::to_string(++repeatedNames[objectName]) + ")");
+		printf("SCENE: Trying to add gameobject with name %s that already exists in scene %s\n", gameObject->getName().c_str(), name.c_str());
+		printf("SCENE: Adding gameobject with name %s\n", objectName.c_str());
+		gameObject->name = objectName;
+		// Try to add again
+		return addGameObject(gameObject);
 	}
-	instantiateQueue.clear();
+
+	repeatedNames[gameObject->getName()] = 0;
+	sceneObjects.push_back(gameObject);
+	gameObject->myScene = this;
+	return true;
 }
 
 void Scene::destroyPendingGameObjects()
@@ -181,32 +182,31 @@ void Scene::destroyGameObject(GameObject* gameObject)
 	destroyQueue.push_back(gameObject);
 }
 
+void Scene::instantiate(GameObject* gameObject)
+{
+	gameObject->node->setVisible(false);
+	gameObject->setActive(false);
+	instantiateQueue.push_back(gameObject);
+}
+
+void Scene::instantiatePendingGameObjects()
+{
+	if (!instantiateQueue.size()) return;
+
+	for (auto gameObject : instantiateQueue) {
+		gameObject->node->setVisible(true);
+		gameObject->setActive(true);
+		addGameObject(gameObject);
+	}
+	instantiateQueue.clear();
+}
+
+
 void Scene::updateAllAnimations(float deltaTime)
 {
-	for (auto set : animationSets) 
+	for (auto set : animationSets)
 	{
 		for (auto anim : set.second->getEnabledAnimationStates())
 			anim->addTime(deltaTime);
 	}
-}
-
-void Scene::addUserComponent(UserComponent* component)
-{
-	userComponents.push_back(component);
-}
-
-
-const std::string& Scene::getName()
-{
-	return name;
-}
-
-Ogre::SceneManager* Scene::getSceneManager() const
-{
-	return sceneManager;
-}
-
-Ogre::Entity* Scene::createEntity(const std::string& name)
-{
-	return sceneManager->createEntity(name);
 }

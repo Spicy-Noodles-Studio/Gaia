@@ -122,6 +122,7 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\ShaderTechniqueResolver.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsSystem.h">
       <Filter>Archivos de encabezado\Systems</Filter>
     </ClInclude>
@@ -156,7 +157,7 @@
       <Filter>Archivos de encabezado\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h">
-      <Filter>Archivos de encabezado\Managers</Filter>
+      <Filter>Archivos de encabezado\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +232,7 @@
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\ShaderTechniqueResolver.cpp">
       <Filter>Archivos de origen</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Systems\PhysicsSystem.cpp">
       <Filter>Archivos de origen\Systems</Filter>
     </ClCompile>
@@ -262,7 +264,7 @@
       <Filter>Archivos de origen\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp">
-      <Filter>Archivos de origen\Managers</Filter>
+      <Filter>Archivos de origen\Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

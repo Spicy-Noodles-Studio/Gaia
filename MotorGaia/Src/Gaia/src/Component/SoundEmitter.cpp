@@ -14,7 +14,7 @@ SoundEmitter::SoundEmitter(GameObject* gameObject) : GaiaComponent(gameObject)
 
 SoundEmitter::~SoundEmitter()
 {
-
+	SoundSystem::GetInstance()->removeEmitter(this);
 }
 
 void SoundEmitter::update()

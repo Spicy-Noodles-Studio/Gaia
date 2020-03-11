@@ -8,7 +8,8 @@
 #include "GameObject.h"
 #include "gTime.h"
 
-PhysicsSystem::PhysicsSystem()
+PhysicsSystem::PhysicsSystem() :	dynamicsWorld(nullptr), collisionConfiguration(nullptr), 
+									dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr)
 {
 }
 
@@ -39,10 +40,14 @@ void PhysicsSystem::init()
 	///-----initialization_end-----
 }
 
+void PhysicsSystem::render()
+{
+	dynamicsWorld->debugDrawWorld();
+}
+
 void PhysicsSystem::update()
 {
 	dynamicsWorld->stepSimulation(1.0f / 50.0f, 10);
-	dynamicsWorld->debugDrawWorld();
 	checkCollisions();
 }
 
@@ -65,8 +70,7 @@ void PhysicsSystem::close()
 
 	delete collisionConfiguration;
 
-	//next line is optional: it will be cleared by the destructor when the array goes out of scope
-	collisionShapes.clear();
+	destroy();
 }
 
 void PhysicsSystem::clearWorld()
@@ -91,6 +95,8 @@ void PhysicsSystem::clearWorld()
 		collisionShapes[j] = 0;
 		delete shape;
 	}
+
+	collisionShapes.clear();
 }
 
 
@@ -161,6 +167,7 @@ void PhysicsSystem::deleteRigidBody(btRigidBody* body)
 	if (i >= 0 && i < collisionShapes.size()) {
 		collisionShapes[i] = 0;
 		delete shape;
+		collisionShapes.removeAtIndex(i);
 	}
 }
 
@@ -202,8 +209,6 @@ void PhysicsSystem::checkCollisions()
 		GameObject* goA = rbA->gameObject;
 		GameObject* goB = rbB->gameObject;
 
-
-
 		//Saca los puntos de colision
 		/*int numContacts = contactManifold->getNumContacts();
 		for (int j = 0; j < numContacts; j++)
@@ -216,8 +221,6 @@ void PhysicsSystem::checkCollisions()
 				const btVector3& normalOnB = pt.m_normalWorldOnB;
 			}
 		}*/
-
-
 
 		newContacts[{rbA, rbB}] = true;
 
@@ -245,7 +248,6 @@ void PhysicsSystem::checkCollisions()
 			else if (bTrigger && !aTrigger)
 				goA->onTriggerStay(goB);
 		}
-
 	}
 
 	for (auto it = contacts.begin(); it != contacts.end(); it++)

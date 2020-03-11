@@ -15,6 +15,9 @@ InterfaceSystem::~InterfaceSystem()
 void InterfaceSystem::close()
 {
 	CEGUI::WindowManager::getSingleton().destroyAllWindows();
+	CEGUI::System::getSingleton().destroy();
+
+	CEGUI::OgreRenderer::destroy(*mRenderer);
 	destroy();
 }
 
@@ -89,10 +92,3 @@ UIElement* InterfaceSystem::loadLayout(const std::string& filename)
 {
 	return CEGUI::WindowManager::getSingleton().loadLayoutFromFile(filename);
 }
-
-bool InterfaceSystem::clicked(const CEGUI::EventArgs& args)
-{
-	printf("jumpedd");
-	return false;
-}
-

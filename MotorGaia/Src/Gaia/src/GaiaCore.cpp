@@ -1,9 +1,9 @@
 #include "GaiaCore.h"
 
 
-GaiaCore::GaiaCore() : root(nullptr), win(nullptr),
-renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr),
-resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
+GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
+						renderSystem(nullptr), inputSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr), interfaceSystem(nullptr),
+						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
 {
 
 }
@@ -35,6 +35,14 @@ void GaiaCore::init()
 	// InputSystem
 	inputSystem = InputSystem::GetInstance();
 	inputSystem->init();
+
+	// PhysicsSystem
+	physicsSystem = PhysicsSystem::GetInstance();
+	physicsSystem->init();
+
+	// SoundSystem
+	soundSystem = SoundSystem::GetInstance();
+	soundSystem->init();
 
 	// InterfaceSystem
 	interfaceSystem = InterfaceSystem::GetInstance();
@@ -84,6 +92,8 @@ void GaiaCore::close()
 
 	//Systems termination
 	interfaceSystem->close();
+	soundSystem->close();
+	physicsSystem->close();
 	inputSystem->close();
 	renderSystem->close();
 
@@ -99,6 +109,12 @@ void GaiaCore::render(float deltaTime)
 {
 	// RenderSystem
 	renderSystem->render(deltaTime);
+
+	// PhysicsSystem
+#ifdef _DEBUG
+	physicsSystem->render();
+#endif
+
 	// InterfaceSystem
 	interfaceSystem->render();
 }
@@ -109,13 +125,19 @@ void GaiaCore::preUpdate(float deltaTime)
 	// RenderSystem (animations)
 	// renderSystem->update(deltaTime);
 
-	// InterfaceSystem
-	interfaceSystem->update(deltaTime);
-
 	// InputSystem
 	inputSystem->update();
 
-	// Managers
+	// PhysicsSystem
+	physicsSystem->update();
+
+	// SoundSystem
+	soundSystem->update(deltaTime);
+
+	// InterfaceSystem
+	interfaceSystem->update(deltaTime);
+
+	// Managers (escena)
 	sceneManager->preUpdate(deltaTime);
 }
 

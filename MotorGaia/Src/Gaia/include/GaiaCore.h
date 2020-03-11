@@ -15,6 +15,8 @@
 #include "RenderSystem.h"
 #include "InputSystem.h"
 #include "InterfaceSystem.h"
+#include "SoundSystem.h"
+#include "PhysicsSystem.h"
 
 #include "ResourcesManager.h"
 #include "ComponentManager.h"
@@ -43,6 +45,8 @@ private:
 	RenderSystem* renderSystem;
 	InputSystem* inputSystem;
 	InterfaceSystem* interfaceSystem;
+	PhysicsSystem* physicsSystem;
+	SoundSystem* soundSystem;
 
 	//Managers
 	ResourcesManager resourcesManager;

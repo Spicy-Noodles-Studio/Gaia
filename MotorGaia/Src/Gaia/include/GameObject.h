@@ -9,6 +9,7 @@
 #include "ComponentManager.h"
 #include "UserComponent.h"
 #include "Transform.h"
+#include "UserComponent.h"
 
 class Scene;
 
@@ -61,6 +62,15 @@ private:
 public:
 	Ogre::SceneNode* node = nullptr;
 	Transform* transform = nullptr;
+
+    void onCollisionEnter(GameObject* other);
+    void onTriggerEnter(GameObject* other);
+
+    void onCollisionStay(GameObject* other);
+    void onTriggerStay(GameObject* other);
+
+    void onCollisionExit(GameObject* other);
+    void onTriggerExit(GameObject* other);
 
 private: 
     std::string name;

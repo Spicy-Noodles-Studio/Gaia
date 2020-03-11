@@ -92,7 +92,7 @@ const std::string& GameObjectData::getTag() const
 	return tag;
 }
 
-const std::map<std::string, ComponentData*>& GameObjectData::getComponentData() const
+const std::unordered_map<std::string, ComponentData*>& GameObjectData::getComponentData() const
 {
 	return componentData;
 }

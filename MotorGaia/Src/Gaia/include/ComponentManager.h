@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef COMPONENT_MANAGER_H
 #define COMPONENT_MANAGER_H
 
@@ -9,7 +8,6 @@
 #include "Component.h"
 
 typedef std::function<Component* (GameObject*)> ComponentFactory;
-
 
 class ComponentManager : public Singleton<ComponentManager>
 {

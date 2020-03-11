@@ -42,7 +42,7 @@ void SoundSystem::init()
 
 	std::cout << "\nSound system started" << "\n";
 
-	createSounds(".//Assets//Sounds//sounds.asset");
+	createSounds(".//Assets//Files//sounds.asset");
 
 }
 

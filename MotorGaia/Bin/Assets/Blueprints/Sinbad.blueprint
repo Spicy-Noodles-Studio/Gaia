@@ -1,0 +1,27 @@
+{
+    "ObjectType": "GAMEOBJECT",
+    "ObjectName": "Sinbad",
+    "Tag": "sinbad",
+    "Components":
+    [
+        {
+            "ComponentName": "Transform",
+            "ComponentProperties": {
+                "position": "200 0 -400",
+                "scale": "10 10 10"
+            }
+        },
+        {
+            "ComponentName": "MeshRenderer",
+            "ComponentProperties": {
+                "mesh": "sinbad Sinbad.mesh"
+            }
+        },
+        {
+            "ComponentName": "Animator",
+            "ComponentProperties": {
+                "anim": "Dance sinbad"
+            }
+        }
+    ]
+}

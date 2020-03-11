@@ -2,7 +2,7 @@
 
 
 GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
-						renderSystem(nullptr), inputSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr), interfaceSystem(nullptr),
+						renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
 						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
 {
 
@@ -36,6 +36,10 @@ void GaiaCore::init()
 	inputSystem = InputSystem::GetInstance();
 	inputSystem->init();
 
+	// InterfaceSystem
+	interfaceSystem = InterfaceSystem::GetInstance();
+	interfaceSystem->init(win);
+
 	// PhysicsSystem
 	physicsSystem = PhysicsSystem::GetInstance();
 	physicsSystem->init();
@@ -43,10 +47,6 @@ void GaiaCore::init()
 	// SoundSystem
 	soundSystem = SoundSystem::GetInstance();
 	soundSystem->init();
-
-	// InterfaceSystem
-	interfaceSystem = InterfaceSystem::GetInstance();
-	interfaceSystem->init(win);
 
 	// Managers initialization
 	// ResourcesManager initialization
@@ -59,7 +59,6 @@ void GaiaCore::init()
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
 	sceneManager->init(root, win);
-
 }
 
 void GaiaCore::run()
@@ -72,7 +71,7 @@ void GaiaCore::run()
 
 		// Pre-process
 		preUpdate(deltaTime);
-
+		
 		// Process
 		update(deltaTime);
 
@@ -83,23 +82,24 @@ void GaiaCore::run()
 
 void GaiaCore::close()
 {
-	// SceneManager termination
-	sceneManager->close();
-	// ComponentManager termination
-	componentManager->close();
 	// ResourcesManager termination
 	resourcesManager.close();
+	// ComponentManager termination
+	componentManager->close();
+	// SceneManager termination
+	sceneManager->close();
 
 	//Systems termination
-	interfaceSystem->close();
-	soundSystem->close();
-	physicsSystem->close();
-	inputSystem->close();
 	renderSystem->close();
+	inputSystem->close();
+	interfaceSystem->close();
+	physicsSystem->close();
+	soundSystem->close();
 
 	if (win != nullptr)
 		delete win;
 	win = nullptr;
+
 	if (root != nullptr)
 		delete root;
 	root = nullptr;
@@ -128,14 +128,14 @@ void GaiaCore::preUpdate(float deltaTime)
 	// InputSystem
 	inputSystem->update();
 
+	// InterfaceSystem
+	interfaceSystem->update(deltaTime);
+
 	// PhysicsSystem
 	physicsSystem->update();
 
 	// SoundSystem
 	soundSystem->update(deltaTime);
-
-	// InterfaceSystem
-	interfaceSystem->update(deltaTime);
 
 	// Managers (escena)
 	sceneManager->preUpdate(deltaTime);

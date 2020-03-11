@@ -16,6 +16,13 @@
             "ComponentProperties": {
                 "mesh": "knot knot.mesh"
             }
+        },
+        {
+            "ComponentName": "RigidBody",
+            "ComponentProperties": {
+                "shape": "Box",
+                "mass": "3"
+            }
         }
     ]
 }

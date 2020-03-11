@@ -4,7 +4,6 @@
 #include "ResourcesManager.h"
 #include "ComponentManager.h"
 
-
 UserComponent::UserComponent(GameObject* gameObject) : Component(gameObject), started(false), sleeping(false)
 {
 	gameObject->addUserComponent(this);
@@ -65,7 +64,6 @@ void UserComponent::onCollisionExit(GameObject* other)
 
 }
 
-
 GameObject* UserComponent::instantiate(const std::string& blueprintName, const Vector3& position)
 {
 	// check if blueprint name is valid
@@ -79,7 +77,6 @@ GameObject* UserComponent::instantiate(const std::string& blueprintName, const V
 
 	return instance;
 }
-
 
 GameObject* UserComponent::instantiate(const GameObjectData* data)
 {
@@ -107,32 +104,42 @@ GameObject* UserComponent::instantiate(const GameObjectData* data)
 	return instance;
 }
 
-
 void UserComponent::destroy(GameObject* gameObject)
 {
 	gameObject->myScene->destroyGameObject(gameObject);
 }
-
 
 GameObject* UserComponent::findGameObjectWithName(const std::string& name)
 {
 	return gameObject->myScene->getGameObjectWithName(name);
 }
 
-
 std::vector<GameObject*> UserComponent::findGameObjectsWithTag(const std::string& tag)
 {
 	return gameObject->myScene->getGameObjectsWithTag(tag);
 }
-
 
 bool UserComponent::hasStarted()
 {
 	return started;
 }
 
-
 bool UserComponent::isSleeping()
 {
 	return sleeping;
+}
+
+void UserComponent::onTriggerEnter(GameObject* other)
+{
+
+}
+
+void UserComponent::onTriggerStay(GameObject* other)
+{
+
+}
+
+void UserComponent::onTriggerExit(GameObject* other)
+{
+
 }

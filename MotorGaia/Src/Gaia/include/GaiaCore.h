@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef GAIA_CORE_H
 #define GAIA_CORE_H
 
@@ -13,7 +12,10 @@
 #include "Window.h"
 
 #include "RenderSystem.h"
-#include "GaiaInput.h"
+#include "InputSystem.h"
+#include "InterfaceSystem.h"
+#include "PhysicsSystem.h"
+#include "SoundSystem.h"
 
 #include "ResourcesManager.h"
 #include "ComponentManager.h"
@@ -40,7 +42,10 @@ private:
 
 	//Systems
 	RenderSystem* renderSystem;
-	GaiaInput* inputSystem;
+	InputSystem* inputSystem;
+	InterfaceSystem* interfaceSystem;
+	PhysicsSystem* physicsSystem;
+	SoundSystem* soundSystem;
 
 	//Managers
 	ResourcesManager resourcesManager;

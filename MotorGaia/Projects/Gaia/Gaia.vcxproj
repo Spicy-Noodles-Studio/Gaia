@@ -25,21 +25,33 @@
     <ClInclude Include="..\..\Src\Gaia\include\ComponentData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\DebugDrawer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
-    <ClInclude Include="..\..\Src\Gaia\include\GaiaInput.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Reverb.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\OgreBulletUtils.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\PhysicsSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\RenderSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ResourcesManager.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\RigidBody.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Scene.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SceneManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ShaderTechniqueResolver.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Singleton.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\SoundEmitter.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\SoundListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\gTime.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Transform.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\UILayout.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Vector3.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Window.h" />
@@ -47,9 +59,15 @@
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\Component\Animator.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Camera.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\GaiaMotionState.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Light.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\MeshRenderer.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Reverb.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\SoundEmitter.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\SoundListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\RigidBody.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\UILayout.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\DataLoader.cpp" />
@@ -58,6 +76,10 @@
     <ClCompile Include="..\..\Src\Gaia\src\ShaderTechniqueResolver.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\GaiaInput.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\DebugDrawer.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\gTime.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Vector3.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Window.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Component.cpp" />
@@ -128,7 +150,7 @@
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_d_$(Platform)</TargetName>
-    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\lib\Debug;$(SolutionDir)Dependencies\bullet3-2.89\Buildx86\lib\Debug;$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x86;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\lib\Debug;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\lib;$(SolutionDir)Dependencies\bullet3-2.89\Buildx86\lib\Debug;$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x86;$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -136,7 +158,7 @@
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_d_$(Platform)</TargetName>
-    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Build\lib\Debug;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\lib\x64;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Build\lib\Debug;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\lib;$(SolutionDir)Dependencies\bullet3-2.89\Build\lib\Debug;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\lib\x64;$(SolutionDir)Dependencies\cegui-0.8.7\Build\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -144,7 +166,7 @@
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)</TargetName>
-    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\lib\Release;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\lib\x86;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\lib\Release;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\lib;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\lib\x86;$(SolutionDir)Dependencies\bullet3-2.89\Buildx86\lib\Release;$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -152,7 +174,7 @@
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)</TargetName>
-    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Build\lib\Release;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\lib\x64;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\ogre-1.12.5\Build\lib\Release;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\lib;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\lib\x64;$(SolutionDir)Dependencies\bullet3-2.89\Build\lib\Release;$(SolutionDir)Dependencies\cegui-0.8.7\Build\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

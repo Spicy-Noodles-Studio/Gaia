@@ -6,6 +6,7 @@
 #include <OgreRoot.h>
 #include "GameObject.h"
 #include "Camera.h"
+#include "DebugDrawer.h"
 
 #include "GaiaComponent.h"
 #include "UserComponent.h"
@@ -35,7 +36,7 @@ public:
 	void setMainCamera(Camera* camera);
 	Camera* getMainCamera() const;
 
-	void addAnimationSet(std::string id, Ogre::AnimationStateSet* anims);
+	void addAnimationSet(const std::string& id, Ogre::AnimationStateSet* anims);
 
 private:
 	void addUserComponent(UserComponent* component);
@@ -54,6 +55,7 @@ private:
 	const std::string name;
 	Ogre::Root* root;
 	Ogre::SceneManager* sceneManager;
+	DebugDrawer* debugDrawer;
 
 	std::vector<UserComponent*> userComponents;
 

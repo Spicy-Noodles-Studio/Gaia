@@ -147,6 +147,51 @@
     <ClInclude Include="..\..\Src\Gaia\include\SceneData.h">
       <Filter>Archivos de encabezado\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\InterfaceSystem.h">
+      <Filter>Archivos de encabezado\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\UILayout.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\ShaderTechniqueResolver.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\PhysicsSystem.h">
+      <Filter>Archivos de encabezado\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\RigidBody.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\DebugDrawer.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\OgreBulletUtils.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\gTime.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h">
+      <Filter>Archivos de encabezado\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\SoundListener.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\SoundEmitter.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Reverb.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h">
+      <Filter>Archivos de encabezado\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Archivos de encabezado">

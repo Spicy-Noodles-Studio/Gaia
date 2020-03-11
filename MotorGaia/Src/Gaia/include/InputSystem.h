@@ -12,12 +12,11 @@
 
 #include "Singleton.h"
 
-class GaiaInput : public Singleton<GaiaInput>
+class InputSystem : public Singleton<InputSystem>
 {
 #define MAX_CONTROLLERS 4
 
-private:
-
+private:  
     // KEYBOARD
     const Uint8* keyboardState; // Stores current keyboard state
 
@@ -39,17 +38,20 @@ private:
     mouseButton MOUSE_BUTTON_RIGHT;
     mouseButton MOUSE_BUTTON_MIDDLE;
 
+    int MOUSE_WHEEL;
+
     void processMouseInputDown(SDL_MouseButtonEvent& e);
     void processMouseInputUp (SDL_MouseButtonEvent& e);
 
     // GAMEPAD
-    int JOYSTICK_DEAD_ZONE = 8000;
     int currentControllers = 0;
 
     struct gameController {
 
         SDL_GameController* controller = nullptr;
         SDL_Haptic* controllerRumble = nullptr;
+        
+        int ID = -1;
         int controllerIndex = -1;
         bool isConected = false;
 
@@ -66,6 +68,8 @@ private:
         bool XButton = false;
         bool YButton = false;
 
+        int JOYSTICK_DEAD_ZONE = 8000;
+
         int16_t LeftStickX = 0;
         int16_t LeftStickY = 0;
 
@@ -79,8 +83,6 @@ private:
         std::set<std::string> buttonRelease; // Stores SDL_KEYUP events from current frame
     };
 
-    SDL_GameController* ControllerHandles[MAX_CONTROLLERS]; // Array of controller handles
-    SDL_Haptic* RumbleHandles[MAX_CONTROLLERS]; // Array of haptic devices (rumble)
     gameController controllers[4];
 
     void controllerInputDown(int index);
@@ -90,16 +92,24 @@ private:
 
 
     // UTILS
+    bool flags = true;
+
     void clearInputs();
     int getFirstFreeController();
     int getControllerByReference(SDL_GameController* handle);
+    int getControllerFromEvent(SDL_Event* e);
+    int getControllerRemovedIndex(SDL_Event* e);
 
 public:
+
+    // est� feo...
+    bool exit = false;
+
     void init();
     void close();
     void update();
 
-    void setDeadZone(int zone) { JOYSTICK_DEAD_ZONE = zone; }
+    void toggleFlags() { flags = !flags; }
 
     // Keyboard returns
     bool isKeyPressed(SDL_Keycode key) { return keyboardState[key]; };
@@ -111,7 +121,10 @@ public:
     bool getMouseButtonClick(char button);
     bool getMouseButtonHold(char button);
     bool getMouseButtonRelease(char button);
+    /// Returns 1 for wheel_up, -1 for wheel_down, 0 if no movement
+    int getMouseWheel() { return MOUSE_WHEEL; }
     std::pair<int, int> getMousePosition() { return std::pair<int, int>(MOUSE_POSITION_X, MOUSE_POSITION_Y); };
+
 
     // Controller returns
     bool isButtonPressed(int controllerIndex, std::string button);
@@ -127,5 +140,6 @@ public:
     int getRightTrigger(int controllerIndex) { controllers[controllerIndex].RightTrigger; }
 
     void controllerRumble(int controllerIndex, float strength, int length);
+    void setDeadZone(int controller, int zone);
 };
 

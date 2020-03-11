@@ -1,8 +1,8 @@
 #include "GaiaCore.h"
 
 
-GaiaCore::GaiaCore() :	root(nullptr), win(nullptr), 
-						renderSystem(nullptr), inputSystem(nullptr),
+GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
+						renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
 						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
 {
 
@@ -24,17 +24,29 @@ void GaiaCore::init()
 	if (!(root->restoreConfig() || root->showConfigDialog(nullptr)))
 		return;
 
-	// Window initialization
-	win = new Window(root, "Ventana de Prueba");
+	// Setup window
+	win = new Window(root, "Test window - 2020 (c) Gaia ");
 
 	// Systems initialization
 	// RenderSystem
 	renderSystem = RenderSystem::GetInstance();
 	renderSystem->init(root);
 
-	//InputSystem
-	inputSystem = GaiaInput::GetInstance();
+	// InputSystem
+	inputSystem = InputSystem::GetInstance();
 	inputSystem->init();
+
+	// InterfaceSystem
+	interfaceSystem = InterfaceSystem::GetInstance();
+	interfaceSystem->init(win);
+
+	// PhysicsSystem
+	physicsSystem = PhysicsSystem::GetInstance();
+	physicsSystem->init();
+
+	// SoundSystem
+	soundSystem = SoundSystem::GetInstance();
+	soundSystem->init();
 
 	// Managers initialization
 	// ResourcesManager initialization
@@ -47,7 +59,6 @@ void GaiaCore::init()
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
 	sceneManager->init(root, win);
-
 }
 
 void GaiaCore::run()
@@ -71,20 +82,24 @@ void GaiaCore::run()
 
 void GaiaCore::close()
 {
-	// SceneManager termination
-	sceneManager->close();
-	// ComponentManager termination
-	componentManager->close();
 	// ResourcesManager termination
 	resourcesManager.close();
+	// ComponentManager termination
+	componentManager->close();
+	// SceneManager termination
+	sceneManager->close();
 
 	//Systems termination
-	inputSystem->close();
 	renderSystem->close();
+	inputSystem->close();
+	interfaceSystem->close();
+	physicsSystem->close();
+	soundSystem->close();
 
 	if (win != nullptr)
 		delete win;
 	win = nullptr;
+
 	if (root != nullptr)
 		delete root;
 	root = nullptr;
@@ -94,8 +109,14 @@ void GaiaCore::render(float deltaTime)
 {
 	// RenderSystem
 	renderSystem->render(deltaTime);
+
+	// PhysicsSystem
+#ifdef _DEBUG
+	physicsSystem->render();
+#endif
+
 	// InterfaceSystem
-	// InterfaceSystem::GetInstance()->render(deltaTime);
+	interfaceSystem->render();
 }
 
 void GaiaCore::preUpdate(float deltaTime)
@@ -104,13 +125,19 @@ void GaiaCore::preUpdate(float deltaTime)
 	// RenderSystem (animations)
 	// renderSystem->update(deltaTime);
 
-	// InterfaceSystem
-	// InterfaceSystem::GetInstance()->update(deltaTime);
-	
 	// InputSystem
 	inputSystem->update();
 
-	// Managers
+	// InterfaceSystem
+	interfaceSystem->update(deltaTime);
+
+	// PhysicsSystem
+	physicsSystem->update();
+
+	// SoundSystem
+	soundSystem->update(deltaTime);
+
+	// Managers (escena)
 	sceneManager->preUpdate(deltaTime);
 }
 

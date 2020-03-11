@@ -10,8 +10,6 @@
 #include "UserComponent.h"
 #include "Transform.h"
 
-class Scene;
-
 class GameObject {
     friend class Scene;
     friend class SceneManager;
@@ -47,7 +45,6 @@ public:
     /* Remove child from parent */
     void removeChild(GameObject* child);
     
-	void addChildNode(GameObject* child);
     const std::string& getName() const;
     const std::string& getTag() const;
     Scene* getScene() const;
@@ -62,6 +59,15 @@ public:
 	Ogre::SceneNode* node = nullptr;
 	Transform* transform = nullptr;
 
+    void onCollisionEnter(GameObject* other);
+    void onTriggerEnter(GameObject* other);
+
+    void onCollisionStay(GameObject* other);
+    void onTriggerStay(GameObject* other);
+
+    void onCollisionExit(GameObject* other);
+    void onTriggerExit(GameObject* other);
+
 private: 
     std::string name;
     std::string tag;
@@ -73,7 +79,6 @@ private:
     std::map<std::string, Component*> components;
     std::vector<UserComponent*> userComponents;
 };
-
 
 template<typename T>
 T* GameObject::addComponent() {
@@ -93,7 +98,6 @@ T* GameObject::addComponent() {
     return (T*)components[key];
 }
 
-
 template<typename T>
 bool GameObject::delComponent() {
     const std::string key = ComponentManager::GetInstance()->getID<T>();
@@ -107,7 +111,6 @@ bool GameObject::delComponent() {
 
     return true;
 }
-
 
 template<typename T>
 T* GameObject::getComponent() {

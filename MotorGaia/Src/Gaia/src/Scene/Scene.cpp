@@ -1,10 +1,11 @@
 #include "Scene.h"
+#include "PhysicsSystem.h"
 
 Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager()), mainCamera(nullptr)
 {
-
+	debugDrawer = new DebugDrawer(sceneManager);
+	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
 }
-
 
 Scene::~Scene()
 {
@@ -31,8 +32,9 @@ Scene::~Scene()
 		delete set.second;
 
 	animationSets.clear();
-}
 
+	delete debugDrawer;
+}
 
 void Scene::awake()
 {
@@ -45,7 +47,6 @@ void Scene::awake()
 	}
 }
 
-
 void Scene::start()
 {
 	// start components
@@ -57,7 +58,6 @@ void Scene::start()
 	}
 }
 
-
 void Scene::preUpdate(float deltaTime)
 {
 	//Preupdate components
@@ -68,7 +68,6 @@ void Scene::preUpdate(float deltaTime)
 
 }
 
-
 void Scene::update(float deltaTime)
 {
 	// update components
@@ -78,7 +77,6 @@ void Scene::update(float deltaTime)
 	}
 }
 
-
 void Scene::postUpdate(float deltaTime)
 {
 	// postUpdate compoenent
@@ -87,7 +85,6 @@ void Scene::postUpdate(float deltaTime)
 			c->postUpdate(deltaTime);
 	}
 }
-
 
 bool Scene::addGameObject(GameObject* gameObject)
 {
@@ -109,7 +106,6 @@ bool Scene::addGameObject(GameObject* gameObject)
 	return true;
 }
 
-
 GameObject* Scene::getGameObjectWithName(const std::string& name)
 {
 	for (auto g : sceneObjects) {
@@ -118,7 +114,6 @@ GameObject* Scene::getGameObjectWithName(const std::string& name)
 	}
 	return nullptr;
 }
-
 
 std::vector<GameObject*> Scene::getGameObjectsWithTag(const std::string& tag)
 {

@@ -1,9 +1,8 @@
 #include "ParticleEmitter.h"
 
-
-ParticleEmitter::ParticleEmitter(GameObject* gameObject) : GaiaComponent(gameObject)
+ParticleEmitter::ParticleEmitter(GameObject* gameObject, Ogre::SceneManager* manager) : GaiaComponent(gameObject)
 {
-	sm = getSceneManager();
+	sm = manager;
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -15,9 +14,10 @@ ParticleEmitter::~ParticleEmitter()
 
 }
 
-void ParticleEmitter::newEmitter(Ogre::String name, Ogre::String source)
+void ParticleEmitter::newEmitter(Ogre::String source)
 {
-	ps = sm->createParticleSystem(name,source);
+	ps = sm->createParticleSystem();
+	ps->setMaterialName(source);
 	ps->setEmitting(false);
 }
 

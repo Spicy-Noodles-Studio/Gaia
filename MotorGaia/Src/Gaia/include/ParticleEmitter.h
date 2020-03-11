@@ -18,9 +18,9 @@ private:
 	Ogre::SceneManager* sm = nullptr;
 
 public:
-	ParticleEmitter(GameObject* gameObject);
+	ParticleEmitter(GameObject* gameObject, Ogre::SceneManager* manager);
 	~ParticleEmitter();
-	void newEmitter(Ogre::String name, Ogre::String source);
+	void newEmitter(Ogre::String source);
 	void start();
 	void stop();
 };

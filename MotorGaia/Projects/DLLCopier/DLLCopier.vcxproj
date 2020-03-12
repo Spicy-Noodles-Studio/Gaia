@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugTest|Win32">
+      <Configuration>DebugTest</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugTest|x64">
+      <Configuration>DebugTest</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseTest|Win32">
+      <Configuration>ReleaseTest</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseTest|x64">
+      <Configuration>ReleaseTest</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
@@ -31,7 +47,20 @@
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugTest|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
@@ -44,7 +73,20 @@
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugTest|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|x64'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
@@ -59,17 +101,35 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugTest|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugTest|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)Bin\</OutDir>
+    <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>$(ProjectName)_d $(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugTest|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
@@ -81,13 +141,31 @@
     <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_d $(Platform)</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugTest|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)Bin\</OutDir>
+    <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>$(ProjectName)_d $(Platform)</TargetName>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName) $(Platform)</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)Bin\</OutDir>
+    <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>$(ProjectName) $(Platform)</TargetName>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)Bin\</OutDir>
+    <TargetName>$(ProjectName) $(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(SolutionDir)inter\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Bin\</OutDir>
@@ -130,7 +208,81 @@ xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bi
 xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\libexpat_d.dll" "$(SolutionDir)Bin" /y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugTest|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreBuildEvent>
+      <Command>xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\OgreMain_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\OgreRTShaderSystem_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\RenderSystem_Direct3D11_d.dll" "$(SolutionDir)Bin"  /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\RenderSystem_GL_d.dll" "$(SolutionDir)Bin"  /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\Codec_STBI_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\Plugin_ParticleFX_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\debug\zlib.dll" "$(SolutionDir)Bin"  /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\bin\SDL2.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x64\fmodL.dll" "$(SolutionDir)Bin"  /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIBase-0_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIOgreRenderer-0_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIExpatParser_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUICoreWindowRendererSet_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUISILLYImageCodec_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\SILLY_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\zlib_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\libpng_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\jpeg_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\freetype_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\pcre_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\glew_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\glfw_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\libexpat_d.dll" "$(SolutionDir)Bin" /y</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreBuildEvent>
+      <Command>xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\debug\OgreMain_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\debug\OgreRTShaderSystem_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\debug\RenderSystem_Direct3D11_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\debug\RenderSystem_GL_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\debug\Codec_STBI_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\debug\Plugin_ParticleFX_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\debug\zlib.dll" "$(SolutionDir)Bin"  /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\bin\SDL2.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x86\fmodL.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\bin\CEGUIBase-0_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\bin\CEGUIOgreRenderer-0_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\bin\CEGUIExpatParser_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\bin\CEGUICoreWindowRendererSet_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\bin\CEGUISILLYImageCodec_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\SILLY_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\zlib_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\libpng_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\jpeg_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\freetype_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\pcre_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\glew_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\glfw_d.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\libexpat_d.dll" "$(SolutionDir)Bin" /y</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugTest|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
@@ -208,7 +360,89 @@ xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies
 xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\libexpat.dll" "$(SolutionDir)Bin" /y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreBuildEvent>
+      <Command>xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\release\OgreMain.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\release\OgreRTShaderSystem.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\release\RenderSystem_Direct3D11.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\release\RenderSystem_GL.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\release\Codec_STBI.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\release\Plugin_ParticleFX.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\bin\release\zlib.dll" "$(SolutionDir)Bin"  /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\bin\SDL2.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x86\fmod.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\bin\CEGUIBase-0.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\bin\CEGUIOgreRenderer-0.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\bin\CEGUIExpatParser.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\bin\CEGUICoreWindowRendererSet.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\bin\CEGUISILLYImageCodec.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\SILLY.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\zlib.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\libpng.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\jpeg.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\freetype.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\pcre.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\glew.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\glfw.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\bin\libexpat.dll" "$(SolutionDir)Bin" /y</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreBuildEvent>
+      <Command>xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\release\OgreMain.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\release\OgreRTShaderSystem.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\release\RenderSystem_Direct3D11.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\release\RenderSystem_GL.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\release\Codec_STBI.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\release\Plugin_ParticleFX.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\bin\release\zlib.dll" "$(SolutionDir)Bin"  /y
+xcopy "$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\bin\SDL2.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\fmod-2.00.07\Build\core\lib\x64\fmod.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIBase-0.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIOgreRenderer-0.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUIExpatParser.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUICoreWindowRendererSet.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\Build\bin\CEGUISILLYImageCodec.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\SILLY.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\zlib.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\libpng.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\jpeg.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\freetype.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\pcre.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\glew.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\glfw.dll" "$(SolutionDir)Bin" /y
+xcopy "$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\bin\libexpat.dll" "$(SolutionDir)Bin" /y</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>

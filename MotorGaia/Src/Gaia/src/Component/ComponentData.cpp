@@ -41,7 +41,7 @@ const std::string& ComponentData::getName() const
 	return name;
 }
 
-const std::map<std::string, std::string>& ComponentData::getProperties() const
+const std::unordered_map<std::string, std::string>& ComponentData::getProperties() const
 {
 	return properties;
 }

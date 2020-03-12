@@ -32,12 +32,32 @@ void UILayout::setLayout(const std::string& filename)
 	}
 }
 
+void UILayout::setEvent(const std::string& element, const std::string& event)
+{
+	getElement("StaticImage")->getChild(element)->
+		subscribeEvent(InterfaceSystem::GetInstance()->getEvent(event).first, InterfaceSystem::GetInstance()->getEvent(event).second);
+}
+
 void UILayout::handleData(ComponentData* data)
 {
 	for (auto prop : data->getProperties())
 	{
+		std::stringstream ss(prop.second);
+
 		if (prop.first == "layout")
 			setLayout(prop.second);
+		else if (prop.first == "event")
+		{
+			std::string element;
+			std::string event;
+			char c;
+			while (ss >> element >> event)
+			{
+				setEvent(element, event);
+				if (ss)
+					ss >> c;
+			}
+		}
 	}
 }
 

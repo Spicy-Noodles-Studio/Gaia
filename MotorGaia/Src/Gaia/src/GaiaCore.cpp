@@ -1,12 +1,11 @@
 #include "GaiaCore.h"
 
-
 #include "UILayout.h"
 #include "CEGUI/CEGUI.h"
 
-GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
-						renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
-						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
+GaiaCore::GaiaCore() : root(nullptr), win(nullptr),
+renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
+resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
 {
 
 }
@@ -14,12 +13,6 @@ GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
 GaiaCore::~GaiaCore()
 {
 	// Call close before GaiaCore destructor
-}
-
-bool Clicked(const CEGUI::EventArgs& args)
-{
-	printf("clicked!\n");
-	return false;
 }
 
 void GaiaCore::init()
@@ -70,10 +63,6 @@ void GaiaCore::init()
 	sceneManager->init(root, win);
 
 	gTime::GetInstance()->setup();
-
-
-	// test button
-	sceneManager->getCurrentScene()->getGameObjectWithName("Layout")->getComponent<UILayout>()->getElement("StaticImage")->getChild("button")->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&Clicked));
 }
 
 void GaiaCore::run()
@@ -86,16 +75,14 @@ void GaiaCore::run()
 
 		// Pre-process
 		preUpdate(deltaTime);
-		
+
 		// Process
 		update(deltaTime);
 
 		// Post-process
 		postUpdate(deltaTime);
 
-
 		deltaTime = gTime::GetInstance()->getDeltaTime();
-		printf("%f\n", deltaTime);
 	}
 }
 
@@ -140,10 +127,6 @@ void GaiaCore::render(float deltaTime)
 
 void GaiaCore::preUpdate(float deltaTime)
 {
-	// Systems TODO:
-	// RenderSystem (animations)
-	// renderSystem->update(deltaTime);
-
 	// InputSystem
 	inputSystem->update();
 

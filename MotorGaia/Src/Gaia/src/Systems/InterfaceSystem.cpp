@@ -2,6 +2,8 @@
 
 #include <CEGUI/Event.h>
 
+std::map<std::string, UIEvent> InterfaceSystem::events;
+
 InterfaceSystem::InterfaceSystem()
 {
 
@@ -9,7 +11,7 @@ InterfaceSystem::InterfaceSystem()
 
 InterfaceSystem::~InterfaceSystem()
 {
-	
+
 }
 
 void InterfaceSystem::close()
@@ -50,7 +52,7 @@ void InterfaceSystem::setupResources()
 	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
 	// load fonts
-	CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang", 12, true, "batang.ttf", "fonts");
+	CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang", 16, true, "batang.ttf", "fonts");
 }
 
 UIElement* InterfaceSystem::getRoot()
@@ -74,6 +76,13 @@ void InterfaceSystem::init(Window* window)
 	setupResources();
 
 	createRoot();
+
+#ifdef _DEBUG
+	fpsText = root->createChild("TaharezLook/StaticText", "FPSText");
+	fpsText->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
+	fpsText->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
+#endif // _DEBUG
+
 }
 
 void InterfaceSystem::render()
@@ -86,9 +95,36 @@ void InterfaceSystem::render()
 void InterfaceSystem::update(float deltaTime)
 {
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectTimePulse(deltaTime);
+
+#ifdef _DEBUG
+	fpsText->setText("FPS: " + std::to_string((int)(1.0 / deltaTime)));
+#endif // DEBUG
 }
 
 UIElement* InterfaceSystem::loadLayout(const std::string& filename)
 {
 	return CEGUI::WindowManager::getSingleton().loadLayoutFromFile(filename);
 }
+
+void InterfaceSystem::registerEvent(const std::string& eventName, UIEvent event)
+{
+	if (events.find(eventName) != events.end())
+	{
+		printf("INTERFACE SYSTEM: Error registering event %s\n", eventName.c_str());
+		return;
+	}
+
+	events[eventName] = event;
+}
+
+UIEvent InterfaceSystem::getEvent(const std::string& eventName)
+{
+	if (events.find(eventName) == events.end())
+	{
+		printf("INTERFACE SYSTEM: Event %s not found\n", eventName.c_str());
+		return UIEvent("",nullptr);
+	}
+
+	return events[eventName];
+}
+

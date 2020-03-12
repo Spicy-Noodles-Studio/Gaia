@@ -20,7 +20,7 @@
                     "ComponentName": "Light",
                     "ComponentProperties": {
                         "type": "Point",
-                        "colour": "0.7 0.1 0.7"
+                        "colour": "1 1 1"
                     }
                 },
                 {
@@ -82,7 +82,8 @@
                 {
                     "ComponentName": "UILayout",
                     "ComponentProperties": {
-                        "layout": "TaharezLookOverview.layout"
+                        "layout" : "TaharezLookOverview.layout",
+                        "event" : "button clickevent | slider volumeEvent"
                     }
                 }
             ]

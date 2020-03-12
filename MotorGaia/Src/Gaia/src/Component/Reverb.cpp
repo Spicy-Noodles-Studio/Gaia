@@ -16,7 +16,6 @@ Reverb::Reverb(GameObject* gameObject) : GaiaComponent(gameObject)
 	reverb->setActive(active);
 	reverb->setProperties(&reverbProperties);
 
-	//SoundSystem::GetInstance()->createReverb(reverb);
 }
 
 Reverb::~Reverb()

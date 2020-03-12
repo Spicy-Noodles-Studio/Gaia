@@ -42,17 +42,24 @@ void SoundSystem::init()
 
 	std::cout << "\nSound system started" << "\n";
 
-	createSounds(".//Assets//Sounds//sounds.asset");
+	createSounds(".//Assets//Files//sounds.asset");
 
-	emitters = new std::vector<SoundEmitter*>();
 }
 
 void SoundSystem::close()
 {
-	system->close();
+	for (auto sound : sounds) {
+		sound.second->release();
+		sound.second = nullptr;
+	}
+	sounds.clear();
 
-	// falta eliminar cosas**
+	system->close();
+	system->release();
+
+	destroy();
 }
+
 
 bool SoundSystem::createSounds(const std::string filename)
 {
@@ -82,7 +89,7 @@ bool SoundSystem::createSounds(const std::string filename)
 	int i = 0;
 	while (std::getline(stream, line)) {
 
-		// Lectura de línea
+		// Lectura de lï¿½nea
 		std::istringstream iss(line);
 		iss >> soundfile_name;
 		iss >> sound_name;
@@ -175,36 +182,42 @@ void SoundSystem::setGeneralVolume(float volume)
 	master->setVolume(volume);
 }
 
-void SoundSystem::setListenerAttributes(const Vector3& position, const Vector3& Forward, const Vector3& Up)
+void SoundSystem::setListenerAttributes(const Vector3& position, const Vector3& forward, const Vector3& up)
 {
-	FMOD_VECTOR pos, vel, forward, up;
+	FMOD_VECTOR pos, vel, forwardTmp, upTmp;
 	pos = { float(position.x) ,float(position.y) ,float(position.z) };
 	vel = { 0,0,0 };
-	forward = { float(Forward.x) ,float(Forward.y) ,float(Forward.z) };
-	up = { float(Up.x) ,float(Up.y) ,float(Up.z) };
-	system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
+	forwardTmp = { float(forward.x) ,float(forward.y) ,float(forward.z) };
+	upTmp = { float(up.x) ,float(up.y) ,float(up.z) };
+	system->set3DListenerAttributes(0, &pos, &vel, &forwardTmp, &upTmp);
 
 }
 
 void SoundSystem::initListener(SoundListener* listener)
 {
-	_listener = listener;
+	if (this->listener == nullptr)
+		this->listener = listener;
 }
 
 void SoundSystem::addEmitter(SoundEmitter* emitter)
 {
-	emitters->push_back(emitter);
+	emitters.push_back(emitter);
+}
+
+void SoundSystem::removeEmitter(SoundEmitter* emitter)
+{
+	auto it = std::find(emitters.begin(), emitters.end(), emitter);
+	if (it != emitters.end())
+		emitters.erase(it);
 }
 
 void SoundSystem::update(float deltaTime)
 {
-	if(_listener != nullptr)
-		_listener->update(deltaTime);
+	if(listener != nullptr)
+		listener->update(deltaTime);
 
-	for (int i = 0; i < emitters->size(); i++)
-	{
-		emitters->at(i)->update();
-	}
+	for (int i = 0; i < emitters.size(); i++)
+		emitters[i]->update();
 
 	result = system->update();
 	ERRCHECK(result);

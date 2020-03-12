@@ -17,19 +17,31 @@ MeshRenderer::~MeshRenderer()
 	entities.clear();
 }
 
+Ogre::Entity* MeshRenderer::getMesh(std::string mesh)
+{
+	return entities[mesh];
+}
+
 void MeshRenderer::setMesh(const std::string& id, const std::string& mesh)
 {
 	if (entities.find(id) == entities.end())
-	{
 		entities[id] = gameObject->getScene()->createEntity(mesh);
-		gameObject->node->attachObject(entities[id]);
-	}
 }
 
 void MeshRenderer::setMaterial(const std::string& id, const std::string& material)
 {
 	if (entities.find(id) != entities.end())
 		entities[id]->setMaterialName(material);
+}
+
+void MeshRenderer::attachEntityToNode(const std::string& mesh)
+{
+	gameObject->node->attachObject(entities[mesh]);
+}
+
+void MeshRenderer::attachEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh)
+{
+	entities[owner]->attachObjectToBone(bone, entities[mesh]);
 }
 
 void MeshRenderer::setVisible(bool visible)
@@ -44,14 +56,18 @@ bool MeshRenderer::isVisible()
 
 void MeshRenderer::handleData(ComponentData* data)
 {
-	for (auto prop : data->getProperties()) {
+	for (auto prop : data->getProperties())
+	{
 		std::stringstream ss(prop.second);
 
-		if (prop.first == "mesh") {
+		if (prop.first == "mesh")
+		{
 			std::string id, name; ss >> id >> name;
 			setMesh(id, name);
+			attachEntityToNode(id);
 		}
-		else if (prop.first == "material") {
+		else if (prop.first == "material")
+		{
 			std::string id, name; ss >> id >> name;
 			setMaterial(id, name);
 		}

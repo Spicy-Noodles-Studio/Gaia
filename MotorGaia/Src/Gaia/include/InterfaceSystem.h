@@ -19,8 +19,6 @@ private:
 
 	void setupResources();
 
-	bool clicked(const CEGUI::EventArgs& args);
-
 public:
 	InterfaceSystem();
 	~InterfaceSystem();

@@ -16,10 +16,7 @@ class InputSystem : public Singleton<InputSystem>
 {
 #define MAX_CONTROLLERS 4
 
-private:
-
-    
-
+private:  
     // KEYBOARD
     const Uint8* keyboardState; // Stores current keyboard state
 
@@ -105,7 +102,7 @@ private:
 
 public:
 
-    // está feo...
+    // estï¿½ feo...
     bool exit = false;
 
     void init();

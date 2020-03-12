@@ -1,9 +1,9 @@
 #include "GaiaCore.h"
 
 
-GaiaCore::GaiaCore() : root(nullptr), win(nullptr),
-	renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr),
-	resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
+GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
+						renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
+						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
 {
 
 }
@@ -59,7 +59,6 @@ void GaiaCore::init()
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
 	sceneManager->init(root, win);
-
 }
 
 void GaiaCore::run()
@@ -72,7 +71,7 @@ void GaiaCore::run()
 
 		// Pre-process
 		preUpdate(deltaTime);
-
+		
 		// Process
 		update(deltaTime);
 
@@ -83,23 +82,24 @@ void GaiaCore::run()
 
 void GaiaCore::close()
 {
-	// SceneManager termination
-	sceneManager->close();
-	// ComponentManager termination
-	componentManager->close();
 	// ResourcesManager termination
 	resourcesManager.close();
+	// ComponentManager termination
+	componentManager->close();
+	// SceneManager termination
+	sceneManager->close();
 
 	//Systems termination
-	soundSystem->close();
-	physicsSystem->close();
-	interfaceSystem->close();
-	inputSystem->close();
 	renderSystem->close();
+	inputSystem->close();
+	interfaceSystem->close();
+	physicsSystem->close();
+	soundSystem->close();
 
 	if (win != nullptr)
 		delete win;
 	win = nullptr;
+
 	if (root != nullptr)
 		delete root;
 	root = nullptr;
@@ -109,6 +109,12 @@ void GaiaCore::render(float deltaTime)
 {
 	// RenderSystem
 	renderSystem->render(deltaTime);
+
+	// PhysicsSystem
+#ifdef _DEBUG
+	physicsSystem->render();
+#endif
+
 	// InterfaceSystem
 	interfaceSystem->render();
 }
@@ -119,11 +125,11 @@ void GaiaCore::preUpdate(float deltaTime)
 	// RenderSystem (animations)
 	// renderSystem->update(deltaTime);
 
-	// InterfaceSystem
-	interfaceSystem->update(deltaTime);
-
 	// InputSystem
 	inputSystem->update();
+
+	// InterfaceSystem
+	interfaceSystem->update(deltaTime);
 
 	// PhysicsSystem
 	physicsSystem->update();
@@ -131,7 +137,7 @@ void GaiaCore::preUpdate(float deltaTime)
 	// SoundSystem
 	soundSystem->update(deltaTime);
 
-	// Managers
+	// Managers (escena)
 	sceneManager->preUpdate(deltaTime);
 }
 

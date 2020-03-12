@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef GAIA_CORE_H
 #define GAIA_CORE_H
 
@@ -15,8 +14,8 @@
 #include "RenderSystem.h"
 #include "InputSystem.h"
 #include "InterfaceSystem.h"
-#include "SoundSystem.h"
 #include "PhysicsSystem.h"
+#include "SoundSystem.h"
 
 #include "ResourcesManager.h"
 #include "ComponentManager.h"

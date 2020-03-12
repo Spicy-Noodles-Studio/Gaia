@@ -9,7 +9,6 @@
 #include "ComponentManager.h"
 #include "UserComponent.h"
 #include "Transform.h"
-#include "UserComponent.h"
 
 class Scene;
 
@@ -48,12 +47,20 @@ public:
     /* Remove child from parent */
     void removeChild(GameObject* child);
     
-	void addChildNode(GameObject* child);
     const std::string& getName() const;
     const std::string& getTag() const;
     Scene* getScene() const;
 
     void setActive(bool active);
+
+	void onCollisionEnter(GameObject* other);
+	void onTriggerEnter(GameObject* other);
+
+	void onCollisionStay(GameObject* other);
+	void onTriggerStay(GameObject* other);
+
+	void onCollisionExit(GameObject* other);
+	void onTriggerExit(GameObject* other);
 
 private:
     void addUserComponent(UserComponent* component);
@@ -63,27 +70,17 @@ public:
 	Ogre::SceneNode* node = nullptr;
 	Transform* transform = nullptr;
 
-    void onCollisionEnter(GameObject* other);
-    void onTriggerEnter(GameObject* other);
-
-    void onCollisionStay(GameObject* other);
-    void onTriggerStay(GameObject* other);
-
-    void onCollisionExit(GameObject* other);
-    void onTriggerExit(GameObject* other);
-
 private: 
     std::string name;
     std::string tag;
 
-    GameObject* parent;
+    GameObject* parent = nullptr;
     std::vector<GameObject*> children;
 
-    Scene* myScene;
+    Scene* myScene = nullptr;
     std::map<std::string, Component*> components;
     std::vector<UserComponent*> userComponents;
 };
-
 
 template<typename T>
 T* GameObject::addComponent() {
@@ -103,7 +100,6 @@ T* GameObject::addComponent() {
     return (T*)components[key];
 }
 
-
 template<typename T>
 bool GameObject::delComponent() {
     const std::string key = ComponentManager::GetInstance()->getID<T>();
@@ -117,7 +113,6 @@ bool GameObject::delComponent() {
 
     return true;
 }
-
 
 template<typename T>
 T* GameObject::getComponent() {

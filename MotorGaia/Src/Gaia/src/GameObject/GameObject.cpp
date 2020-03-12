@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "Scene.h"
 
-GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene), parent(nullptr)
+GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene)
 {
 	node = scene->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 }
@@ -84,12 +84,6 @@ void GameObject::removeChild(GameObject* child)
     // SceneNode stuff
     node->removeChild(child->node);
     node->getCreator()->getRootSceneNode()->addChild(child->node);
-}
-
-void GameObject::addChildNode(GameObject* child)
-{
-	if (node != nullptr)
-		node->addChild(child->node);
 }
 
 const std::string& GameObject::getName() const

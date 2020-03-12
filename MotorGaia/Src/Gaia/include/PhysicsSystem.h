@@ -23,7 +23,7 @@ enum Col_Filters
 {
 	NONE = -1,
 	DEFAULT = (1 << 0),
-	ALL = (1<<15)
+	ALL = (1 << 15)
 };
 
 class PhysicsSystem : public Singleton<PhysicsSystem> 
@@ -33,6 +33,7 @@ public:
 	~PhysicsSystem();
 
 	void init();
+	void render();
 	void update();
 	void close();
 

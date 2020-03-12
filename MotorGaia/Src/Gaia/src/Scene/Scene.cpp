@@ -1,5 +1,4 @@
 #include "Scene.h"
-
 #include "PhysicsSystem.h"
 
 Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager()), mainCamera(nullptr)
@@ -7,7 +6,6 @@ Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), 
 	debugDrawer = new DebugDrawer(sceneManager);
 	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
 }
-
 
 Scene::~Scene()
 {
@@ -28,11 +26,12 @@ Scene::~Scene()
 	sceneManager->clearScene();
 	root->destroySceneManager(sceneManager);
 
-	delete debugDrawer;
-
 	mainCamera = nullptr;
-}
 
+	animationSets.clear();
+
+	delete debugDrawer;
+}
 
 void Scene::awake()
 {
@@ -45,7 +44,6 @@ void Scene::awake()
 	}
 }
 
-
 void Scene::start()
 {
 	// start components
@@ -57,7 +55,6 @@ void Scene::start()
 	}
 }
 
-
 void Scene::preUpdate(float deltaTime)
 {
 	//Preupdate components
@@ -68,7 +65,6 @@ void Scene::preUpdate(float deltaTime)
 
 }
 
-
 void Scene::update(float deltaTime)
 {
 	// update components
@@ -77,7 +73,6 @@ void Scene::update(float deltaTime)
 			c->update(deltaTime);
 	}
 }
-
 
 void Scene::postUpdate(float deltaTime)
 {
@@ -88,6 +83,62 @@ void Scene::postUpdate(float deltaTime)
 	}
 }
 
+const std::string& Scene::getName()
+{
+	return name;
+}
+
+Ogre::SceneManager* Scene::getSceneManager() const
+{
+	return sceneManager;
+}
+
+Ogre::Entity* Scene::createEntity(const std::string& name)
+{
+	return sceneManager->createEntity(name);
+}
+
+GameObject* Scene::getGameObjectWithName(const std::string& name)
+{
+	for (auto g : sceneObjects) {
+		if (g->getName() == name)
+			return g;
+	}
+	return nullptr;
+}
+
+std::vector<GameObject*> Scene::getGameObjectsWithTag(const std::string& tag)
+{
+	std::vector<GameObject*> result;
+
+	for (auto g : sceneObjects) {
+		if (g->getTag() == tag) {
+			result.push_back(g);
+		}
+	}
+
+	return result;
+}
+
+void Scene::setMainCamera(Camera* camera)
+{
+	mainCamera = camera;
+}
+
+Camera* Scene::getMainCamera() const
+{
+	return mainCamera;
+}
+
+void Scene::addAnimationSet(const std::string& id, Ogre::AnimationStateSet* anims)
+{
+	animationSets[id] = anims;
+}
+
+void Scene::addUserComponent(UserComponent* component)
+{
+	userComponents.push_back(component);
+}
 
 bool Scene::addGameObject(GameObject* gameObject)
 {
@@ -109,38 +160,23 @@ bool Scene::addGameObject(GameObject* gameObject)
 	return true;
 }
 
-
-GameObject* Scene::getGameObjectWithName(const std::string& name)
+void Scene::destroyPendingGameObjects()
 {
-	for (auto g : sceneObjects) {
-		if (g->getName() == name)
-			return g;
+	if (!destroyQueue.size()) return;
+
+	for (GameObject* g : destroyQueue) {
+		// Sacarlo de almacenamiento
+		std::vector<GameObject*>::iterator it = std::find(sceneObjects.begin(), sceneObjects.end(), g);
+		sceneObjects.erase(it);
+		delete g;
+		g = nullptr;
 	}
-	return nullptr;
+	destroyQueue.clear();
 }
 
-
-std::vector<GameObject*> Scene::getGameObjectsWithTag(const std::string& tag)
+void Scene::destroyGameObject(GameObject* gameObject)
 {
-	std::vector<GameObject*> result;
-	
-	for (auto g : sceneObjects) {
-		if (g->getTag() == tag) {
-			result.push_back(g);
-		}
-	}
-
-	return result;
-}
-
-void Scene::setMainCamera(Camera* camera)
-{
-	mainCamera = camera;
-}
-
-Camera* Scene::getMainCamera() const
-{
-	return mainCamera;
+	destroyQueue.push_back(gameObject);
 }
 
 void Scene::instantiate(GameObject* gameObject)
@@ -162,50 +198,12 @@ void Scene::instantiatePendingGameObjects()
 	instantiateQueue.clear();
 }
 
-void Scene::destroyPendingGameObjects()
-{
-	if (!destroyQueue.size()) return;
-
-	for (GameObject* g : destroyQueue) {
-		// Sacarlo de almacenamiento
-		std::vector<GameObject*>::iterator it = std::find(sceneObjects.begin(), sceneObjects.end(), g);
-		sceneObjects.erase(it);
-		delete g;
-		g = nullptr;
-	}
-	destroyQueue.clear();
-}
-
-void Scene::destroyGameObject(GameObject* gameObject)
-{
-	destroyQueue.push_back(gameObject);
-}
 
 void Scene::updateAllAnimations(float deltaTime)
 {
-	for (auto anim : sceneManager->getAnimationStates()) 
+	for (auto set : animationSets)
 	{
-		anim.second->addTime(deltaTime);
+		for (auto anim : set.second->getEnabledAnimationStates())
+			anim->addTime(deltaTime);
 	}
-}
-
-void Scene::addUserComponent(UserComponent* component)
-{
-	userComponents.push_back(component);
-}
-
-
-const std::string& Scene::getName()
-{
-	return name;
-}
-
-Ogre::SceneManager* Scene::getSceneManager() const
-{
-	return sceneManager;
-}
-
-Ogre::Entity* Scene::createEntity(const std::string& name)
-{
-	return sceneManager->createEntity(name);
 }

@@ -1,8 +1,11 @@
 #include "ParticleEmitter.h"
+#include "Scene.h"
+#include <OgreSceneNode.h>
 
-ParticleEmitter::ParticleEmitter(GameObject* gameObject, Ogre::SceneManager* manager) : GaiaComponent(gameObject)
+ParticleEmitter::ParticleEmitter(GameObject* gameObject) : GaiaComponent(gameObject)
 {
-	sm = manager;
+	sm = gameObject->getScene()->getSceneManager();
+	go = gameObject;
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -11,13 +14,16 @@ ParticleEmitter::~ParticleEmitter()
 	sm = nullptr;
 	delete ps;
 	ps = nullptr;
+	delete go;
+	go = nullptr;
 
 }
 
-void ParticleEmitter::newEmitter(Ogre::String source)
+void ParticleEmitter::newEmitter(std::string name,std::string source)
 {
-	ps = sm->createParticleSystem();
+	ps = sm->createParticleSystem(name,source);
 	ps->setMaterialName(source);
+	go->node->attachObject(ps);
 	ps->setEmitting(false);
 }
 

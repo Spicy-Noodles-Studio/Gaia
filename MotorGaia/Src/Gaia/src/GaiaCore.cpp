@@ -69,14 +69,17 @@ void GaiaCore::init()
 	sceneManager = SceneManager::GetInstance();
 	sceneManager->init(root, win);
 
+	gTime::GetInstance()->setup();
 
+
+	// test button
 	sceneManager->getCurrentScene()->getGameObjectWithName("Layout")->getComponent<UILayout>()->getElement("StaticImage")->getChild("button")->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&Clicked));
 }
 
 void GaiaCore::run()
 {
 	bool exit = false;
-	float deltaTime = 1.f / 60.f;
+	float deltaTime = gTime::GetInstance()->getDeltaTime();
 	while (!inputSystem->getKeyPress("Escape") && !inputSystem->exit) {
 		// Render
 		render(deltaTime);
@@ -89,6 +92,10 @@ void GaiaCore::run()
 
 		// Post-process
 		postUpdate(deltaTime);
+
+
+		deltaTime = gTime::GetInstance()->getDeltaTime();
+		printf("%f\n", deltaTime);
 	}
 }
 
@@ -144,7 +151,7 @@ void GaiaCore::preUpdate(float deltaTime)
 	interfaceSystem->update(deltaTime);
 
 	// PhysicsSystem
-	physicsSystem->update();
+	physicsSystem->update(deltaTime);
 
 	// SoundSystem
 	soundSystem->update(deltaTime);

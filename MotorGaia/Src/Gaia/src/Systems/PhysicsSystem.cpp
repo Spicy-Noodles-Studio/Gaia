@@ -37,6 +37,8 @@ void PhysicsSystem::init()
 
 	dynamicsWorld->setGravity(btVector3(0, -10, 0));
 
+	time = 0;
+
 	///-----initialization_end-----
 }
 
@@ -45,10 +47,15 @@ void PhysicsSystem::render()
 	dynamicsWorld->debugDrawWorld();
 }
 
-void PhysicsSystem::update()
+void PhysicsSystem::update(float deltaTime)
 {
-	dynamicsWorld->stepSimulation(1.0f / 50.0f, 10);
-	checkCollisions();
+	time += deltaTime;
+	while (time >= 1.0f / 50.0f)
+	{
+		dynamicsWorld->stepSimulation(1.0f / 50.0f, 10);
+		checkCollisions();
+		time -= 1.0f / 50.0f;
+	}
 }
 
 void PhysicsSystem::close()

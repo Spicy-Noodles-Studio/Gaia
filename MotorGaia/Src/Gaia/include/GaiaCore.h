@@ -21,6 +21,8 @@
 #include "ComponentManager.h"
 #include "SceneManager.h"
 
+#include "gTime.h"
+
 class GAIA_API GaiaCore
 {
 public:

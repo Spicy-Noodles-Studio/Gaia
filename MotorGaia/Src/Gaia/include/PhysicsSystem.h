@@ -34,7 +34,7 @@ public:
 
 	void init();
 	void render();
-	void update();
+	void update(float deltaTime);
 	void close();
 
 	void clearWorld();
@@ -64,6 +64,9 @@ private:
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
 	std::map<std::pair<RigidBody*, RigidBody*>, bool> contacts;
+
+
+	float time;
 };
 
 #endif

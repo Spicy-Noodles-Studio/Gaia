@@ -24,6 +24,8 @@ private:
     std::set<std::string> keyHold; // Stores SDL_KEYDOWN events from current frame
     std::set<std::string> keyRelease; // Stores SDL_KEYUP events from current frame
 
+
+
     // MOUSE
     int MOUSE_POSITION_X;
     int MOUSE_POSITION_Y;
@@ -87,9 +89,6 @@ private:
 
     void controllerInputDown(int index);
     void controllerInputUp(int index);
-    
-    
-
 
     // UTILS
     bool flags = true;

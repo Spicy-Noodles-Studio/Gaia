@@ -1,6 +1,9 @@
 #include "GaiaCore.h"
 
 
+#include "UILayout.h"
+#include "CEGUI/CEGUI.h"
+
 GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
 						renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
 						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
@@ -11,6 +14,12 @@ GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
 GaiaCore::~GaiaCore()
 {
 	// Call close before GaiaCore destructor
+}
+
+bool Clicked(const CEGUI::EventArgs& args)
+{
+	printf("clicked!\n");
+	return false;
 }
 
 void GaiaCore::init()
@@ -59,13 +68,16 @@ void GaiaCore::init()
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
 	sceneManager->init(root, win);
+
+
+	sceneManager->getCurrentScene()->getGameObjectWithName("Layout")->getComponent<UILayout>()->getElement("StaticImage")->getChild("button")->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&Clicked));
 }
 
 void GaiaCore::run()
 {
 	bool exit = false;
 	float deltaTime = 1.f / 60.f;
-	while (!inputSystem->getKeyPress("Escape")) {
+	while (!inputSystem->getKeyPress("Escape") && !inputSystem->exit) {
 		// Render
 		render(deltaTime);
 

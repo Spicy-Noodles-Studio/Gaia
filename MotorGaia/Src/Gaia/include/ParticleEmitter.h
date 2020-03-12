@@ -1,30 +1,24 @@
 #pragma once
-#ifndef PARTICLEEMITTER_H
-#define PARTICLEEMITTER_H
-
-#include <Ogre.h>
+#ifndef PARTICLE_EMITTER_H
+#define PARTICLE_EMITTER_H
 
 #include "GaiaComponent.h"
 #include <OgreParticleSystem.h>
-#include <OgreSceneManager.h>
-#include <RenderSystem.h>
-#include "GameObject.h"
 
 
-
-class ParticleEmitter : public GaiaComponent, public RenderSystem
+class ParticleEmitter : public GaiaComponent
 {
 private:
-	Ogre::ParticleSystem* ps = nullptr;
-	Ogre::SceneManager* sm = nullptr;
-	GameObject* go = nullptr;
+	Ogre::ParticleSystem* particleSystem = nullptr;
 
 public:
 	ParticleEmitter(GameObject* gameObject);
 	~ParticleEmitter();
-	void newEmitter(std::string name,std::string source);
+	void newEmitter(const std::string& source);
 	void start();
 	void stop();
+
+	virtual void handleData(ComponentData* data);
 };
 
 #endif

@@ -32,5 +32,5 @@ void GaiaMotionState::setWorldTransform(const btTransform& worldTrans)
 	btQuaternion rot = worldTrans.getRotation();
 	transform->setOrientation({ rot.w(), rot.x(), rot.y(), rot.z() });
 	btVector3 pos = worldTrans.getOrigin();
-	transform->setPosition(pos.x()-offset.x, pos.y()-offset.y, pos.z()-offset.z);
+	transform->setWorldPosition({ pos.x() - offset.x, pos.y() - offset.y, pos.z() - offset.z });
 }

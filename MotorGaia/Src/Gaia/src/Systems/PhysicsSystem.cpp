@@ -175,7 +175,7 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 {
 	btTransform t;
 	t.setIdentity();
-	t.setOrigin({ btScalar(transform->getPosition().x), btScalar(transform->getPosition().y), btScalar(transform->getPosition().z) });
+	t.setOrigin({ btScalar(transform->getWorldPosition().x), btScalar(transform->getWorldPosition().y), btScalar(transform->getWorldPosition().z) });
 	t.setRotation(btQuaternion(btScalar(transform->getRotation().y) * SIMD_RADS_PER_DEG, btScalar(transform->getRotation().x) * SIMD_RADS_PER_DEG, btScalar(transform->getRotation().z) * SIMD_RADS_PER_DEG));
 	return t;
 }

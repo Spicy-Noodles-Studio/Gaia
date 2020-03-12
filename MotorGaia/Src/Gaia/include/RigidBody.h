@@ -27,7 +27,7 @@ public:
 	RigidBody(GameObject* gameObject);
 	~RigidBody();
 
-	void setRigidBody(float mass, RB_Shape shape, bool kinematic = false, const Vector3& offset = { 0.0f, 0.0f, 0.0f }, const Vector3& dim = { 1,1,1 }, bool isTrigger = false, uint16_t myGroup = DEFAULT, uint16_t collidesWith = ALL);
+	void setRigidBody(float mass, RB_Shape shape, const Vector3& offset = { 0.0f, 0.0f, 0.0f }, const Vector3& dim = { 1,1,1 }, uint16_t myGroup = DEFAULT, uint16_t collidesWith = ALL);
 	void handleData(ComponentData* data);
 
 	void addForce(const Vector3 &force, Vector3 relPos = { 0.0f, 0.0f, 0.0f });
@@ -42,16 +42,20 @@ public:
 	void setFriction(float friction);
 	void setRestitution(float restitution);
 
+	void setTrigger(bool trigger);
+	void setKinematic(bool kinematic);
+	void setStatic(bool stat);
+
 	virtual void setActive(bool active);
 	void multiplyScale(const Vector3& scale);
 	void setTransform();
 
+	void addChild(const RigidBody* rb);
+	void lookParent() const;
+
 	bool isTrigger() const;
 	bool isKinematic() const;
 	bool isStatic() const;
-
-	void addChild(const RigidBody* rb);
-	void lookParent() const;
 
 	float getLinearDamping() const;
 	float getFriction() const;

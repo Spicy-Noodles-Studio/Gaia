@@ -85,6 +85,46 @@ void Transform::setOrientation(const Ogre::Quaternion& rot)
 	gameObject->node->setOrientation(rot);
 }
 
+void Transform::setWorldPosition(const Vector3& pos)
+{
+	Vector3 worldPos = pos;
+	GameObject* parent = gameObject->getParent();
+	if (parent != nullptr) {
+		worldPos -= parent->transform->getWorldPosition();
+		worldPos /= parent->transform->getWorldScale();
+	}
+	setPosition(worldPos);
+}
+
+void Transform::setWorldScale(const Vector3& scale)
+{
+	Vector3 worldScale = scale;
+	GameObject* parent = gameObject->getParent();
+	if (parent != nullptr)
+		worldScale /= parent->transform->getWorldScale();
+	setScale(worldScale);
+}
+
+const Vector3& Transform::getWorldPosition() const
+{
+	Vector3 worldPos = position;
+	GameObject* parent = gameObject->getParent();
+	if (parent != nullptr) {
+		worldPos *= parent->transform->getWorldScale();
+		worldPos += parent->transform->getWorldPosition();
+	}
+	return worldPos;
+}
+
+const Vector3& Transform::getWorldScale() const
+{
+	Vector3 worldScale = scale;
+	GameObject* parent = gameObject->getParent();
+	if (parent != nullptr)
+		worldScale = worldScale * parent->transform->getWorldScale();
+	return worldScale;
+}
+
 const Vector3& Transform::getPosition() const
 {
 	return position;

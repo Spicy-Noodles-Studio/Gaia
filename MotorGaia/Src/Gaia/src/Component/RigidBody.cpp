@@ -7,6 +7,7 @@
 #include "ComponentData.h"
 #include "PhysicsSystem.h"
 #include "ComponentData.h"
+#include "..\..\include\RigidBody.h"
 
 Vector3 RigidBody::btScaleConversion = { 50,50,50 };
 
@@ -20,11 +21,10 @@ RigidBody::~RigidBody()
 	PhysicsSystem::GetInstance()->deleteRigidBody(body);
 }
 
-void RigidBody::setRigidBody(float mass, RB_Shape shape, bool kinematic, const Vector3& offset, const Vector3& dim, bool isT, uint16_t myGroup, uint16_t collidesWith)
+void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, const Vector3& dim, uint16_t myGroup, uint16_t collidesWith)
 {
 	motionState = new GaiaMotionState(gameObject->transform, offset);
-	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getScale() * dim * btScaleConversion, myGroup, collidesWith);
-	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_NO_CONTACT_RESPONSE * isT) | (body->CF_KINEMATIC_OBJECT * kinematic));
+	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getWorldScale() * dim * btScaleConversion, myGroup, collidesWith);
 	body->setUserPointer(this);
 }
 
@@ -62,38 +62,9 @@ void RigidBody::handleData(ComponentData* data)
 			ss >> kinematic;
 		}
 	}
-	setRigidBody(mass, shape, kinematic, off, dim, isTrigger);
-}
-
-bool RigidBody::isTrigger() const
-{
-	return (body->getCollisionFlags() & body->CF_NO_CONTACT_RESPONSE) != 0;
-}
-
-bool RigidBody::isKinematic() const
-{
-	return body->isKinematicObject();
-}
-
-bool RigidBody::isStatic() const
-{
-	return body->isStaticObject();
-}
-
-void RigidBody::addChild(const RigidBody* rb)
-{
-	btTransform t = rb->body->getWorldTransform();
-	t.setOrigin(body->getWorldTransform().getOrigin() + t.getOrigin());
-	((btCompoundShape*)body->getCollisionShape())->addChildShape(t, rb->body->getCollisionShape());
-}
-
-void RigidBody::lookParent() const
-{
-	if (gameObject->getParent() != nullptr) {
-		RigidBody* parentRB = gameObject->getParent()->getComponent<RigidBody>();
-		if (parentRB != nullptr)
-			parentRB->addChild(this);
-	}
+	setRigidBody(mass, shape, off, dim);
+	setKinematic(kinematic);
+	setTrigger(isTrigger);
 }
 
 void RigidBody::addForce(const Vector3& force, Vector3 relPos)
@@ -166,6 +137,21 @@ void RigidBody::setRestitution(float restitution)
 	body->setRestitution(restitution);
 }
 
+void RigidBody::setTrigger(bool trigger)
+{
+	body->setCollisionFlags(body->getCollisionFlags() & (body->CF_NO_CONTACT_RESPONSE * trigger));
+}
+
+void RigidBody::setKinematic(bool kinematic)
+{
+	body->setCollisionFlags(body->getCollisionFlags() & (body->CF_KINEMATIC_OBJECT * kinematic));
+}
+
+void RigidBody::setStatic(bool stat)
+{
+	body->setCollisionFlags(body->getCollisionFlags() & (body->CF_STATIC_OBJECT * stat));
+}
+
 void RigidBody::setActive(bool active)
 {
 	Component::setActive(active);
@@ -185,6 +171,36 @@ void RigidBody::setTransform()
 	body->getMotionState()->getWorldTransform(body->getWorldTransform());
 }
 
+void RigidBody::addChild(const RigidBody* rb)
+{
+	btTransform t = rb->body->getWorldTransform();
+	t.setOrigin(body->getWorldTransform().getOrigin() + t.getOrigin());
+	((btCompoundShape*)body->getCollisionShape())->addChildShape(t, rb->body->getCollisionShape());
+}
+
+void RigidBody::lookParent() const
+{
+	if (gameObject->getParent() != nullptr) {
+		RigidBody* parentRB = gameObject->getParent()->getComponent<RigidBody>();
+		if (parentRB != nullptr)
+			parentRB->addChild(this);
+	}
+}
+
+bool RigidBody::isTrigger() const
+{
+	return (body->getCollisionFlags() & body->CF_NO_CONTACT_RESPONSE) != 0;
+}
+
+bool RigidBody::isKinematic() const
+{
+	return body->isKinematicObject();
+}
+
+bool RigidBody::isStatic() const
+{
+	return body->isStaticObject();
+}
 
 float RigidBody::getLinearDamping() const
 {

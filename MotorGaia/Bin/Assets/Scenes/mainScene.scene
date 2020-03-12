@@ -50,8 +50,9 @@
                         {
                             "ComponentName": "Transform",
                             "ComponentProperties":{
-                                "position" : "-150 0 0",
-                                "scale" : "1 1 1"
+                                "position" : "-150 0 -400",
+                                "scale" : "1 1 1",
+                                "rotation" : " 0 0 0"
                             }
                         }
                     ]
@@ -68,7 +69,7 @@
                 {
                     "ComponentName": "Transform",
                     "ComponentProperties": {
-                        "position" : "200 0 -400"
+                        "position" : "150 0 -800"
                     }
                 }
             ]

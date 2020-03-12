@@ -39,7 +39,7 @@ public:
 
 private:
 	Scene* createScene(const SceneData* data);
-	GameObject* createGameObject(const GameObjectData* data, Scene* scene);
+	GameObject* createGameObject(const GameObjectData* data, Scene* scene, GameObject* parent = nullptr);
 
 	void loadScene(const SceneData* data);
 

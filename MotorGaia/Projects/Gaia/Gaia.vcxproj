@@ -35,6 +35,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtilities.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Reverb.h" />
     <ClInclude Include="..\..\Src\Gaia\include\OgreBulletUtils.h" />

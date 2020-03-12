@@ -147,7 +147,7 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
-	dynamicsWorld->addRigidBody(body);
+	dynamicsWorld->addRigidBody(body, myGroup, mask);
 
 	return body;
 }

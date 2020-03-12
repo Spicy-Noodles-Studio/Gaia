@@ -2,29 +2,17 @@
 #ifndef PHYSICS_SYSTEM_H
 #define PHYSICS_SYSTEM_H
 
-#include "btBulletDynamicsCommon.h"
+#include <btBulletDynamicsCommon.h>
 #include <map>
 
 #include "Vector3.h"
 #include "Singleton.h"
-#include"DebugDrawer.h"
+#include "DebugDrawer.h"
+#include "PhysicsUtilities.h"
 
 class Transform;
 class GaiaMotionState;
 class RigidBody;
-
-enum RB_Shape
-{
-	BOX_RB_SHAPE, SPHERE_RB_SHAPE
-};
-
-//Potencias de 2 hasta 2^15
-enum Col_Filters
-{
-	NONE = -1,
-	DEFAULT = (1 << 0),
-	ALL = (1 << 15)
-};
 
 class PhysicsSystem : public Singleton<PhysicsSystem> 
 {

@@ -1,6 +1,7 @@
 #include "Vector3.h"
 
 #include<cmath>
+#include <btBulletDynamicsCommon.h>
 
 Vector3::Vector3()
 {

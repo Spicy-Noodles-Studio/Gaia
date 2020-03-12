@@ -1,12 +1,16 @@
 #include "RigidBody.h"
-#include "btBulletDynamicsCommon.h"
+
+#include <btBulletDynamicsCommon.h>
+
 #include "GameObject.h"
 #include "GaiaMotionState.h"
+#include "ComponentData.h"
+#include "PhysicsSystem.h"
 #include "ComponentData.h"
 
 Vector3 RigidBody::btScaleConversion = { 50,50,50 };
 
-RigidBody::RigidBody(GameObject* gameObject) : GaiaComponent(gameObject)
+RigidBody::RigidBody(GameObject* gameObject) : GaiaComponent(gameObject), body(nullptr), motionState(nullptr)
 {
 
 }
@@ -16,13 +20,12 @@ RigidBody::~RigidBody()
 	PhysicsSystem::GetInstance()->deleteRigidBody(body);
 }
 
-void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, const Vector3& dim, bool isT, uint16_t myGroup, uint16_t collidesWith)
+void RigidBody::setRigidBody(float mass, RB_Shape shape, bool kinematic, const Vector3& offset, const Vector3& dim, bool isT, uint16_t myGroup, uint16_t collidesWith)
 {
 	motionState = new GaiaMotionState(gameObject->transform, offset);
 	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getScale() * dim * btScaleConversion, myGroup, collidesWith);
-	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_NO_CONTACT_RESPONSE * isT));
+	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_NO_CONTACT_RESPONSE * isT) | (body->CF_KINEMATIC_OBJECT * kinematic));
 	body->setUserPointer(this);
-	trigger = isT;
 }
 
 void RigidBody::handleData(ComponentData* data)
@@ -30,7 +33,7 @@ void RigidBody::handleData(ComponentData* data)
 	float mass = 1.0;
 	RB_Shape shape;
 	Vector3 off = Vector3(), dim = Vector3(1, 1, 1);
-	bool isTrigger = false;
+	bool isTrigger = false, kinematic = false;
 
 	for (auto prop : data->getProperties()) {
 		std::stringstream ss(prop.second);
@@ -55,35 +58,64 @@ void RigidBody::handleData(ComponentData* data)
 		else if (prop.first == "trigger") {
 			ss >> isTrigger;
 		}
+		else if (prop.first == "kinematic") {
+			ss >> kinematic;
+		}
 	}
-	setRigidBody(mass, shape, off, dim, isTrigger);
+	setRigidBody(mass, shape, kinematic, off, dim, isTrigger);
 }
 
 bool RigidBody::isTrigger() const
 {
-	return trigger;
+	return (body->getCollisionFlags() & body->CF_NO_CONTACT_RESPONSE) != 0;
 }
 
-void RigidBody::addForce(const Vector3& force, Vector3 rel_pos)
+bool RigidBody::isKinematic() const
 {
-	if (rel_pos == Vector3(0.0f, 0.0f, 0.0f))
+	return body->isKinematicObject();
+}
+
+bool RigidBody::isStatic() const
+{
+	return body->isStaticObject();
+}
+
+void RigidBody::addChild(const RigidBody* rb)
+{
+	btTransform t = rb->body->getWorldTransform();
+	t.setOrigin(body->getWorldTransform().getOrigin() + t.getOrigin());
+	((btCompoundShape*)body->getCollisionShape())->addChildShape(t, rb->body->getCollisionShape());
+}
+
+void RigidBody::lookParent() const
+{
+	if (gameObject->getParent() != nullptr) {
+		RigidBody* parentRB = gameObject->getParent()->getComponent<RigidBody>();
+		if (parentRB != nullptr)
+			parentRB->addChild(this);
+	}
+}
+
+void RigidBody::addForce(const Vector3& force, Vector3 relPos)
+{
+	if (relPos == Vector3(0.0f, 0.0f, 0.0f))
 		body->applyCentralForce(parseToBulletVector(force));
 	else
-		body->applyForce(parseToBulletVector(force), parseToBulletVector(rel_pos));
+		body->applyForce(parseToBulletVector(force), parseToBulletVector(relPos));
 }
 
-void RigidBody::addImpulse(const Vector3& impulse, ImpulseMode mode, Vector3 rel_pos)
+void RigidBody::addImpulse(const Vector3& impulse, ImpulseMode mode, Vector3 relPos)
 {
 	switch (mode)
 	{
 	case IMPULSE:
-		if (rel_pos == Vector3(0.0f, 0.0f, 0.0f))
+		if (relPos == Vector3(0.0f, 0.0f, 0.0f))
 			body->applyCentralImpulse(parseToBulletVector(impulse));
 		else
-			body->applyImpulse(parseToBulletVector(impulse), parseToBulletVector(rel_pos));
+			body->applyImpulse(parseToBulletVector(impulse), parseToBulletVector(relPos));
 		break;
 	case PUSH:
-		body->applyPushImpulse(parseToBulletVector(impulse), parseToBulletVector(rel_pos));
+		body->applyPushImpulse(parseToBulletVector(impulse), parseToBulletVector(relPos));
 		break;
 	case TORQUE:
 		body->applyTorqueImpulse(parseToBulletVector(impulse));
@@ -114,9 +146,9 @@ void RigidBody::setAngularDamping(float damping)
 	body->setDamping(body->getLinearDamping(), btScalar(damping));
 }
 
-void RigidBody::setAngularVelocity(const Vector3& ang_vel)
+void RigidBody::setAngularVelocity(const Vector3& angVel)
 {
-	body->setAngularVelocity(parseToBulletVector(ang_vel));
+	body->setAngularVelocity(parseToBulletVector(angVel));
 }
 
 void RigidBody::setLinearVelocity(const Vector3& vel)
@@ -134,19 +166,44 @@ void RigidBody::setRestitution(float restitution)
 	body->setRestitution(restitution);
 }
 
-const Vector3& RigidBody::getGravity() const
+void RigidBody::setActive(bool active)
 {
-	return parseFromBulletVector(body->getGravity());
+	Component::setActive(active);
+
+	int state = (active) ? ACTIVE_TAG : DISABLE_SIMULATION;
+	body->forceActivationState(state);
 }
 
-float RigidBody::getLinearDamping()
+// Multiplies original rigidBody scale with the input vector
+void RigidBody::multiplyScale(const Vector3& scale)
+{
+	body->getCollisionShape()->setLocalScaling(parseToBulletVector(scale));
+}
+
+void RigidBody::setTransform()
+{
+	body->getMotionState()->getWorldTransform(body->getWorldTransform());
+}
+
+
+float RigidBody::getLinearDamping() const
 {
 	return body->getLinearDamping();
 }
 
-bool RigidBody::isActive()
+float RigidBody::getFriction() const
 {
-	return body->isActive();
+	return body->getFriction();
+}
+
+float RigidBody::getRestitution() const
+{
+	return body->getRestitution();
+}
+
+const Vector3& RigidBody::getGravity() const
+{
+	return parseFromBulletVector(body->getGravity());
 }
 
 const Vector3& RigidBody::getAngularVelocity() const
@@ -154,19 +211,9 @@ const Vector3& RigidBody::getAngularVelocity() const
 	return parseFromBulletVector(body->getAngularVelocity());
 }
 
-float RigidBody::getFriction()
-{
-	return body->getFriction();
-}
-
 const Vector3& RigidBody::getLinearVelocity() const
 {
 	return parseFromBulletVector(body->getLinearVelocity());
-}
-
-float RigidBody::getRestitution()
-{
-	return body->getRestitution();
 }
 
 const Vector3& RigidBody::getTotalForce() const
@@ -179,10 +226,12 @@ const Vector3& RigidBody::getTotalTorque() const
 	return parseFromBulletVector(body->getTotalTorque());
 }
 
-const Ogre::Quaternion& RigidBody::getOrientation() const
+const Vector3& RigidBody::getOrientation() const
 {
 	btQuaternion btq = body->getOrientation();
-	return { btq.w(), btq.x(), btq.y(), btq.z() };
+	btScalar x, y, z;
+	btq.getEulerZYX(z, y, x);
+	return { x,y,z };
 }
 
 

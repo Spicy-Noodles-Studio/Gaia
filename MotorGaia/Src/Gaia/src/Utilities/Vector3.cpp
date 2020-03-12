@@ -2,6 +2,7 @@
 
 #include<cmath>
 #include <btBulletDynamicsCommon.h>
+#include "Quaternion.h"
 
 Vector3::Vector3()
 {
@@ -71,7 +72,7 @@ bool Vector3::operator == (const Vector3 p) const
 	return this->x == p.x && this->y == p.y && this->z == p.z;
 }
 
-Vector3 Vector3::operator=( Vector3 p)
+Vector3 Vector3::operator=(Vector3 p)
 {
 	//Comprueba que no se este intentando igualar un vector3 a si mismo
 	if (this != &p)
@@ -92,6 +93,35 @@ Vector3& Vector3::normalized()
 {
 	Vector3 aux = *this / magnitude();
 	return aux;
+}
+
+Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles)
+{
+	Vector3 v = { point.x - pivot.x,point.y - pivot.y, point.z - pivot.z };
+	Quaternion q = ToQuaternion(angles.z, angles.y, angles.x), q1 = q.inverse(), aux = { 0,v.x,v.y,v.z }, aux1;
+	aux1 = hamilton(q, aux);
+	aux1 = hamilton(aux1, q1);
+	v = { std::round(aux1.x),std::round(aux1.y),std::round(aux1.z) };
+	return (v + pivot);
+}
+
+void Vector3::rotateAroundAxis(const Vector3& axis, double angle)
+{
+	Vector3 result = *this;
+	double ang = angle * SIMD_RADS_PER_DEG;
+	if (axis == Vector3(0, 0, 1)) {
+		result.x = x * cos(ang) - y * sin(ang);
+		result.y = x * sin(ang) + y * cos(ang);
+	}
+	else if (axis == Vector3(0, 1, 0)) {
+		result.x = x * cos(ang) + z * sin(ang);
+		result.z = -x * sin(ang) + z * cos(ang);
+	}
+	else if (axis == Vector3(1, 0, 0)) {
+		result.y = y * cos(ang) - z * sin(ang);
+		result.z = y * sin(ang) + z * cos(ang);
+	}
+	*this = result;
 }
 
 double Vector3::magnitudeSquared()

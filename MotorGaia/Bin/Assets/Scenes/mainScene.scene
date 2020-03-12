@@ -35,6 +35,34 @@
                 }
             ]
         },
+         {
+            "ObjectType": "GAMEOBJECT",
+            "ObjectName": "Suelo",
+            "Tag": "suelo",
+            "Components":
+            [
+                {
+                    "ComponentName": "Transform",
+                    "ComponentProperties": {
+                        "scale" : "5 0.05 5",
+                        "position" : "0 -100 -500"
+                    }
+                },
+                {
+                    "ComponentName": "MeshRenderer",
+                    "ComponentProperties": {
+                        "mesh": "knot cube.mesh"
+                    }
+                },
+                {
+                    "ComponentName": "RigidBody",
+                    "ComponentProperties": {
+                        "shape": "Box",
+                        "mass": "0"
+                    }
+                }
+            ]
+        },
         {
             "ObjectType": "BLUEPRINT",
             "ObjectName": "Nudo 1",
@@ -52,7 +80,7 @@
                             "ComponentProperties":{
                                 "position" : "-150 0 -400",
                                 "scale" : "1 1 1",
-                                "rotation" : " 0 0 0"
+                                "rotation" : " 30 90 45"
                             }
                         }
                     ]
@@ -69,21 +97,7 @@
                 {
                     "ComponentName": "Transform",
                     "ComponentProperties": {
-                        "position" : "150 0 -800"
-                    }
-                }
-            ]
-        },
-        {
-            "ObjectType": "GAMEOBJECT",
-            "ObjectName": "Layout",
-            "Tag": "LayoutTag",
-            "Components":
-            [
-                {
-                    "ComponentName": "UILayout",
-                    "ComponentProperties": {
-                        "layout": "TaharezLookOverview.layout"
+                        "position" : "150 0 -500"
                     }
                 }
             ]

@@ -3,6 +3,7 @@
 #include "ComponentData.h"
 #include <OgreQuaternion.h>
 #include <sstream>
+#include "RigidBody.h"
 
 Transform::Transform(GameObject* gameObject) : GaiaComponent(gameObject)
 {
@@ -52,16 +53,14 @@ void Transform::setRotation(double x, double y, double z)
 	rotation.y = y;
 	rotation.z = z;
 
-	gameObject->node->setOrientation(Ogre::Quaternion());
-
 	if (gameObject->node != nullptr)
 	{
-		gameObject->node->pitch(Ogre::Radian(Ogre::Degree(x)));
-		gameObject->node->yaw(Ogre::Radian(Ogre::Degree(y)));
-		gameObject->node->roll(Ogre::Radian(Ogre::Degree(z)));
+		gameObject->node->setOrientation(Ogre::Quaternion());
+		gameObject->node->pitch(Ogre::Radian(Ogre::Degree(x)), Ogre::Node::TS_WORLD);
+		gameObject->node->yaw(Ogre::Radian(Ogre::Degree(y)), Ogre::Node::TS_WORLD);
+		gameObject->node->roll(Ogre::Radian(Ogre::Degree(z)), Ogre::Node::TS_WORLD);
 	}
 
-	//quaternion = ToQuaternion(y, x, z);
 	quaternion = ToQuaternion(z, y, x);
 }
 
@@ -90,7 +89,11 @@ void Transform::setWorldPosition(const Vector3& pos)
 	Vector3 worldPos = pos;
 	GameObject* parent = gameObject->getParent();
 	if (parent != nullptr) {
-		worldPos -= parent->transform->getWorldPosition();
+		Vector3 parentPos = parent->transform->getWorldPosition();
+		worldPos = rotateAroundPivot(worldPos, parentPos, { -parent->transform->getWorldRotation().x, 0,0 });
+		worldPos = rotateAroundPivot(worldPos, parentPos, { 0, -parent->transform->getWorldRotation().y,0 });
+		worldPos = rotateAroundPivot(worldPos, parentPos, { 0,0, -parent->transform->getWorldRotation().z, });
+		worldPos -= parentPos;
 		worldPos /= parent->transform->getWorldScale();
 	}
 	setPosition(worldPos);
@@ -105,13 +108,30 @@ void Transform::setWorldScale(const Vector3& scale)
 	setScale(worldScale);
 }
 
+void Transform::setWorldRotation(const Vector3& rot)
+{
+	Vector3 worldRotation = rot;
+	GameObject* parent = gameObject->getParent();
+	if (parent != nullptr) {
+		Vector3 parentRot = parent->transform->getWorldRotation();
+		worldRotation.x = -std::fmod((parentRot.x - worldRotation.x), 360);
+		worldRotation.y = std::fmod((parentRot.y - worldRotation.y), 360);
+		worldRotation.z = -std::fmod((parentRot.z - worldRotation.z), 360);
+	}
+	setRotation(worldRotation);
+}
+
 const Vector3& Transform::getWorldPosition() const
 {
 	Vector3 worldPos = position;
 	GameObject* parent = gameObject->getParent();
 	if (parent != nullptr) {
+		Vector3 parentPos = parent->transform->getWorldPosition();
 		worldPos *= parent->transform->getWorldScale();
-		worldPos += parent->transform->getWorldPosition();
+		worldPos += parentPos;
+		worldPos = rotateAroundPivot(worldPos, parentPos, { parent->transform->getWorldRotation().x, 0,0 });
+		worldPos = rotateAroundPivot(worldPos, parentPos, { 0, parent->transform->getWorldRotation().y,0 });
+		worldPos = rotateAroundPivot(worldPos, parentPos, { 0,0, parent->transform->getWorldRotation().z, });
 	}
 	return worldPos;
 }
@@ -123,6 +143,19 @@ const Vector3& Transform::getWorldScale() const
 	if (parent != nullptr)
 		worldScale = worldScale * parent->transform->getWorldScale();
 	return worldScale;
+}
+
+const Vector3& Transform::getWorldRotation() const
+{
+	Vector3 worldRotation = rotation;
+	GameObject* parent = gameObject->getParent();
+	if (parent != nullptr) {
+		Vector3 parentRot = parent->transform->getWorldRotation();
+		worldRotation.x = -std::fmod((worldRotation.x + parentRot.x), 360);
+		worldRotation.y = std::fmod((worldRotation.y + parentRot.y), 360);
+		worldRotation.z = -std::fmod((worldRotation.z + parentRot.z), 360);
+	}
+	return worldRotation;
 }
 
 const Vector3& Transform::getPosition() const

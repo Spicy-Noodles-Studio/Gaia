@@ -139,17 +139,17 @@ void RigidBody::setRestitution(float restitution)
 
 void RigidBody::setTrigger(bool trigger)
 {
-	body->setCollisionFlags(body->getCollisionFlags() & (body->CF_NO_CONTACT_RESPONSE * trigger));
+	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_NO_CONTACT_RESPONSE * trigger));
 }
 
 void RigidBody::setKinematic(bool kinematic)
 {
-	body->setCollisionFlags(body->getCollisionFlags() & (body->CF_KINEMATIC_OBJECT * kinematic));
+	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_KINEMATIC_OBJECT * kinematic));
 }
 
 void RigidBody::setStatic(bool stat)
 {
-	body->setCollisionFlags(body->getCollisionFlags() & (body->CF_STATIC_OBJECT * stat));
+	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_STATIC_OBJECT * stat));
 }
 
 void RigidBody::setActive(bool active)

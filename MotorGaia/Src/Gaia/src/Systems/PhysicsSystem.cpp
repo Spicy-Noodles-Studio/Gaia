@@ -8,8 +8,8 @@
 #include "GameObject.h"
 #include "gTime.h"
 
-PhysicsSystem::PhysicsSystem() :	dynamicsWorld(nullptr), collisionConfiguration(nullptr), 
-									dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr)
+PhysicsSystem::PhysicsSystem() : dynamicsWorld(nullptr), collisionConfiguration(nullptr),
+dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr)
 {
 }
 
@@ -35,7 +35,7 @@ void PhysicsSystem::init()
 
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
-	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+	dynamicsWorld->setGravity(btVector3(0, -1, 0));
 
 	///-----initialization_end-----
 }
@@ -147,7 +147,7 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
-	dynamicsWorld->addRigidBody(body, myGroup, mask);
+	dynamicsWorld->addRigidBody(body);
 
 	return body;
 }
@@ -175,8 +175,9 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 {
 	btTransform t;
 	t.setIdentity();
-	t.setOrigin({ btScalar(transform->getWorldPosition().x), btScalar(transform->getWorldPosition().y), btScalar(transform->getWorldPosition().z) });
-	t.setRotation(btQuaternion(btScalar(transform->getRotation().y) * SIMD_RADS_PER_DEG, btScalar(transform->getRotation().x) * SIMD_RADS_PER_DEG, btScalar(transform->getRotation().z) * SIMD_RADS_PER_DEG));
+	Vector3 pos = transform->getWorldPosition(), rot = transform->getWorldRotation();
+	t.setOrigin({ btScalar(pos.x), btScalar(pos.y), btScalar(pos.z) });
+	t.setRotation(btQuaternion(btScalar(rot.y) * SIMD_RADS_PER_DEG, btScalar(rot.x) * SIMD_RADS_PER_DEG, btScalar(rot.z) * SIMD_RADS_PER_DEG));
 	return t;
 }
 

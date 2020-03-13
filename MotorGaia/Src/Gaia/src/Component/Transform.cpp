@@ -88,7 +88,7 @@ void Transform::setWorldPosition(const Vector3& pos)
 	Vector3 worldPos = pos;
 	GameObject* parent = gameObject->getParent();
 	if (parent != nullptr) {
-		auto aux = parent->node->convertWorldToLocalPosition(Ogre::Vector3(pos.x,pos.y,pos.z));
+		auto aux = parent->node->convertWorldToLocalPosition(Ogre::Vector3(pos.x, pos.y, pos.z));
 		worldPos = { aux.x, aux.y,aux.z };
 	}
 	setPosition(worldPos);

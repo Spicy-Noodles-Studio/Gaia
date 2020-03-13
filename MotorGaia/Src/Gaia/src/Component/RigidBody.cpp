@@ -177,18 +177,11 @@ void RigidBody::multiplyScale(const Vector3& scale)
 
 void RigidBody::updateTransform()
 {
-	bool kin = isKinematic();
-	body->clearForces();
-	body->clearGravity();
-
-	setKinematic(true);
-	body->getMotionState()->getWorldTransform(body->getWorldTransform());
-	body->getMotionState()->setWorldTransform(body->getWorldTransform());
-	setKinematic(kin);
-
-	/*for (GameObject* g : gameObject->getChildren())
-		if (g->getComponent<RigidBody>() != nullptr)
-			g->getComponent<RigidBody>()->setTransform();*/
+	if (!isKinematic()) {
+		setKinematic(true);
+		body->getMotionState()->getWorldTransform(body->getWorldTransform());
+		setKinematic(false);
+	}
 }
 
 void RigidBody::disableDeactivation()

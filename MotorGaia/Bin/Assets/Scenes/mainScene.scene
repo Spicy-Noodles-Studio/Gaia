@@ -76,6 +76,13 @@
                     "BlueprintPath": "Nudo",
                     "ComponentModifications": [
                         {
+                            "ComponentName": "RigidBody",
+                            "ComponentProperties":{
+                                "kinematic" : "0",
+                                "size": "1 1 1"
+                            }
+                        },
+                        {
                             "ComponentName": "Transform",
                             "ComponentProperties":{
                                 "position" : "-150 0 -400",
@@ -97,7 +104,7 @@
                 {
                     "ComponentName": "Transform",
                     "ComponentProperties": {
-                        "position" : "150 0 -500"
+                        "position" : "150 -10 -500"
                     }
                 }
             ]

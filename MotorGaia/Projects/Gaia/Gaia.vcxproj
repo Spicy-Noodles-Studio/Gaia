@@ -202,7 +202,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GAIA_EXPORTS;_DEBUG;_CONSOLE;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GAIA_EXPORTS;BT_EULER_DEFAULT_ZYX;SDL_MAIN_HANDLED;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\include;$(SolutionDir)Src\Gaia\src;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\json-3.7.3\include;$(SolutionDir)Dependencies\cegui-0.8.7\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\Build\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\include</AdditionalIncludeDirectories>
     </ClCompile>

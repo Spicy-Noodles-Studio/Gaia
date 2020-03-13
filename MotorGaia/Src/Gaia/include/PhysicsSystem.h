@@ -4,6 +4,7 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <map>
+#include <vector>
 
 #include "Vector3.h"
 #include "Singleton.h"
@@ -23,6 +24,7 @@ public:
 	void init();
 	void render();
 	void update();
+	void postUpdate();
 	void close();
 
 	void clearWorld();
@@ -41,6 +43,12 @@ public:
 	void checkCollisions();
 
 private:
+	void CollisionEnterCallbacks(const std::pair<RigidBody*, RigidBody*>& col);
+	void CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody*>& col);
+	void CollisionStayCallbacks(const std::pair<RigidBody*, RigidBody*>& col);
+
+	void deleteBody(btCollisionObject* obj);
+
 	btDiscreteDynamicsWorld* dynamicsWorld;
 	btDefaultCollisionConfiguration* collisionConfiguration;
 	btCollisionDispatcher* dispatcher;
@@ -49,7 +57,7 @@ private:
 
 	//keep track of the shapes, we release memory at exit.
 	//make sure to re-use collision shapes among rigid bodies whenever possible!
-	btAlignedObjectArray<btCollisionShape*> collisionShapes;
+	std::vector<btCollisionShape*> collisionShapes;
 
 	std::map<std::pair<RigidBody*, RigidBody*>, bool> contacts;
 };

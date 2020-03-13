@@ -31,6 +31,8 @@ struct Vector3
 	Vector3& normalized();
 
 	void rotateAroundAxis(const Vector3& axis, double angle);
+	void lerp(const Vector3& v, double percentage);
+	void lerp(const Vector3& v, const Vector3& percentage);
 
 };
 

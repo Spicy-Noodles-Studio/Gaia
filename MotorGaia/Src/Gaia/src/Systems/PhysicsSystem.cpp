@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "gTime.h"
 
+
 PhysicsSystem::PhysicsSystem() : dynamicsWorld(nullptr), collisionConfiguration(nullptr),
 dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr)
 {
@@ -51,6 +52,20 @@ void PhysicsSystem::update()
 	checkCollisions();
 }
 
+void PhysicsSystem::postUpdate()
+{
+	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
+	{
+		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
+		btRigidBody* body = btRigidBody::upcast(obj);
+		if (body != nullptr)
+		{
+			RigidBody* rb = (RigidBody*)body->getUserPointer();
+			rb->updateTransform();
+		}
+	}
+}
+
 void PhysicsSystem::close()
 {
 	///-----cleanup_start-----
@@ -79,23 +94,16 @@ void PhysicsSystem::clearWorld()
 	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
 		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		if (body && body->getMotionState())
-		{
-			delete body->getMotionState();
-		}
-		dynamicsWorld->removeCollisionObject(obj);
-		delete obj;
+		deleteBody(obj);
 	}
 
 	//delete collision shapes
 	for (int j = 0; j < collisionShapes.size(); j++)
 	{
 		btCollisionShape* shape = collisionShapes[j];
-		collisionShapes[j] = 0;
+		collisionShapes[j] = nullptr;
 		delete shape;
 	}
-
 	collisionShapes.clear();
 }
 
@@ -133,9 +141,6 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	collisionShapes.push_back(colShape);
 
 	/// Create Dynamic Objects
-	//btTransform transform = parseToBulletTransform(mState->getTransform());
-	//	transform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-
 	btScalar mass(m);
 
 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
@@ -156,19 +161,12 @@ void PhysicsSystem::deleteRigidBody(btRigidBody* body)
 {
 	btCollisionObject* obj = body;
 	btCollisionShape* shape = obj->getCollisionShape();
-	if (body && body->getMotionState())
-	{
-		delete body->getMotionState();
-	}
-	dynamicsWorld->removeCollisionObject(obj);
-	delete obj;
+	deleteBody(obj);
 
-	int i = collisionShapes.findBinarySearch(shape);
-	if (i >= 0 && i < collisionShapes.size()) {
-		collisionShapes[i] = 0;
-		delete shape;
-		collisionShapes.removeAtIndex(i);
-	}
+	auto it = std::find(collisionShapes.begin(), collisionShapes.end(), shape);
+	if (it != collisionShapes.end())
+		collisionShapes.erase(it);
+	delete shape;
 }
 
 btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
@@ -177,7 +175,7 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 	t.setIdentity();
 	Vector3 pos = transform->getWorldPosition(), rot = transform->getWorldRotation();
 	t.setOrigin({ btScalar(pos.x), btScalar(pos.y), btScalar(pos.z) });
-	btQuaternion quat = (btQuaternion(btScalar(rot.y) * SIMD_RADS_PER_DEG, btScalar(rot.x) * SIMD_RADS_PER_DEG, btScalar(rot.z) * SIMD_RADS_PER_DEG)); quat.normalize();
+	btQuaternion quat = (btQuaternion(btScalar(rot.z) * SIMD_RADS_PER_DEG, btScalar(rot.y) * SIMD_RADS_PER_DEG, btScalar(rot.x) * SIMD_RADS_PER_DEG)); quat.normalize();
 	t.setRotation(quat);
 	return t;
 }
@@ -190,13 +188,11 @@ void PhysicsSystem::checkCollisions()
 	for (int i = 0; i < numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0());
-		btCollisionObject* obB = (btCollisionObject*)(contactManifold->getBody1());
+		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0()), *obB = (btCollisionObject*)(contactManifold->getBody1());
 
-		RigidBody* rbA = (RigidBody*)obA->getUserPointer();
-		RigidBody* rbB = (RigidBody*)obB->getUserPointer();
+		RigidBody* rbA = (RigidBody*)obA->getUserPointer(), *rbB = (RigidBody*)obB->getUserPointer();
 
-		if (rbA == 0 or rbB == 0)
+		if (rbA == nullptr or rbB == nullptr)
 			return;
 
 		// Orden A < B, para el mapa
@@ -208,70 +204,84 @@ void PhysicsSystem::checkCollisions()
 			rbB = aux;
 		}
 
-		GameObject* goA = rbA->gameObject;
-		GameObject* goB = rbB->gameObject;
-
-		//Saca los puntos de colision
-		/*int numContacts = contactManifold->getNumContacts();
-		for (int j = 0; j < numContacts; j++)
-		{
-			btManifoldPoint& pt = contactManifold->getContactPoint(j);
-			if (pt.getDistance() < 0.f)
-			{
-				const btVector3& ptA = pt.getPositionWorldOnA();
-				const btVector3& ptB = pt.getPositionWorldOnB();
-				const btVector3& normalOnB = pt.m_normalWorldOnB;
-			}
-		}*/
-
-		newContacts[{rbA, rbB}] = true;
-
-		bool aTrigger = rbA->isTrigger(), bTrigger = rbB->isTrigger();
+		std::pair<RigidBody*, RigidBody*> col = { rbA,rbB };
+		newContacts[col] = true;
 
 		//llamamos al collisionEnter si no estaban registrados.
-		if (!contacts[{rbA, rbB}])
+		if (!contacts[col])
 		{
-			if (!aTrigger && !bTrigger) {
-				goA->onCollisionEnter(goB);
-				goB->onCollisionEnter(goA);
-			}
-			else if (aTrigger && !bTrigger)
-				goB->onTriggerEnter(goA);
-			else if (bTrigger && !aTrigger)
-				goA->onTriggerEnter(goB);
+			CollisionEnterCallbacks(col);
 		}// Si ya estaban llamamos al collisionStay.
 		else {
-			if (!aTrigger && !bTrigger) {
-				goA->onCollisionStay(goB);
-				goB->onCollisionStay(goA);
-			}
-			else if (aTrigger && !bTrigger)
-				goB->onTriggerStay(goA);
-			else if (bTrigger && !aTrigger)
-				goA->onTriggerStay(goB);
+			CollisionStayCallbacks(col);
 		}
 	}
 
+	//Comprobamos que contactos ya no estan
 	for (auto it = contacts.begin(); it != contacts.end(); it++)
 	{
 		std::pair<RigidBody*, RigidBody*> col = (*it).first;
 		if (newContacts.find(col) == newContacts.end())
 		{
-			bool aTrigger = col.first->isTrigger();
-			bool bTrigger = col.second->isTrigger();
-			GameObject* goA = col.first->gameObject;
-			GameObject* goB = col.second->gameObject;
-
-			if (!aTrigger && !bTrigger) {
-				goA->onCollisionExit(goB);
-				goB->onCollisionExit(goA);
-			}
-			else if (aTrigger && !bTrigger)
-				goB->onTriggerExit(goA);
-			else if (bTrigger && !aTrigger)
-				goA->onTriggerExit(goB);
+			CollisionExitCallbacks(col);
 		}
 	}
 
 	contacts = newContacts;
+}
+
+void PhysicsSystem::CollisionEnterCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
+{
+	bool aTrigger = col.first->isTrigger(), bTrigger = col.second->isTrigger();
+	GameObject* goA = col.first->gameObject, * goB = col.second->gameObject;
+
+	if (!aTrigger && !bTrigger) {
+		goA->onCollisionEnter(goB);
+		goB->onCollisionEnter(goA);
+	}
+	else if (aTrigger && !bTrigger)
+		goB->onTriggerEnter(goA);
+	else if (bTrigger && !aTrigger)
+		goA->onTriggerEnter(goB);
+}
+
+void PhysicsSystem::CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
+{
+	bool aTrigger = col.first->isTrigger(), bTrigger = col.second->isTrigger();
+	GameObject* goA = col.first->gameObject, * goB = col.second->gameObject;
+
+	if (!aTrigger && !bTrigger) {
+		goA->onCollisionExit(goB);
+		goB->onCollisionExit(goA);
+	}
+	else if (aTrigger && !bTrigger)
+		goB->onTriggerExit(goA);
+	else if (bTrigger && !aTrigger)
+		goA->onTriggerExit(goB);
+}
+
+void PhysicsSystem::CollisionStayCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
+{
+	bool aTrigger = col.first->isTrigger(), bTrigger = col.second->isTrigger();
+	GameObject* goA = col.first->gameObject, * goB = col.second->gameObject;
+
+	if (!aTrigger && !bTrigger) {
+		goA->onCollisionStay(goB);
+		goB->onCollisionStay(goA);
+	}
+	else if (aTrigger && !bTrigger)
+		goB->onTriggerStay(goA);
+	else if (bTrigger && !aTrigger)
+		goA->onTriggerStay(goB);
+}
+
+void PhysicsSystem::deleteBody(btCollisionObject* obj)
+{
+	btRigidBody* body = btRigidBody::upcast(obj);
+	if (body != nullptr && body->getMotionState() != nullptr)
+	{
+		delete body->getMotionState();
+	}
+	dynamicsWorld->removeCollisionObject(obj);
+	delete obj;
 }

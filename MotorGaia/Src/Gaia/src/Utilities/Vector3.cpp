@@ -124,6 +124,17 @@ void Vector3::rotateAroundAxis(const Vector3& axis, double angle)
 	*this = result;
 }
 
+// percentage has to be a value between 0 and 1
+void Vector3::lerp(const Vector3& v, double percentage)
+{
+	lerp(v, { percentage,percentage,percentage });
+}
+
+void Vector3::lerp(const Vector3& v, const Vector3& percentage)
+{
+	*this = { x + (v.x - x) * percentage.x, y + (v.y - y) * percentage.y, z + (v.z - z) * percentage.z };
+}
+
 double Vector3::magnitudeSquared()
 {
 	return x * x + y * y + z * z;

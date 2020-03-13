@@ -1,5 +1,5 @@
 #include "GaiaCore.h"
-
+#include "RigidBody.h"
 
 GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
 						renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
@@ -74,6 +74,9 @@ void GaiaCore::run()
 		
 		// Process
 		update(deltaTime);
+
+		if (inputSystem->getKeyPress("K"))
+			sceneManager->getCurrentScene()->getGameObjectWithName("Nudo 1")->getComponent<RigidBody>()->addImpulse({ 100,0,0 });
 
 		// Post-process
 		postUpdate(deltaTime);
@@ -153,5 +156,6 @@ void GaiaCore::postUpdate(float deltaTime)
 	sceneManager->postUpdate(deltaTime);
 
 	// Systems 
+	physicsSystem->postUpdate();
 	// Si es que hay
 }

@@ -22,7 +22,11 @@
             "ComponentName": "RigidBody",
             "ComponentProperties": {
                 "shape": "Box",
-                "mass": "3"
+                "mass": "3",
+                "offset": "0 0 0",
+                "size": "1 1 1",
+                "kinematic": "0",
+                "trigger": "0"
             }
         }
     ]

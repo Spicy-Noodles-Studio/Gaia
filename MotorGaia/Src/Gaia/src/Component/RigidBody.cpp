@@ -7,7 +7,6 @@
 #include "ComponentData.h"
 #include "PhysicsSystem.h"
 #include "ComponentData.h"
-#include "..\..\include\RigidBody.h"
 
 Vector3 RigidBody::btScaleConversion = { 50,50,50 };
 
@@ -26,6 +25,7 @@ void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, 
 	motionState = new GaiaMotionState(gameObject->transform, offset);
 	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getWorldScale() * dim * btScaleConversion, myGroup, collidesWith);
 	body->setUserPointer(this);
+	if (mass > 0) disableDeactivation();
 }
 
 void RigidBody::handleData(ComponentData* data)
@@ -139,17 +139,26 @@ void RigidBody::setRestitution(float restitution)
 
 void RigidBody::setTrigger(bool trigger)
 {
-	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_NO_CONTACT_RESPONSE * trigger));
+	int flag = 0;
+	if (isTrigger() && !trigger) flag = -body->CF_NO_CONTACT_RESPONSE;
+	else if (!isTrigger() && trigger) flag = body->CF_NO_CONTACT_RESPONSE;
+	body->setCollisionFlags(body->getCollisionFlags() + flag);
 }
 
 void RigidBody::setKinematic(bool kinematic)
 {
-	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_KINEMATIC_OBJECT * kinematic));
+	int flag = 0;
+	if (isKinematic() && !kinematic) flag = -body->CF_KINEMATIC_OBJECT;
+	else if (!isKinematic() && kinematic) flag = body->CF_KINEMATIC_OBJECT;
+	body->setCollisionFlags(body->getCollisionFlags() + flag);
 }
 
 void RigidBody::setStatic(bool stat)
 {
-	body->setCollisionFlags(body->getCollisionFlags() | (body->CF_STATIC_OBJECT * stat));
+	int flag = 0;
+	if (isStatic() && !stat) flag = -body->CF_STATIC_OBJECT;
+	else if (!isStatic() && stat && body->getMass()>0) flag = body->CF_STATIC_OBJECT;
+	body->setCollisionFlags(body->getCollisionFlags() +flag);
 }
 
 void RigidBody::setActive(bool active)
@@ -166,25 +175,25 @@ void RigidBody::multiplyScale(const Vector3& scale)
 	body->getCollisionShape()->setLocalScaling(parseToBulletVector(scale));
 }
 
-void RigidBody::setTransform()
+void RigidBody::updateTransform()
 {
+	bool kin = isKinematic();
+	body->clearForces();
+	body->clearGravity();
+
+	setKinematic(true);
 	body->getMotionState()->getWorldTransform(body->getWorldTransform());
+	body->getMotionState()->setWorldTransform(body->getWorldTransform());
+	setKinematic(kin);
+
+	/*for (GameObject* g : gameObject->getChildren())
+		if (g->getComponent<RigidBody>() != nullptr)
+			g->getComponent<RigidBody>()->setTransform();*/
 }
 
-void RigidBody::addChild(const RigidBody* rb)
+void RigidBody::disableDeactivation()
 {
-	btTransform t = rb->body->getWorldTransform();
-	t.setOrigin(body->getWorldTransform().getOrigin() + t.getOrigin());
-	((btCompoundShape*)body->getCollisionShape())->addChildShape(t, rb->body->getCollisionShape());
-}
-
-void RigidBody::lookParent() const
-{
-	if (gameObject->getParent() != nullptr) {
-		RigidBody* parentRB = gameObject->getParent()->getComponent<RigidBody>();
-		if (parentRB != nullptr)
-			parentRB->addChild(this);
-	}
+	body->setActivationState(DISABLE_DEACTIVATION);
 }
 
 bool RigidBody::isTrigger() const

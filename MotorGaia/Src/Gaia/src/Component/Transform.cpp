@@ -3,7 +3,7 @@
 #include "ComponentData.h"
 #include <OgreQuaternion.h>
 #include <sstream>
-#include "RigidBody.h"
+#include <cmath>
 
 Transform::Transform(GameObject* gameObject) : GaiaComponent(gameObject)
 {
@@ -55,10 +55,9 @@ void Transform::setRotation(double x, double y, double z)
 
 	if (gameObject->node != nullptr)
 	{
-		gameObject->node->setOrientation(Ogre::Quaternion());
-		gameObject->node->pitch(Ogre::Radian(Ogre::Degree(x)), Ogre::Node::TS_WORLD);
-		gameObject->node->yaw(Ogre::Radian(Ogre::Degree(y)), Ogre::Node::TS_WORLD);
-		gameObject->node->roll(Ogre::Radian(Ogre::Degree(z)), Ogre::Node::TS_WORLD);
+		Ogre::Matrix3 mx;
+		mx.FromEulerAnglesZYX(Ogre::Radian(Ogre::Degree(rotation.z)), Ogre::Radian(Ogre::Degree(rotation.y)), Ogre::Radian(Ogre::Degree(rotation.x)));
+		gameObject->node->setOrientation(Ogre::Quaternion(mx));
 	}
 
 	quaternion = ToQuaternion(z, y, x);
@@ -89,12 +88,8 @@ void Transform::setWorldPosition(const Vector3& pos)
 	Vector3 worldPos = pos;
 	GameObject* parent = gameObject->getParent();
 	if (parent != nullptr) {
-		Vector3 parentPos = parent->transform->getWorldPosition();
-		worldPos = rotateAroundPivot(worldPos, parentPos, { -parent->transform->getWorldRotation().x, 0,0 });
-		worldPos = rotateAroundPivot(worldPos, parentPos, { 0, -parent->transform->getWorldRotation().y,0 });
-		worldPos = rotateAroundPivot(worldPos, parentPos, { 0,0, -parent->transform->getWorldRotation().z, });
-		worldPos -= parentPos;
-		worldPos /= parent->transform->getWorldScale();
+		auto aux = parent->node->convertWorldToLocalPosition(Ogre::Vector3(pos.x,pos.y,pos.z));
+		worldPos = { aux.x, aux.y,aux.z };
 	}
 	setPosition(worldPos);
 }
@@ -110,15 +105,21 @@ void Transform::setWorldScale(const Vector3& scale)
 
 void Transform::setWorldRotation(const Vector3& rot)
 {
-	Vector3 worldRotation = rot;
+	Vector3 localRotation = rot;
 	GameObject* parent = gameObject->getParent();
 	if (parent != nullptr) {
-		Vector3 parentRot = parent->transform->getWorldRotation();
-		worldRotation.x = -std::fmod((parentRot.x - worldRotation.x), 360);
-		worldRotation.y = std::fmod((parentRot.y - worldRotation.y), 360);
-		worldRotation.z = -std::fmod((parentRot.z - worldRotation.z), 360);
+		Ogre::Matrix3 mx;
+		mx.FromEulerAnglesZYX(Ogre::Radian(Ogre::Degree(rot.z)), Ogre::Radian(Ogre::Degree(rot.y)), Ogre::Radian(Ogre::Degree(rot.x)));
+		Ogre::Quaternion aux = parent->node->convertWorldToLocalOrientation(Ogre::Quaternion(mx));
+
+		aux.ToRotationMatrix(mx);
+		Ogre::Radian x, y, z; mx.ToEulerAnglesZYX(z, y, x);
+
+		localRotation = { x.valueDegrees(),  y.valueDegrees(), z.valueDegrees() };
+		localRotation += {360.0, 360.0, 360.0};
+		localRotation = { std::fmod(localRotation.x, 360), std::fmod(localRotation.y, 360) , std::fmod(localRotation.z, 360) };
 	}
-	setRotation(worldRotation);
+	setRotation(localRotation);
 }
 
 const Vector3& Transform::getWorldPosition() const
@@ -126,12 +127,8 @@ const Vector3& Transform::getWorldPosition() const
 	Vector3 worldPos = position;
 	GameObject* parent = gameObject->getParent();
 	if (parent != nullptr) {
-		Vector3 parentPos = parent->transform->getWorldPosition();
-		worldPos *= parent->transform->getWorldScale();
-		worldPos += parentPos;
-		worldPos = rotateAroundPivot(worldPos, parentPos, { parent->transform->getWorldRotation().x, 0,0 });
-		worldPos = rotateAroundPivot(worldPos, parentPos, { 0, parent->transform->getWorldRotation().y,0 });
-		worldPos = rotateAroundPivot(worldPos, parentPos, { 0,0, parent->transform->getWorldRotation().z, });
+		auto aux = parent->node->convertLocalToWorldPosition(gameObject->node->getPosition());
+		worldPos = { aux.x, aux.y,aux.z };
 	}
 	return worldPos;
 }
@@ -150,10 +147,13 @@ const Vector3& Transform::getWorldRotation() const
 	Vector3 worldRotation = rotation;
 	GameObject* parent = gameObject->getParent();
 	if (parent != nullptr) {
-		Vector3 parentRot = parent->transform->getWorldRotation();
-		worldRotation.x = -std::fmod((worldRotation.x + parentRot.x), 360);
-		worldRotation.y = std::fmod((worldRotation.y + parentRot.y), 360);
-		worldRotation.z = -std::fmod((worldRotation.z + parentRot.z), 360);
+		Ogre::Quaternion aux =parent->node->convertLocalToWorldOrientation(gameObject->node->getOrientation()); aux.normalise();
+		Ogre::Matrix3 mx; aux.ToRotationMatrix(mx);
+		Ogre::Radian x, y, z; mx.ToEulerAnglesZYX(z, y, x);
+
+		worldRotation = { x.valueDegrees(),  y.valueDegrees(), z.valueDegrees() };
+		worldRotation += {360.0, 360.0, 360.0};
+		worldRotation = { std::fmod(worldRotation.x, 360), std::fmod(worldRotation.y, 360) , std::fmod(worldRotation.z, 360) };
 	}
 	return worldRotation;
 }

@@ -107,7 +107,7 @@ void PhysicsSystem::setWorldGravity(Vector3 gravity)
 
 void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
 {
-	debugDrawer->setDebugMode(btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE);
+	debugDrawer->setDebugMode(btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE + btIDebugDraw::DBG_DrawContactPoints);
 	dynamicsWorld->setDebugDrawer(debugDrawer);
 }
 
@@ -177,7 +177,8 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 	t.setIdentity();
 	Vector3 pos = transform->getWorldPosition(), rot = transform->getWorldRotation();
 	t.setOrigin({ btScalar(pos.x), btScalar(pos.y), btScalar(pos.z) });
-	t.setRotation(btQuaternion(btScalar(rot.y) * SIMD_RADS_PER_DEG, btScalar(rot.x) * SIMD_RADS_PER_DEG, btScalar(rot.z) * SIMD_RADS_PER_DEG));
+	btQuaternion quat = (btQuaternion(btScalar(rot.y) * SIMD_RADS_PER_DEG, btScalar(rot.x) * SIMD_RADS_PER_DEG, btScalar(rot.z) * SIMD_RADS_PER_DEG)); quat.normalize();
+	t.setRotation(quat);
 	return t;
 }
 

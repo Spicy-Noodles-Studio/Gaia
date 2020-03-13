@@ -30,8 +30,9 @@ void GaiaMotionState::getWorldTransform(btTransform& worldTrans) const
 void GaiaMotionState::setWorldTransform(const btTransform& worldTrans)
 {
 	btScalar x, y, z;
-	worldTrans.getRotation().getEulerZYX(z, y, x);
-	transform->setWorldRotation({ x / SIMD_RADS_PER_DEG, y / SIMD_RADS_PER_DEG, z / SIMD_RADS_PER_DEG });
+	worldTrans.getRotation().getEulerZYX(z,y,x);
+	Vector3 angle = { x / SIMD_RADS_PER_DEG, y / SIMD_RADS_PER_DEG, z / SIMD_RADS_PER_DEG };
+	transform->setWorldRotation(angle);
 	btVector3 pos = worldTrans.getOrigin();
 	transform->setWorldPosition({ pos.x() - offset.x, pos.y() - offset.y, pos.z() - offset.z });
 }

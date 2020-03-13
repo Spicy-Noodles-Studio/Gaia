@@ -48,10 +48,9 @@ public:
 
 	virtual void setActive(bool active);
 	void multiplyScale(const Vector3& scale);
-	void setTransform();
+	void updateTransform();
 
-	void addChild(const RigidBody* rb);
-	void lookParent() const;
+	void disableDeactivation();
 
 	bool isTrigger() const;
 	bool isKinematic() const;

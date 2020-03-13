@@ -1,6 +1,7 @@
 #include "Reverb.h"
 #include "GameObject.h"
 
+
 Reverb::Reverb(GameObject* gameObject) : GaiaComponent(gameObject)
 {
 	active = true;
@@ -15,6 +16,8 @@ Reverb::Reverb(GameObject* gameObject) : GaiaComponent(gameObject)
 	reverb->set3DAttributes(&pos, minDistance, maxDistance);
 	reverb->setActive(active);
 	reverb->setProperties(&reverbProperties);
+
+	initPresets();
 
 }
 
@@ -49,30 +52,12 @@ void Reverb::handleData(ComponentData* data)
 		std::stringstream ss(prop.second);
 
 		if (prop.first == "preset") {
-			if (prop.second == "off") reverbProperties = FMOD_PRESET_OFF;
-			else if (prop.second == "generic") reverbProperties = FMOD_PRESET_GENERIC;
-			else if (prop.second == "paddedcell") reverbProperties = FMOD_PRESET_PADDEDCELL;
-			else if (prop.second == "room") reverbProperties = FMOD_PRESET_ROOM;
-			else if (prop.second == "bathroom") reverbProperties = FMOD_PRESET_BATHROOM;
-			else if (prop.second == "livingroom") reverbProperties = FMOD_PRESET_LIVINGROOM;
-			else if (prop.second == "stoneroom") reverbProperties = FMOD_PRESET_STONEROOM;
-			else if (prop.second == "auditorium") reverbProperties = FMOD_PRESET_AUDITORIUM;
-			else if (prop.second == "concerthall") reverbProperties = FMOD_PRESET_CONCERTHALL;
-			else if (prop.second == "cave") reverbProperties = FMOD_PRESET_CAVE;
-			else if (prop.second == "arena") reverbProperties = FMOD_PRESET_ARENA;
-			else if (prop.second == "hangar") reverbProperties = FMOD_PRESET_HANGAR;
-			else if (prop.second == "carpettedhallway") reverbProperties = FMOD_PRESET_CARPETTEDHALLWAY;
-			else if (prop.second == "hallway") reverbProperties = FMOD_PRESET_HALLWAY;
-			else if (prop.second == "stonecorridor") reverbProperties = FMOD_PRESET_STONECORRIDOR;
-			else if (prop.second == "alley") reverbProperties = FMOD_PRESET_ALLEY;
-			else if (prop.second == "forest") reverbProperties = FMOD_PRESET_FOREST;
-			else if (prop.second == "city") reverbProperties = FMOD_PRESET_CITY;
-			else if (prop.second == "mountains") reverbProperties = FMOD_PRESET_MOUNTAINS;
-			else if (prop.second == "quarry") reverbProperties = FMOD_PRESET_QUARRY;
-			else if (prop.second == "plain") reverbProperties = FMOD_PRESET_PLAIN;
-			else if (prop.second == "parkinglot") reverbProperties = FMOD_PRESET_PARKINGLOT;
-			else if (prop.second == "sewerpipe") reverbProperties = FMOD_PRESET_SEWERPIPE;
-			else if (prop.second == "underwater") reverbProperties = FMOD_PRESET_UNDERWATER;
+			
+			if (presets.find(prop.second) != presets.end())
+			{
+				reverbProperties = presets[prop.second];
+			}
+			
 			else printf("REVERB: error loading preset %s\n", prop.second.c_str());
 		}
 		else if (prop.first == "maxDistance") {
@@ -82,6 +67,10 @@ void Reverb::handleData(ComponentData* data)
 		else if (prop.first == "minDistance") {
 			float minDistance; ss >> minDistance;
 			setReverbMinDistance(minDistance);
+		}
+		else
+		{
+			printf("REVERB: Invalid property name \"%s\"", prop.first.c_str());
 		}
 	}
 }
@@ -166,4 +155,33 @@ void Reverb::setReverbPreset(PRESET type)
 		break;
 	}
 	reverb->setProperties(&reverbProperties);
+}
+
+
+void Reverb::initPresets()
+{
+	presets["off"] = FMOD_PRESET_OFF;
+	presets["generic"] = FMOD_PRESET_GENERIC;
+	presets["paddedcell"] = FMOD_PRESET_PADDEDCELL;
+	presets["room"] = FMOD_PRESET_ROOM;
+	presets["bathroom"] = FMOD_PRESET_BATHROOM;
+	presets["livingroom"] = FMOD_PRESET_LIVINGROOM;
+	presets["stoneroom"] = FMOD_PRESET_STONEROOM;
+	presets["auditorium"] = FMOD_PRESET_AUDITORIUM;
+	presets["concerthall"] = FMOD_PRESET_CONCERTHALL;
+	presets["cave"] = FMOD_PRESET_CAVE;
+	presets["arena"] = FMOD_PRESET_ARENA;
+	presets["hangar"] = FMOD_PRESET_HANGAR;
+	presets["carpettedhallway"] = FMOD_PRESET_CARPETTEDHALLWAY;
+	presets["hallway"] = FMOD_PRESET_HALLWAY;
+	presets["stonecorridor"] = FMOD_PRESET_STONECORRIDOR;
+	presets["alley"] = FMOD_PRESET_ALLEY;
+	presets["forest"] = FMOD_PRESET_FOREST;
+	presets["city"] = FMOD_PRESET_CITY;
+	presets["mountains"] = FMOD_PRESET_MOUNTAINS;
+	presets["quarry"] = FMOD_PRESET_QUARRY;
+	presets["plain"] = FMOD_PRESET_PLAIN;
+	presets["parkinglot"] = FMOD_PRESET_PARKINGLOT;
+	presets["sewerpipe"] = FMOD_PRESET_SEWERPIPE;
+	presets["underwater"] = FMOD_PRESET_UNDERWATER;
 }

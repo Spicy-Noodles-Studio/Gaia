@@ -98,8 +98,18 @@ void SoundEmitter::handleData(ComponentData* data)
 			float pitch; ss >> pitch;
 			setPitch(pitch);
 		}
+		else if (prop.first == "playSound")
+		{
+			playSound(prop.second, true);
+		}
+		else if (prop.first == "playMusic")
+		{
+			playMusic(prop.second);
+		}
+		else
+		{
+			printf("SOUND EMITTER: Invalid property name \"%s\"", prop.first.c_str());
+		}
 	}
 
-	// esto esta mas feo que hacer merge sin squash & merge!! ***
-	playSound("prueba2", true);
 }

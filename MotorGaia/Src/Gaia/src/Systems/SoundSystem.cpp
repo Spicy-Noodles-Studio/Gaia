@@ -202,7 +202,10 @@ void SoundSystem::removeEmitter(EmitterData* emitter)
 {
 	auto it = std::find(emitters.begin(), emitters.end(), emitter);
 	if (it != emitters.end())
+	{
+		delete* it;
 		emitters.erase(it);
+	}
 }
 
 void SoundSystem::removeListener()

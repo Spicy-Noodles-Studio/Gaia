@@ -97,7 +97,8 @@
                     "ComponentName": "SoundEmitter",
                     "ComponentProperties": {
                         "volume" : "1",
-                        "pitch" : "1"
+                        "pitch" : "1",
+                        "playSound" : "prueba2"
                     }
                 },
                 {

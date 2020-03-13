@@ -5,6 +5,7 @@
 #include "GaiaComponent.h"
 #include "SoundSystem.h"
 #include "Vector3.h"
+#include <map>
 
 enum PRESET {
 	OFF, GENERIC, PADDEDCELL, ROOM, BATHROOM, LIVINGROOM, STONEROOM, AUDITORIUM, CONCERTHALL,
@@ -16,6 +17,7 @@ class Reverb : public GaiaComponent
 {
 private:
 
+	std::map<std::string, FMOD_REVERB_PROPERTIES> presets;
 	FMOD_VECTOR pos;
 
 	float minDistance;
@@ -26,12 +28,13 @@ private:
 	FMOD::Reverb3D* reverb;
 	FMOD_REVERB_PROPERTIES reverbProperties;
 
+	
+
 public:
 	Reverb(GameObject* gameObject);
 	~Reverb();
-
-	virtual void update(float deltaTime);
-
+	
+	
 	void setReverbPreset(PRESET type);
 	void setReverbMaxDistance(float distance);
 	void setReverbMinDistance(float distance);
@@ -39,6 +42,8 @@ public:
 	void setReverbActive(bool _active);
 
 	void handleData(ComponentData* data);
+private:
+	void initPresets();
 };
 
 #endif

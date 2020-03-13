@@ -8,14 +8,9 @@
 
 class SoundListener : public GaiaComponent
 {
-private:
-	
-
 public:
 	SoundListener(GameObject* gameObject);
 	~SoundListener();
-
-	virtual void update(float deltaTime);
 };
 
 #endif

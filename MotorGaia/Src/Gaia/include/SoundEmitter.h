@@ -9,21 +9,14 @@
 class SoundEmitter : public GaiaComponent
 {
 private:
+	SoundSystem::EmitterData * emitterData;
 
-	FMOD_VECTOR pos;
-	FMOD_VECTOR zero = { 0,0,0 };
-
-	FMOD::Channel* channel;
 	float pitch;
 	float volume;
-
-	bool paused;
 
 public:
 	SoundEmitter(GameObject* gameObject);
 	~SoundEmitter();
-
-	virtual void update();
 
 	void playSound(std::string soundName, bool reverb = false);
 	void playMusic(std::string soundName, bool reverb = false);

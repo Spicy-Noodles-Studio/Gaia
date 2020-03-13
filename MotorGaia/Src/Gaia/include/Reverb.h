@@ -30,8 +30,6 @@ public:
 	Reverb(GameObject* gameObject);
 	~Reverb();
 
-	virtual void update(float deltaTime);
-
 	void setReverbPreset(PRESET type);
 	void setReverbMaxDistance(float distance);
 	void setReverbMinDistance(float distance);

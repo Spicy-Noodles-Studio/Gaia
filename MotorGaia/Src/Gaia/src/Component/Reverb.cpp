@@ -23,10 +23,7 @@ Reverb::~Reverb()
 	reverb->release();
 }
 
-void Reverb::update(float deltaTime)
-{
 
-}
 
 void Reverb::setReverbMaxDistance(float distance)
 {
@@ -76,7 +73,7 @@ void Reverb::handleData(ComponentData* data)
 			else if (prop.second == "parkinglot") reverbProperties = FMOD_PRESET_PARKINGLOT;
 			else if (prop.second == "sewerpipe") reverbProperties = FMOD_PRESET_SEWERPIPE;
 			else if (prop.second == "underwater") reverbProperties = FMOD_PRESET_UNDERWATER;
-			else printf("REVERB: error loading preset %s\n", prop.second);
+			else printf("REVERB: error loading preset %s\n", prop.second.c_str());
 		}
 		else if (prop.first == "maxDistance") {
 			float maxDistance; ss >> maxDistance;

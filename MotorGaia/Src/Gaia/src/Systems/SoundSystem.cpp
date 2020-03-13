@@ -6,8 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "SoundListener.h"
-#include "SoundEmitter.h"
+
 
 SoundSystem::SoundSystem()
 {
@@ -54,6 +53,11 @@ void SoundSystem::close()
 	}
 	sounds.clear();
 
+	for (EmitterData* emi : emitters)
+	{
+		removeEmitter(emi);
+	}
+	removeListener();
 	system->close();
 	system->release();
 
@@ -124,7 +128,7 @@ bool SoundSystem::createSounds(const std::string filename)
 	return true;
 }
 
-FMOD::Channel* SoundSystem::playSound(const std::string sound)
+FMOD::Channel* SoundSystem::playSound(const std::string & sound)
 {
 	FMOD::Channel* channel;
 
@@ -135,7 +139,7 @@ FMOD::Channel* SoundSystem::playSound(const std::string sound)
 
 }
 
-FMOD::Channel* SoundSystem::playMusic(const std::string sound)
+FMOD::Channel* SoundSystem::playMusic(const std::string & sound)
 {
 	FMOD::Channel* channel;
 
@@ -193,34 +197,61 @@ void SoundSystem::setListenerAttributes(const Vector3& position, const Vector3& 
 
 }
 
-void SoundSystem::initListener(SoundListener* listener)
-{
-	if (this->listener == nullptr)
-		this->listener = listener;
-}
 
-void SoundSystem::addEmitter(SoundEmitter* emitter)
-{
-	emitters.push_back(emitter);
-}
-
-void SoundSystem::removeEmitter(SoundEmitter* emitter)
+void SoundSystem::removeEmitter(EmitterData* emitter)
 {
 	auto it = std::find(emitters.begin(), emitters.end(), emitter);
 	if (it != emitters.end())
 		emitters.erase(it);
 }
 
+void SoundSystem::removeListener()
+{
+	delete listener;
+}
+
 void SoundSystem::update(float deltaTime)
 {
-	if(listener != nullptr)
-		listener->update(deltaTime);
-
+	Vector3 pos, forward, up;
+	if (listener != nullptr)
+	{
+		pos = *listener->position;
+		forward = GetForwardVector(*listener->quaternion);
+		up = GetUpVector(*listener->quaternion);
+		setListenerAttributes(pos, forward, up);
+	}
+	FMOD_VECTOR posEmi,zero;
+	zero = { 0,0,0 };
 	for (int i = 0; i < emitters.size(); i++)
-		emitters[i]->update();
+	{
+		if (emitters[i]->channel && !emitters[i]->paused) 
+		{
+			posEmi =vecToFMOD(*emitters[i]->position);
+			emitters[i]->channel->set3DAttributes(&posEmi, &zero);
+		}
+	}
 
 	result = system->update();
 	ERRCHECK(result);
+}
+
+SoundSystem::EmitterData* SoundSystem::createEmitter(const Vector3* pos)
+{
+	SoundSystem::EmitterData* data = new SoundSystem::EmitterData();
+	data->position = pos;
+	emitters.push_back(data);
+	return data;
+}
+
+SoundSystem::ListenerData* SoundSystem::createListener(const Vector3* pos, const Quaternion* q)
+{
+	if (listener != nullptr)
+		delete listener;
+	ListenerData* data = new ListenerData();
+	data->position = pos;
+	data->quaternion = q;
+	listener = data;
+	return data;
 }
 
 FMOD_VECTOR SoundSystem::vecToFMOD(const Vector3& in)

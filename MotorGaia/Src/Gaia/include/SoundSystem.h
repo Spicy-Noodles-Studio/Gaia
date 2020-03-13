@@ -14,14 +14,18 @@
 #include "Quaternion.h"
 #include <vector>
 
-
+typedef FMOD_MODE SoundMode;
+typedef FMOD::Sound Sound;
+typedef FMOD::System System;
+typedef FMOD::Channel Channel;
+typedef FMOD::ChannelGroup ChannelGroup;
 
 class SoundSystem : public Singleton<SoundSystem>
 {
 public:
 	struct EmitterData
 	{
-		FMOD::Channel* channel;
+		Channel* channel;
 		const Vector3* position;
 		bool paused;
 	};
@@ -31,13 +35,11 @@ public:
 		const Quaternion* quaternion;
 	};
 private:
-	FMOD::System* system;
-	FMOD_RESULT result;
-	std::string file;
-	std::map<std::string, FMOD::Sound*> sounds;
+	System* system;
+	std::map<std::string, Sound*> sounds;
 
-	FMOD::ChannelGroup* music;
-	FMOD::ChannelGroup* soundEfects;
+	ChannelGroup* music;
+	ChannelGroup* soundEfects;
 
 	std::vector<EmitterData*> emitters;
 	ListenerData* listener = nullptr;
@@ -51,9 +53,10 @@ public:
 	void close();
 
 	bool createSounds(const std::string filename);
+	Sound* createSound(const std::string& soundName, const SoundMode& mode);
 
-	FMOD::Channel* playSound(const std::string & sound);
-	FMOD::Channel* playMusic(const std::string & sound);
+	Channel* playSound(const std::string& sound);
+	Channel* playMusic(const std::string& sound);
 
 	void setPauseAllSounds(bool pause);
 

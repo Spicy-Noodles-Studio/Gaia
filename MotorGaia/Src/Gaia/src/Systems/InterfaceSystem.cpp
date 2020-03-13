@@ -71,7 +71,7 @@ void InterfaceSystem::init(Window* window)
 	CEGUI::System::create(*mRenderer);
 
 	// esto deberia ir en el ResourceManager!!
-	setupResources();
+	//setupResources();
 
 	createRoot();
 }
@@ -90,5 +90,11 @@ void InterfaceSystem::update(float deltaTime)
 
 UIElement* InterfaceSystem::loadLayout(const std::string& filename)
 {
-	return CEGUI::WindowManager::getSingleton().loadLayoutFromFile(filename);
+	try {
+		return CEGUI::WindowManager::getSingleton().loadLayoutFromFile(filename);
+	}
+	catch (std::exception e) {
+		printf("INTERFACE SYSTEM: trying to load \"%s\" layout\n", filename.c_str());
+		return nullptr;
+	}
 }

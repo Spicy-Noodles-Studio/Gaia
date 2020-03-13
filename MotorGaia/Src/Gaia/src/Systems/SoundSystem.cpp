@@ -18,7 +18,7 @@ SoundSystem::~SoundSystem()
 
 void SoundSystem::init()
 {
-	result = FMOD::System_Create(&system);
+	FMOD_RESULT result = FMOD::System_Create(&system);
 	ERRCHECK(result);
 
 	result = system->init(128, FMOD_INIT_NORMAL, 0);
@@ -40,9 +40,6 @@ void SoundSystem::init()
 	ERRCHECK(result);
 
 	std::cout << "\nSound system started" << "\n";
-
-	createSounds(".//Assets//Files//sounds.asset");
-
 }
 
 void SoundSystem::close()
@@ -106,7 +103,7 @@ bool SoundSystem::createSounds(const std::string filename)
 		mode = sound_mode == "3D" ? FMOD_3D : FMOD_2D;
 		mode |= loop == "true" ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
 		//mode |= FMOD_CREATESTREAM;
-
+		FMOD_RESULT result;
 		if ((result = system->createSound(file_path.c_str(), mode, 0, &sonido)) != FMOD_RESULT::FMOD_OK) {
 			std::cout << "Sound loading failed at file: " << soundfile_name << "\n" <<
 				"FMOD Error: " << FMOD_ErrorString(result) << "\n"
@@ -128,33 +125,36 @@ bool SoundSystem::createSounds(const std::string filename)
 	return true;
 }
 
+Sound* SoundSystem::createSound(const std::string& soundName, const SoundMode& mode)
+{
+	Sound* sound;
+	if (system->createSound(soundName.c_str(), mode, nullptr, &sound) == FMOD_RESULT::FMOD_OK)
+		return sound;
+	return nullptr;
+}
+
 FMOD::Channel* SoundSystem::playSound(const std::string & sound)
 {
-	FMOD::Channel* channel;
-
-	result = system->playSound(sounds[sound], soundEfects, false, &channel);
+	Channel* channel;
+	FMOD_RESULT result = system->playSound(sounds[sound], soundEfects, false, &channel);
 	ERRCHECK(result);
 	channel->set3DMinMaxDistance(50, 10000);
 	return channel;
-
 }
 
 FMOD::Channel* SoundSystem::playMusic(const std::string & sound)
 {
-	FMOD::Channel* channel;
-
-	result = system->playSound(sounds[sound], music, false, &channel);
+	Channel* channel;
+	FMOD_RESULT result = system->playSound(sounds[sound], music, false, &channel);
 	ERRCHECK(result);
-
 	channel->set3DMinMaxDistance(50, 10000);
 	return channel;
-
 }
 
 void SoundSystem::setPauseAllSounds(bool pause)
 {
-	FMOD::ChannelGroup* master;
-	result = system->getMasterChannelGroup(&master);
+	ChannelGroup* master;
+	FMOD_RESULT result = system->getMasterChannelGroup(&master);
 	ERRCHECK(result);
 	master->setPaused(pause);
 }
@@ -180,8 +180,8 @@ Parametros en decimal para no romper timpanos
 */
 void SoundSystem::setGeneralVolume(float volume)
 {
-	FMOD::ChannelGroup* master;
-	result = system->getMasterChannelGroup(&master);
+	ChannelGroup* master;
+	FMOD_RESULT result = system->getMasterChannelGroup(&master);
 	ERRCHECK(result);
 	master->setVolume(volume);
 }
@@ -194,7 +194,6 @@ void SoundSystem::setListenerAttributes(const Vector3& position, const Vector3& 
 	forwardTmp = { float(forward.x) ,float(forward.y) ,float(forward.z) };
 	upTmp = { float(up.x) ,float(up.y) ,float(up.z) };
 	system->set3DListenerAttributes(0, &pos, &vel, &forwardTmp, &upTmp);
-
 }
 
 
@@ -234,7 +233,7 @@ void SoundSystem::update(float deltaTime)
 		}
 	}
 
-	result = system->update();
+	FMOD_RESULT result = system->update();
 	ERRCHECK(result);
 }
 
@@ -270,7 +269,7 @@ FMOD_VECTOR SoundSystem::vecToFMOD(const Vector3& in)
 FMOD::Reverb3D* SoundSystem::createReverb()
 {
 	FMOD::Reverb3D* reverb;
-	result = system->createReverb3D(&reverb);
+	FMOD_RESULT result = system->createReverb3D(&reverb);
 	ERRCHECK(result);
 	return reverb;
 }

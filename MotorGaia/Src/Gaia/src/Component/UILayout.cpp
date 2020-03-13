@@ -18,6 +18,8 @@ UILayout::~UILayout()
 void UILayout::setLayout(const std::string& filename)
 {
 	layout = InterfaceSystem::GetInstance()->loadLayout(filename);
+	if (layout == nullptr)
+		return;
 	InterfaceSystem::GetInstance()->getRoot()->addChild(layout);
 
 	//esto esta MU FEO***
@@ -38,6 +40,8 @@ void UILayout::handleData(ComponentData* data)
 	{
 		if (prop.first == "layout")
 			setLayout(prop.second);
+		else
+			printf("UILAYOUT: invalid property name \"%s\"", prop.first.c_str());
 	}
 }
 

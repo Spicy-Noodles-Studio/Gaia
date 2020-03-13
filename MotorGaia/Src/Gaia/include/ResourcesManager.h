@@ -3,6 +3,7 @@
 #ifndef RESOURCES_MANAGER_H
 #define RESOURCES_MANAGER_H
 
+#include <thread>
 #include <map>
 #include "DataLoader.h"
 #include "SceneData.h"
@@ -10,6 +11,7 @@
 
 #include <OgreFileSystemLayer.h>
 #include "ShaderTechniqueResolver.h"
+#include <SoundSystem.h>
 
 class ResourcesManager
 {
@@ -32,20 +34,28 @@ private:
 	
 	void loadScenes(const std::string& filename);
 	void loadBlueprints(const std::string& filename);
+	void loadSounds(const std::string& filename);
 	void loadOgreResources(const std::string& filename);
+	void loadInterfaceResources(const std::string& filename);
 
 	void loadScene(const std::string& filename);
 	void loadBlueprint(const std::string& filename);
+	void loadSound(const std::string& filename);
 
 	bool initShaderSystem();
 	void destroyShaderSystem();
 
 private:
+	std::mutex sceneDataMutex;
+	std::mutex blueprintMutex;
+	std::mutex soundMutex;
+
 	std::string resourcesPath;
 	DataLoader dataLoader;
 
 	static std::map<std::string, SceneData*> sceneData;
 	static std::map<std::string, GameObjectData*> blueprints;
+	static std::map<std::string, Sound*> sounds;
 
 	Ogre::FileSystemLayer* fileSystemLayer;
 	std::string shaderLibPath;

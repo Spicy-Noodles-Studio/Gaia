@@ -8,7 +8,7 @@
 #include <OgreGpuProgramManager.h>
 
 std::map<std::string, SceneData*> ResourcesManager::sceneData;
-std::map<std::string, GameObjectData*> ResourcesManager::blueprints;
+std::map<std::string, GameObjectData*> ResourcesManager::blueprintData;
 std::map<std::string, Sound*> ResourcesManager::sounds;
 
 ResourcesManager::ResourcesManager(const std::string& filePath) :	dataLoader(), resourcesPath(filePath), fileSystemLayer(nullptr), 
@@ -78,13 +78,19 @@ void ResourcesManager::init()
 
 void ResourcesManager::close()
 {
-	for (auto s : sceneData)
-		delete s.second;
-	for (auto b : blueprints)
-		delete b.second;
+	for (auto sData : sceneData)
+		delete sData.second;
+	for (auto bData : blueprintData)
+		delete bData.second;
+
+	for (auto sound : sounds) {
+		sound.second->release();
+		sound.second = nullptr;
+	}
 
 	sceneData.clear();
-	blueprints.clear();
+	blueprintData.clear();
+	sounds.clear();
 
 	if(fileSystemLayer != nullptr)
 		delete fileSystemLayer;
@@ -200,11 +206,11 @@ bool ResourcesManager::registerBlueprint(GameObjectData* data)
 {
 	// lock_guard secures unlock on destruction
 	std::lock_guard<std::mutex> lock(blueprintMutex);
-	if (blueprints.find(data->name) != blueprints.end()) {
+	if (blueprintData.find(data->name) != blueprintData.end()) {
 		printf("RESOURCES MANAGER: trying to add an already existing Blueprint: %s.\n", data->name.c_str());
 		return false;
 	}
-	blueprints[data->name] = data;
+	blueprintData[data->name] = data;
 	return true;
 }
 
@@ -230,11 +236,20 @@ const SceneData* ResourcesManager::getSceneData(int index)
 
 const GameObjectData* ResourcesManager::getBlueprint(const std::string& name)
 {
-	if (blueprints.find(name) == blueprints.end()) {
+	if (blueprintData.find(name) == blueprintData.end()) {
 		printf("RESOURCES MANAGER: trying to get not existing Blueprint: %s.\n", name.c_str());
 		return nullptr;
 	}
-	return blueprints[name];
+	return blueprintData[name];
+}
+
+Sound* ResourcesManager::getSound(const std::string& name)
+{
+	if (sounds.find(name) == sounds.end()) {
+		printf("RESOURCES MANAGER: trying to get not existing Sound: %s.\n", name.c_str());
+		return nullptr;
+	}
+	return sounds[name];
 }
 
 void ResourcesManager::loadResources(const std::string& resourceType, const std::string& path)

@@ -28,6 +28,7 @@ public:
 	static const SceneData* getSceneData(const std::string& name);
 	static const SceneData* getSceneData(int index);
 	static const GameObjectData* getBlueprint(const std::string& name);
+	static Sound* getSound(const std::string& name);
 
 private:
 	void loadResources(const std::string& resourceType, const std::string& filename);
@@ -49,12 +50,13 @@ private:
 	std::mutex sceneDataMutex;
 	std::mutex blueprintMutex;
 	std::mutex soundMutex;
+	std::mutex interfaceMutex;
 
 	std::string resourcesPath;
 	DataLoader dataLoader;
 
 	static std::map<std::string, SceneData*> sceneData;
-	static std::map<std::string, GameObjectData*> blueprints;
+	static std::map<std::string, GameObjectData*> blueprintData;
 	static std::map<std::string, Sound*> sounds;
 
 	Ogre::FileSystemLayer* fileSystemLayer;

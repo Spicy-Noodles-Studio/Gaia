@@ -36,7 +36,6 @@ public:
 	};
 private:
 	System* system;
-	std::map<std::string, Sound*> sounds;
 
 	ChannelGroup* music;
 	ChannelGroup* soundEfects;
@@ -52,11 +51,10 @@ public:
 	void init();
 	void close();
 
-	bool createSounds(const std::string filename);
-	Sound* createSound(const std::string& soundName, const SoundMode& mode);
+	Sound* createSound(const std::string& name, const SoundMode& mode);
 
-	Channel* playSound(const std::string& sound);
-	Channel* playMusic(const std::string& sound);
+	Channel* playSound(const std::string& name);
+	Channel* playMusic(const std::string& name);
 
 	void setPauseAllSounds(bool pause);
 

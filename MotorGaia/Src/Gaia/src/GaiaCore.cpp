@@ -86,20 +86,20 @@ void GaiaCore::run()
 
 void GaiaCore::close()
 {
-	// ResourcesManager termination
-	resourcesManager.close();
-	// ComponentManager termination
-	componentManager->close();
 	// SceneManager termination
 	sceneManager->close();
+	// ComponentManager termination
+	componentManager->close();
+	// ResourcesManager termination
+	resourcesManager.close();
 
 	//Systems termination
-	eventSystem->close();
-	renderSystem->close();
-	inputSystem->close();
-	interfaceSystem->close();
-	physicsSystem->close();
 	soundSystem->close();
+	physicsSystem->close();
+	interfaceSystem->close();
+	inputSystem->close();
+	renderSystem->close();
+	eventSystem->close();
 
 	if (eventSystem != nullptr)
 		delete eventSystem;
@@ -119,8 +119,8 @@ void GaiaCore::render(float deltaTime)
 	// RenderSystem
 	renderSystem->render(deltaTime);
 
-	// PhysicsSystem
 #ifdef _DEBUG
+	// PhysicsSystem
 	physicsSystem->render();
 #endif
 
@@ -130,11 +130,14 @@ void GaiaCore::render(float deltaTime)
 
 void GaiaCore::preUpdate(float deltaTime)
 {
+	// InputSystem
+	inputSystem->preUpdate();
+
 	// EventSystem
 	eventSystem->update();
 
-	// InputSystem
-	inputSystem->update();
+	// InputSystem (DEPRECATED)
+	//inputSystem->update();
 
 	// InterfaceSystem
 	interfaceSystem->update(deltaTime);
@@ -144,19 +147,17 @@ void GaiaCore::preUpdate(float deltaTime)
 
 	// SoundSystem
 	soundSystem->update(deltaTime);
-
-	// Managers (escena)
-	sceneManager->preUpdate(deltaTime);
 }
 
 void GaiaCore::update(float deltaTime)
 {
 	// Managers
+	sceneManager->preUpdate(deltaTime);
 	sceneManager->update(deltaTime);
+	sceneManager->postUpdate(deltaTime);
 }
 
 void GaiaCore::postUpdate(float deltaTime)
 {
-	// Managers
-	sceneManager->postUpdate(deltaTime);
+	inputSystem->postUpdate();
 }

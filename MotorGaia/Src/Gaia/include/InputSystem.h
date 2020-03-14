@@ -11,8 +11,10 @@
 #include "SDL2/SDL_keycode.h"
 
 #include "Singleton.h"
+#include "MouseEventListener.h"
+#include "KeyboardEventListener.h"
 
-class InputSystem : public Singleton<InputSystem>
+class InputSystem : public Singleton<InputSystem>, public MouseEventListener, public KeyboardEventListener
 {
 #define MAX_CONTROLLERS 4
 
@@ -88,7 +90,17 @@ private:
     void controllerInputDown(int index);
     void controllerInputUp(int index);
     
-    
+    // Listener callbacks
+    void processKeyDown(std::string keyName, int key);
+    void processKeyUp(std::string keyName, int key);
+    void processMouseMotion(int x, int y);
+    void processMouseLeftButtonDown();
+    void processMouseRightButtonDown();
+    void processMouseMiddleButtonDown(); 
+    void processMouseLeftButtonUp();
+    void processMouseRightButtonUp();
+    void processMouseMiddleButtonUp();
+    void processMouseWheelScrollY(int value);
 
 
     // UTILS
@@ -101,13 +113,11 @@ private:
     int getControllerRemovedIndex(SDL_Event* e);
 
 public:
-
-    // est� feo...
-    bool exit = false;
-
     void init();
     void close();
+    void preUpdate();
     void update();
+    void postUpdate();
 
     void toggleFlags() { flags = !flags; }
 

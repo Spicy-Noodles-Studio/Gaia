@@ -2,6 +2,9 @@
 
 #include <OgreRoot.h>
 #include "Singleton.h"
+#include "MouseEventListener.h"
+#include "KeyboardEventListener.h"
+#include "WindowEventListener.h"
 
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/Renderer.h>
@@ -11,13 +14,14 @@
 
 typedef CEGUI::Window UIElement;
 
-class InterfaceSystem : public Singleton<InterfaceSystem>
+class InterfaceSystem : public Singleton<InterfaceSystem>, public MouseEventListener, public KeyboardEventListener, public WindowEventListener
 {
 private:
 	CEGUI::OgreRenderer* mRenderer;
 	UIElement* root;
 
 	void setupResources();
+	CEGUI::Key::Scan SDLKeyToCEGUIKey(int key);
 
 public:
 	InterfaceSystem();

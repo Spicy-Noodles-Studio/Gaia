@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "ComponentData.h"
 
-UILayout::UILayout(GameObject* gameObject) : GaiaComponent(gameObject)
+UILayout::UILayout(GameObject* gameObject) : GaiaComponent(gameObject), layout(nullptr)
 {
 
 }
@@ -47,10 +47,14 @@ void UILayout::handleData(ComponentData* data)
 
 UIElement* UILayout::getElement(const std::string& name)
 {
+	if (layout == nullptr)
+		return nullptr;
 	return layout->getChild(name);
 }
 
 void UILayout::setVisible(bool visible)
 {
+	if (layout == nullptr)
+		return;
 	layout->setVisible(visible);
 }

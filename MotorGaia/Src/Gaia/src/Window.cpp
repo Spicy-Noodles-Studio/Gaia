@@ -63,7 +63,8 @@ Window::Window(Ogre::Root* root, std::string windowTitle) : root(root)
 
 Window::~Window()
 {
-
+	root->destroyRenderTarget(window);
+	SDL_DestroyWindow(sdlWindow);
 }
 
 void Window::displayConfig(Ogre::RenderSystem* rs)
@@ -139,6 +140,4 @@ void Window::resized(unsigned int width, unsigned int height)
 void Window::close()
 {
 	closed = true;
-	root->destroyRenderTarget(window);
-	SDL_DestroyWindow(sdlWindow);
 }

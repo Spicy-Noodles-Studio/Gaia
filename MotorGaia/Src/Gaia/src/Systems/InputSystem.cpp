@@ -1,4 +1,5 @@
 #include "InputSystem.h"
+#include "DebugUtils.h"
 
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/System.h>
@@ -22,7 +23,16 @@ void InputSystem::init()
     SDL_GameControllerEventState(true);
 
     // Callback definitions
-
+    onKeyDown([this](std::string keyName, int key) { processKeyDown(keyName, key); });
+    onKeyUp([this](std::string keyName, int key) { processKeyUp(keyName, key); });
+    onMouseMotion([this](int x, int y) { processMouseMotion(x, y); });
+    onMouseLeftButtonDown([this]() { processMouseLeftButtonDown(); });
+    onMouseRightButtonDown([this]() { processMouseRightButtonDown(); });
+    onMouseMiddleButtonDown([this]() { processMouseMiddleButtonDown(); });
+    onMouseLeftButtonUp([this]() { processMouseLeftButtonUp(); });
+    onMouseRightButtonUp([this]() { processMouseRightButtonUp(); });
+    onMouseMiddleButtonUp([this]() { processMouseMiddleButtonUp(); });
+    onMouseWheelScrollY([this](int value) { processMouseWheelScrollY(value); });
 }
 
 // Closing
@@ -42,13 +52,16 @@ void InputSystem::close()
     destroy();
 }
 
+void InputSystem::preUpdate()
+{
+    // Clear previous frame press/release events
+    clearInputs();
+}
+
 /// MAIN LOOP
 
 void InputSystem::update()
 {
-    // Clear previous frame press/release events
-    clearInputs();
-
     // Get new input events
     SDL_Event event;
     int index; int controllerIndex;
@@ -60,7 +73,7 @@ void InputSystem::update()
         switch (event.type)
         {
             // Keyboard events
-        case SDL_KEYDOWN:
+        /*case SDL_KEYDOWN:
             key = SDL_GetKeyName(event.key.keysym.sym);
             std::transform(key.begin(), key.end(), key.begin(), ::toupper);
             if (!isKeyPressed(key)) {
@@ -77,24 +90,24 @@ void InputSystem::update()
             if (flags) std::cout << "Key up: " << key << "\n";
             break;
         case SDL_TEXTINPUT:
-            break;
+            break;*/
 
             // Mouse events
-        case SDL_MOUSEMOTION:
+        /*case SDL_MOUSEMOTION:
             SDL_GetMouseState(&MOUSE_POSITION_X, &MOUSE_POSITION_Y);
             CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(
                 static_cast<float>(MOUSE_POSITION_X),
                 static_cast<float>(MOUSE_POSITION_Y)
             );
-            break;
-        case SDL_MOUSEBUTTONDOWN:
+            break;*/
+        /*case SDL_MOUSEBUTTONDOWN:
             processMouseInputDown(event.button);
             if(flags) std::cout << "Mouse X: " << MOUSE_POSITION_X << " | Mouse Y: " << MOUSE_POSITION_Y << "\n";
-            break;
-        case SDL_MOUSEBUTTONUP:
+            break;*/
+       /* case SDL_MOUSEBUTTONUP:
             processMouseInputUp(event.button);
-            break;
-        case SDL_MOUSEWHEEL:
+            break;*/
+        /*case SDL_MOUSEWHEEL:
             if (event.wheel.y > 0) {
                 MOUSE_WHEEL = 1;
                 if (flags) std::cout << "Mouse wheel up" << "\n";
@@ -103,7 +116,7 @@ void InputSystem::update()
                 MOUSE_WHEEL = -1;
                 if (flags) std::cout << "Mouse wheel down" << "\n";
             }
-            break;
+            break;*/
 
             // Controller events
         case SDL_CONTROLLERBUTTONDOWN:
@@ -178,16 +191,6 @@ void InputSystem::update()
         case SDL_CONTROLLERDEVICEREMAPPED:
             break;
 
-            // System events
-        case SDL_QUIT:
-            exit = true;
-            break;
-
-        case SDL_WINDOWEVENT:
-            if (event.window.event == SDL_WINDOWEVENT_RESIZED)
-                std::cout << "UFF\n";
-            break;
-
             // UNUSED
         case SDL_CONTROLLERAXISMOTION:
             break;
@@ -206,7 +209,7 @@ void InputSystem::update()
 
             // Default
         default:
-            if(flags) std::cout << "Unknown event: " << event.type <<"\n";
+            //if(flags) std::cout << "Unknown event: " << event.type <<"\n";
             break;
         }
 
@@ -239,6 +242,38 @@ void InputSystem::update()
             }
         }
 
+    }
+}
+
+void InputSystem::postUpdate()
+{
+    // Save current keyboard state
+    keyboardState = SDL_GetKeyboardState(NULL);
+
+    for (int i = 0; i < MAX_CONTROLLERS; i++)
+    {
+        if (controllers[i].isConected)
+        {
+            // Left joystick
+            controllers[i].LeftStickX = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTX)) > controllers[i].JOYSTICK_DEAD_ZONE ?
+                SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTX) : 0;
+            controllers[i].LeftStickY = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTY)) > controllers[i].JOYSTICK_DEAD_ZONE ?
+                SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTY) : 0;
+
+            // Right joystick
+            controllers[i].RightStickX = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTX)) > controllers[i].JOYSTICK_DEAD_ZONE ?
+                SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTX) : 0;
+            controllers[i].RightStickY = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTY)) > controllers[i].JOYSTICK_DEAD_ZONE ?
+                SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_RIGHTY) : 0;
+
+            // Triggers
+            controllers[i].LeftTrigger = SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+            controllers[i].RightTrigger = SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+        }
+        else
+        {
+            // TODO: This controller is not plugged in.
+        }
     }
 }
 
@@ -490,6 +525,82 @@ void InputSystem::controllerInputUp(int index)
     if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_Y) && !controllers[index].YButton) {
         controllers[index].YButton = false;
         controllers[index].buttonRelease.emplace("Y");
+    }
+}
+
+void InputSystem::processKeyDown(std::string keyName, int key)
+{
+    std::transform(keyName.begin(), keyName.end(), keyName.begin(), ::toupper);
+    if (!isKeyPressed(keyName)) {
+        keyPress.emplace(keyName);
+        keyHold.emplace(keyName);
+        if (flags) std::cout << "Key down: " << keyName << "\n";
+    }            
+}
+
+void InputSystem::processKeyUp(std::string keyName, int key)
+{
+    std::transform(keyName.begin(), keyName.end(), keyName.begin(), ::toupper);
+    keyRelease.emplace(keyName);
+    keyHold.erase(keyName);
+    if (flags) std::cout << "Key up: " << keyName << "\n";
+}
+
+void InputSystem::processMouseMotion(int x, int y)
+{
+    // SDL_GetMouseState(&MOUSE_POSITION_X, &MOUSE_POSITION_Y);
+    MOUSE_POSITION_X = x;
+    MOUSE_POSITION_Y = y;
+}
+
+void InputSystem::processMouseLeftButtonDown()
+{
+    MOUSE_BUTTON_LEFT.hold = true;
+    MOUSE_BUTTON_LEFT.pressed = true;
+    if (flags) LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
+}
+
+void InputSystem::processMouseRightButtonDown()
+{
+    MOUSE_BUTTON_RIGHT.hold = true;
+    MOUSE_BUTTON_RIGHT.pressed = true;
+    if (flags) LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
+}
+
+void InputSystem::processMouseMiddleButtonDown()
+{
+    MOUSE_BUTTON_MIDDLE.hold = true;
+    MOUSE_BUTTON_MIDDLE.pressed = true;
+    if (flags) LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
+}
+
+void InputSystem::processMouseLeftButtonUp()
+{
+    MOUSE_BUTTON_LEFT.hold = false;
+    MOUSE_BUTTON_LEFT.released = true;
+}
+
+void InputSystem::processMouseRightButtonUp()
+{
+    MOUSE_BUTTON_RIGHT.hold = false;
+    MOUSE_BUTTON_RIGHT.released = true;
+}
+
+void InputSystem::processMouseMiddleButtonUp()
+{
+    MOUSE_BUTTON_MIDDLE.hold = false;
+    MOUSE_BUTTON_MIDDLE.released = true;
+}
+
+void InputSystem::processMouseWheelScrollY(int value)
+{
+    if (value > 0) {
+        MOUSE_WHEEL = 1;
+        if (flags) LOG("Mouse wheel up");
+    }
+    else if (value < 0) {
+        MOUSE_WHEEL = -1;
+        if (flags) LOG("Mouse wheel down");
     }
 }
 

@@ -68,7 +68,7 @@ void MouseEventListener::onMouseMiddleButtonDown(std::function<void()> callback)
 
 void MouseEventListener::onMouseLeftButtonUp(std::function<void()> callback)
 {
-	mouseMiddleButtonUp = callback;
+	mouseLeftButtonUp = callback;
 }
 
 void MouseEventListener::onMouseRightButtonUp(std::function<void()> callback)

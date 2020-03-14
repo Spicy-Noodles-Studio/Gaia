@@ -1,6 +1,6 @@
 #pragma once
-#ifndef UILAYOUT_H
-#define UILAYOUT_H
+#ifndef UI_LAYOUT_H
+#define UI_LAYOUT_H
 
 #include "GaiaComponent.h"
 #include <CEGUI/CEGUI.h>
@@ -9,7 +9,7 @@
 class UILayout : public GaiaComponent
 {
 private:
-	CEGUI::Window* layout;
+	UIElement* layout;
 
 public:
 	UILayout(GameObject* gameObject);

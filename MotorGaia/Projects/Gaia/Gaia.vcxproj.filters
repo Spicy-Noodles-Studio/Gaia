@@ -112,9 +112,21 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\ParticleEmitter.cpp">
       <Filter>Archivos de código fuente\Component</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Events\EventListener.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\Events\WindowEventListener.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\Systems\EventSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Systems\EventSystem.cpp">
+      <Filter>Archivos de código fuente\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Events\EventListener.cpp">
+      <Filter>Archivos de código fuente\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Events\WindowEventListener.cpp">
+      <Filter>Archivos de código fuente\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Events\MouseEventListener.cpp">
+      <Filter>Archivos de código fuente\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Events\KeyboardEventListener.cpp">
+      <Filter>Archivos de código fuente\Events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
@@ -234,13 +246,23 @@
     <ClInclude Include="..\..\Src\Gaia\include\ParticleEmitter.h">
       <Filter>Archivos de encabezado\Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\EventListener.h" />
-    <ClInclude Include="..\..\Src\Gaia\include\WindowEventListener.h" />
     <ClInclude Include="..\..\Src\Gaia\include\EventSystem.h">
       <Filter>Archivos de encabezado\Systems</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\DebugUtils.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\EventListener.h">
+      <Filter>Archivos de encabezado\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\WindowEventListener.h">
+      <Filter>Archivos de encabezado\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\MouseEventListener.h">
+      <Filter>Archivos de encabezado\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\KeyboardEventListener.h">
+      <Filter>Archivos de encabezado\Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +307,12 @@
     </Filter>
     <Filter Include="Archivos de encabezado\Systems">
       <UniqueIdentifier>{52be9477-cdfb-4cb4-930f-c4e716c69b64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Events">
+      <UniqueIdentifier>{67bcdd21-44d6-48b6-887a-5c4ef9c27354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Events">
+      <UniqueIdentifier>{21d1e15d-c747-4e22-8142-e7df25f5fd91}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

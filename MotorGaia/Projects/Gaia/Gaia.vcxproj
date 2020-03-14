@@ -50,6 +50,8 @@
     <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\KeyboardEventListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\MouseEventListener.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ParticleEmitter.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InterfaceSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
@@ -92,6 +94,8 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\UILayout.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Events\EventListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Events\KeyboardEventListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Events\MouseEventListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Events\WindowEventListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />

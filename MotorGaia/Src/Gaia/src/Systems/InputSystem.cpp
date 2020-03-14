@@ -19,9 +19,9 @@ void InputSystem::init()
     // CONTROLLER SYSTEM
     for (int i = 0; i < 4; i++) controllers[i].controllerIndex = i;
 
-    //if (!SDL_WasInit(SDL_INIT_JOYSTICK)) SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
-
     SDL_GameControllerEventState(true);
+
+    // Callback definitions
 
 }
 

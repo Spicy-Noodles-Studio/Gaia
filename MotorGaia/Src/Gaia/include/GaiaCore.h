@@ -11,6 +11,7 @@
 #include <OgreRoot.h>
 #include "Window.h"
 
+#include "EventSystem.h"
 #include "RenderSystem.h"
 #include "InputSystem.h"
 #include "InterfaceSystem.h"
@@ -38,9 +39,10 @@ private:
 	void postUpdate(float deltaTime);
 
 	Ogre::Root* root;
-	Window* win;
+	Window* window;
 
 	//Systems
+	EventSystem* eventSystem;
 	RenderSystem* renderSystem;
 	InputSystem* inputSystem;
 	InterfaceSystem* interfaceSystem;

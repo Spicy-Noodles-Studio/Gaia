@@ -1,8 +1,9 @@
 #include "GaiaCore.h"
 
 
-GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
-						renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
+GaiaCore::GaiaCore() :	root(nullptr), window(nullptr),
+						eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr), 
+						interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
 						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
 {
 
@@ -25,9 +26,12 @@ void GaiaCore::init()
 		return;
 
 	// Setup window
-	win = new Window(root, "Test window - 2020 (c) Gaia ");
+	window = new Window(root, "Test window - 2020 (c) Gaia ");
 
 	// Systems initialization
+	//EventSystem
+	eventSystem = new EventSystem();
+	eventSystem->init();
 	// RenderSystem
 	renderSystem = RenderSystem::GetInstance();
 	renderSystem->init(root);
@@ -38,7 +42,7 @@ void GaiaCore::init()
 
 	// InterfaceSystem
 	interfaceSystem = InterfaceSystem::GetInstance();
-	interfaceSystem->init(win);
+	interfaceSystem->init(window);
 
 	// PhysicsSystem
 	physicsSystem = PhysicsSystem::GetInstance();
@@ -58,14 +62,14 @@ void GaiaCore::init()
 
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
-	sceneManager->init(root, win);
+	sceneManager->init(root, window);
 }
 
 void GaiaCore::run()
 {
 	bool exit = false;
 	float deltaTime = 1.f / 60.f;
-	while (!inputSystem->getKeyPress("Escape")) {
+	while (!window->isClosed()) {
 		// Render
 		render(deltaTime);
 
@@ -90,15 +94,20 @@ void GaiaCore::close()
 	sceneManager->close();
 
 	//Systems termination
+	eventSystem->close();
 	renderSystem->close();
 	inputSystem->close();
 	interfaceSystem->close();
 	physicsSystem->close();
 	soundSystem->close();
 
-	if (win != nullptr)
-		delete win;
-	win = nullptr;
+	if (eventSystem != nullptr)
+		delete eventSystem;
+	eventSystem = nullptr;
+
+	if (window != nullptr)
+		delete window;
+	window = nullptr;
 
 	if (root != nullptr)
 		delete root;
@@ -121,6 +130,9 @@ void GaiaCore::render(float deltaTime)
 
 void GaiaCore::preUpdate(float deltaTime)
 {
+	// EventSystem
+	eventSystem->update();
+
 	// InputSystem
 	inputSystem->update();
 

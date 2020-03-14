@@ -67,7 +67,7 @@ void InterfaceSystem::createRoot()
 void InterfaceSystem::init(Window* window)
 {
 	// init
-	mRenderer = &CEGUI::OgreRenderer::create(*window->mWindow);
+	mRenderer = &CEGUI::OgreRenderer::create(*window->getRenderWindow());
 	CEGUI::System::create(*mRenderer);
 
 	// esto deberia ir en el ResourceManager!!

@@ -112,6 +112,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\ParticleEmitter.cpp">
       <Filter>Archivos de código fuente\Component</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Events\EventListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Events\WindowEventListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Systems\EventSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
@@ -230,6 +233,14 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\ParticleEmitter.h">
       <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\EventListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\WindowEventListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\EventSystem.h">
+      <Filter>Archivos de encabezado\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\DebugUtils.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,12 +7,15 @@
 struct Quaternion
 {
     double w, x, y, z;
+
+    Quaternion inverse();
 };
 
 Quaternion ToQuaternion(double yaw, double pitch, double roll);
+Quaternion hamilton(const Quaternion& q1, const Quaternion& q2);
 
-Vector3 GetForwardVector(Quaternion q);
-Vector3 GetUpVector(Quaternion q);
-Vector3 GetLeftVector(Quaternion q);
+Vector3 GetForwardVector(const Quaternion& q);
+Vector3 GetUpVector(const Quaternion& q);
+Vector3 GetLeftVector(const Quaternion& q);
 
 #endif

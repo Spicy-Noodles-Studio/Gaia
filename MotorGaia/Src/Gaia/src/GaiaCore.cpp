@@ -1,6 +1,5 @@
 #include "GaiaCore.h"
 
-
 GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
 						renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
 						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
@@ -154,5 +153,6 @@ void GaiaCore::postUpdate(float deltaTime)
 	sceneManager->postUpdate(deltaTime);
 
 	// Systems 
+	physicsSystem->postUpdate();
 	// Si es que hay
 }

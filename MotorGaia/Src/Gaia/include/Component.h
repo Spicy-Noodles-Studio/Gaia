@@ -7,7 +7,6 @@
 class GameObject;
 class ComponentData;
 
-
 class Component
 {
 friend class ComponentManager;
@@ -22,7 +21,7 @@ public:
 	//Usando sstream se da valor a la variable ->                sstream>>variable
 	virtual void handleData(ComponentData* data);
 
-	void setActive(bool active);
+	virtual void setActive(bool active);
 	bool isActive();
 
 public:

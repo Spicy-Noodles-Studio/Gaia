@@ -87,7 +87,7 @@
                             "ComponentProperties":{
                                 "position" : "-150 0 -400",
                                 "scale" : "1 1 1",
-                                "rotation" : " 30 90 45"
+                                "rotation" : " 45 0 45"
                             }
                         }
                     ]

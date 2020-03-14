@@ -113,6 +113,12 @@ void PhysicsSystem::setWorldGravity(Vector3 gravity)
 	dynamicsWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 }
 
+Vector3 PhysicsSystem::getWorldGravity() const
+{
+	btVector3 g = dynamicsWorld->getGravity();
+	return{ g.x(),g.y(),g.z() };
+}
+
 void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
 {
 	debugDrawer->setDebugMode(btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE + btIDebugDraw::DBG_DrawContactPoints);
@@ -188,33 +194,25 @@ void PhysicsSystem::checkCollisions()
 	for (int i = 0; i < numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0()), *obB = (btCollisionObject*)(contactManifold->getBody1());
+		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0()), * obB = (btCollisionObject*)(contactManifold->getBody1());
 
-		RigidBody* rbA = (RigidBody*)obA->getUserPointer(), *rbB = (RigidBody*)obB->getUserPointer();
+		RigidBody* rbA = (RigidBody*)obA->getUserPointer(), * rbB = (RigidBody*)obB->getUserPointer();
 
-		if (rbA == nullptr or rbB == nullptr)
-			return;
+		if (rbA == nullptr or rbB == nullptr) return;
 
 		// Orden A < B, para el mapa
-		RigidBody* aux;
-		if (rbA > rbB)
-		{
-			aux = rbA;
-			rbA = rbB;
-			rbB = aux;
-		}
+		if (rbA > rbB) std::swap(rbA, rbB);
 
 		std::pair<RigidBody*, RigidBody*> col = { rbA,rbB };
 		newContacts[col] = true;
 
-		//llamamos al collisionEnter si no estaban registrados.
+		//Llamamos al collisionEnter si no estaban registrados.
 		if (!contacts[col])
-		{
 			CollisionEnterCallbacks(col);
-		}// Si ya estaban llamamos al collisionStay.
-		else {
+		// Si ya estaban llamamos al collisionStay.
+		else
 			CollisionStayCallbacks(col);
-		}
+
 	}
 
 	//Comprobamos que contactos ya no estan
@@ -222,9 +220,7 @@ void PhysicsSystem::checkCollisions()
 	{
 		std::pair<RigidBody*, RigidBody*> col = (*it).first;
 		if (newContacts.find(col) == newContacts.end())
-		{
 			CollisionExitCallbacks(col);
-		}
 	}
 
 	contacts = newContacts;

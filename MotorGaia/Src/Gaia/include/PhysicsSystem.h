@@ -31,6 +31,7 @@ public:
 
 	// World config methods
 	void setWorldGravity(Vector3 gravity);
+	Vector3 getWorldGravity()const;
 
 	void setDebugDrawer(DebugDrawer* debugDrawer);
 

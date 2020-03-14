@@ -30,9 +30,9 @@ void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, 
 
 void RigidBody::handleData(ComponentData* data)
 {
-	float mass = 1.0;
+	float mass = 1.0, damping = 0.0, friction = 0.0,restitution = 0.0, angularDamping = 0.0;
 	RB_Shape shape;
-	Vector3 off = Vector3(), dim = Vector3(1, 1, 1);
+	Vector3 off = Vector3(), dim = Vector3(1, 1, 1), gravity = PhysicsSystem::GetInstance()->getWorldGravity();
 	bool isTrigger = false, kinematic = false;
 
 	for (auto prop : data->getProperties()) {
@@ -49,6 +49,18 @@ void RigidBody::handleData(ComponentData* data)
 		else if (prop.first == "mass") {
 			ss >> mass;
 		}
+		else if (prop.first == "friction") {
+			ss >> friction;
+		}
+		else if (prop.first == "restitution") {
+			ss >> restitution;
+		}
+		else if (prop.first == "damping") {
+			ss >> damping;
+		}
+		else if (prop.first == "angularDamping") {
+			ss >> angularDamping;
+		}
 		else if (prop.first == "offset") {
 			ss >> off.x >> off.y >> off.z;
 		}
@@ -61,8 +73,18 @@ void RigidBody::handleData(ComponentData* data)
 		else if (prop.first == "kinematic") {
 			ss >> kinematic;
 		}
+		else if (prop.first == "gravity") {
+			ss >> gravity.x>>gravity.y>>gravity.z;
+		}
 	}
 	setRigidBody(mass, shape, off, dim);
+
+	setGravity(gravity);
+	setDamping(damping);
+	setAngularDamping(angularDamping);
+	setFriction(friction);
+	setRestitution(restitution);
+
 	setKinematic(kinematic);
 	setTrigger(isTrigger);
 }

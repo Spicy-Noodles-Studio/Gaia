@@ -11,7 +11,7 @@
 std::map<std::string, SceneData*> ResourcesManager::sceneData;
 std::map<std::string, GameObjectData*> ResourcesManager::blueprints;
 
-ResourcesManager::ResourcesManager(const std::string& filePath) : dataLoader(), resourcesPath(filePath), fileSystemLayer(nullptr), 
+ResourcesManager::ResourcesManager(const std::string& filePath) :	dataLoader(), resourcesPath(filePath), fileSystemLayer(nullptr), 
 																	shaderLibPath(""), shaderGenerator(nullptr), shaderTechniqueResolver(nullptr)
 {
 

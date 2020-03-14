@@ -173,6 +173,11 @@ const Vector3& Transform::getRotation() const
 	return rotation;
 }
 
+const Quaternion& Transform::getQuaternion() const
+{
+	return quaternion;
+}
+
 const Vector3& Transform::getForwardVector() const
 {
 	return GetForwardVector(quaternion);

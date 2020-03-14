@@ -20,7 +20,7 @@
                     "ComponentName": "Light",
                     "ComponentProperties": {
                         "type": "Point",
-                        "colour": "0.7 0.1 0.7"
+                        "colour": "1 1 1"
                     }
                 },
                 {
@@ -119,7 +119,15 @@
                     "ComponentName": "SoundEmitter",
                     "ComponentProperties": {
                         "volume" : "1",
-                        "pitch" : "1"
+                        "pitch" : "1",
+                        "playSound" : "prueba2"
+                    }
+                },
+                {
+                    "ComponentName": "ParticleEmitter",
+                    "ComponentProperties": {
+                        "emitter":"Smoke",
+                        "start":"true"
                     }
                 }
             ]

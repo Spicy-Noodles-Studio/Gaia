@@ -25,7 +25,7 @@
 - Navegad por todas las carpetas de "Build" y cambiad todas las carpetas con nombre "inc" a "include".
 
 # CEGUI-0.8.7
-- Descargar el codigo fuente Y LAS DEPENDENCIAS desde http://cegui.org/download.
+- Descargar el codigo fuente Y LAS DEPENDENCIAS desde http://cegui.org/download
 - Extraer el codigo fuente y extraer las dependencias. Meter la carpeta de las dependencias en la carpeta del codigo fuente.
 - Renombrar la carpeta de las dependencias a "dependencies"
 - Usar CMake para compilar las dependencias de la misma manera que el resto de librerias. (Con carpetas Build y Buildx86 dentro de la carpeta de dependencias)
@@ -49,7 +49,7 @@
 - Volver a pulsar Configure.
 - Pulsar Generate.
 - Cuando intenteis compilar, os dará errores. Hay que corregir ciertas cosas.
-- Buscar en archivo Config.h en ../Dependencies/cegui-0.8.7/Bulld/cegui/include/CEGUI y buscar (con CTRL+F) "ogre"
+- Buscar en archivo Config.h en ../Dependencies/cegui-0.8.7/Build/cegui/include/CEGUI y buscar (con CTRL+F) "ogre"
 - Modificar las siguientes macros a estos valores (cambiar el 0 por el valor y guardar):
     - CEGUI_OGRE_VERSION_MAJOR 1
     - CEGUI_OGRE_VERSION_MINOR 12

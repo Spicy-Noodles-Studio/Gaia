@@ -35,6 +35,7 @@ public:
 	const Vector3& getPosition() const;
 	const Vector3& getScale() const;
 	const Vector3& getRotation() const;
+	const Quaternion& getQuaternion() const;
 
 	const Vector3& getWorldPosition() const;
 	const Vector3& getWorldScale() const;

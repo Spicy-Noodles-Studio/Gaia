@@ -109,6 +109,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\Animator.cpp">
       <Filter>Archivos de código fuente\Component</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\ParticleEmitter.cpp">
+      <Filter>Archivos de código fuente\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
@@ -227,6 +230,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtilities.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\ParticleEmitter.h">
+      <Filter>Archivos de encabezado\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

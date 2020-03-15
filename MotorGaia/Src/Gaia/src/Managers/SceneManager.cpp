@@ -11,7 +11,7 @@ SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(
 
 SceneManager::~SceneManager()
 {
-	
+
 }
 
 void SceneManager::init(Ogre::Root* root, Window* window)
@@ -87,10 +87,14 @@ Scene* SceneManager::createScene(const SceneData* data)
 	return myScene;
 }
 
-GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* scene)
+GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* scene, GameObject* parent)
 {
 	GameObject* gameObject = new GameObject(data->getName(), data->getTag(), scene);
 	scene->addGameObject(gameObject);
+
+	if (parent != nullptr)
+		parent->addChild(gameObject);
+
 	// Component
 	for (auto compData : data->getComponentData()) {
 		ComponentData* cData = compData.second;
@@ -105,9 +109,9 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 	}
 	// For each child, create the child
 	for (auto childData : data->getChildrenData()) {
-		GameObject* child = createGameObject(childData.second, scene);
-		gameObject->addChild(child);
+		GameObject* child = createGameObject(childData.second, scene, gameObject);
 	}
+
 	return gameObject;
 }
 
@@ -118,7 +122,7 @@ void SceneManager::loadScene(const SceneData* data)
 		return;
 	}
 	// Creates the Scene by its data (assuming creation was succesfull)
-	stackScene = createScene(data);	
+	stackScene = createScene(data);
 }
 
 void SceneManager::processSceneChange()

@@ -3,7 +3,7 @@
 
 #include <CEGUI/Event.h>
 
-InterfaceSystem::InterfaceSystem() : mRenderer(nullptr), root(nullptr)
+InterfaceSystem::InterfaceSystem() : mRenderer(nullptr), root(nullptr), deltaX(0), deltaY(0)
 {
 
 }
@@ -38,7 +38,7 @@ void InterfaceSystem::setupResources()
 	rp->setResourceGroupDirectory("schemas", "./Assets/UI/xml_schemas/");
 	rp->setResourceGroupDirectory("animations", "./Assets/UI/animations/");
 
-	CEGUI::ImageManager::setImagesetDefaultResourceGroup("imagesets");
+    CEGUI::ImageManager::setImagesetDefaultResourceGroup("imagesets");
 	CEGUI::Font::setDefaultResourceGroup("fonts");
 	CEGUI::Scheme::setDefaultResourceGroup("schemes");
 	CEGUI::WidgetLookManager::setDefaultResourceGroup("looknfeels");

@@ -32,6 +32,7 @@ void GaiaCore::init()
 	//EventSystem
 	eventSystem = new EventSystem();
 	eventSystem->init();
+	
 	// RenderSystem
 	renderSystem = RenderSystem::GetInstance();
 	renderSystem->init(root);
@@ -160,4 +161,7 @@ void GaiaCore::update(float deltaTime)
 void GaiaCore::postUpdate(float deltaTime)
 {
 	sceneManager->postUpdate(deltaTime);
+
+	// Systems 
+	physicsSystem->postUpdate();
 }

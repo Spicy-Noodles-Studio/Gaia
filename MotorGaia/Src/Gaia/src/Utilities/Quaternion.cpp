@@ -25,7 +25,7 @@ Quaternion ToQuaternion(double yaw, double pitch, double roll) // yaw (Z), pitch
     return q;
 }
 
-Vector3 GetForwardVector(Quaternion q)
+Vector3 GetForwardVector(const Quaternion& q)
 {
     Vector3 forward;
     forward.x = 2 * (q.x * q.z + q.w * q.y);
@@ -35,7 +35,7 @@ Vector3 GetForwardVector(Quaternion q)
     return forward;
 }
 
-Vector3 GetUpVector(Quaternion q)
+Vector3 GetUpVector(const Quaternion& q)
 {
     Vector3 up;
     up.x = 2 * (q.x * q.y - q.w * q.z);
@@ -45,7 +45,7 @@ Vector3 GetUpVector(Quaternion q)
     return up;
 }
 
-Vector3 GetLeftVector(Quaternion q)
+Vector3 GetLeftVector(const Quaternion& q)
 {
     Vector3 left;
     left.x = 1 - 2 * (q.y * q.y + q.z * q.z);
@@ -53,4 +53,19 @@ Vector3 GetLeftVector(Quaternion q)
     left.z = 2 * (q.x * q.z - q.w * q.y);
     left.normalize();
     return left;
+}
+
+Quaternion hamilton(const Quaternion& q1, const Quaternion& q2)
+{
+    Quaternion aux;
+    aux.w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
+    aux.x = q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y;
+    aux.y = q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z * q2.x;
+    aux.z = q1.w * q2.z + q1.x * q2.y - q1.y * q2.x + q1.z * q2.w;
+    return aux;
+}
+
+Quaternion Quaternion::inverse()
+{
+    return { w,-x,-y,-z };
 }

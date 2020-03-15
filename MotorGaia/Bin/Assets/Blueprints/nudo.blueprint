@@ -8,20 +8,30 @@
             "ComponentName": "Transform",
             "ComponentProperties": {
                 "position": "0 0 -400",
-                "scale": "0.5 0.5 0.5"
+                "scale": "0.5 0.5 0.5",
+                "rotation" : "0 45 0"
             }
         },
         {
             "ComponentName": "MeshRenderer",
             "ComponentProperties": {
-                "mesh": "knot knot.mesh"
+                "mesh": "knot cube.mesh"
             }
         },
         {
             "ComponentName": "RigidBody",
             "ComponentProperties": {
                 "shape": "Box",
-                "mass": "3"
+                "mass": "3",
+                "friction": "0",
+                "restitution": "0",
+                "damping": "0",
+                "angularDamping": "0",
+                "gravity": "0 -10 0",
+                "offset": "0 0 0",
+                "size": "1 1 1",
+                "kinematic": "0",
+                "trigger": "0"
             }
         }
     ]

@@ -21,7 +21,7 @@ Window::Window(Ogre::Root* root, std::string windowTitle) : root(root), closed(f
 			"BaseApplication::setup");
 	}
 
-	SDL_ShowCursor(SDL_DISABLE);
+	//SDL_ShowCursor(SDL_DISABLE);
 
 	Ogre::ConfigOptionMap ropts = rs->getConfigOptions();
 	std::istringstream mode(ropts["Video Mode"].currentValue);

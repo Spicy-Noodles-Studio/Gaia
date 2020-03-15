@@ -2,7 +2,7 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
-#include "btBulletDynamicsCommon.h"
+class btVector3;
 
 struct Vector3
 {
@@ -30,7 +30,13 @@ struct Vector3
 	double magnitude();
 	Vector3& normalized();
 
+	void rotateAroundAxis(const Vector3& axis, double angle);
+	void lerp(const Vector3& v, double percentage);
+	void lerp(const Vector3& v, const Vector3& percentage);
+
 };
+
+Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles);
 
 Vector3 operator +(const Vector3& p1, const Vector3& p2);
 Vector3 operator +(const Vector3& p1, const btVector3& p2);
@@ -40,6 +46,5 @@ Vector3 operator *(const Vector3& p1, const Vector3& p2);
 Vector3 operator /(const Vector3& p1, const Vector3& p2);
 Vector3 operator *(const Vector3& p1, const double d);
 Vector3 operator /(const Vector3& p1, const double d);
-
 
 #endif

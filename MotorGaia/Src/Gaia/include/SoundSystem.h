@@ -16,7 +16,7 @@
 
 
 
-class SoundSystem : public Singleton<SoundSystem>
+class GAIA_API SoundSystem : public Singleton<SoundSystem>
 {
 public:
 	struct EmitterData

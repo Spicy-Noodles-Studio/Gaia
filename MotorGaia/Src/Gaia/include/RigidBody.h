@@ -12,7 +12,7 @@ class btVector3;
 class GameObject;
 class ComponentData;
 
-class RigidBody : public GaiaComponent
+class GAIA_API RigidBody : public GaiaComponent
 {
 private:
 	btRigidBody* body = nullptr;

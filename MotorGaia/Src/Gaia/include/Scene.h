@@ -11,7 +11,7 @@
 #include "GaiaComponent.h"
 #include "UserComponent.h"
 
-class Scene {
+class GAIA_API Scene {
 	friend class SceneManager;
 	friend class UserComponent;
 public:

@@ -144,7 +144,6 @@ void GaiaCore::update(float deltaTime)
 {
 	// Managers
 	sceneManager->update(deltaTime);
-	sceneManager->getCurrentScene()->getMainCamera()->gameObject->transform->rotate(Vector3(0, 0.3, 0));
 }
 
 void GaiaCore::postUpdate(float deltaTime)

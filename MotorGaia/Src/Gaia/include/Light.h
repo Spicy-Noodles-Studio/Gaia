@@ -6,7 +6,7 @@
 #include "RenderSystem.h"
 #include "Vector3.h"
 
-class Light : public GaiaComponent
+class GAIA_API Light : public GaiaComponent
 {
 private:
 	Ogre::Light* light;

@@ -6,7 +6,7 @@
 #include "SoundSystem.h"
 #include "Vector3.h"
 
-class SoundEmitter : public GaiaComponent
+class GAIA_API SoundEmitter : public GaiaComponent
 {
 private:
 	SoundSystem::EmitterData * emitterData;

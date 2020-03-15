@@ -3,8 +3,9 @@
 #define VECTOR3_H
 
 class btVector3;
+#include "GaiaExports.h"
 
-struct Vector3
+struct GAIA_API Vector3
 {
 	double x;
 	double y;

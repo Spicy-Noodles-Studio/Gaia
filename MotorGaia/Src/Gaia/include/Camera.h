@@ -6,7 +6,7 @@
 #include "RenderSystem.h"
 #include "Vector3.h"
 
-class Camera : public GaiaComponent
+class GAIA_API Camera : public GaiaComponent
 {
 private:
 	Ogre::Camera* camera;

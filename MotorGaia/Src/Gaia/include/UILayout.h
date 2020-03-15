@@ -6,7 +6,7 @@
 #include <CEGUI/CEGUI.h>
 #include "InterfaceSystem.h"
 
-class UILayout : public GaiaComponent
+class GAIA_API UILayout : public GaiaComponent
 {
 private:
 	CEGUI::Window* layout;

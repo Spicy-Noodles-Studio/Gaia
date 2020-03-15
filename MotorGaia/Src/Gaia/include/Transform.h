@@ -7,7 +7,7 @@
 #include "Vector3.h"
 #include "OgreBulletUtils.h"
 
-class Transform : public GaiaComponent
+class GAIA_API Transform : public GaiaComponent
 {
 private:
 	Vector3 position;

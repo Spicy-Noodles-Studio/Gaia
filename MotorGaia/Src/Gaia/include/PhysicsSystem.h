@@ -15,7 +15,7 @@ class Transform;
 class GaiaMotionState;
 class RigidBody;
 
-class PhysicsSystem : public Singleton<PhysicsSystem> 
+class GAIA_API PhysicsSystem : public Singleton<PhysicsSystem>
 {
 public:
 	PhysicsSystem();

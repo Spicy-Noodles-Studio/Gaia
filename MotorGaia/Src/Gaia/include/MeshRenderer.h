@@ -5,7 +5,7 @@
 #include "GaiaComponent.h"
 #include "RenderSystem.h"
 
-class MeshRenderer : public GaiaComponent
+class GAIA_API MeshRenderer : public GaiaComponent
 {
 private:
 	std::map<std::string, Ogre::Entity*> entities;

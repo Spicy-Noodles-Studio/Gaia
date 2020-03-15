@@ -12,7 +12,7 @@
 
 class Scene;
 
-class GameObject {
+class GAIA_API GameObject {
     friend class Scene;
     friend class SceneManager;
     friend class UserComponent;

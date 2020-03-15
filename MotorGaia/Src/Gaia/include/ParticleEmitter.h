@@ -6,7 +6,7 @@
 #include <OgreParticleSystem.h>
 
 
-class ParticleEmitter : public GaiaComponent
+class GAIA_API ParticleEmitter : public GaiaComponent
 {
 private:
 	Ogre::ParticleSystem* particleSystem = nullptr;

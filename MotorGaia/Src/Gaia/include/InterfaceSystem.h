@@ -11,7 +11,7 @@
 
 typedef CEGUI::Window UIElement;
 
-class InterfaceSystem : public Singleton<InterfaceSystem>
+class GAIA_API InterfaceSystem : public Singleton<InterfaceSystem>
 {
 private:
 	CEGUI::OgreRenderer* mRenderer;

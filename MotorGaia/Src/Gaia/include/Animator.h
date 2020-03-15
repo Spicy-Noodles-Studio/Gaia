@@ -7,7 +7,7 @@
 
 #include "GaiaComponent.h"
 
-class Animator : public GaiaComponent
+class GAIA_API Animator : public GaiaComponent
 {
 private:
 	Ogre::AnimationStateSet* animations;

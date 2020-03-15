@@ -2,12 +2,6 @@
 #ifndef GAIA_CORE_H
 #define GAIA_CORE_H
 
-#ifdef GAIA_EXPORTS
-#define GAIA_API __declspec(dllexport)
-#else
-#define GAIA_API __declspec(dllimport)
-#endif
-
 #include <OgreRoot.h>
 #include "Window.h"
 

@@ -44,6 +44,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\DebugDrawer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaExports.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />

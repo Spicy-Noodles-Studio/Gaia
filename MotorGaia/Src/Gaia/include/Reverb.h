@@ -13,7 +13,7 @@ enum PRESET {
 	PLAIN, PARKINGLOT, SEWERPIPE, UNDERWATER
 };
 
-class Reverb : public GaiaComponent
+class GAIA_API Reverb : public GaiaComponent
 {
 private:
 

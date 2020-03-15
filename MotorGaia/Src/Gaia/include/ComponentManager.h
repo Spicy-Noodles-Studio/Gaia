@@ -9,7 +9,7 @@
 
 typedef std::function<Component* (GameObject*)> ComponentFactory;
 
-class ComponentManager : public Singleton<ComponentManager>
+class GAIA_API ComponentManager : public Singleton<ComponentManager>
 {
 public:
 	ComponentManager();

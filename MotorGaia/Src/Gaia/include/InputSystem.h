@@ -29,11 +29,11 @@ private:
     std::set<std::string> keyHold; // Stores SDL_KEYDOWN events from current frame
     std::set<std::string> keyRelease; // Stores SDL_KEYUP events from current frame
 
-
-
     // MOUSE
     int MOUSE_POSITION_X;
     int MOUSE_POSITION_Y;
+    int MOUSE_DELTA_X;
+    int MOUSE_DELTA_Y;
 
     struct mouseButton {
         bool pressed = false;
@@ -110,6 +110,8 @@ private:
     void processControllerButtonUp(int index, int button);
     void processControllerDeviceAdded(int index);
     void processControllerDeviceRemoved(int index);
+    void processControllerAxisLeftY(int index, double value);
+    void processControllerAxisLeftX(int index, double value);
 
     // UTILS
     bool flags = true;

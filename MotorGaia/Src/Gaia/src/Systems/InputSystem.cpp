@@ -5,7 +5,7 @@
 #include <CEGUI/System.h>
 
 
-InputSystem::InputSystem() : MOUSE_POSITION_X(0), MOUSE_POSITION_Y(0), MOUSE_WHEEL(0), keyboardState(nullptr)
+InputSystem::InputSystem() : MOUSE_POSITION_X(0), MOUSE_POSITION_Y(0), MOUSE_DELTA_X(0), MOUSE_DELTA_Y(0), MOUSE_WHEEL(0), keyboardState(nullptr)
 {
 
 }
@@ -48,6 +48,10 @@ void InputSystem::init()
 	onControllerButtonUp([this](int index, int button) { processControllerButtonUp(index, button); });
 	onControllerDeviceAdded([this](int index) { processControllerDeviceAdded(index); });
 	onControllerDeviceRemoved([this](int index) { processControllerDeviceRemoved(index); });
+
+	onControllerAxisLeftYMotion([this](int index, double value) { processControllerAxisLeftY(index, value); });
+	onControllerAxisLeftXMotion([this](int index, double value) { processControllerAxisLeftX(index, value); });
+
 }
 
 // Closing
@@ -104,6 +108,9 @@ void InputSystem::update()
 			// TODO: This controller is not plugged in.
 		}
 	}
+
+	// Update cursor position if using controller
+	SDL_WarpMouseInWindow(nullptr, MOUSE_POSITION_X + MOUSE_DELTA_X, MOUSE_POSITION_Y + MOUSE_DELTA_Y);
 }
 
 void InputSystem::setDeadZone(int controller, int zone)
@@ -499,6 +506,16 @@ void InputSystem::processControllerDeviceRemoved(int index)
 	currentControllers--;
 
 	if (flags) LOG("Controller: %i removed", controllerIndex);
+}
+
+void InputSystem::processControllerAxisLeftY(int index, double value)
+{
+	MOUSE_DELTA_Y = value * 5; // TODO: sensitivity
+}
+
+void InputSystem::processControllerAxisLeftX(int index, double value)
+{
+	MOUSE_DELTA_X = value * 5; // TODO: sensitivity
 }
 
 bool InputSystem::isButtonPressed(int controllerIndex, std::string button)

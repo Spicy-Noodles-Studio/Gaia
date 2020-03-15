@@ -34,8 +34,6 @@ private:
 	void setupResources();
 	CEGUI::Key::Scan SDLKeyToCEGUIKey(int key);
 
-	void processControllerAxisLeftY(int index, double value);
-	void processControllerAxisLeftX(int index, double value);
 	void processControllerButtonDown(int index, int button);
 	void processControllerButtonUp(int index, int button);
 

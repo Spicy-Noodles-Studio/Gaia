@@ -5,7 +5,10 @@
 
 std::map<std::string, UIEvent> InterfaceSystem::events;
 
-InterfaceSystem::InterfaceSystem() : renderer(nullptr), root(nullptr), deltaX(0), deltaY(0), fpsText(nullptr)
+InterfaceSystem::InterfaceSystem() : renderer(nullptr), root(nullptr), deltaX(0), deltaY(0)
+#ifdef _DEBUG
+, fpsText(nullptr)
+#endif // _DEBUG
 {
 
 }
@@ -17,10 +20,6 @@ InterfaceSystem::~InterfaceSystem()
 
 void InterfaceSystem::close()
 {
-	//CEGUI::WindowManager::getSingleton().destroyAllWindows();
-	/*CEGUI::System::destroy();
-	CEGUI::OgreRenderer::destroy(*renderer);*/
-
     renderer->destroySystem();
 	destroy();
 }
@@ -74,22 +73,14 @@ void InterfaceSystem::init(Window* window)
 
     onWindowResized([this](int width, int height) { CEGUI::System::getSingleton().notifyDisplaySizeChanged(CEGUI::Sizef(width, height)); });
 
-    onControllerAxisLeftYMotion([this](int index, double value) { processControllerAxisLeftY(index, value); });
-    onControllerAxisLeftXMotion([this](int index, double value) { processControllerAxisLeftX(index, value); });
-
     onControllerButtonDown([this](int index, int button) { processControllerButtonDown(index, button); });
     onControllerButtonUp([this](int index, int button) { processControllerButtonUp(index, button); });
-
-#ifdef _DEBUG
-	//fpsText = root->createChild("TaharezLook/StaticText", "FPSText");
-	//fpsText->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
-	//fpsText->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
-#endif
-
 }
 
 void InterfaceSystem::render()
 {
+    /* Ogre does it for us */
+
 	//renderer->beginRendering();
 	//CEGUI::System::getSingleton().renderAllGUIContexts();
 	//renderer->endRendering();
@@ -101,8 +92,8 @@ void InterfaceSystem::update(float deltaTime)
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(deltaX, deltaY);
 
 #ifdef _DEBUG
-	//fpsText->setText("FPS: " + std::to_string((int)(1.0 / deltaTime)));
-#endif // DEBUG
+	fpsText->setText("FPS: " + std::to_string((int)(1.0 / deltaTime)));
+#endif
 }
 
 UIElement* InterfaceSystem::loadLayout(const std::string& filename)
@@ -128,6 +119,13 @@ void InterfaceSystem::initDefaultResources()
 
     // load fonts
     CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang", 16, true, "batang.ttf");
+
+
+#ifdef _DEBUG
+    fpsText = root->createChild("TaharezLook/StaticText", "FPSText");
+    fpsText->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
+    fpsText->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
+#endif
 }
 
 CEGUI::Key::Scan InterfaceSystem::SDLKeyToCEGUIKey(int key)
@@ -244,16 +242,6 @@ CEGUI::Key::Scan InterfaceSystem::SDLKeyToCEGUIKey(int key)
     default:                return CEGUI::Key::Unknown;
     }
     return CEGUI::Key::Unknown;
-}
-
-void InterfaceSystem::processControllerAxisLeftY(int index, double value)
-{
-    deltaY = value * 5; // TODO: this should be a sensitivity value
-}
-
-void InterfaceSystem::processControllerAxisLeftX(int index, double value)
-{
-    deltaX = value * 5; // TODO: this should be a sensitivity value
 }
 
 void InterfaceSystem::processControllerButtonDown(int index, int button)

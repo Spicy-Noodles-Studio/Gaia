@@ -127,6 +127,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\Events\KeyboardEventListener.cpp">
       <Filter>Archivos de código fuente\Events</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Events\ControllerEventListener.cpp">
+      <Filter>Archivos de código fuente\Events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
@@ -262,6 +265,9 @@
       <Filter>Archivos de encabezado\Events</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\KeyboardEventListener.h">
+      <Filter>Archivos de encabezado\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\ControllerEventListener.h">
       <Filter>Archivos de encabezado\Events</Filter>
     </ClInclude>
   </ItemGroup>

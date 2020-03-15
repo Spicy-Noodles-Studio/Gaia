@@ -8,13 +8,14 @@
 
 #include <iostream>
 
-Window::Window(Ogre::Root* root, std::string windowTitle) : root(root)
+Window::Window(Ogre::Root* root, std::string windowTitle) : root(root), closed(false)
 {
 	Ogre::RenderSystem* rs = root->getRenderSystem();//ByName("OpenGL Rendering Subsystem");
 	root->setRenderSystem(rs);
 
 	root->initialise(false);
 
+	SDL_SetMainReady();
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		OGRE_EXCEPT(Ogre::Exception::ERR_INTERNAL_ERROR, "Cannot initialize SDL2!",
 			"BaseApplication::setup");

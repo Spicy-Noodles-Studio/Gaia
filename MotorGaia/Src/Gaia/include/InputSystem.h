@@ -13,8 +13,9 @@
 #include "Singleton.h"
 #include "MouseEventListener.h"
 #include "KeyboardEventListener.h"
+#include "ControllerEventListener.h"
 
-class InputSystem : public Singleton<InputSystem>, public MouseEventListener, public KeyboardEventListener
+class InputSystem : public Singleton<InputSystem>, public MouseEventListener, public KeyboardEventListener, public ControllerEventListener
 {
 #define MAX_CONTROLLERS 4
 
@@ -101,7 +102,10 @@ private:
     void processMouseRightButtonUp();
     void processMouseMiddleButtonUp();
     void processMouseWheelScrollY(int value);
-
+    void processControllerButtonDown(int index, int button);
+    void processControllerButtonUp(int index, int button);
+    void processControllerDeviceAdded(int index);
+    void processControllerDeviceRemoved(int index);
 
     // UTILS
     bool flags = true;
@@ -109,15 +113,17 @@ private:
     void clearInputs();
     int getFirstFreeController();
     int getControllerByReference(SDL_GameController* handle);
-    int getControllerFromEvent(SDL_Event* e);
-    int getControllerRemovedIndex(SDL_Event* e);
+    int getControllerFromEvent(int index);
+    int getControllerRemovedIndex(int index);
 
 public:
+    InputSystem();
+    ~InputSystem();
+
     void init();
     void close();
     void preUpdate();
     void update();
-    void postUpdate();
 
     void toggleFlags() { flags = !flags; }
 

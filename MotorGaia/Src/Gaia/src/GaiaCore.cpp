@@ -136,8 +136,8 @@ void GaiaCore::preUpdate(float deltaTime)
 	// EventSystem
 	eventSystem->update();
 
-	// InputSystem (DEPRECATED)
-	//inputSystem->update();
+	// InputSystem
+	inputSystem->update();
 
 	// InterfaceSystem
 	interfaceSystem->update(deltaTime);
@@ -147,17 +147,17 @@ void GaiaCore::preUpdate(float deltaTime)
 
 	// SoundSystem
 	soundSystem->update(deltaTime);
+
+	// Managers
+	sceneManager->preUpdate(deltaTime);
 }
 
 void GaiaCore::update(float deltaTime)
 {
-	// Managers
-	sceneManager->preUpdate(deltaTime);
 	sceneManager->update(deltaTime);
-	sceneManager->postUpdate(deltaTime);
 }
 
 void GaiaCore::postUpdate(float deltaTime)
 {
-	inputSystem->postUpdate();
+	sceneManager->postUpdate(deltaTime);
 }

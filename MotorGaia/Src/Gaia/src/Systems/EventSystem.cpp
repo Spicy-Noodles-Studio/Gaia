@@ -15,7 +15,7 @@ EventSystem::~EventSystem()
 
 void EventSystem::init()
 {
-	if (SDL_Init(SDL_INIT_EVENTS) != 0) {
+	if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER) != 0) {
 		LOG_ERROR("EVENT SYSTEM","system cannot be initialized");
 	}
 }

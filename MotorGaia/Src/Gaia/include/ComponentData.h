@@ -4,7 +4,7 @@
 #define COMPONENT_DATA_H
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 class ComponentData
 {
@@ -18,13 +18,13 @@ public:
 	bool modifyProperty(const std::string& propName, const std::string& propValue);
 
 	const std::string& getName() const;
-	const std::map<std::string, std::string>& getProperties() const;
+	const std::unordered_map<std::string, std::string>& getProperties() const;
 
 	static ComponentData* empty();
 
 public:
 	std::string name;
-	std::map<std::string, std::string> properties;
+	std::unordered_map<std::string, std::string> properties;
 };
 
 #endif

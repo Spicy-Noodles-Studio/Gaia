@@ -1,4 +1,6 @@
 #pragma once
+#ifndef INPUT_SYSTEM_H
+#define INPUT_SYSTEM_H
 
 #include <iostream>
 #include <cstdint>
@@ -26,6 +28,8 @@ private:
     std::set<std::string> keyPress; // Stores SDL_KEYDOWN events from current frame
     std::set<std::string> keyHold; // Stores SDL_KEYDOWN events from current frame
     std::set<std::string> keyRelease; // Stores SDL_KEYUP events from current frame
+
+
 
     // MOUSE
     int MOUSE_POSITION_X;
@@ -159,3 +163,4 @@ public:
     void setDeadZone(int controller, int zone);
 };
 
+#endif

@@ -8,6 +8,23 @@
 #include <iostream>
 #include "GaiaCore.h"
 
+bool Clicked(const CEGUI::EventArgs& args)
+{
+	CEGUI::MouseEventArgs* args2 = (CEGUI::MouseEventArgs*)(&args);
+
+	printf("clicked!\n");
+	return false;
+}
+
+bool volumeEvent(const CEGUI::EventArgs& args)
+{
+	CEGUI::WindowEventArgs* args2 = (CEGUI::WindowEventArgs*)(&args);
+
+	SoundSystem::GetInstance()->setSoundEffectsVolume(static_cast<CEGUI::Slider*>(args2->window)->getCurrentValue());
+
+	return false;
+}
+
 #ifdef _DEBUG
 int main()
 #else
@@ -18,8 +35,12 @@ WinMain(HINSTANCE hinstance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nCmdSh
 {
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(15450);
+	//_CrtSetBreakAlloc(94345);
 #endif
+
+	// event test
+	InterfaceSystem::registerEvent("clickevent", UIEvent(CEGUI::Window::EventMouseClick, &Clicked));
+	InterfaceSystem::registerEvent("volumeEvent", UIEvent(CEGUI::Slider::EventValueChanged, &volumeEvent));
 
 	GaiaCore engine;
 	engine.init();

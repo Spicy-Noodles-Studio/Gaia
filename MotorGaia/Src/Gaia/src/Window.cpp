@@ -64,7 +64,7 @@ Window::Window(Ogre::Root* root, std::string windowTitle) : root(root), closed(f
 
 Window::~Window()
 {
-	root->destroyRenderTarget(window);
+	//root->destroyRenderTarget(window);
 	SDL_DestroyWindow(sdlWindow);
 }
 

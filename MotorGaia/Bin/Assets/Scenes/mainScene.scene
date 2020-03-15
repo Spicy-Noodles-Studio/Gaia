@@ -104,7 +104,22 @@
                 {
                     "ComponentName": "Transform",
                     "ComponentProperties": {
-                        "position" : "150 -10 -500"
+                        "position" : "200 0 -400"
+                    }
+                }
+            ]
+        },
+        {
+            "ObjectType": "GAMEOBJECT",
+            "ObjectName": "Layout",
+            "Tag": "LayoutTag",
+            "Components":
+            [
+                {
+                    "ComponentName": "UILayout",
+                    "ComponentProperties": {
+                        "layout" : "TaharezLookOverview.layout",
+                        "event" : "button clickevent | slider volumeEvent"
                     }
                 }
             ]

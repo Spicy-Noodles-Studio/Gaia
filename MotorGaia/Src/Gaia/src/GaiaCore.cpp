@@ -1,5 +1,7 @@
 #include "GaiaCore.h"
 
+#include "UILayout.h"
+#include "CEGUI/CEGUI.h"
 
 GaiaCore::GaiaCore() :	root(nullptr), window(nullptr),
 						eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr), 
@@ -29,7 +31,7 @@ void GaiaCore::init()
 	window = new Window(root, "Test window - 2020 (c) Gaia ");
 
 	// Systems initialization
-	//EventSystem
+	// EventSystem
 	eventSystem = new EventSystem();
 	eventSystem->init();
 	
@@ -61,32 +63,39 @@ void GaiaCore::init()
 	componentManager = ComponentManager::GetInstance();
 	componentManager->init();
 
+	//Init Default Resources
+	interfaceSystem->initDefaultResources();
+
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
 	sceneManager->init(root, window);
+
+	gTime::GetInstance()->setup();
 }
 
 void GaiaCore::run()
 {
-	bool exit = false;
-	float deltaTime = 1.f / 60.f;
+	float deltaTime = gTime::GetInstance()->getDeltaTime();
 	while (!window->isClosed()) {
 		// Render
 		render(deltaTime);
 
 		// Pre-process
 		preUpdate(deltaTime);
-		
+
 		// Process
 		update(deltaTime);
 
 		// Post-process
 		postUpdate(deltaTime);
+
+		deltaTime = gTime::GetInstance()->getDeltaTime();
 	}
 }
 
 void GaiaCore::close()
 {
+	gTime::GetInstance()->destroy();
 	// SceneManager termination
 	sceneManager->close();
 	// ComponentManager termination
@@ -144,7 +153,7 @@ void GaiaCore::preUpdate(float deltaTime)
 	interfaceSystem->update(deltaTime);
 
 	// PhysicsSystem
-	physicsSystem->update();
+	physicsSystem->update(deltaTime);
 
 	// SoundSystem
 	soundSystem->update(deltaTime);

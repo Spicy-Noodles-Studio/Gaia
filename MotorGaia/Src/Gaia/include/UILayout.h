@@ -11,6 +11,8 @@ class UILayout : public GaiaComponent
 private:
 	UIElement* layout;
 
+	void setEvent(const std::string& element, const std::string& event);
+
 public:
 	UILayout(GameObject* gameObject);
 	~UILayout();

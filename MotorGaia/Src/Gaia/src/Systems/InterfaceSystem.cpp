@@ -3,55 +3,35 @@
 
 #include <CEGUI/Event.h>
 
-InterfaceSystem::InterfaceSystem() : mRenderer(nullptr), root(nullptr), deltaX(0), deltaY(0)
+std::map<std::string, UIEvent> InterfaceSystem::events;
+
+InterfaceSystem::InterfaceSystem() : renderer(nullptr), root(nullptr), deltaX(0), deltaY(0), fpsText(nullptr)
 {
 
 }
 
 InterfaceSystem::~InterfaceSystem()
 {
-	
+
 }
 
 void InterfaceSystem::close()
 {
-	CEGUI::WindowManager::getSingleton().destroyAllWindows();
-	CEGUI::System::getSingleton().destroy();
+	//CEGUI::WindowManager::getSingleton().destroyAllWindows();
+	/*CEGUI::System::destroy();
+	CEGUI::OgreRenderer::destroy(*renderer);*/
 
-	CEGUI::OgreRenderer::destroy(*mRenderer);
+    renderer->destroySystem();
 	destroy();
 }
 
 void InterfaceSystem::setupResources()
 {
-	CEGUI::DefaultResourceProvider* rp =
-		static_cast<CEGUI::DefaultResourceProvider*>
-		(CEGUI::System::getSingleton().getResourceProvider());
-
-	// setup resources
-	rp->setResourceGroupDirectory("schemes", "./Assets/UI/schemes/");
-	rp->setResourceGroupDirectory("imagesets", "./Assets/UI/imagesets/");
-	rp->setResourceGroupDirectory("fonts", "./Assets/UI/fonts/");
-	rp->setResourceGroupDirectory("layouts", "./Assets/UI/layouts/");
-	rp->setResourceGroupDirectory("looknfeels", "./Assets/UI/looknfeel/");
-	rp->setResourceGroupDirectory("lua_scripts", "./Assets/UI/lua_scripts/");
-	rp->setResourceGroupDirectory("schemas", "./Assets/UI/xml_schemas/");
-	rp->setResourceGroupDirectory("animations", "./Assets/UI/animations/");
-
-    CEGUI::ImageManager::setImagesetDefaultResourceGroup("imagesets");
-	CEGUI::Font::setDefaultResourceGroup("fonts");
-	CEGUI::Scheme::setDefaultResourceGroup("schemes");
-	CEGUI::WidgetLookManager::setDefaultResourceGroup("looknfeels");
-	CEGUI::WindowManager::setDefaultResourceGroup("layouts");
-
-	// load themes
-	CEGUI::SchemeManager::getSingleton().createFromFile("VanillaSkin.scheme");
-	CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-	CEGUI::SchemeManager::getSingleton().createFromFile("Generic.scheme");
-	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
-
-	// load fonts
-	CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang", 12, true, "batang.ttf", "fonts");
+    CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
+    CEGUI::Font::setDefaultResourceGroup("Fonts");
+    CEGUI::Scheme::setDefaultResourceGroup("Schemes");
+    CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
+    CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 }
 
 UIElement* InterfaceSystem::getRoot()
@@ -68,12 +48,10 @@ void InterfaceSystem::createRoot()
 void InterfaceSystem::init(Window* window)
 {
 	// init
-	mRenderer = &CEGUI::OgreRenderer::create(*window->getRenderWindow());
-	CEGUI::System::create(*mRenderer);
+    CEGUI::OgreRenderer& ogreRenderer = CEGUI::OgreRenderer::bootstrapSystem(*window->getRenderWindow());
+    renderer = &ogreRenderer;
 
-	// esto deberia ir en el ResourceManager!!
 	setupResources();
-
 	createRoot();
 
 	// Callback definitions
@@ -101,30 +79,55 @@ void InterfaceSystem::init(Window* window)
 
     onControllerButtonDown([this](int index, int button) { processControllerButtonDown(index, button); });
     onControllerButtonUp([this](int index, int button) { processControllerButtonUp(index, button); });
+
+#ifdef _DEBUG
+	//fpsText = root->createChild("TaharezLook/StaticText", "FPSText");
+	//fpsText->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
+	//fpsText->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
+#endif
+
 }
 
 void InterfaceSystem::render()
 {
-	mRenderer->beginRendering();
-	CEGUI::System::getSingleton().renderAllGUIContexts();
-	mRenderer->endRendering();
+	//renderer->beginRendering();
+	//CEGUI::System::getSingleton().renderAllGUIContexts();
+	//renderer->endRendering();
 }
 
 void InterfaceSystem::update(float deltaTime)
 {
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectTimePulse(deltaTime);
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(deltaX, deltaY);
+
+#ifdef _DEBUG
+	//fpsText->setText("FPS: " + std::to_string((int)(1.0 / deltaTime)));
+#endif // DEBUG
 }
 
 UIElement* InterfaceSystem::loadLayout(const std::string& filename)
 {
 	try {
-		return CEGUI::WindowManager::getSingleton().loadLayoutFromFile(filename);
+        return CEGUI::WindowManager::getSingleton().loadLayoutFromFile(filename);
 	}
 	catch (std::exception e) {
 		LOG_ERROR("INTERFACE SYSTEM","trying to load \"%s\" layout", filename.c_str());
 		return nullptr;
 	}
+}
+
+void InterfaceSystem::initDefaultResources()
+{
+    /* Resources are loaded at this moment by OgreResourceProvider */
+    /* Here we just initilialize default interface resources */
+    // load themes
+    CEGUI::SchemeManager::getSingleton().createFromFile("VanillaSkin.scheme");
+    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+    CEGUI::SchemeManager::getSingleton().createFromFile("Generic.scheme");
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+
+    // load fonts
+    CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang", 16, true, "batang.ttf");
 }
 
 CEGUI::Key::Scan InterfaceSystem::SDLKeyToCEGUIKey(int key)
@@ -264,3 +267,26 @@ void InterfaceSystem::processControllerButtonUp(int index, int button)
     if (button == SDL_CONTROLLER_BUTTON_A)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MouseButton::LeftButton);
 }
+
+void InterfaceSystem::registerEvent(const std::string& eventName, UIEvent event)
+{
+	if (events.find(eventName) != events.end())
+	{
+		printf("INTERFACE SYSTEM: Error registering event %s\n", eventName.c_str());
+		return;
+	}
+
+	events[eventName] = event;
+}
+
+UIEvent InterfaceSystem::getEvent(const std::string& eventName)
+{
+	if (events.find(eventName) == events.end())
+	{
+		printf("INTERFACE SYSTEM: Event %s not found\n", eventName.c_str());
+		return UIEvent("",nullptr);
+	}
+
+	return events[eventName];
+}
+

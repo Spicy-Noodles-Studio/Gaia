@@ -1,4 +1,6 @@
 #pragma once
+#ifndef INTERFACE_SYSTEM_H
+#define INTERFACE_SYSTEM_H
 
 #include <OgreRoot.h>
 #include "Singleton.h"
@@ -14,14 +16,20 @@
 #include "Window.h"
 
 typedef CEGUI::Window UIElement;
+typedef std::pair<CEGUI::String, std::function<bool(const CEGUI::EventArgs&)>> UIEvent;
 
 class InterfaceSystem : public Singleton<InterfaceSystem>, public MouseEventListener, public KeyboardEventListener, public WindowEventListener, public ControllerEventListener
 {
 private:
-	CEGUI::OgreRenderer* mRenderer;
+	CEGUI::OgreRenderer* renderer;
 	UIElement* root;
 
 	double deltaX, deltaY;
+#ifdef _DEBUG
+	UIElement* fpsText;
+#endif // _DEBUG
+
+	static std::map<std::string, UIEvent> events;
 
 	void setupResources();
 	CEGUI::Key::Scan SDLKeyToCEGUIKey(int key);
@@ -40,10 +48,14 @@ public:
 	void update(float deltaTime);
 	void close();
 
+	static void registerEvent(const std::string& eventName, UIEvent event);
+	static UIEvent getEvent(const std::string& eventName);
+
 	void createRoot();
 	UIElement* getRoot();
 
 	UIElement* loadLayout(const std::string& filename);
-
+	void initDefaultResources();
 };
 
+#endif

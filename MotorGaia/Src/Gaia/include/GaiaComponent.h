@@ -4,7 +4,7 @@
 
 #include "Component.h"
 
-class GaiaComponent : public Component
+class GAIA_API GaiaComponent : public Component
 {
 public:
 	GaiaComponent(GameObject* gameObject);

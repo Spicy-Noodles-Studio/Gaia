@@ -2,6 +2,8 @@
 #ifndef SINGLETON_H
 #define SINGLETON_H
 
+#include "GaiaExports.h"
+
 template<typename T>
 class Singleton
 {

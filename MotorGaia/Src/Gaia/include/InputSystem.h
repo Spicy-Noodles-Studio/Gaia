@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <set>
+#include <string>
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_gamecontroller.h"
@@ -12,7 +13,7 @@
 
 #include "Singleton.h"
 
-class InputSystem : public Singleton<InputSystem>
+class GAIA_API InputSystem : public Singleton<InputSystem>
 {
 #define MAX_CONTROLLERS 4
 
@@ -136,8 +137,8 @@ public:
     std::pair<int, int> getRightJoystick(int controllerIndex) {
         return std::pair<int, int>(controllers[controllerIndex].RightStickX, controllers[controllerIndex].RightStickY); }
 
-    int getLeftTrigger(int controllerIndex) { controllers[controllerIndex].LeftTrigger; }
-    int getRightTrigger(int controllerIndex) { controllers[controllerIndex].RightTrigger; }
+    int getLeftTrigger(int controllerIndex) { return controllers[controllerIndex].LeftTrigger; }
+    int getRightTrigger(int controllerIndex) { return controllers[controllerIndex].RightTrigger; }
 
     void controllerRumble(int controllerIndex, float strength, int length);
     void setDeadZone(int controller, int zone);

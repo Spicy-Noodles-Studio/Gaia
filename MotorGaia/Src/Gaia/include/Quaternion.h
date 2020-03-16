@@ -4,7 +4,9 @@
 
 #include <math.h>
 #include "Vector3.h"
-struct Quaternion
+#include "GaiaExports.h"
+
+struct GAIA_API Quaternion
 {
     double w, x, y, z;
 

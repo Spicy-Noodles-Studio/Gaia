@@ -1,4 +1,6 @@
 #include "Animator.h"
+#include <OgreAnimationState.h>
+#include <OgreEntity.h>
 #include "GameObject.h"
 #include "MeshRenderer.h"
 #include "Scene.h"

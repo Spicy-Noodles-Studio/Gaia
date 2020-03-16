@@ -1,12 +1,14 @@
 #include "PhysicsSystem.h"
 
-#include "Bullet3Common/b3Scalar.h"
+#include <Bullet3Common/b3Scalar.h>
+#include <btBulletDynamicsCommon.h>
 
 #include "Transform.h"
 #include "GaiaMotionState.h"
 #include "RigidBody.h"
 #include "GameObject.h"
 #include "gTime.h"
+#include "DebugDrawer.h"
 
 
 PhysicsSystem::PhysicsSystem() : dynamicsWorld(nullptr), collisionConfiguration(nullptr),

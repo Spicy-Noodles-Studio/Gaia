@@ -3,10 +3,9 @@
 #define SOUND_LISTENER_H
 
 #include "GaiaComponent.h"
-#include "SoundSystem.h"
 #include "Vector3.h"
 
-class SoundListener : public GaiaComponent
+class GAIA_API SoundListener : public GaiaComponent
 {
 public:
 	SoundListener(GameObject* gameObject);

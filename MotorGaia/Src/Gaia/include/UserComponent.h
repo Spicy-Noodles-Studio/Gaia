@@ -8,7 +8,7 @@
 
 #include "GameObjectData.h"
 
-class UserComponent : public Component
+class GAIA_API UserComponent : public Component
 {
 	friend class Scene;
 public:

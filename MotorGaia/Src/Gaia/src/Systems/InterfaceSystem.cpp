@@ -1,6 +1,10 @@
 #include "InterfaceSystem.h"
 
 #include <CEGUI/Event.h>
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
+
+#include "Window.h"
 
 InterfaceSystem::InterfaceSystem()
 {

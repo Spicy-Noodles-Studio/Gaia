@@ -5,9 +5,12 @@
 #include "GaiaComponent.h"
 #include "Quaternion.h"
 #include "Vector3.h"
-#include "OgreBulletUtils.h"
 
-class Transform : public GaiaComponent
+namespace Ogre {
+	class Quaternion;
+}
+
+class GAIA_API Transform : public GaiaComponent
 {
 private:
 	Vector3 position;

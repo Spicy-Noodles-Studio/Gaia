@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "ComponentData.h"
+#include <OgreSceneManager.h>
 #include <sstream>
 
 Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera(false)

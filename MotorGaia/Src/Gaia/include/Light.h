@@ -3,10 +3,13 @@
 #define LIGHT_H
 
 #include "GaiaComponent.h"
-#include "RenderSystem.h"
 #include "Vector3.h"
 
-class Light : public GaiaComponent
+namespace Ogre {
+	class Light;
+}
+
+class GAIA_API Light : public GaiaComponent
 {
 private:
 	Ogre::Light* light;

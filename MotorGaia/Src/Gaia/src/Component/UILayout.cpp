@@ -1,8 +1,10 @@
 #include "UILayout.h"
 
+#include <CEGUI/CEGUI.h>
 
 #include "GameObject.h"
 #include "ComponentData.h"
+#include "InterfaceSystem.h"
 
 UILayout::UILayout(GameObject* gameObject) : GaiaComponent(gameObject)
 {

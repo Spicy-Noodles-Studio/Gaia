@@ -7,6 +7,8 @@
 #include "ComponentData.h"
 #include "PhysicsSystem.h"
 #include "ComponentData.h"
+#include <sstream>
+
 
 Vector3 RigidBody::btScaleConversion = { 50,50,50 };
 

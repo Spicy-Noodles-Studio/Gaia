@@ -2,20 +2,29 @@
 #ifndef PHYSICS_SYSTEM_H
 #define PHYSICS_SYSTEM_H
 
-#include <btBulletDynamicsCommon.h>
 #include <map>
 #include <vector>
 
 #include "Vector3.h"
 #include "Singleton.h"
-#include "DebugDrawer.h"
 #include "PhysicsUtilities.h"
 
+class DebugDrawer;
 class Transform;
 class GaiaMotionState;
 class RigidBody;
 
-class PhysicsSystem : public Singleton<PhysicsSystem> 
+class btRigidBody;
+class btTransform;
+class btCollisionObject;
+class btDiscreteDynamicsWorld;
+class btDefaultCollisionConfiguration;
+class btCollisionDispatcher;
+class btBroadphaseInterface;
+class btSequentialImpulseConstraintSolver;
+class btCollisionShape;
+
+class GAIA_API PhysicsSystem : public Singleton<PhysicsSystem>
 {
 public:
 	PhysicsSystem();

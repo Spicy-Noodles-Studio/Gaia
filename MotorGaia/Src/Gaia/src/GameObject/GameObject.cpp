@@ -1,5 +1,8 @@
 #include "GameObject.h"
 #include "Scene.h"
+#include <OgreSceneNode.h>
+#include <OgreSceneManager.h>
+
 
 GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene)
 {

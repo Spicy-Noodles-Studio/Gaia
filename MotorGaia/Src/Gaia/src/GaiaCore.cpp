@@ -3,17 +3,20 @@
 #include <OgreRoot.h>
 #include "Window.h"
 
+#include "EventSystem.h"
 #include "RenderSystem.h"
 #include "InputSystem.h"
 #include "InterfaceSystem.h"
 #include "PhysicsSystem.h"
 #include "SoundSystem.h"
+#include "gTime.h"
 
 #include "ComponentManager.h"
 #include "SceneManager.h"
 
-GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
-						renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
+GaiaCore::GaiaCore() :	root(nullptr), window(nullptr),
+						eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr), 
+						interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
 						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
 {
 
@@ -36,9 +39,13 @@ void GaiaCore::init()
 		return;
 
 	// Setup window
-	win = new Window(root, "Test window - 2020 (c) Gaia ");
+	window = new Window(root, "Test window - 2020 (c) Gaia ");
 
 	// Systems initialization
+	// EventSystem
+	eventSystem = new EventSystem();
+	eventSystem->init();
+	
 	// RenderSystem
 	renderSystem = RenderSystem::GetInstance();
 	renderSystem->init(root);
@@ -49,7 +56,7 @@ void GaiaCore::init()
 
 	// InterfaceSystem
 	interfaceSystem = InterfaceSystem::GetInstance();
-	interfaceSystem->init(win);
+	interfaceSystem->init(window);
 
 	// PhysicsSystem
 	physicsSystem = PhysicsSystem::GetInstance();
@@ -67,49 +74,61 @@ void GaiaCore::init()
 	componentManager = ComponentManager::GetInstance();
 	componentManager->init();
 
+	//Init Default Resources
+	interfaceSystem->initDefaultResources();
+
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
-	sceneManager->init(root, win);
+	sceneManager->init(root, window);
+
+	gTime::GetInstance()->setup();
 }
 
 void GaiaCore::run()
 {
-	bool exit = false;
-	float deltaTime = 1.f / 60.f;
-	while (!inputSystem->getKeyPress("Escape")) {
+	float deltaTime = gTime::GetInstance()->getDeltaTime();
+	while (!window->isClosed()) {
 		// Render
 		render(deltaTime);
 
 		// Pre-process
 		preUpdate(deltaTime);
-		
+
 		// Process
 		update(deltaTime);
 
 		// Post-process
 		postUpdate(deltaTime);
+
+		deltaTime = gTime::GetInstance()->getDeltaTime();
 	}
 }
 
 void GaiaCore::close()
 {
-	// ResourcesManager termination
-	resourcesManager.close();
-	// ComponentManager termination
-	componentManager->close();
+	gTime::GetInstance()->destroy();
 	// SceneManager termination
 	sceneManager->close();
+	// ComponentManager termination
+	componentManager->close();
+	// ResourcesManager termination
+	resourcesManager.close();
 
 	//Systems termination
-	renderSystem->close();
-	inputSystem->close();
-	interfaceSystem->close();
-	physicsSystem->close();
 	soundSystem->close();
+	physicsSystem->close();
+	interfaceSystem->close();
+	inputSystem->close();
+	renderSystem->close();
+	eventSystem->close();
 
-	if (win != nullptr)
-		delete win;
-	win = nullptr;
+	if (eventSystem != nullptr)
+		delete eventSystem;
+	eventSystem = nullptr;
+
+	if (window != nullptr)
+		delete window;
+	window = nullptr;
 
 	if (root != nullptr)
 		delete root;
@@ -121,8 +140,8 @@ void GaiaCore::render(float deltaTime)
 	// RenderSystem
 	renderSystem->render(deltaTime);
 
-	// PhysicsSystem
 #ifdef _DEBUG
+	// PhysicsSystem
 	physicsSystem->render();
 #endif
 
@@ -132,9 +151,11 @@ void GaiaCore::render(float deltaTime)
 
 void GaiaCore::preUpdate(float deltaTime)
 {
-	// Systems TODO:
-	// RenderSystem (animations)
-	// renderSystem->update(deltaTime);
+	// InputSystem
+	inputSystem->preUpdate();
+
+	// EventSystem
+	eventSystem->update();
 
 	// InputSystem
 	inputSystem->update();
@@ -143,27 +164,24 @@ void GaiaCore::preUpdate(float deltaTime)
 	interfaceSystem->update(deltaTime);
 
 	// PhysicsSystem
-	physicsSystem->update();
+	physicsSystem->update(deltaTime);
 
 	// SoundSystem
 	soundSystem->update(deltaTime);
 
-	// Managers (escena)
+	// Managers
 	sceneManager->preUpdate(deltaTime);
 }
 
 void GaiaCore::update(float deltaTime)
 {
-	// Managers
 	sceneManager->update(deltaTime);
 }
 
 void GaiaCore::postUpdate(float deltaTime)
 {
-	// Managers
 	sceneManager->postUpdate(deltaTime);
 
 	// Systems 
 	physicsSystem->postUpdate();
-	// Si es que hay
 }

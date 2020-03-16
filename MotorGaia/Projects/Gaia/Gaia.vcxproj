@@ -40,20 +40,27 @@
     <ClInclude Include="..\..\Src\Gaia\include\Component.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\ControllerEventListener.h" />
     <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h" />
     <ClInclude Include="..\..\Src\Gaia\include\DebugDrawer.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\DebugUtils.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\EventListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\EventSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaExports.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\KeyboardEventListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\MathUtils.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\MouseEventListener.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ParticleEmitter.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InterfaceSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
-    <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtilities.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Reverb.h" />
     <ClInclude Include="..\..\Src\Gaia\include\OgreBulletUtils.h" />
@@ -75,6 +82,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Vector3.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Window.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\WindowEventListener.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\Component\Animator.cpp" />
@@ -89,11 +97,17 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\RigidBody.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\UILayout.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Events\ControllerEventListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Events\EventListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Events\KeyboardEventListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Events\MouseEventListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Events\WindowEventListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\DataLoader.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ResourcesManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\SceneManager.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Systems\EventSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\InterfaceSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\ShaderTechniqueResolver.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\PhysicsSystem.cpp" />
@@ -275,7 +289,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GAIA_EXPORTS;BT_EULER_DEFAULT_ZYX;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GAIA_EXPORTS;WIN32;_DEBUG;_CONSOLE;BT_EULER_DEFAULT_ZYX;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\include;$(SolutionDir)Src\Gaia\src;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\Dependencies\include;$(SolutionDir)Dependencies\json-3.7.3\include;$(SolutionDir)Dependencies\cegui-0.8.7\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\include</AdditionalIncludeDirectories>
     </ClCompile>
@@ -307,7 +321,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GAIA_EXPORTS;BT_EULER_DEFAULT_ZYX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GAIA_EXPORTS;_DEBUG;_CONSOLE;BT_EULER_DEFAULT_ZYX;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\include;$(SolutionDir)Src\Gaia\src;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\json-3.7.3\include;$(SolutionDir)Dependencies\cegui-0.8.7\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\Build\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\include</AdditionalIncludeDirectories>
     </ClCompile>
@@ -341,7 +355,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GAIA_EXPORTS;BT_EULER_DEFAULT_ZYX;BT_EULER_DEFAULT_ZYX;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GAIA_EXPORTS;WIN32;NDEBUG;_CONSOLE;BT_EULER_DEFAULT_ZYX;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\include;$(SolutionDir)Src\Gaia\src;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Buildx86\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\json-3.7.3\include;$(SolutionDir)Dependencies\cegui-0.8.7\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\Buildx86\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Buildx86\dependencies\include</AdditionalIncludeDirectories>
     </ClCompile>
@@ -381,7 +395,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GAIA_EXPORTS;BT_EULER_DEFAULT_ZYX;BT_EULER_DEFAULT_ZYX;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GAIA_EXPORTS;NDEBUG;_CONSOLE;BT_EULER_DEFAULT_ZYX;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Src\Gaia\src;$(SolutionDir)Src\Gaia\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\Dependencies\include;$(SolutionDir)Dependencies\ogre-1.12.5\OgreMain\include;$(SolutionDir)Dependencies\ogre-1.12.5\Components\RTShaderSystem\include;$(SolutionDir)Dependencies\ogre-1.12.5\Build\include;$(SolutionDir)Dependencies\bullet3-2.89\src;$(SolutionDir)Dependencies\fmod-2.00.07\build\core\include;$(SolutionDir)Dependencies\json-3.7.3\include;$(SolutionDir)Dependencies\cegui-0.8.7\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\Build\cegui\include;$(SolutionDir)Dependencies\cegui-0.8.7\dependencies\Build\dependencies\include</AdditionalIncludeDirectories>
     </ClCompile>

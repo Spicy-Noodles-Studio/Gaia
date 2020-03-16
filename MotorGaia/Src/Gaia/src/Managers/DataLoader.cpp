@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "ResourcesManager.h"
+#include "DebugUtils.h"
 
 
 DataLoader::DataLoader()
@@ -19,7 +20,7 @@ SceneData* DataLoader::loadScene(const std::string& filename, bool& loaded)
 	std::fstream i;
 	i.open(filename);
 	if (!i.is_open()) {
-		printf("DATA LOADER: filename %s not found\n", filename.c_str());
+		LOG("DATA LOADER: filename %s not found\n", filename.c_str());
 		loaded = false;
 		return SceneData::empty();
 	}
@@ -30,7 +31,7 @@ SceneData* DataLoader::loadScene(const std::string& filename, bool& loaded)
 		i >> j;
 	}
 	catch(std::exception message){
-		printf("DATA LOADER: Scene file \"%s\" invalid format. Should be .json formatting\n", filename.c_str());
+		LOG("DATA LOADER: Scene file \"%s\" invalid format. Should be .json formatting\n", filename.c_str());
 		i.close();
 		return SceneData::empty();
 	}
@@ -43,7 +44,7 @@ GameObjectData* DataLoader::loadBlueprint(const std::string& filename, bool& loa
 	std::fstream i;
 	i.open(filename);
 	if (!i.is_open()) {
-		printf("DATA LOADER: filename %s not found\n", filename.c_str());
+		LOG("DATA LOADER: filename %s not found\n", filename.c_str());
 		loaded = false;
 		return GameObjectData::empty();
 	}
@@ -54,7 +55,7 @@ GameObjectData* DataLoader::loadBlueprint(const std::string& filename, bool& loa
 		i >> j;
 	}
 	catch (std::exception message) {
-		printf("DATA LOADER: Scene file \"%s\" invalid format. Should be .json formatting\n", filename.c_str());
+		LOG("DATA LOADER: Scene file \"%s\" invalid format. Should be .json formatting\n", filename.c_str());
 		i.close();
 		return GameObjectData::empty();
 	}
@@ -68,7 +69,7 @@ ComponentData* DataLoader::loadComponentData(const json& data, bool& loaded)
 
 	json::const_iterator name = data.find("ComponentName");
 	if (name == data.end()) {
-		printf("DATA LOADER: Component name not found\n");
+		LOG("DATA LOADER: Component name not found\n");
 		loaded = false;
 		delete cD;
 		return ComponentData::empty();
@@ -93,7 +94,7 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data, bool& loaded)
 	json::const_iterator objectName = data.find("ObjectName");
 	json::const_iterator objectTag = data.find("Tag");
 	if (objectName == data.end() || objectTag == data.end()) {
-		printf("DATA LOADER: Object name nor tag found\n");
+		LOG("DATA LOADER: Object name nor tag found\n");
 		loaded = false;
 		delete gOD;
 		return GameObjectData::empty();
@@ -104,7 +105,7 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data, bool& loaded)
 
 	json::const_iterator buildType = data.find("ObjectType");
 	if (buildType == data.end()) {
-		printf("DATA LOADER: Object type not found %s\n", gOD->getName().c_str());
+		LOG("DATA LOADER: Object type not found %s\n", gOD->getName().c_str());
 		loaded = false;
 		delete gOD;
 		return GameObjectData::empty();
@@ -145,7 +146,7 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data, bool& loaded)
 			}
 	}
 	else if (type != "gameobject") {
-		printf("DATA LOADER: %s is an invalid object type\n", gOD->getName().c_str());
+		LOG("DATA LOADER: %s is an invalid object type\n", gOD->getName().c_str());
 		loaded = false;
 		delete gOD;
 		return GameObjectData::empty();
@@ -162,7 +163,7 @@ GameObjectData* DataLoader::loadGameObjectData(const json& data, bool& loaded)
 		for (auto& child : (*children).items()) {
 			json::const_iterator name = child.value().find("ObjectName");
 			if (name == child.value().end()) {
-				printf("DATA LOADER: object child name %s not found\n", gOD->name.c_str());
+				LOG("DATA LOADER: object child name %s not found\n", gOD->name.c_str());
 				loaded = false;
 				delete gOD;
 				return GameObjectData::empty();
@@ -182,7 +183,7 @@ SceneData* DataLoader::loadSceneData(const json& data, bool& loaded)
 
 	json::const_iterator name = data.find("SceneName");
 	if (name == data.end()) {
-		printf("DATA LOADER: SceneName not found\n");
+		LOG("DATA LOADER: SceneName not found\n");
 		loaded = false;
 		delete sD;
 		return SceneData::empty();
@@ -207,7 +208,7 @@ bool DataLoader::addComponents(GameObjectData& gOD, const json& data)
 	for (auto& component : data.items()) {
 		json::const_iterator name = component.value().find("ComponentName");
 		if (name == component.value().end()) {
-			printf("DATA LOADER: ComponentName not found\n");
+			LOG("DATA LOADER: ComponentName not found\n");
 			return false;
 		}
 		bool aux = true;
@@ -223,7 +224,7 @@ bool DataLoader::modifyComponents(GameObjectData& gOD, const json& data)
 	for (auto& component : data.items()) {
 		json::const_iterator name = component.value().find("ComponentName");
 		if (name == component.value().end()) {
-			printf("DATA LOADER: ComponentName not found for modification\n");
+			LOG("DATA LOADER: ComponentName not found for modification\n");
 			allMod = false;
 			continue; // Si no se ha podido modificar el componente pasamos al siguiente
 		}

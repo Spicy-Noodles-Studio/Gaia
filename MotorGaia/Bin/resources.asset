@@ -1,5 +1,5 @@
-Blueprints = .//Assets//Files//blueprints.asset
-Scenes = .//Assets//Files//scenes.asset
-Sounds = .//Assets//Files//sounds.asset
+Blueprints = ./Assets/Files/blueprints.asset
+Scenes = ./Assets/Files/scenes.asset
+Sounds = ./Assets/Files/sounds.asset
 
-Ogre = .//resources.cfg
+Ogre = ./resources.cfg

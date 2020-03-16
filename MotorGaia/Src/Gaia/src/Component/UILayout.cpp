@@ -6,7 +6,7 @@
 #include "ComponentData.h"
 #include "InterfaceSystem.h"
 
-UILayout::UILayout(GameObject* gameObject) : GaiaComponent(gameObject)
+UILayout::UILayout(GameObject* gameObject) : GaiaComponent(gameObject), layout(nullptr)
 {
 
 }
@@ -20,6 +20,8 @@ UILayout::~UILayout()
 void UILayout::setLayout(const std::string& filename)
 {
 	layout = InterfaceSystem::GetInstance()->loadLayout(filename);
+	if (layout == nullptr)
+		return;
 	InterfaceSystem::GetInstance()->getRoot()->addChild(layout);
 
 	//esto esta MU FEO***
@@ -34,21 +36,47 @@ void UILayout::setLayout(const std::string& filename)
 	}
 }
 
+void UILayout::setEvent(const std::string& element, const std::string& event)
+{
+	getElement("StaticImage")->getChild(element)->
+		subscribeEvent(InterfaceSystem::GetInstance()->getEvent(event).first, InterfaceSystem::GetInstance()->getEvent(event).second);
+}
+
 void UILayout::handleData(ComponentData* data)
 {
 	for (auto prop : data->getProperties())
 	{
+		std::stringstream ss(prop.second);
+
 		if (prop.first == "layout")
 			setLayout(prop.second);
+		else if (prop.first == "event")
+		{
+			std::string element;
+			std::string event;
+			char c;
+			while (ss >> element >> event)
+			{
+				setEvent(element, event);
+				if (ss)
+					ss >> c;
+			}
+		}
+		else
+			LOG("UILAYOUT: invalid property name \"%s\"", prop.first.c_str());
 	}
 }
 
 UIElement* UILayout::getElement(const std::string& name)
 {
+	if (layout == nullptr)
+		return nullptr;
 	return layout->getChild(name);
 }
 
 void UILayout::setVisible(bool visible)
 {
+	if (layout == nullptr)
+		return;
 	layout->setVisible(visible);
 }

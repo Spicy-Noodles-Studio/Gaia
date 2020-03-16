@@ -108,7 +108,7 @@ void SoundEmitter::handleData(ComponentData* data)
 		}
 		else
 		{
-			printf("SOUND EMITTER: Invalid property name \"%s\"", prop.first.c_str());
+			LOG("SOUND EMITTER: Invalid property name \"%s\"", prop.first.c_str());
 		}
 	}
 

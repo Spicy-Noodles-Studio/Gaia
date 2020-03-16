@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef PHYSICS_UTILITIES_H
-#define PHYSICS_UTILITIES_H
+#ifndef PHYSICS_UTILS_H
+#define PHYSICS_UTILS_H
 
 enum ImpulseMode
 {

@@ -43,7 +43,7 @@ void RigidBody::handleData(ComponentData* data)
 			else if (prop.second == "Sphere")
 				shape = SPHERE_RB_SHAPE;
 			else
-				printf("RIGIDBODY: %s not valid rigidbody shape type\n", prop.second.c_str());
+				LOG("RIGIDBODY: %s not valid rigidbody shape type\n", prop.second.c_str());
 		}
 		else if (prop.first == "mass") {
 			ss >> mass;

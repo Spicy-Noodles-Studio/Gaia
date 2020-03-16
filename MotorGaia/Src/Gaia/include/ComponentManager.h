@@ -6,6 +6,7 @@
 #include <map>
 #include <functional>
 #include "Component.h"
+#include "DebugUtils.h"
 
 typedef std::function<Component* (GameObject*)> ComponentFactory;
 
@@ -38,7 +39,7 @@ void ComponentManager::registerComponent(const std::string& nameID)
 {
 	if (factories.find(nameID) != factories.end())
 	{
-		printf("COMPONENT MANAGER: trying to register a ComponentFactory ID: %s, there is already an existing one.\n", nameID.c_str());
+		LOG("COMPONENT MANAGER: trying to register a ComponentFactory ID: %s, there is already an existing one.\n", nameID.c_str());
 		return;
 	}
 	ids[typeid(T).name()] = nameID;

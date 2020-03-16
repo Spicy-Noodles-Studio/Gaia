@@ -1,4 +1,6 @@
 #pragma once
+#ifndef INPUT_SYSTEM_H
+#define INPUT_SYSTEM_H
 
 #include <iostream>
 #include <cstdint>
@@ -12,8 +14,11 @@
 #include "SDL2/SDL_keycode.h"
 
 #include "Singleton.h"
+#include "MouseEventListener.h"
+#include "KeyboardEventListener.h"
+#include "ControllerEventListener.h"
 
-class GAIA_API InputSystem : public Singleton<InputSystem>
+class GAIA_API InputSystem : public Singleton<InputSystem>, public MouseEventListener, public KeyboardEventListener, public ControllerEventListener
 {
 #define MAX_CONTROLLERS 4
 
@@ -28,6 +33,8 @@ private:
     // MOUSE
     int MOUSE_POSITION_X;
     int MOUSE_POSITION_Y;
+    int MOUSE_DELTA_X;
+    int MOUSE_DELTA_Y;
 
     struct mouseButton {
         bool pressed = false;
@@ -89,8 +96,23 @@ private:
     void controllerInputDown(int index);
     void controllerInputUp(int index);
     
-    
-
+    // Listener callbacks
+    void processKeyDown(std::string keyName, int key);
+    void processKeyUp(std::string keyName, int key);
+    void processMouseMotion(int x, int y);
+    void processMouseLeftButtonDown();
+    void processMouseRightButtonDown();
+    void processMouseMiddleButtonDown(); 
+    void processMouseLeftButtonUp();
+    void processMouseRightButtonUp();
+    void processMouseMiddleButtonUp();
+    void processMouseWheelScrollY(int value);
+    void processControllerButtonDown(int index, int button);
+    void processControllerButtonUp(int index, int button);
+    void processControllerDeviceAdded(int index);
+    void processControllerDeviceRemoved(int index);
+    void processControllerAxisLeftY(int index, double value);
+    void processControllerAxisLeftX(int index, double value);
 
     // UTILS
     bool flags = true;
@@ -98,16 +120,16 @@ private:
     void clearInputs();
     int getFirstFreeController();
     int getControllerByReference(SDL_GameController* handle);
-    int getControllerFromEvent(SDL_Event* e);
-    int getControllerRemovedIndex(SDL_Event* e);
+    int getControllerFromEvent(int index);
+    int getControllerRemovedIndex(int index);
 
 public:
-
-    // est� feo...
-    bool exit = false;
+    InputSystem();
+    ~InputSystem();
 
     void init();
     void close();
+    void preUpdate();
     void update();
 
     void toggleFlags() { flags = !flags; }
@@ -144,3 +166,4 @@ public:
     void setDeadZone(int controller, int zone);
 };
 
+#endif

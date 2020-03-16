@@ -11,6 +11,7 @@ namespace Ogre {
 
 class Window;
 
+class EventSystem;
 class RenderSystem;
 class InputSystem;
 class PhysicsSystem;
@@ -19,6 +20,7 @@ class SoundSystem;
 
 class ComponentManager;
 class SceneManager;
+
 
 class GAIA_API GaiaCore
 {
@@ -37,9 +39,10 @@ private:
 	void postUpdate(float deltaTime);
 
 	Ogre::Root* root;
-	Window* win;
+	Window* window;
 
 	//Systems
+	EventSystem* eventSystem;
 	RenderSystem* renderSystem;
 	InputSystem* inputSystem;
 	InterfaceSystem* interfaceSystem;

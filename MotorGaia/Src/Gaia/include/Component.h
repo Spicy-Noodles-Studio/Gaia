@@ -4,6 +4,7 @@
 
 #include <string>
 #include "ComponentData.h"
+#include "DebugUtils.h"
 
 class GameObject;
 

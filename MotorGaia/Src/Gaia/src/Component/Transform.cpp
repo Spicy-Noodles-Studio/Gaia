@@ -5,20 +5,23 @@
 #include <OgreRoot.h>
 #include <sstream>
 #include <cmath>
+#include "DebugUtils.h"
 
 Transform::Transform(GameObject* gameObject) : GaiaComponent(gameObject)
 {
-	position.x = 0;
-	position.y = 0;
-	position.z = 0;
+	position.x = 0.0;
+	position.y = 0.0;
+	position.z = 0.0;
 
-	scale.x = 1;
-	scale.y = 1;
-	scale.z = 1;
+	scale.x = 1.0;
+	scale.y = 1.0;
+	scale.z = 1.0;
 
-	rotation.x = 0;
-	rotation.y = 0;
-	rotation.z = 0;
+	rotation.x = 0.0;
+	rotation.y = 0.0;
+	rotation.z = 0.0;
+
+	quaternion = Quaternion::AnglesToQuaternion(0.0, 0.0, 0.0);
 
 	gameObject->transform = this;
 }
@@ -61,7 +64,7 @@ void Transform::setRotation(double x, double y, double z)
 		gameObject->node->setOrientation(Ogre::Quaternion(mx));
 	}
 
-	quaternion = ToQuaternion(z, y, x);
+	quaternion = Quaternion::AnglesToQuaternion(z, y, x);
 }
 
 void Transform::setPosition(const Vector3& pos)
@@ -138,8 +141,9 @@ Vector3 Transform::getWorldScale() const
 {
 	Vector3 worldScale = scale;
 	GameObject* parent = gameObject->getParent();
-	if (parent != nullptr)
-		worldScale = worldScale * parent->transform->getWorldScale();
+	if (parent != nullptr) {
+		worldScale *= parent->transform->getWorldScale();
+	}
 	return worldScale;
 }
 
@@ -210,7 +214,11 @@ void Transform::handleData(ComponentData* data)
 {
 	for (auto prop : data->getProperties()) {
 		std::stringstream ss(prop.second);
-		double x, y, z; ss >> x >> y >> z;
+		double x, y, z; 
+		if (!(ss >> x >> y >> z)) {
+			LOG_ERROR("TRANFORM", "invalid value \"%s\"", prop.second.c_str());
+			continue;
+		}
 
 		if (prop.first == "position") {
 			setPosition(x, y, z);
@@ -222,7 +230,7 @@ void Transform::handleData(ComponentData* data)
 			setRotation(x, y, z);
 		}
 		else {
-			printf("TRANSFORM: property %s does not exist\n", prop.first.c_str());
+			LOG("TRANSFORM: property %s does not exist\n", prop.first.c_str());
 		}
 	}
 }

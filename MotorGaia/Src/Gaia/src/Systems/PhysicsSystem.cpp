@@ -11,8 +11,8 @@
 #include "DebugDrawer.h"
 
 
-PhysicsSystem::PhysicsSystem() : dynamicsWorld(nullptr), collisionConfiguration(nullptr),
-dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr)
+PhysicsSystem::PhysicsSystem() :	dynamicsWorld(nullptr), collisionConfiguration(nullptr),
+									dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr), time(0.0)
 {
 }
 
@@ -38,7 +38,9 @@ void PhysicsSystem::init()
 
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
-	dynamicsWorld->setGravity(btVector3(0, -1, 0));
+	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+
+	time = 0;
 
 	///-----initialization_end-----
 }
@@ -48,10 +50,15 @@ void PhysicsSystem::render()
 	dynamicsWorld->debugDrawWorld();
 }
 
-void PhysicsSystem::update()
+void PhysicsSystem::update(float deltaTime)
 {
-	dynamicsWorld->stepSimulation(1.0f / 50.0f, 10);
-	checkCollisions();
+	time += deltaTime;
+	while (time >= 1.0f / 50.0f)
+	{
+		dynamicsWorld->stepSimulation(1.0f / 50.0f, 10);
+		checkCollisions();
+		time -= 1.0f / 50.0f;
+	}
 }
 
 void PhysicsSystem::postUpdate()

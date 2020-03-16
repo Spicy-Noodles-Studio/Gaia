@@ -7,7 +7,7 @@
 
 #include "Vector3.h"
 #include "Singleton.h"
-#include "PhysicsUtilities.h"
+#include "PhysicsUtils.h"
 
 class DebugDrawer;
 class Transform;
@@ -32,7 +32,7 @@ public:
 
 	void init();
 	void render();
-	void update();
+	void update(float deltaTime);
 	void postUpdate();
 	void close();
 
@@ -70,6 +70,9 @@ private:
 	std::vector<btCollisionShape*> collisionShapes;
 
 	std::map<std::pair<RigidBody*, RigidBody*>, bool> contacts;
+
+
+	float time;
 };
 
 #endif

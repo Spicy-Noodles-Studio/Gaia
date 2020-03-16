@@ -4,6 +4,7 @@
 #include "ComponentData.h"
 #include <OgreSceneManager.h>
 #include <sstream>
+#include "DebugUtils.h"
 
 Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera(false)
 {
@@ -63,18 +64,18 @@ void Camera::handleData(ComponentData* data)
 					gameObject->getScene()->setMainCamera(this);
 				}
 				else {
-					printf("CAMERA: there's already a main Camera\n");
+					LOG("CAMERA: there's already a main Camera\n");
 				}
 			}
 			else if (prop.second == "false") {
 				isMainCamera = false;
 			}
 			else {
-				printf("CAMERA: %s value not valid for \"main\" property\n", prop.second.c_str());
+				LOG("CAMERA: %s value not valid for \"main\" property\n", prop.second.c_str());
 			}
 		}
 		else {
-			printf("CAMERA: %s is not a valid property name\n", prop.first.c_str());
+			LOG("CAMERA: %s is not a valid property name\n", prop.first.c_str());
 		}
 	}
 }

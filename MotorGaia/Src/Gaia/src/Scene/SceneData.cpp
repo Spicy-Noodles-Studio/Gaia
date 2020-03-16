@@ -59,8 +59,7 @@ SceneData* SceneData::empty()
 	cube->componentData["Transform"]->addProperty("position", "0 0 0");
 	cube->componentData["MeshRenderer"] = new ComponentData();
 	cube->componentData["MeshRenderer"]->name = "MeshRenderer";
-	cube->componentData["MeshRenderer"]->addProperty("mesh", "knot knot.mesh");
-	// TODO: cambiar knot por cube
+	cube->componentData["MeshRenderer"]->addProperty("mesh", "cube cube.mesh");
 
 	s->setGameObjectData(camera);
 	s->setGameObjectData(cube);

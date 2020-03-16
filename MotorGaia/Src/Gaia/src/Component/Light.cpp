@@ -91,7 +91,7 @@ void Light::handleData(ComponentData* data)
 			else if (prop.second == "Directional")
 				setType(Directional);
 			else
-				printf("LIGHT: %s not valid light type\n", prop.second.c_str());
+				LOG("LIGHT: %s not valid light type\n", prop.second.c_str());
 		}
 		else if (prop.first == "colour") {
 			double x, y, z; ss >> x >> y >> z;

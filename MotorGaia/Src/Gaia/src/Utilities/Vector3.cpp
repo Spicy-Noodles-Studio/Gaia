@@ -1,8 +1,8 @@
 #include "Vector3.h"
 
-#include<cmath>
-#include <btBulletDynamicsCommon.h>
 #include "Quaternion.h"
+#include <btBulletDynamicsCommon.h>
+#include "MathUtils.h"
 
 Vector3::Vector3()
 {
@@ -16,72 +16,158 @@ Vector3::Vector3(double x, double y, double z) : x(x), y(y), z(z)
 
 }
 
-Vector3 Vector3::operator+=(const Vector3 p)
+Vector3::~Vector3()
 {
-	this->x += p.x;
-	this->y += p.y;
-	this->z += p.z;
+}
+
+bool Vector3::operator==(const Vector3& v) const
+{
+	CHECK_VALID(v);
+	CHECK_VALID(*this);
+	return (v.x == x) && (v.y == y) && (v.z == z);
+}
+
+bool Vector3::operator!=(const Vector3& v) const
+{
+	CHECK_VALID(src);
+	CHECK_VALID(*this);
+	return (v.x != x) || (v.y != y) || (v.z != z);
+}
+
+Vector3& Vector3::operator+=(const Vector3& v)
+{
+	CHECK_VALID(*this);
+	CHECK_VALID(v);
+	x += v.x; y += v.y; z += v.z;
 	return *this;
 }
 
-
-Vector3 Vector3::operator-=(const Vector3 p)
+Vector3& Vector3::operator-=(const Vector3& v)
 {
-	this->x -= p.x;
-	this->y -= p.y;
-	this->z -= p.z;
+	CHECK_VALID(*this);
+	CHECK_VALID(v);
+	x -= v.x; y -= v.y; z -= v.z;
 	return *this;
 }
 
-
-Vector3& Vector3::operator/=(const Vector3& p)
+Vector3& Vector3::operator*=(double n)
 {
-	this->x /= p.x;
-	this->y /= p.y;
-	this->z /= p.z;
+	x *= n;
+	y *= n;
+	z *= n;
+	CHECK_VALID(*this);
 	return *this;
 }
 
-Vector3& Vector3::operator*=(const Vector3& p)
+Vector3& Vector3::operator*=(const Vector3& v)
 {
-	this->x *= p.x;
-	this->y *= p.y;
-	this->z *= p.z;
+	CHECK_VALID(v);
+	x *= v.x;
+	y *= v.y;
+	z *= v.z;
+	CHECK_VALID(*this);
 	return *this;
 }
 
-Vector3& Vector3::operator/=(const double d)
+Vector3& Vector3::operator+=(double n)
 {
-	this->x /= d;
-	this->y /= d;
-	this->z /= d;
+	x += n;
+	y += n;
+	z += n;
+	CHECK_VALID(*this);
 	return *this;
 }
 
-Vector3& Vector3::operator*=(const double d)
+Vector3& Vector3::operator-=(double n)
 {
-	this->x *= d;
-	this->y *= d;
-	this->z *= d;
+	x -= n;
+	y -= n;
+	z -= n;
+	CHECK_VALID(*this);
 	return *this;
 }
 
-bool Vector3::operator == (const Vector3 p) const
-
+Vector3& Vector3::operator/=(double n)
 {
-	return this->x == p.x && this->y == p.y && this->z == p.z;
+	Assert(n != 0.f);
+	double d = 1.0f / n;
+	x *= d;
+	y *= d;
+	z *= d;
+	CHECK_VALID(*this);
+	return *this;
 }
 
-Vector3 Vector3::operator=(Vector3 p)
+Vector3& Vector3::operator/=(const Vector3& v)
 {
-	//Comprueba que no se este intentando igualar un vector3 a si mismo
-	if (this != &p)
-	{
-		this->x = p.x;
-		this->y = p.y;
-		this->z = p.z;
-	}
+	CHECK_VALID(v);
+	Assert(v.x != 0.f && v.y != 0.f && v.z != 0.f);
+	x /= v.x;
+	y /= v.y;
+	z /= v.z;
+	CHECK_VALID(*this);
 	return *this;
+}
+
+Vector3& Vector3::operator=(const Vector3& v)
+{
+	CHECK_VALID(v);
+	x = v.x; y = v.y; z = v.z;
+	return *this;
+}
+
+Vector3 Vector3::operator+(const Vector3& v) const
+{
+	Vector3 res;
+	res.x = x + v.x;
+	res.y = y + v.y;
+	res.z = z + v.z;
+	return res;
+}
+
+Vector3 Vector3::operator-(const Vector3& v) const
+{
+	Vector3 res;
+	res.x = x - v.x;
+	res.y = y - v.y;
+	res.z = z - v.z;
+	return res;
+}
+
+Vector3 Vector3::operator*(double n) const
+{
+	Vector3 res;
+	res.x = x * n;
+	res.y = y * n;
+	res.z = z * n;
+	return res;
+}
+
+Vector3 Vector3::operator*(const Vector3& v) const
+{
+	Vector3 res;
+	res.x = x * v.x;
+	res.y = y * v.y;
+	res.z = z * v.z;
+	return res;
+}
+
+Vector3 Vector3::operator/(double n) const
+{
+	Vector3 res;
+	res.x = x / n;
+	res.y = y / n;
+	res.z = z / n;
+	return res;
+}
+
+Vector3 Vector3::operator/(const Vector3& v) const
+{
+	Vector3 res;
+	res.x = x / v.x;
+	res.y = y / v.y;
+	res.z = z / v.z;
+	return res;
 }
 
 void Vector3::normalize()
@@ -95,12 +181,30 @@ Vector3& Vector3::normalized()
 	return aux;
 }
 
+Vector3 Vector3::cross(const Vector3& v)
+{
+	return Vector3(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
+}
+
+double Vector3::dot(const Vector3& v)
+{
+	return x * v.x + y * v.y + z * v.z;
+}
+
+Vector3& Vector3::set(double x, double y, double z)
+{
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	return *this;
+}
+
 Vector3 Vector3::rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles)
 {
 	Vector3 v = { point.x - pivot.x,point.y - pivot.y, point.z - pivot.z };
-	Quaternion q = ToQuaternion(angles.z, angles.y, angles.x), q1 = q.inverse(), aux = { 0,v.x,v.y,v.z }, aux1;
-	aux1 = hamilton(q, aux);
-	aux1 = hamilton(aux1, q1);
+	Quaternion q = Quaternion::AnglesToQuaternion(angles.z, angles.y, angles.x), q1 = q.inverse(), aux = { 0,v.x,v.y,v.z }, aux1;
+	aux1 = Quaternion::hamilton(q, aux);
+	aux1 = Quaternion::hamilton(aux1, q1);
 	v = { std::round(aux1.x),std::round(aux1.y),std::round(aux1.z) };
 	return (v + pivot);
 }
@@ -108,7 +212,7 @@ Vector3 Vector3::rotateAroundPivot(const Vector3& point, const Vector3& pivot, c
 void Vector3::rotateAroundAxis(const Vector3& axis, double angle)
 {
 	Vector3 result = *this;
-	double ang = angle * SIMD_RADS_PER_DEG;
+	double ang = angle * RAD_TO_DEG;
 	if (axis == Vector3(0, 0, 1)) {
 		result.x = x * cos(ang) - y * sin(ang);
 		result.y = x * sin(ang) + y * cos(ang);
@@ -145,43 +249,13 @@ double Vector3::magnitude()
 	return sqrt(magnitudeSquared());
 }
 
-Vector3 Vector3::operator +(const Vector3& p2) const
+
+Vector3 Vector3::operator+(const btVector3& v)
 {
-	return Vector3(x + p2.x, y + p2.y, z + p2.z);
+	return Vector3(x + v.x(), y + v.y(), z + v.z());
 }
 
-
-Vector3 Vector3::operator -(const Vector3& p2) const
+btVector3 operator+(const btVector3& p1, const Vector3& p2)
 {
-	return Vector3(x - p2.x, y - p2.y, z - p2.z);
-}
-
-Vector3 Vector3::operator*(const Vector3& p2) const
-{
-	return Vector3(x * p2.x, y * p2.y, z * p2.z);
-}
-
-Vector3 Vector3::operator/(const Vector3& p2) const
-{
-	return Vector3(x / p2.x, y / p2.y, z / p2.z);
-}
-
-Vector3 Vector3::operator*(const double d) const
-{
-	return Vector3(x * d, y * d, z * d);
-}
-
-Vector3 Vector3::operator/(const double d) const
-{
-	return Vector3(x / d, y / d, z / d);
-}
-
-Vector3 Vector3::operator+(const btVector3& p2) const
-{
-	return Vector3(x + p2.x(), y + p2.y(), z + p2.z());
-}
-
-btVector3 operator+(const btVector3& p1,const Vector3& p2)
-{
-	return btVector3(p1.x() + btScalar(p2.x), p1.y() + btScalar(p2.y), p1.z() + btScalar(p2.z));
+	return btVector3(btScalar(p1.x() + p2.x), btScalar(p1.y() + p2.y), btScalar(p1.z() + p2.z));
 }

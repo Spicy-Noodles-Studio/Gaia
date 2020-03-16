@@ -1,5 +1,6 @@
 #include "ComponentData.h"
 #include <stdio.h>
+#include "DebugUtils.h"
 
 ComponentData::ComponentData()
 {
@@ -18,7 +19,7 @@ bool ComponentData::addProperty(const std::string& propName, const std::string& 
 {
 	if (properties.find(propName) != properties.end()) 
 	{
-		printf("COMPONENT DATA: tried to add to %s a property %s already defined\n", name.c_str(), propName.c_str());
+		LOG("COMPONENT DATA: tried to add to %s a property %s already defined\n", name.c_str(), propName.c_str());
 		return false;
 	}
 	properties[propName] = propValue;
@@ -29,7 +30,7 @@ bool ComponentData::modifyProperty(const std::string& propName, const std::strin
 {
 	if (properties.find(propName) == properties.end())
 	{
-		printf("COMPONENT DATA: tried to modify in %s component an undefined property %s\n", name.c_str(), propName.c_str());
+		LOG("COMPONENT DATA: tried to modify in %s component an undefined property %s\n", name.c_str(), propName.c_str());
 		return false;
 	}
 	properties[propName] = propValue;
@@ -41,7 +42,7 @@ const std::string& ComponentData::getName() const
 	return name;
 }
 
-const std::map<std::string, std::string>& ComponentData::getProperties() const
+const std::unordered_map<std::string, std::string>& ComponentData::getProperties() const
 {
 	return properties;
 }

@@ -2,7 +2,7 @@
 #ifndef RIGID_BODY_H
 #define RIGID_BODY_H
 
-#include "PhysicsUtilities.h"
+#include "PhysicsUtils.h"
 #include "Vector3.h"
 #include "GaiaComponent.h"
 

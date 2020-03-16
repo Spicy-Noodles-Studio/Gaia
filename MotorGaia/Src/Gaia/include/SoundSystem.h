@@ -9,14 +9,21 @@
 #include <vector>
 #include <string>
 #include "Quaternion.h"
+#include <vector>
 #include "Vector3.h"
+
+typedef FMOD_MODE SoundMode;
+typedef FMOD::Sound Sound;
+typedef FMOD::System System;
+typedef FMOD::Channel Channel;
+typedef FMOD::ChannelGroup ChannelGroup;
 
 class GAIA_API SoundSystem : public Singleton<SoundSystem>
 {
 public:
 	struct EmitterData
 	{
-		FMOD::Channel* channel;
+		Channel* channel;
 		const Vector3* position;
 		bool paused;
 	};
@@ -26,13 +33,10 @@ public:
 		const Quaternion* quaternion;
 	};
 private:
-	FMOD::System* system;
-	FMOD_RESULT result;
-	std::string file;
-	std::map<std::string, FMOD::Sound*> sounds;
+	System* system;
 
-	FMOD::ChannelGroup* music;
-	FMOD::ChannelGroup* soundEfects;
+	ChannelGroup* music;
+	ChannelGroup* soundEfects;
 
 	std::vector<EmitterData*> emitters;
 	ListenerData* listener = nullptr;
@@ -45,10 +49,10 @@ public:
 	void init();
 	void close();
 
-	bool createSounds(const std::string filename);
+	Sound* createSound(const std::string& name, const SoundMode& mode);
 
-	FMOD::Channel* playSound(const std::string & sound);
-	FMOD::Channel* playMusic(const std::string & sound);
+	Channel* playSound(const std::string& name);
+	Channel* playMusic(const std::string& name);
 
 	void setPauseAllSounds(bool pause);
 

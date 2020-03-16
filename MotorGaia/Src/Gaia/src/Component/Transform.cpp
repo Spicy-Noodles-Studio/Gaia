@@ -19,6 +19,8 @@ Transform::Transform(GameObject* gameObject) : GaiaComponent(gameObject)
 	rotation.y = 0;
 	rotation.z = 0;
 
+	quaternion = ToQuaternion(0, 0, 0);
+
 	gameObject->transform = this;
 }
 
@@ -122,7 +124,7 @@ void Transform::setWorldRotation(const Vector3& rot)
 	setRotation(localRotation);
 }
 
-const Vector3& Transform::getWorldPosition() const
+Vector3 Transform::getWorldPosition() const
 {
 	Vector3 worldPos = position;
 	GameObject* parent = gameObject->getParent();
@@ -133,16 +135,17 @@ const Vector3& Transform::getWorldPosition() const
 	return worldPos;
 }
 
-const Vector3& Transform::getWorldScale() const
+Vector3 Transform::getWorldScale() const
 {
 	Vector3 worldScale = scale;
 	GameObject* parent = gameObject->getParent();
-	if (parent != nullptr)
-		worldScale = worldScale * parent->transform->getWorldScale();
+	if (parent != nullptr) {
+		worldScale *= parent->transform->getWorldScale();
+	}
 	return worldScale;
 }
 
-const Vector3& Transform::getWorldRotation() const
+Vector3 Transform::getWorldRotation() const
 {
 	Vector3 worldRotation = rotation;
 	GameObject* parent = gameObject->getParent();
@@ -178,17 +181,17 @@ const Quaternion& Transform::getQuaternion() const
 	return quaternion;
 }
 
-const Vector3& Transform::getForwardVector() const
+Vector3 Transform::getForwardVector() const
 {
 	return GetForwardVector(quaternion);
 }
 
-const Vector3& Transform::getUpVector() const
+Vector3 Transform::getUpVector() const
 {
 	return GetUpVector(quaternion);
 }
 
-const Vector3& Transform::getLeftVector() const
+Vector3 Transform::getLeftVector() const
 {
 	return GetLeftVector(quaternion);
 }

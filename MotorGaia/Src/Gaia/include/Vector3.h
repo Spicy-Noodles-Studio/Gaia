@@ -2,6 +2,9 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
+#define CHECK_VALID( _v ) 0
+#define Assert( _exp ) ((void)0)
+
 class btVector3;
 
 struct Vector3
@@ -16,15 +19,24 @@ struct Vector3
 
 	void normalize();
 
-	Vector3 operator +=(const Vector3 p);
-	Vector3 operator -=(const Vector3 p);
-	bool operator == (const Vector3 p) const;
-	Vector3 operator = (const Vector3 p);
+	bool operator==(const Vector3& v) const;
+	bool operator!=(const Vector3& v) const;
+	Vector3& operator+=(const Vector3& v);
+	Vector3& operator-=(const Vector3& v);
+	Vector3& operator*=(const Vector3& v);
+	Vector3& operator*=(double n);
+	Vector3& operator/=(const Vector3& v);
+	Vector3& operator/=(double n);
+	Vector3& operator+=(double n);
+	Vector3& operator-=(double n);
 
-	Vector3& operator /= (const Vector3& p);
-	Vector3& operator *= (const Vector3& p);
-	Vector3& operator /= (const double d);
-	Vector3& operator *= (const double d);
+	Vector3& operator=(const Vector3& v);
+	Vector3	operator+(const Vector3& v) const;
+	Vector3	operator-(const Vector3& v) const;
+	Vector3	operator*(const Vector3& v) const;
+	Vector3	operator/(const Vector3& v) const;
+	Vector3	operator*(double n) const;
+	Vector3	operator/(double n) const;
 
 	double magnitudeSquared();
 	double magnitude();
@@ -38,13 +50,7 @@ struct Vector3
 
 Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles);
 
-Vector3 operator +(const Vector3& p1, const Vector3& p2);
 Vector3 operator +(const Vector3& p1, const btVector3& p2);
-btVector3 operator +(const btVector3& p1, const Vector3& p2 );
-Vector3 operator -(const Vector3& p1, const Vector3& p2);
-Vector3 operator *(const Vector3& p1, const Vector3& p2);
-Vector3 operator /(const Vector3& p1, const Vector3& p2);
-Vector3 operator *(const Vector3& p1, const double d);
-Vector3 operator /(const Vector3& p1, const double d);
+btVector3 operator +(const btVector3& p1, const Vector3& p2);
 
 #endif

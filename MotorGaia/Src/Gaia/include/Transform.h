@@ -37,13 +37,13 @@ public:
 	const Vector3& getRotation() const;
 	const Quaternion& getQuaternion() const;
 
-	const Vector3& getWorldPosition() const;
-	const Vector3& getWorldScale() const;
-	const Vector3& getWorldRotation() const;
+	Vector3 getWorldPosition() const;
+	Vector3 getWorldScale() const;
+	Vector3 getWorldRotation() const;
 
-	const Vector3& getForwardVector() const;
-	const Vector3& getUpVector() const;
-	const Vector3& getLeftVector() const;
+	Vector3 getForwardVector() const;
+	Vector3 getUpVector() const;
+	Vector3 getLeftVector() const;
 
 	void translate(const Vector3& pos);
 	void rotate(const Vector3& rot);

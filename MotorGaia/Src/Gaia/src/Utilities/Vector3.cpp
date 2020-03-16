@@ -16,72 +16,154 @@ Vector3::Vector3(double x, double y, double z) : x(x), y(y), z(z)
 
 }
 
-Vector3 Vector3::operator+=(const Vector3 p)
+bool Vector3::operator==(const Vector3& v) const
 {
-	this->x += p.x;
-	this->y += p.y;
-	this->z += p.z;
+	CHECK_VALID(v);
+	CHECK_VALID(*this);
+	return (v.x == x) && (v.y == y) && (v.z == z);
+}
+
+bool Vector3::operator!=(const Vector3& v) const
+{
+	CHECK_VALID(src);
+	CHECK_VALID(*this);
+	return (v.x != x) || (v.y != y) || (v.z != z);
+}
+
+Vector3& Vector3::operator+=(const Vector3& v)
+{
+	CHECK_VALID(*this);
+	CHECK_VALID(v);
+	x += v.x; y += v.y; z += v.z;
 	return *this;
 }
 
-
-Vector3 Vector3::operator-=(const Vector3 p)
+Vector3& Vector3::operator-=(const Vector3& v)
 {
-	this->x -= p.x;
-	this->y -= p.y;
-	this->z -= p.z;
+	CHECK_VALID(*this);
+	CHECK_VALID(v);
+	x -= v.x; y -= v.y; z -= v.z;
 	return *this;
 }
 
-
-Vector3& Vector3::operator/=(const Vector3& p)
+Vector3& Vector3::operator*=(double n)
 {
-	this->x /= p.x;
-	this->y /= p.y;
-	this->z /= p.z;
+	x *= n;
+	y *= n;
+	z *= n;
+	CHECK_VALID(*this);
 	return *this;
 }
 
-Vector3& Vector3::operator*=(const Vector3& p)
+Vector3& Vector3::operator*=(const Vector3& v)
 {
-	this->x *= p.x;
-	this->y *= p.y;
-	this->z *= p.z;
+	CHECK_VALID(v);
+	x *= v.x;
+	y *= v.y;
+	z *= v.z;
+	CHECK_VALID(*this);
 	return *this;
 }
 
-Vector3& Vector3::operator/=(const double d)
+Vector3& Vector3::operator+=(double n)
 {
-	this->x /= d;
-	this->y /= d;
-	this->z /= d;
+	x += n;
+	y += n;
+	z += n;
+	CHECK_VALID(*this);
 	return *this;
 }
 
-Vector3& Vector3::operator*=(const double d)
+Vector3& Vector3::operator-=(double n)
 {
-	this->x *= d;
-	this->y *= d;
-	this->z *= d;
+	x -= n;
+	y -= n;
+	z -= n;
+	CHECK_VALID(*this);
 	return *this;
 }
 
-bool Vector3::operator == (const Vector3 p) const
-
+Vector3& Vector3::operator/=(double n)
 {
-	return this->x == p.x && this->y == p.y && this->z == p.z;
+	Assert(n != 0.f);
+	double d = 1.0f / n;
+	x *= d;
+	y *= d;
+	z *= d;
+	CHECK_VALID(*this);
+	return *this;
 }
 
-Vector3 Vector3::operator=(Vector3 p)
+Vector3& Vector3::operator/=(const Vector3& v)
 {
-	//Comprueba que no se este intentando igualar un vector3 a si mismo
-	if (this != &p)
-	{
-		this->x = p.x;
-		this->y = p.y;
-		this->z = p.z;
-	}
+	CHECK_VALID(v);
+	Assert(v.x != 0.f && v.y != 0.f && v.z != 0.f);
+	x /= v.x;
+	y /= v.y;
+	z /= v.z;
+	CHECK_VALID(*this);
 	return *this;
+}
+
+Vector3& Vector3::operator=(const Vector3& v)
+{
+	CHECK_VALID(v);
+	x = v.x; y = v.y; z = v.z;
+	return *this;
+}
+
+Vector3 Vector3::operator+(const Vector3& v) const
+{
+	Vector3 res;
+	res.x = x + v.x;
+	res.y = y + v.y;
+	res.z = z + v.z;
+	return res;
+}
+
+Vector3 Vector3::operator-(const Vector3& v) const
+{
+	Vector3 res;
+	res.x = x - v.x;
+	res.y = y - v.y;
+	res.z = z - v.z;
+	return res;
+}
+
+Vector3 Vector3::operator*(double n) const
+{
+	Vector3 res;
+	res.x = x * n;
+	res.y = y * n;
+	res.z = z * n;
+	return res;
+}
+
+Vector3 Vector3::operator*(const Vector3& v) const
+{
+	Vector3 res;
+	res.x = x * v.x;
+	res.y = y * v.y;
+	res.z = z * v.z;
+	return res;
+}
+
+Vector3 Vector3::operator/(double n) const
+{
+	Vector3 res;
+	res.x = x / n;
+	res.y = y / n;
+	res.z = z / n;
+	return res;
+}
+
+Vector3 Vector3::operator/(const Vector3& v) const
+{
+	Vector3 res;
+	res.x = x / v.x;
+	res.y = y / v.y;
+	res.z = z / v.z;
+	return res;
 }
 
 void Vector3::normalize()
@@ -145,10 +227,6 @@ double Vector3::magnitude()
 	return sqrt(magnitudeSquared());
 }
 
-Vector3 operator +(const Vector3& p1, const Vector3& p2)
-{
-	return Vector3(p1.x + p2.x, p1.y + p2.y, p1.z + p2.z);
-}
 
 Vector3 operator+(const Vector3& p1, const btVector3& p2)
 {
@@ -159,30 +237,3 @@ btVector3 operator+(const btVector3& p1, const Vector3& p2)
 {
 	return btVector3(p1.x() + btScalar(p2.x), p1.y() + btScalar(p2.y), p1.z() + btScalar(p2.z));
 }
-
-Vector3 operator -(const Vector3& p1, const Vector3& p2)
-{
-	return Vector3(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
-}
-
-Vector3 operator*(const Vector3& p1, const Vector3& p2)
-{
-	return Vector3(p1.x * p2.x, p1.y * p2.y, p1.z * p2.z);
-}
-
-Vector3 operator/(const Vector3& p1, const Vector3& p2)
-{
-	return Vector3(p1.x / p2.x, p1.y / p2.y, p1.z / p2.z);
-}
-
-Vector3 operator*(const Vector3& p1, const double d)
-{
-	return Vector3(p1.x * d, p1.y * d, p1.z * d);
-}
-
-Vector3 operator/(const Vector3& p1, const double d)
-{
-	return Vector3(p1.x / d, p1.y / d, p1.z / d);
-}
-
-

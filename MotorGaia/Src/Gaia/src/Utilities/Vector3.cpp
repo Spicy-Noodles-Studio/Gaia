@@ -257,5 +257,5 @@ Vector3 Vector3::operator+(const btVector3& v)
 
 btVector3 operator+(const btVector3& p1, const Vector3& p2)
 {
-	return btVector3(p1.x() + btScalar(p2.x), p1.y() + btScalar(p2.y), p1.z() + btScalar(p2.z));
+	return btVector3(btScalar(p1.x() + p2.x), btScalar(p1.y() + p2.y), btScalar(p1.z() + p2.z));
 }

@@ -3,9 +3,11 @@
 #define REVERB_H
 
 #include "GaiaComponent.h"
+
+#include <map>
+
 #include "SoundSystem.h"
 #include "Vector3.h"
-#include <map>
 
 enum PRESET {
 	OFF, GENERIC, PADDEDCELL, ROOM, BATHROOM, LIVINGROOM, STONEROOM, AUDITORIUM, CONCERTHALL,
@@ -13,7 +15,7 @@ enum PRESET {
 	PLAIN, PARKINGLOT, SEWERPIPE, UNDERWATER
 };
 
-class Reverb : public GaiaComponent
+class GAIA_API Reverb : public GaiaComponent
 {
 private:
 

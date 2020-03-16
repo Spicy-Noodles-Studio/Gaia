@@ -8,7 +8,7 @@
 
 #include "Singleton.h"
 
-class RenderSystem : public Singleton<RenderSystem>
+class GAIA_API RenderSystem : public Singleton<RenderSystem>
 {
 private:
 	Ogre::Root* root;

@@ -48,6 +48,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\EventSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaExports.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
@@ -59,7 +60,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshRenderer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
-    <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtilities.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Reverb.h" />
     <ClInclude Include="..\..\Src\Gaia\include\OgreBulletUtils.h" />

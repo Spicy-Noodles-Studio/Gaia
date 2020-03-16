@@ -70,7 +70,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 	// Check if scene exists
 	const SceneData* data = ResourcesManager::getSceneData(name);
 	if (data == nullptr)
-		printf("SCENE MANAGER: scene with name %s not found\n", name.c_str());
+		LOG("SCENE MANAGER: scene with name %s not found\n", name.c_str());
 
 	loadScene(data);
 
@@ -118,7 +118,7 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 void SceneManager::loadScene(const SceneData* data)
 {
 	if (data == nullptr) {
-		printf("SCENE MANAGER: given SceneData not valid. Loading default SceneData\n");
+		LOG("SCENE MANAGER: given SceneData not valid. Loading default SceneData\n");
 		return;
 	}
 	// Creates the Scene by its data (assuming creation was succesfull)
@@ -144,7 +144,7 @@ void SceneManager::processCameraChange()
 	Camera* camera = currentScene->getMainCamera();
 	if (camera == nullptr)
 	{
-		printf("SCENE MANAGER: changing to scene \"%s\" that has no main camera\n", currentScene->getName().c_str());
+		LOG("SCENE MANAGER: changing to scene \"%s\" that has no main camera\n", currentScene->getName().c_str());
 		window->removeAllViewports();
 		return;
 	}

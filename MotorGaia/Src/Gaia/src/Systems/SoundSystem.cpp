@@ -1,6 +1,7 @@
 #include "SoundSystem.h"
 #include <fmod_errors.h>
 #include "ResourcesManager.h"
+#include "DebugUtils.h"
 
 
 SoundSystem::SoundSystem()
@@ -34,7 +35,7 @@ void SoundSystem::init()
 	result = master->addGroup(soundEfects);
 	ERRCHECK(result);
 
-	printf("\nSOUND SYSTEM: System started\n");
+	LOG("\nSOUND SYSTEM: System started\n");
 }
 
 void SoundSystem::close()
@@ -221,6 +222,6 @@ void SoundSystem::ERRCHECK(FMOD_RESULT result)
 {
 	if (result != FMOD_RESULT::FMOD_OK)
 	{
-		printf("%s\n", FMOD_ErrorString(result));
+		LOG("%s\n", FMOD_ErrorString(result));
 	}
 }

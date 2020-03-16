@@ -3,10 +3,12 @@
 #define PARTICLE_EMITTER_H
 
 #include "GaiaComponent.h"
-#include <OgreParticleSystem.h>
 
+namespace Ogre {
+	class ParticleSystem;
+}
 
-class ParticleEmitter : public GaiaComponent
+class GAIA_API ParticleEmitter : public GaiaComponent
 {
 private:
 	Ogre::ParticleSystem* particleSystem = nullptr;

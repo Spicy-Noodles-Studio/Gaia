@@ -2,17 +2,21 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include <OgreSceneNode.h>
 #include <string>
 #include <map>
+#include <vector>
 
 #include "ComponentManager.h"
-#include "UserComponent.h"
 #include "Transform.h"
 
-class Scene;
+namespace Ogre {
+    class SceneNode;
+}
 
-class GameObject {
+class Scene;
+class UserComponent;
+
+class GAIA_API GameObject {
     friend class Scene;
     friend class SceneManager;
     friend class UserComponent;
@@ -86,13 +90,13 @@ template<typename T>
 T* GameObject::addComponent() {
     const std::string key = ComponentManager::GetInstance()->getID<T>();
     if (components.find(key) != components.end()) {
-        printf("GAMEOBJECT: Component %s already exists in %s GameObject\n", key.c_str(), name.c_str());
+        LOG("GAMEOBJECT: Component %s already exists in %s GameObject\n", key.c_str(), name.c_str());
         return (T*)components[key]; // Return the exiting one.
     }
     auto constructor = ComponentManager::GetInstance()->getComponentFactory(key);
 
     if (constructor == nullptr) {
-        printf("GAMEOBJECT: Component %s not attached to %s GameObject. Constructor not found\n", key.c_str(), name.c_str());
+        LOG("GAMEOBJECT: Component %s not attached to %s GameObject. Constructor not found\n", key.c_str(), name.c_str());
         return nullptr;
     }
 
@@ -104,7 +108,7 @@ template<typename T>
 bool GameObject::delComponent() {
     const std::string key = ComponentManager::GetInstance()->getID<T>();
     if (components.find(key) != components.end()) {
-        printf("GAMEOBJECT: Cannot remove. Component %s does not exist in %s GameObject\n", key.c_str(), name.c_str());
+        LOG("GAMEOBJECT: Cannot remove. Component %s does not exist in %s GameObject\n", key.c_str(), name.c_str());
         return false;
     }
 

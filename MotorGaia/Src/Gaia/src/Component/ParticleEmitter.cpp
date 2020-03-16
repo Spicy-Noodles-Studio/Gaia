@@ -1,4 +1,8 @@
 #include "ParticleEmitter.h"
+#include <OgreParticleSystem.h>
+#include <OgreSceneNode.h>
+#include <OgreSceneManager.h>
+#include "GameObject.h"
 #include "Scene.h"
 
 ParticleEmitter::ParticleEmitter(GameObject* gameObject) : GaiaComponent(gameObject), particleSystem(nullptr)
@@ -34,7 +38,7 @@ void ParticleEmitter::start()
 	if (particleSystem != nullptr)
 		particleSystem->setEmitting(true);
 	else
-		printf("PARTICLE EMITTER: trying to start a NULL particle emitter\n");
+		LOG("PARTICLE EMITTER: trying to start a NULL particle emitter\n");
 }
 
 void ParticleEmitter::stop()
@@ -42,7 +46,7 @@ void ParticleEmitter::stop()
 	if (particleSystem != nullptr)
 		particleSystem->setEmitting(false);
 	else
-		printf("PARTICLE EMITTER: trying to stop a NULL particle emitter\n");
+		LOG("PARTICLE EMITTER: trying to stop a NULL particle emitter\n");
 }
 
 void ParticleEmitter::handleData(ComponentData* data)
@@ -55,7 +59,7 @@ void ParticleEmitter::handleData(ComponentData* data)
 				newEmitter(source);
 			}
 			else {
-				printf("PARTICLE EMITTER: invalid data format. Property \"emitter\"\n");
+				LOG("PARTICLE EMITTER: invalid data format. Property \"emitter\"\n");
 			}
 		}
 		else if (prop.first == "start") {
@@ -66,11 +70,11 @@ void ParticleEmitter::handleData(ComponentData* data)
 				stop();
 			}
 			else {
-				printf("PARTICLE EMITTER: invalid value \"%s\". Property \"start\"\n", prop.second.c_str());
+				LOG("PARTICLE EMITTER: invalid value \"%s\". Property \"start\"\n", prop.second.c_str());
 			}
 		}
 		else {
-			printf("PARTICLE EMITTER: invalid property name \"%s\"\n", prop.first.c_str());
+			LOG("PARTICLE EMITTER: invalid property name \"%s\"\n", prop.first.c_str());
 		}
 	}
 }

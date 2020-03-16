@@ -2,7 +2,7 @@
 #ifndef RIGID_BODY_H
 #define RIGID_BODY_H
 
-#include "PhysicsUtilities.h"
+#include "PhysicsUtils.h"
 #include "Vector3.h"
 #include "GaiaComponent.h"
 
@@ -12,11 +12,10 @@ class btVector3;
 class GameObject;
 class ComponentData;
 
-class RigidBody : public GaiaComponent
+class GAIA_API RigidBody : public GaiaComponent
 {
 private:
 	btRigidBody* body = nullptr;
-	static Vector3 btScaleConversion;
 	GaiaMotionState* motionState;
 
 	// Turns a Gaia Vector3 into a Bullet Physics Vector3

@@ -2,10 +2,10 @@
 #ifndef G_TIME_H
 #define G_TIME_H
 
-#include "Ogre.h"
 #include "Singleton.h"
+#include <OgreFrameListener.h>
 
-class gTime : public Ogre::FrameListener, public Singleton<gTime>
+class GAIA_API gTime : public Ogre::FrameListener, public Singleton<gTime>
 {
 protected:
 	float deltaTime;

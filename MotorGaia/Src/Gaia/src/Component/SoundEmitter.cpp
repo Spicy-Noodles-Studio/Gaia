@@ -1,6 +1,6 @@
 #include "SoundEmitter.h"
 #include "GameObject.h"
-
+#include <sstream>
 
 SoundEmitter::SoundEmitter(GameObject* gameObject) : GaiaComponent(gameObject)
 {
@@ -108,7 +108,7 @@ void SoundEmitter::handleData(ComponentData* data)
 		}
 		else
 		{
-			printf("SOUND EMITTER: Invalid property name \"%s\"", prop.first.c_str());
+			LOG("SOUND EMITTER: Invalid property name \"%s\"", prop.first.c_str());
 		}
 	}
 

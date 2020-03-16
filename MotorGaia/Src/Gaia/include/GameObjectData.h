@@ -8,7 +8,7 @@
 #include <string>
 #include "ComponentData.h"
 
-class GameObjectData
+class GAIA_API GameObjectData
 {
 public:
 	GameObjectData();

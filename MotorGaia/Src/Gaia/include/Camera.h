@@ -3,10 +3,13 @@
 #define CAMERA_H
 
 #include "GaiaComponent.h"
-#include "RenderSystem.h"
 #include "Vector3.h"
 
-class Camera : public GaiaComponent
+namespace Ogre {
+	class Camera;
+}
+
+class GAIA_API Camera : public GaiaComponent
 {
 private:
 	Ogre::Camera* camera;

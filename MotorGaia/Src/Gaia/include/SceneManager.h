@@ -16,7 +16,7 @@
 #include "Camera.h"
 
 
-class SceneManager : public Singleton<SceneManager>
+class GAIA_API  SceneManager : public Singleton<SceneManager>
 {
 public:
 	SceneManager();

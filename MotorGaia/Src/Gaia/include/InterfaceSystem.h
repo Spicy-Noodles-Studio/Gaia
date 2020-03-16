@@ -2,23 +2,26 @@
 #ifndef INTERFACE_SYSTEM_H
 #define INTERFACE_SYSTEM_H
 
-#include <OgreRoot.h>
 #include "Singleton.h"
 #include "MouseEventListener.h"
 #include "KeyboardEventListener.h"
 #include "WindowEventListener.h"
 #include "ControllerEventListener.h"
+#include <CEGUI\CEGUI.h>
+#include <string>
 
-#include <CEGUI/CEGUI.h>
-#include <CEGUI/Renderer.h>
-#include <CEGUI/RendererModules/Ogre/Renderer.h>
-
-#include "Window.h"
+namespace CEGUI {
+	class Window;
+	class OgreRenderer;
+	class String;
+	class EventArgs;
+}
+class Window;
 
 typedef CEGUI::Window UIElement;
 typedef std::pair<CEGUI::String, std::function<bool(const CEGUI::EventArgs&)>> UIEvent;
 
-class InterfaceSystem : public Singleton<InterfaceSystem>, public MouseEventListener, public KeyboardEventListener, public WindowEventListener, public ControllerEventListener
+class GAIA_API InterfaceSystem : public Singleton<InterfaceSystem>, public MouseEventListener, public KeyboardEventListener, public WindowEventListener, public ControllerEventListener
 {
 private:
 	CEGUI::OgreRenderer* renderer;

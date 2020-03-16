@@ -117,7 +117,7 @@ void InputSystem::setDeadZone(int controller, int zone)
 {
 	if (controller > 0 && controller < 4)
 		controllers[controller].JOYSTICK_DEAD_ZONE = zone;
-	if (flags) std::cout << "Controller: " << controller << " | Deadzone: " << zone << "\n";
+	if (flags) LOG("Controller: %i | Deadzone: %i", controller, zone);
 }
 
 // KEYBOARD
@@ -207,7 +207,7 @@ bool InputSystem::getMouseButtonClick(char button)
 		return MOUSE_BUTTON_MIDDLE.pressed;
 		break;
 	default:
-		std::cout << "Button does not exist\n";
+		LOG("Button does not exist");
 		;
 	}
 	return false;
@@ -227,7 +227,7 @@ bool InputSystem::getMouseButtonHold(char button)
 		return MOUSE_BUTTON_MIDDLE.hold;
 		break;
 	default:
-		std::cout << "Button does not exist\n";
+		LOG("Button does not exist");
 		;
 	}
 	return false;
@@ -247,7 +247,7 @@ bool InputSystem::getMouseButtonRelease(char button)
 		return MOUSE_BUTTON_MIDDLE.released;
 		break;
 	default:
-		std::cout << "Button does not exist\n";
+		LOG("Button does not exist");
 		;
 	}
 	return false;
@@ -314,51 +314,51 @@ void InputSystem::controllerInputUp(int index)
 {
 	if (!controllers[index].isConected)return;
 
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_UP) && !controllers[index].Up) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_UP) && controllers[index].Up) {
 		controllers[index].Up = false;
 		controllers[index].buttonRelease.emplace("UP");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN) && !controllers[index].Down) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN) && controllers[index].Down) {
 		controllers[index].Down = false;
 		controllers[index].buttonRelease.emplace("DOWN");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT) && !controllers[index].Left) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT) && controllers[index].Left) {
 		controllers[index].Left = false;
 		controllers[index].buttonRelease.emplace("LEFT");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT) && !controllers[index].Right) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT) && controllers[index].Right) {
 		controllers[index].Right = false;
 		controllers[index].buttonRelease.emplace("RIGHT");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_START) && !controllers[index].Start) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_START) && controllers[index].Start) {
 		controllers[index].Start = false;
 		controllers[index].buttonRelease.emplace("START");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_BACK) && !controllers[index].Back) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_BACK) && controllers[index].Back) {
 		controllers[index].Back = false;
 		controllers[index].buttonRelease.emplace("BACK");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER) && !controllers[index].LeftShoulder) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER) && controllers[index].LeftShoulder) {
 		controllers[index].LeftShoulder = false;
 		controllers[index].buttonRelease.emplace("LB");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) && !controllers[index].RightShoulder) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) && controllers[index].RightShoulder) {
 		controllers[index].RightShoulder = false;
 		controllers[index].buttonRelease.emplace("RB");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_A) && !controllers[index].AButton) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_A) && controllers[index].AButton) {
 		controllers[index].AButton = false;
 		controllers[index].buttonRelease.emplace("A");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_B) && !controllers[index].BButton) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_B) && controllers[index].BButton) {
 		controllers[index].BButton = false;
 		controllers[index].buttonRelease.emplace("B");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_X) && !controllers[index].XButton) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_X) && controllers[index].XButton) {
 		controllers[index].XButton = false;
 		controllers[index].buttonRelease.emplace("X");
 	}
-	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_Y) && !controllers[index].YButton) {
+	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_Y) && controllers[index].YButton) {
 		controllers[index].YButton = false;
 		controllers[index].buttonRelease.emplace("Y");
 	}
@@ -370,7 +370,7 @@ void InputSystem::processKeyDown(std::string keyName, int key)
 	if (!isKeyPressed(keyName)) {
 		keyPress.emplace(keyName);
 		keyHold.emplace(keyName);
-		if (flags) std::cout << "Key down: " << keyName << "\n";
+		if (flags) LOG("Key down: %s", keyName.c_str());
 	}
 }
 
@@ -379,7 +379,7 @@ void InputSystem::processKeyUp(std::string keyName, int key)
 	std::transform(keyName.begin(), keyName.end(), keyName.begin(), ::toupper);
 	keyRelease.emplace(keyName);
 	keyHold.erase(keyName);
-	if (flags) std::cout << "Key up: " << keyName << "\n";
+	if (flags) LOG("Key up: %s", keyName.c_str());
 }
 
 void InputSystem::processMouseMotion(int x, int y)

@@ -2,17 +2,15 @@
 #ifndef SOUND_SYSTEM_H
 #define SOUND_SYSTEM_H
 
-#include "Vector3.h"
+#include "Singleton.h"
 
-
-#include <fmod.h>
 #include <fmod.hpp>
 #include <map>
-#include "Singleton.h"
-#include <string.h>
+#include <vector>
 #include <string>
 #include "Quaternion.h"
 #include <vector>
+#include "Vector3.h"
 
 typedef FMOD_MODE SoundMode;
 typedef FMOD::Sound Sound;
@@ -20,7 +18,7 @@ typedef FMOD::System System;
 typedef FMOD::Channel Channel;
 typedef FMOD::ChannelGroup ChannelGroup;
 
-class SoundSystem : public Singleton<SoundSystem>
+class GAIA_API SoundSystem : public Singleton<SoundSystem>
 {
 public:
 	struct EmitterData

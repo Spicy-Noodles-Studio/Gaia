@@ -7,7 +7,7 @@
 
 #include "GameObjectData.h"
 
-class SceneData {
+class GAIA_API SceneData {
 public:
 	SceneData();
 	~SceneData();

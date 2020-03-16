@@ -68,20 +68,6 @@ Window::~Window()
 	SDL_DestroyWindow(sdlWindow);
 }
 
-void Window::displayConfig(Ogre::RenderSystem* rs)
-{
-	Ogre::ConfigOptionMap m = rs->getConfigOptions();
-	for (auto it = m.begin(); it != m.end(); it++)
-	{
-		std::cout << "Name: " << it->second.name << "\n";
-		std::cout << "Values: " << "\n";
-
-		for (int i = 0; i < it->second.possibleValues.size(); i++)
-		{
-			std::cout << it->second.possibleValues.at(i) << ", ";
-		}
-	}
-}
 
 Ogre::Viewport* Window::addViewport(Ogre::Camera* cam)
 {

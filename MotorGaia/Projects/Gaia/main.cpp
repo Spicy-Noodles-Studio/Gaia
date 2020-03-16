@@ -7,12 +7,14 @@
 
 #include <iostream>
 #include "GaiaCore.h"
+#include "InterfaceSystem.h"
+#include "DebugUtils.h"
 
 bool Clicked(const CEGUI::EventArgs& args)
 {
 	CEGUI::MouseEventArgs* args2 = (CEGUI::MouseEventArgs*)(&args);
 
-	printf("clicked!\n");
+	LOG("clicked!\n");
 	return false;
 }
 

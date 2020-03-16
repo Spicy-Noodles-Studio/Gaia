@@ -2,6 +2,10 @@
 #include "DebugUtils.h"
 
 #include <CEGUI/Event.h>
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
+
+#include "Window.h"
 
 std::map<std::string, UIEvent> InterfaceSystem::events;
 
@@ -260,7 +264,7 @@ void InterfaceSystem::registerEvent(const std::string& eventName, UIEvent event)
 {
 	if (events.find(eventName) != events.end())
 	{
-		printf("INTERFACE SYSTEM: Error registering event %s\n", eventName.c_str());
+		LOG("INTERFACE SYSTEM: Error registering event %s\n", eventName.c_str());
 		return;
 	}
 
@@ -271,7 +275,7 @@ UIEvent InterfaceSystem::getEvent(const std::string& eventName)
 {
 	if (events.find(eventName) == events.end())
 	{
-		printf("INTERFACE SYSTEM: Event %s not found\n", eventName.c_str());
+		LOG("INTERFACE SYSTEM: Event %s not found\n", eventName.c_str());
 		return UIEvent("",nullptr);
 	}
 

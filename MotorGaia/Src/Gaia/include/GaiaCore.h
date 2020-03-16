@@ -2,27 +2,25 @@
 #ifndef GAIA_CORE_H
 #define GAIA_CORE_H
 
-#ifdef GAIA_EXPORTS
-#define GAIA_API __declspec(dllexport)
-#else
-#define GAIA_API __declspec(dllimport)
-#endif
-
-#include <OgreRoot.h>
-#include "Window.h"
-
-#include "EventSystem.h"
-#include "RenderSystem.h"
-#include "InputSystem.h"
-#include "InterfaceSystem.h"
-#include "PhysicsSystem.h"
-#include "SoundSystem.h"
-
 #include "ResourcesManager.h"
-#include "ComponentManager.h"
-#include "SceneManager.h"
+#include "GaiaExports.h"
 
-#include "gTime.h"
+namespace Ogre {
+	class Root;
+}
+
+class Window;
+
+class EventSystem;
+class RenderSystem;
+class InputSystem;
+class PhysicsSystem;
+class InterfaceSystem;
+class SoundSystem;
+
+class ComponentManager;
+class SceneManager;
+
 
 class GAIA_API GaiaCore
 {

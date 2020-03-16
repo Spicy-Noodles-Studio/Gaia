@@ -30,8 +30,6 @@ public:
 	bool isClosed();
 
 private:
-	void displayConfig(Ogre::RenderSystem* rs);
-
 	void moved(unsigned int x, unsigned int y);
 	void resized(unsigned int width, unsigned int height);
 	void close();

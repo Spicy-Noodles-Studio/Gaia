@@ -5,9 +5,12 @@
 #include "GaiaComponent.h"
 #include "Quaternion.h"
 #include "Vector3.h"
-#include "OgreBulletUtils.h"
 
-class Transform : public GaiaComponent
+namespace Ogre {
+	class Quaternion;
+}
+
+class GAIA_API Transform : public GaiaComponent
 {
 private:
 	Vector3 position;
@@ -32,10 +35,10 @@ public:
 	void setWorldScale(const Vector3& scale);
 	void setWorldRotation(const Vector3& rot);
 
-	const Vector3& getPosition() const;
-	const Vector3& getScale() const;
-	const Vector3& getRotation() const;
-	const Quaternion& getQuaternion() const;
+	Vector3 getPosition() const;
+	Vector3 getScale() const;
+	Vector3 getRotation() const;
+	Quaternion getQuaternion() const;
 
 	Vector3 getWorldPosition() const;
 	Vector3 getWorldScale() const;

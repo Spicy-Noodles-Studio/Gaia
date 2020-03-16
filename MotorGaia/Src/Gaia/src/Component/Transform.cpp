@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "ComponentData.h"
 #include <OgreQuaternion.h>
+#include <OgreRoot.h>
 #include <sstream>
 #include <cmath>
 #include "DebugUtils.h"
@@ -162,22 +163,22 @@ Vector3 Transform::getWorldRotation() const
 	return worldRotation;
 }
 
-const Vector3& Transform::getPosition() const
+Vector3 Transform::getPosition() const
 {
 	return position;
 }
 
-const Vector3& Transform::getScale() const
+Vector3 Transform::getScale() const
 {
 	return scale;
 }
 
-const Vector3& Transform::getRotation() const
+Vector3 Transform::getRotation() const
 {
 	return rotation;
 }
 
-const Quaternion& Transform::getQuaternion() const
+Quaternion Transform::getQuaternion() const
 {
 	return quaternion;
 }
@@ -229,7 +230,7 @@ void Transform::handleData(ComponentData* data)
 			setRotation(x, y, z);
 		}
 		else {
-			printf("TRANSFORM: property %s does not exist\n", prop.first.c_str());
+			LOG("TRANSFORM: property %s does not exist\n", prop.first.c_str());
 		}
 	}
 }

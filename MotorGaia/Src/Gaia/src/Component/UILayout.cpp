@@ -1,8 +1,10 @@
 #include "UILayout.h"
 
+#include <CEGUI/CEGUI.h>
 
 #include "GameObject.h"
 #include "ComponentData.h"
+#include "InterfaceSystem.h"
 
 UILayout::UILayout(GameObject* gameObject) : GaiaComponent(gameObject), layout(nullptr)
 {
@@ -36,8 +38,8 @@ void UILayout::setLayout(const std::string& filename)
 
 void UILayout::setEvent(const std::string& element, const std::string& event)
 {
-	/*getElement("StaticImage")->getChild(element)->
-		subscribeEvent(InterfaceSystem::GetInstance()->getEvent(event).first, InterfaceSystem::GetInstance()->getEvent(event).second);*/
+	getElement("StaticImage")->getChild(element)->
+		subscribeEvent(InterfaceSystem::GetInstance()->getEvent(event).first, InterfaceSystem::GetInstance()->getEvent(event).second);
 }
 
 void UILayout::handleData(ComponentData* data)
@@ -61,7 +63,7 @@ void UILayout::handleData(ComponentData* data)
 			}
 		}
 		else
-			printf("UILAYOUT: invalid property name \"%s\"", prop.first.c_str());
+			LOG("UILAYOUT: invalid property name \"%s\"", prop.first.c_str());
 	}
 }
 

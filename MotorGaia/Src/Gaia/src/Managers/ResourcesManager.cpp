@@ -1,5 +1,6 @@
 ﻿#include "ResourcesManager.h"
 #include <fstream>
+#include "DebugUtils.h"
 
 #include <OgreConfigFile.h>
 #include <OgreResourceGroupManager.h>
@@ -35,15 +36,15 @@ void ResourcesManager::init()
 	// Reads all file paths
 	std::fstream file(resourcesPath);
 	if (!file.is_open()) {
-		printf("RESOURCES MANAGER: Resources filepath not valid: %s\n", resourcesPath.c_str());
+		LOG("RESOURCES MANAGER: Resources filepath not valid: %s\n", resourcesPath.c_str());
 		return;
 	}
-	printf("Reading Resources paths...\n");
+	LOG("Reading Resources paths...\n");
 	// Start reading resources
 	std::string type, c, filename;
 	while (file >> type >> c >> filename) {
 		if (c != "=") {
-			printf("RESOURCES MANAGER: invalid resources file format\nFailed at: %s %s %s\n", type.c_str(), c.c_str(), filename.c_str());
+			LOG("RESOURCES MANAGER: invalid resources file format\nFailed at: %s %s %s\n", type.c_str(), c.c_str(), filename.c_str());
 			file.close();
 			return;
 		}
@@ -55,22 +56,24 @@ void ResourcesManager::init()
 
 	// Start loading resources
 	/* Code for main thread */
-	for (int i = 0; i < filePaths.size(); i++) {
+	/*for (int i = 0; i < filePaths.size(); i++) {
 		std::string type = filePaths[i].first;
 		std::string path = filePaths[i].second;
 		loadResources(type, path);
-	}
+	}*/
 
-	/*TODO: investigar por que al dividir la carga en mas hilos, la texturas para particulas no se cargan bien */
 	/* Code for multithreading */
-	/*std::vector<std::thread> resourceThreads;
+	std::vector<std::thread> resourceThreads;
 	for (int i = 0; i < filePaths.size(); i++) {
-		resourceThreads.push_back(std::thread(&ResourcesManager::loadResources, std::ref(*this), filePaths[i].first, filePaths[i].second));
+		if(filePaths[i].first != "Ogre") // Little hack, OgreResources does not load correctly on multithreading
+			resourceThreads.push_back(std::thread(&ResourcesManager::loadResources, std::ref(*this), filePaths[i].first, filePaths[i].second));
+		else
+			loadResources(filePaths[i].first, filePaths[i].second);
 	}
 
 	for (int i = 0; i < resourceThreads.size(); i++) {
 		resourceThreads[i].join();
-	}*/
+	}
 
 }
 
@@ -103,9 +106,9 @@ void ResourcesManager::loadScene(const std::string& filename)
 	SceneData* data = dataLoader.loadScene(filename, loaded);
 	if (!registerSceneData(data)) { delete data; loaded = false; }
 	if (!loaded)
-		printf("RESOURCES MANAGER: invalid Scene, filename %s\n", filename.c_str());
+		LOG("RESOURCES MANAGER: invalid Scene, filename %s\n", filename.c_str());
 	else
-		printf("RESOURCES MANAGER: Scene file \"%s\" loaded\n", filename.c_str());
+		LOG("RESOURCES MANAGER: Scene file \"%s\" loaded\n", filename.c_str());
 }
 
 void ResourcesManager::loadBlueprint(const std::string& filename)
@@ -114,9 +117,9 @@ void ResourcesManager::loadBlueprint(const std::string& filename)
 	GameObjectData* data = dataLoader.loadBlueprint(filename, loaded);
 	if (!registerBlueprint(data)) { delete data; loaded = false; }
 	if (!loaded)
-		printf("RESOURCES MANAGER: invalid Blueprint, filename %s\n", filename.c_str());
+		LOG("RESOURCES MANAGER: invalid Blueprint, filename %s\n", filename.c_str());
 	else
-		printf("RESOURCES MANAGER: Blueprint file \"%s\" loaded\n", filename.c_str());
+		LOG("RESOURCES MANAGER: Blueprint file \"%s\" loaded\n", filename.c_str());
 }
 
 void ResourcesManager::loadSound(const std::string& filename)
@@ -125,18 +128,18 @@ void ResourcesManager::loadSound(const std::string& filename)
 	std::string soundfile, name, soundmode, loop;
 	std::stringstream ss(filename);
 	if (!(ss >> soundfile >> name >> soundmode >> loop)) {
-		printf("RESOURCES MANAGER: invalid format \"%s\"\n", filename.c_str());
+		LOG("RESOURCES MANAGER: invalid format \"%s\"\n", filename.c_str());
 		return;
 	}
 	SoundMode mode = FMOD_DEFAULT;
 	mode = soundmode == "3D" ? FMOD_3D : FMOD_2D;
 	mode |= loop == "true" ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
-	mode |= FMOD_NONBLOCKING;
+	mode |= FMOD_NONBLOCKING; //Load in the background
 	//mode |= FMOD_CREATESTREAM;
 
 	FMOD::Sound* sound;
 	if ((sound = SoundSystem::GetInstance()->createSound(soundfile, mode)) == nullptr) {
-		printf("RESOURCES MANAGER: Sound named \"%s\" not found\n", soundfile.c_str());
+		LOG("RESOURCES MANAGER: Sound named \"%s\" not found\n", soundfile.c_str());
 		return;
 	}
 
@@ -144,7 +147,7 @@ void ResourcesManager::loadSound(const std::string& filename)
 	std::lock_guard<std::mutex> lock(soundMutex);
 	sounds[name] = sound;
 
-	printf("RESOURCES MANAGER: Sound loaded: %s\n", soundfile.c_str());
+	LOG("RESOURCES MANAGER: Sound loaded: %s\n", soundfile.c_str());
 }
 
 bool ResourcesManager::initShaderSystem()
@@ -154,7 +157,7 @@ bool ResourcesManager::initShaderSystem()
 		shaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 		// Core shader libs not found -> shader generating will fail.
 		if (shaderLibPath.empty()) {
-			printf("RESOURCES MANAGER: Shader libs not found.\n");
+			LOG("RESOURCES MANAGER: Shader libs not found.\n");
 			return false;
 		}
 		// Create and register the material manager listener if it doesn't exist yet.
@@ -193,7 +196,7 @@ bool ResourcesManager::registerSceneData(SceneData* data)
 	// lock_guard secures unlock on destruction
 	std::lock_guard<std::mutex> lock(sceneDataMutex);
 	if (sceneData.find(data->name) != sceneData.end()) {
-		printf("RESOURCES MANAGER: trying to add an already existing SceneData: %s.\n", data->name.c_str());
+		LOG("RESOURCES MANAGER: trying to add an already existing SceneData: %s.\n", data->name.c_str());
 		return false;
 	}
 	sceneData[data->name] = data;
@@ -206,7 +209,7 @@ bool ResourcesManager::registerBlueprint(GameObjectData* data)
 	// lock_guard secures unlock on destruction
 	std::lock_guard<std::mutex> lock(blueprintMutex);
 	if (blueprintData.find(data->name) != blueprintData.end()) {
-		printf("RESOURCES MANAGER: trying to add an already existing Blueprint: %s.\n", data->name.c_str());
+		LOG("RESOURCES MANAGER: trying to add an already existing Blueprint: %s.\n", data->name.c_str());
 		return false;
 	}
 	blueprintData[data->name] = data;
@@ -216,7 +219,7 @@ bool ResourcesManager::registerBlueprint(GameObjectData* data)
 const SceneData* ResourcesManager::getSceneData(const std::string& name)
 {
 	if (sceneData.find(name) == sceneData.end()) {
-		printf("RESOURCES MANAGER: trying to get not existing SceneData: %s.\n", name.c_str());
+		LOG("RESOURCES MANAGER: trying to get not existing SceneData: %s.\n", name.c_str());
 		return nullptr;
 	}
 	return sceneData[name];
@@ -225,7 +228,7 @@ const SceneData* ResourcesManager::getSceneData(const std::string& name)
 const SceneData* ResourcesManager::getSceneData(int index)
 {
 	if (index >= sceneData.size()) {
-		printf("RESOURCES MANAGER: trying to get not existing SceneData index: %i.\n", index);
+		LOG("RESOURCES MANAGER: trying to get not existing SceneData index: %i.\n", index);
 		return nullptr;
 	}
 	auto it = sceneData.begin(); 
@@ -236,7 +239,7 @@ const SceneData* ResourcesManager::getSceneData(int index)
 const GameObjectData* ResourcesManager::getBlueprint(const std::string& name)
 {
 	if (blueprintData.find(name) == blueprintData.end()) {
-		printf("RESOURCES MANAGER: trying to get not existing Blueprint: %s.\n", name.c_str());
+		LOG("RESOURCES MANAGER: trying to get not existing Blueprint: %s.\n", name.c_str());
 		return nullptr;
 	}
 	return blueprintData[name];
@@ -245,7 +248,7 @@ const GameObjectData* ResourcesManager::getBlueprint(const std::string& name)
 Sound* ResourcesManager::getSound(const std::string& name)
 {
 	if (sounds.find(name) == sounds.end()) {
-		printf("RESOURCES MANAGER: trying to get not existing Sound: %s.\n", name.c_str());
+		LOG("RESOURCES MANAGER: trying to get not existing Sound: %s.\n", name.c_str());
 		return nullptr;
 	}
 	return sounds[name];
@@ -262,14 +265,14 @@ void ResourcesManager::loadResources(const std::string& resourceType, const std:
 	else if (resourceType == "Ogre")
 		loadOgreResources(path);
 	else
-		printf("RESOURCES MANAGER: invalid resource type: \"%s\". Resource not loaded.\n", resourceType.c_str());
+		LOG("RESOURCES MANAGER: invalid resource type: \"%s\". Resource not loaded.\n", resourceType.c_str());
 }
 
 void ResourcesManager::loadScenes(const std::string& filename)
 {
 	std::fstream file(filename);
 	if (!file.is_open()) {
-		printf("RESOURCES MANAGER: ScenesAssets path %s not found.\n", filename.c_str());
+		LOG("RESOURCES MANAGER: ScenesAssets path %s not found.\n", filename.c_str());
 		return;
 	}
 	std::vector<std::string> paths;
@@ -296,7 +299,7 @@ void ResourcesManager::loadBlueprints(const std::string& filename)
 {
 	std::fstream file(filename);
 	if (!file.is_open()) {
-		printf("RESOURCES MANAGER: BlueprintsAssets path %s not found.\n", filename.c_str());
+		LOG("RESOURCES MANAGER: BlueprintsAssets path %s not found.\n", filename.c_str());
 		return;
 	}
 	std::vector<std::string> paths;
@@ -322,7 +325,7 @@ void ResourcesManager::loadSounds(const std::string& filename)
 	std::fstream stream;
 	stream.open(filename);
 	if (!stream.is_open()) {
-		printf("RESOURCES MANAGER: SoundsAssets path %s not found.\n", filename.c_str());
+		LOG("RESOURCES MANAGER: SoundsAssets path %s not found.\n", filename.c_str());
 		return;
 	}
 	std::string line;
@@ -435,5 +438,5 @@ void ResourcesManager::loadOgreResources(const std::string& filename)
 	//Initialize (REMEMBER TO INITIALIZE OGRE)
 	//Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-	printf("RESOURCES MANAGER: Ogre resources loaded\n");
+	LOG("RESOURCES MANAGER: Ogre resources loaded\n");
 }

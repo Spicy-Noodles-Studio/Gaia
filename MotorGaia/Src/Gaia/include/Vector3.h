@@ -2,12 +2,14 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
+#include "GaiaExports.h"
+
 #define CHECK_VALID( _v ) 0
 #define Assert( _exp ) ((void)0)
 
 class btVector3;
 
-class Vector3
+class GAIA_API Vector3
 {
 public:
 	double x;
@@ -50,7 +52,6 @@ public:
 	void rotateAroundAxis(const Vector3& axis, double angle);
 	void lerp(const Vector3& v, double percentage);
 	void lerp(const Vector3& v, const Vector3& percentage);
-
 	Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles);
 
 	Vector3 operator+(const btVector3& v);

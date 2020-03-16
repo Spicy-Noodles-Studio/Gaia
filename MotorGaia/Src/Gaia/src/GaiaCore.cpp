@@ -1,7 +1,18 @@
 #include "GaiaCore.h"
 
-#include "UILayout.h"
-#include "CEGUI/CEGUI.h"
+#include <OgreRoot.h>
+#include "Window.h"
+
+#include "EventSystem.h"
+#include "RenderSystem.h"
+#include "InputSystem.h"
+#include "InterfaceSystem.h"
+#include "PhysicsSystem.h"
+#include "SoundSystem.h"
+#include "gTime.h"
+
+#include "ComponentManager.h"
+#include "SceneManager.h"
 
 GaiaCore::GaiaCore() :	root(nullptr), window(nullptr),
 						eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr), 

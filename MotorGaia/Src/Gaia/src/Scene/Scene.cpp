@@ -1,5 +1,9 @@
 #include "Scene.h"
+#include <OgreRoot.h>
 #include "PhysicsSystem.h"
+#include "GameObject.h"
+#include "Camera.h"
+#include "DebugDrawer.h"
 
 Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager()), mainCamera(nullptr)
 {
@@ -147,8 +151,8 @@ bool Scene::addGameObject(GameObject* gameObject)
 	std::string objectName = gameObject->getName();
 	if (repeatedNames.find(objectName) != repeatedNames.end()) {
 		objectName += ("(" + std::to_string(++repeatedNames[objectName]) + ")");
-		printf("SCENE: Trying to add gameobject with name %s that already exists in scene %s\n", gameObject->getName().c_str(), name.c_str());
-		printf("SCENE: Adding gameobject with name %s\n", objectName.c_str());
+		LOG("SCENE: Trying to add gameobject with name %s that already exists in scene %s\n", gameObject->getName().c_str(), name.c_str());
+		LOG("SCENE: Adding gameobject with name %s\n", objectName.c_str());
 		gameObject->name = objectName;
 		// Try to add again
 		return addGameObject(gameObject);

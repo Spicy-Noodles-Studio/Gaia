@@ -3,11 +3,12 @@
 #define COMPONENT_H
 
 #include <string>
+#include "ComponentData.h"
+#include "DebugUtils.h"
 
 class GameObject;
-class ComponentData;
 
-class Component
+class GAIA_API Component
 {
 friend class ComponentManager;
 friend class GameObject;

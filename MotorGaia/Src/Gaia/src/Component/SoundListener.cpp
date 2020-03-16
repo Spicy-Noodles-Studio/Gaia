@@ -1,7 +1,10 @@
 #include "SoundListener.h"
+
+#include <iostream>
+
 #include "GameObject.h"
 #include "Quaternion.h"
-#include <iostream>
+#include "SoundSystem.h"
 
 SoundListener::SoundListener(GameObject* gameObject) : GaiaComponent(gameObject)
 {

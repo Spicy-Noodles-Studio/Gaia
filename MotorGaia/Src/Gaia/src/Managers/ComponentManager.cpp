@@ -48,7 +48,7 @@ const ComponentFactory& ComponentManager::getComponentFactory(const std::string&
 {
 	if (factories.find(nameID) == factories.end())
 	{
-		printf("COMPONENT MANAGER: trying to get a ComponentFactory ID: %s. Does not exist.\n", nameID.c_str());
+		LOG("COMPONENT MANAGER: trying to get a ComponentFactory ID: %s. Does not exist.\n", nameID.c_str());
 		return nullptr;
 	}
 	return factories[nameID];

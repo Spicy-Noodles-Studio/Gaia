@@ -1,5 +1,8 @@
 #include "GameObject.h"
 #include "Scene.h"
+#include <OgreSceneNode.h>
+#include <OgreSceneManager.h>
+
 
 GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene)
 {
@@ -105,42 +108,42 @@ void GameObject::onCollisionEnter(GameObject* other)
 {
     for (UserComponent* c : userComponents)
         c->onCollisionEnter(other);
-    //printf("Collision Enter between %s & %s.\n", name.c_str(), other->getName().c_str());
+    //LOG("Collision Enter between %s & %s.\n", name.c_str(), other->getName().c_str());
 }
 
 void GameObject::onTriggerEnter(GameObject* other)
 {
     for (UserComponent* c : userComponents)
         c->onTriggerEnter(other);
-    //printf("%s entered the trigger %s.\n", name.c_str(), other->getName().c_str());
+    //LOG("%s entered the trigger %s.\n", name.c_str(), other->getName().c_str());
 }
 
 void GameObject::onCollisionStay(GameObject* other)
 {
     for (UserComponent* c : userComponents)
         c->onCollisionStay(other);
-    //printf("Collision Stay between %s & %s.\n", name.c_str(), other->getName().c_str());
+    //LOG("Collision Stay between %s & %s.\n", name.c_str(), other->getName().c_str());
 }
 
 void GameObject::onTriggerStay(GameObject* other)
 {
     for (UserComponent* c : userComponents)
         c->onTriggerStay(other);
-   //printf("%s is in the trigger %s.\n", name.c_str(), other->getName().c_str());
+   //LOG("%s is in the trigger %s.\n", name.c_str(), other->getName().c_str());
 }
 
 void GameObject::onCollisionExit(GameObject* other)
 {
     for (UserComponent* c : userComponents)
         c->onCollisionExit(other);
-   //printf("Collision Exit between %s & %s.\n", name.c_str(), other->getName().c_str());
+   //LOG("Collision Exit between %s & %s.\n", name.c_str(), other->getName().c_str());
 }
 
 void GameObject::onTriggerExit(GameObject* other)
 {
     for (UserComponent* c : userComponents)
         c->onTriggerExit(other);
-    //printf("%s exited the trigger %s.\n", name.c_str(), other->getName().c_str());
+    //LOG("%s exited the trigger %s.\n", name.c_str(), other->getName().c_str());
 }
 
 void GameObject::setActive(bool active)
@@ -153,7 +156,7 @@ void GameObject::setActive(bool active)
 bool GameObject::addComponent(const std::string& componentName, Component* component)
 {
     if (components.find(componentName) != components.end()) {
-        printf("GAMEOBJECT: Trying to add component with name %s that already exists in gameobject %s.\n", componentName.c_str(), name.c_str());
+        LOG("GAMEOBJECT: Trying to add component with name %s that already exists in gameobject %s.\n", componentName.c_str(), name.c_str());
         return false;
     }
     components[componentName] = component;

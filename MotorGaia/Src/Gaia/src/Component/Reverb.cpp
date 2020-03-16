@@ -1,6 +1,7 @@
 #include "Reverb.h"
 #include "GameObject.h"
-
+#include "SoundSystem.h"
+#include <sstream>
 
 Reverb::Reverb(GameObject* gameObject) : GaiaComponent(gameObject)
 {
@@ -58,7 +59,7 @@ void Reverb::handleData(ComponentData* data)
 				reverbProperties = presets[prop.second];
 			}
 			
-			else printf("REVERB: error loading preset %s\n", prop.second.c_str());
+			else LOG("REVERB: error loading preset %s\n", prop.second.c_str());
 		}
 		else if (prop.first == "maxDistance") {
 			float maxDistance; ss >> maxDistance;
@@ -70,7 +71,7 @@ void Reverb::handleData(ComponentData* data)
 		}
 		else
 		{
-			printf("REVERB: Invalid property name \"%s\"", prop.first.c_str());
+			LOG("REVERB: Invalid property name \"%s\"", prop.first.c_str());
 		}
 	}
 }

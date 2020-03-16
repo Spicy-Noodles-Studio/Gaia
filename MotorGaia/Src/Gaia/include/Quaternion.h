@@ -3,8 +3,9 @@
 #define QUATERNION_H
 
 #include "Vector3.h"
+#include "GaiaExports.h"
 
-class Quaternion
+class GAIA_API Quaternion
 {
 public:
     double x, y, z, w;
@@ -52,8 +53,8 @@ public:
     static Quaternion hamilton(const Quaternion& q1, const Quaternion& q2);
 };
 
-Vector3 GetForwardVector(const Quaternion& q);
-Vector3 GetUpVector(const Quaternion& q);
-Vector3 GetLeftVector(const Quaternion& q);
+GAIA_API Vector3 GetForwardVector(const Quaternion& q);
+GAIA_API Vector3 GetUpVector(const Quaternion& q);
+GAIA_API Vector3 GetLeftVector(const Quaternion& q);
 
 #endif

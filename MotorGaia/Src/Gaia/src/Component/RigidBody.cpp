@@ -7,8 +7,7 @@
 #include "ComponentData.h"
 #include "PhysicsSystem.h"
 #include "ComponentData.h"
-
-Vector3 RigidBody::btScaleConversion = { 50,50,50 };
+#include <sstream>
 
 RigidBody::RigidBody(GameObject* gameObject) : GaiaComponent(gameObject), body(nullptr), motionState(nullptr)
 {
@@ -23,7 +22,7 @@ RigidBody::~RigidBody()
 void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, const Vector3& dim, uint16_t myGroup, uint16_t collidesWith)
 {
 	motionState = new GaiaMotionState(gameObject->transform, offset);
-	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getWorldScale() * dim * btScaleConversion, myGroup, collidesWith);
+	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getWorldScale() * dim, myGroup, collidesWith);
 	body->setUserPointer(this);
 	if (mass > 0) disableDeactivation();
 }
@@ -44,7 +43,7 @@ void RigidBody::handleData(ComponentData* data)
 			else if (prop.second == "Sphere")
 				shape = SPHERE_RB_SHAPE;
 			else
-				printf("RIGIDBODY: %s not valid rigidbody shape type\n", prop.second.c_str());
+				LOG("RIGIDBODY: %s not valid rigidbody shape type\n", prop.second.c_str());
 		}
 		else if (prop.first == "mass") {
 			ss >> mass;
@@ -64,7 +63,7 @@ void RigidBody::handleData(ComponentData* data)
 		else if (prop.first == "offset") {
 			ss >> off.x >> off.y >> off.z;
 		}
-		else if (prop.first == "size") {
+		else if (prop.first == "scale") {
 			ss >> dim.x >> dim.y >> dim.z;
 		}
 		else if (prop.first == "trigger") {

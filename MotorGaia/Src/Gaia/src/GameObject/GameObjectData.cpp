@@ -1,5 +1,5 @@
 #include "GameObjectData.h"
-
+#include "DebugUtils.h"
 #include <stdio.h>
 
 GameObjectData::GameObjectData()
@@ -47,7 +47,7 @@ void GameObjectData::setTag(const std::string& gameObjectTag)
 void GameObjectData::addComponentData(const std::string& componentName, ComponentData* data)
 {
 	if (componentData.find(componentName) != componentData.end()) {
-		printf("GAMEOBJECT DATA: object %s component %s data has been overwritten\n", name.c_str(), componentName.c_str());
+		LOG("GAMEOBJECT DATA: object %s component %s data has been overwritten\n", name.c_str(), componentName.c_str());
 		delete componentData[componentName];
 	}
 	componentData[componentName] = data;
@@ -56,7 +56,7 @@ void GameObjectData::addComponentData(const std::string& componentName, Componen
 void GameObjectData::addChildrenData(const std::string& childrenName, GameObjectData* data)
 {
 	if (componentData.find(childrenName) != componentData.end()) {
-		printf("GAMEOBJECT DATA: object %s child %s data has been overwritten\n", name.c_str(), childrenName.c_str());
+		LOG("GAMEOBJECT DATA: object %s child %s data has been overwritten\n", name.c_str(), childrenName.c_str());
 		delete childrenData[childrenName];
 	}
 	childrenData[childrenName] = data;
@@ -65,7 +65,7 @@ void GameObjectData::addChildrenData(const std::string& childrenName, GameObject
 bool GameObjectData::modifyComponentData(const std::string& componentName, const std::string& propertyName, const std::string& value)
 {
 	if (componentData.find(componentName) == componentData.end()) {
-		printf("GAMEOBJECT DATA: tried to modify component %s, does not exist in object %s\n", componentName.c_str(), name.c_str());
+		LOG("GAMEOBJECT DATA: tried to modify component %s, does not exist in object %s\n", componentName.c_str(), name.c_str());
 		return false;
 	}
 	componentData[componentName]->modifyProperty(propertyName, value);
@@ -75,7 +75,7 @@ bool GameObjectData::modifyComponentData(const std::string& componentName, const
 bool GameObjectData::modifyChildData(const std::string& childName, const std::string& componentName, const std::string& propertyName, const std::string& value)
 {
 	if (childrenData.find(childName) == childrenData.end()) {
-		printf("GAMEOBJECT DATA: tried to modify child %s, does not exist in object %s\n", childName.c_str(), name.c_str());
+		LOG("GAMEOBJECT DATA: tried to modify child %s, does not exist in object %s\n", childName.c_str(), name.c_str());
 		return false;
 	}
 	return childrenData[childName]->modifyComponentData(componentName, propertyName, value);
@@ -107,7 +107,7 @@ GameObjectData* GameObjectData::getChild(const std::string& childName, bool& exi
 	auto child = childrenData.find(childName);
 	if (child == childrenData.end()) {
 		exists = false;
-		printf("GAMEOBJECT DATA: child with name %s does not exist in object %s\n", childName.c_str(), name.c_str());
+		LOG("GAMEOBJECT DATA: child with name %s does not exist in object %s\n", childName.c_str(), name.c_str());
 		return GameObjectData::empty();
 	}
 	exists = true;
@@ -119,7 +119,7 @@ ComponentData* GameObjectData::getComponent(const std::string& componentName, bo
 	auto component = componentData.find(componentName);
 	if (component == componentData.end()) {
 		exists = false;
-		printf("GAMEOBJECT DATA: component with name %s does not exist in object %s\n", componentName.c_str(), name.c_str());
+		LOG("GAMEOBJECT DATA: component with name %s does not exist in object %s\n", componentName.c_str(), name.c_str());
 		return ComponentData::empty();
 	}
 	exists = true;

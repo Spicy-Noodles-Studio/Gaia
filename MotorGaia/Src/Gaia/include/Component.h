@@ -3,7 +3,6 @@
 #define COMPONENT_H
 
 #include <string>
-#include "GaiaExports.h"
 #include "ComponentData.h"
 
 class GameObject;

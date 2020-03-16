@@ -123,7 +123,7 @@ void Transform::setWorldRotation(const Vector3& rot)
 	setRotation(localRotation);
 }
 
-const Vector3& Transform::getWorldPosition() const
+Vector3 Transform::getWorldPosition() const
 {
 	Vector3 worldPos = position;
 	GameObject* parent = gameObject->getParent();
@@ -134,7 +134,7 @@ const Vector3& Transform::getWorldPosition() const
 	return worldPos;
 }
 
-const Vector3& Transform::getWorldScale() const
+Vector3 Transform::getWorldScale() const
 {
 	Vector3 worldScale = scale;
 	GameObject* parent = gameObject->getParent();
@@ -143,7 +143,7 @@ const Vector3& Transform::getWorldScale() const
 	return worldScale;
 }
 
-const Vector3& Transform::getWorldRotation() const
+Vector3 Transform::getWorldRotation() const
 {
 	Vector3 worldRotation = rotation;
 	GameObject* parent = gameObject->getParent();
@@ -159,37 +159,37 @@ const Vector3& Transform::getWorldRotation() const
 	return worldRotation;
 }
 
-const Vector3& Transform::getPosition() const
+Vector3 Transform::getPosition() const
 {
 	return position;
 }
 
-const Vector3& Transform::getScale() const
+Vector3 Transform::getScale() const
 {
 	return scale;
 }
 
-const Vector3& Transform::getRotation() const
+Vector3 Transform::getRotation() const
 {
 	return rotation;
 }
 
-const Quaternion& Transform::getQuaternion() const
+Quaternion Transform::getQuaternion() const
 {
 	return quaternion;
 }
 
-const Vector3& Transform::getForwardVector() const
+Vector3 Transform::getForwardVector() const
 {
 	return GetForwardVector(quaternion);
 }
 
-const Vector3& Transform::getUpVector() const
+Vector3 Transform::getUpVector() const
 {
 	return GetUpVector(quaternion);
 }
 
-const Vector3& Transform::getLeftVector() const
+Vector3 Transform::getLeftVector() const
 {
 	return GetLeftVector(quaternion);
 }

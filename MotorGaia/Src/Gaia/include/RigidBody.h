@@ -16,7 +16,6 @@ class GAIA_API RigidBody : public GaiaComponent
 {
 private:
 	btRigidBody* body = nullptr;
-	static Vector3 btScaleConversion;
 	GaiaMotionState* motionState;
 
 	// Turns a Gaia Vector3 into a Bullet Physics Vector3

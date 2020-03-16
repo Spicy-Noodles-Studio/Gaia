@@ -6,8 +6,9 @@
 
 class btVector3;
 
-struct GAIA_API Vector3
+class GAIA_API Vector3
 {
+public:
 	double x;
 	double y;
 	double z;
@@ -35,18 +36,18 @@ struct GAIA_API Vector3
 	void rotateAroundAxis(const Vector3& axis, double angle);
 	void lerp(const Vector3& v, double percentage);
 	void lerp(const Vector3& v, const Vector3& percentage);
+	Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles);
+
+	Vector3 operator +(const Vector3& p2) const;
+	Vector3 operator +(const btVector3& p2) const;
+	Vector3 operator -(const Vector3& p2) const;
+	Vector3 operator *(const Vector3& p2) const;
+	Vector3 operator /(const Vector3& p2) const;
+	Vector3 operator *(const double d) const;
+	Vector3 operator /(const double d) const;
 
 };
 
-Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles);
-
-Vector3 operator +(const Vector3& p1, const Vector3& p2);
-Vector3 operator +(const Vector3& p1, const btVector3& p2);
-btVector3 operator +(const btVector3& p1, const Vector3& p2 );
-Vector3 operator -(const Vector3& p1, const Vector3& p2);
-Vector3 operator *(const Vector3& p1, const Vector3& p2);
-Vector3 operator /(const Vector3& p1, const Vector3& p2);
-Vector3 operator *(const Vector3& p1, const double d);
-Vector3 operator /(const Vector3& p1, const double d);
+btVector3 operator +(const btVector3& p1, const Vector3& p2);
 
 #endif

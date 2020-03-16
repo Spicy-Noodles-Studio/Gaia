@@ -13,11 +13,11 @@ struct GAIA_API Quaternion
     Quaternion inverse();
 };
 
-Quaternion ToQuaternion(double yaw, double pitch, double roll);
-Quaternion hamilton(const Quaternion& q1, const Quaternion& q2);
+GAIA_API Quaternion ToQuaternion(double yaw, double pitch, double roll);
+GAIA_API Quaternion hamilton(const Quaternion& q1, const Quaternion& q2);
 
-Vector3 GetForwardVector(const Quaternion& q);
-Vector3 GetUpVector(const Quaternion& q);
-Vector3 GetLeftVector(const Quaternion& q);
+GAIA_API Vector3 GetForwardVector(const Quaternion& q);
+GAIA_API Vector3 GetUpVector(const Quaternion& q);
+GAIA_API Vector3 GetLeftVector(const Quaternion& q);
 
 #endif

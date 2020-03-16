@@ -58,6 +58,7 @@
                     "ComponentName": "RigidBody",
                     "ComponentProperties": {
                         "shape": "Box",
+                        "scale": "50 50 50",
                         "mass": "0"
                     }
                 }
@@ -78,8 +79,7 @@
                         {
                             "ComponentName": "RigidBody",
                             "ComponentProperties":{
-                                "kinematic" : "0",
-                                "size": "1 1 1"
+                                "kinematic" : "0"
                             }
                         },
                         {

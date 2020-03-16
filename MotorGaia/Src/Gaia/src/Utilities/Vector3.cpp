@@ -95,7 +95,7 @@ Vector3& Vector3::normalized()
 	return aux;
 }
 
-Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles)
+Vector3 Vector3::rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles)
 {
 	Vector3 v = { point.x - pivot.x,point.y - pivot.y, point.z - pivot.z };
 	Quaternion q = ToQuaternion(angles.z, angles.y, angles.x), q1 = q.inverse(), aux = { 0,v.x,v.y,v.z }, aux1;
@@ -145,44 +145,43 @@ double Vector3::magnitude()
 	return sqrt(magnitudeSquared());
 }
 
-Vector3 operator +(const Vector3& p1, const Vector3& p2)
+Vector3 Vector3::operator +(const Vector3& p2) const
 {
-	return Vector3(p1.x + p2.x, p1.y + p2.y, p1.z + p2.z);
+	return Vector3(x + p2.x, y + p2.y, z + p2.z);
 }
 
-Vector3 operator+(const Vector3& p1, const btVector3& p2)
+
+Vector3 Vector3::operator -(const Vector3& p2) const
 {
-	return Vector3(p1.x + p2.x(), p1.y + p2.y(), p1.z + p2.z());
+	return Vector3(x - p2.x, y - p2.y, z - p2.z);
 }
 
-btVector3 operator+(const btVector3& p1, const Vector3& p2)
+Vector3 Vector3::operator*(const Vector3& p2) const
+{
+	return Vector3(x * p2.x, y * p2.y, z * p2.z);
+}
+
+Vector3 Vector3::operator/(const Vector3& p2) const
+{
+	return Vector3(x / p2.x, y / p2.y, z / p2.z);
+}
+
+Vector3 Vector3::operator*(const double d) const
+{
+	return Vector3(x * d, y * d, z * d);
+}
+
+Vector3 Vector3::operator/(const double d) const
+{
+	return Vector3(x / d, y / d, z / d);
+}
+
+Vector3 Vector3::operator+(const btVector3& p2) const
+{
+	return Vector3(x + p2.x(), y + p2.y(), z + p2.z());
+}
+
+btVector3 operator+(const btVector3& p1,const Vector3& p2)
 {
 	return btVector3(p1.x() + btScalar(p2.x), p1.y() + btScalar(p2.y), p1.z() + btScalar(p2.z));
 }
-
-Vector3 operator -(const Vector3& p1, const Vector3& p2)
-{
-	return Vector3(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
-}
-
-Vector3 operator*(const Vector3& p1, const Vector3& p2)
-{
-	return Vector3(p1.x * p2.x, p1.y * p2.y, p1.z * p2.z);
-}
-
-Vector3 operator/(const Vector3& p1, const Vector3& p2)
-{
-	return Vector3(p1.x / p2.x, p1.y / p2.y, p1.z / p2.z);
-}
-
-Vector3 operator*(const Vector3& p1, const double d)
-{
-	return Vector3(p1.x * d, p1.y * d, p1.z * d);
-}
-
-Vector3 operator/(const Vector3& p1, const double d)
-{
-	return Vector3(p1.x / d, p1.y / d, p1.z / d);
-}
-
-

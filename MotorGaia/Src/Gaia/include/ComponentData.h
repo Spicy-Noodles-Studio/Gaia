@@ -5,8 +5,9 @@
 
 #include <string>
 #include <map>
+#include "GaiaExports.h"
 
-class ComponentData
+class GAIA_API ComponentData
 {
 public:
 	ComponentData();

@@ -273,6 +273,9 @@
     <ClInclude Include="..\..\Src\Gaia\include\ControllerEventListener.h">
       <Filter>Archivos de encabezado\Events</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\MathUtils.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Archivos de encabezado">

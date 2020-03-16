@@ -7,17 +7,17 @@
 
 class btVector3;
 
-struct Vector3
+class Vector3
 {
+public:
 	double x;
 	double y;
 	double z;
 
+public:
 	Vector3();
 	Vector3(double x, double y, double z);
-
-
-	void normalize();
+	~Vector3();
 
 	bool operator==(const Vector3& v) const;
 	bool operator!=(const Vector3& v) const;
@@ -38,19 +38,24 @@ struct Vector3
 	Vector3	operator*(double n) const;
 	Vector3	operator/(double n) const;
 
+	void normalize();
 	double magnitudeSquared();
 	double magnitude();
 	Vector3& normalized();
+	Vector3 cross(const Vector3& v);
+	double dot(const Vector3& v);
+
+	Vector3& set(double x, double y, double z);
 
 	void rotateAroundAxis(const Vector3& axis, double angle);
 	void lerp(const Vector3& v, double percentage);
 	void lerp(const Vector3& v, const Vector3& percentage);
 
+	Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles);
+
+	Vector3 operator+(const btVector3& v);
 };
 
-Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles);
-
-Vector3 operator +(const Vector3& p1, const btVector3& p2);
-btVector3 operator +(const btVector3& p1, const Vector3& p2);
+btVector3 operator+(const btVector3& p1, const Vector3& p2);
 
 #endif

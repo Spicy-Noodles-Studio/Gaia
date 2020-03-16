@@ -2,17 +2,55 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
-#include <math.h>
 #include "Vector3.h"
-struct Quaternion
+
+class Quaternion
 {
-    double w, x, y, z;
+public:
+    double x, y, z, w;
 
-    Quaternion inverse();
+public:
+    Quaternion();
+    Quaternion(const Vector3& euler);
+    Quaternion(double xEuler, double yEuler, double zEuler);
+    Quaternion(double x, double y, double z, double w);
+    ~Quaternion();
+
+    bool operator==(const Quaternion& other) const;
+    bool operator!=(const Quaternion& other) const;
+    Quaternion& operator=(const Quaternion& other);
+    Quaternion operator+(const Quaternion& other) const;
+    Quaternion operator*(const Quaternion& other) const;
+    Quaternion operator*(double n) const;
+    Quaternion& operator*=(double n);
+    Quaternion& operator*=(const Quaternion& other);
+
+    double dot(const Quaternion& other) const;
+
+    Quaternion& set(double x, double y, double z, double w);
+    Quaternion& set(double xEuler, double yEuler, double zEuler);
+    Quaternion& set(const Vector3& euler);
+    Quaternion& set(const Quaternion& quat);
+    
+    Quaternion& fromAngleAxis(double angle, const Vector3& axis);
+    Quaternion& lerp(Quaternion q1, Quaternion q2, double t);
+    Quaternion& slerp(Quaternion q1, Quaternion q2, double t, double threshold = 0.05);
+
+    Quaternion& identity();
+    Quaternion& inverse();
+    Quaternion& normalize();
+
+    Quaternion getIdentity();
+    Quaternion getInverse();
+    Quaternion getNormalize();
+
+    Quaternion& rotationFromTo(const Vector3& from, const Vector3& to);
+    Vector3 toEuler();
+    void toAngleAxis(double& angle, Vector3& axis);
+
+    static Quaternion AnglesToQuaternion(double yaw, double pitch, double roll);
+    static Quaternion hamilton(const Quaternion& q1, const Quaternion& q2);
 };
-
-Quaternion ToQuaternion(double yaw, double pitch, double roll);
-Quaternion hamilton(const Quaternion& q1, const Quaternion& q2);
 
 Vector3 GetForwardVector(const Quaternion& q);
 Vector3 GetUpVector(const Quaternion& q);

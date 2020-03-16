@@ -55,25 +55,23 @@ void ResourcesManager::init()
 
 	// Start loading resources
 	/* Code for main thread */
-	/*for (int i = 0; i < filePaths.size(); i++) {
+	for (int i = 0; i < filePaths.size(); i++) {
 		std::string type = filePaths[i].first;
 		std::string path = filePaths[i].second;
 		loadResources(type, path);
-	}*/
+	}
 
+	/*TODO: investigar por que al dividir la carga en mas hilos, la texturas para particulas no se cargan bien */
 	/* Code for multithreading */
-	std::vector<std::thread> resourceThreads;
+	/*std::vector<std::thread> resourceThreads;
 	for (int i = 0; i < filePaths.size(); i++) {
 		resourceThreads.push_back(std::thread(&ResourcesManager::loadResources, std::ref(*this), filePaths[i].first, filePaths[i].second));
 	}
 
 	for (int i = 0; i < resourceThreads.size(); i++) {
 		resourceThreads[i].join();
-	}
+	}*/
 
-	//Initialize (REMEMBER TO INITIALIZE OGRE)
-	Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
-	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 }
 
 void ResourcesManager::close()
@@ -125,14 +123,15 @@ void ResourcesManager::loadSound(const std::string& filename)
 {
 	// Lectura de linea
 	std::string soundfile, name, soundmode, loop;
-	std::istringstream iss(filename);
-	if (!(iss >> soundfile >> name >> soundmode >> loop)) {
+	std::stringstream ss(filename);
+	if (!(ss >> soundfile >> name >> soundmode >> loop)) {
 		printf("RESOURCES MANAGER: invalid format \"%s\"\n", filename.c_str());
 		return;
 	}
 	SoundMode mode = FMOD_DEFAULT;
 	mode = soundmode == "3D" ? FMOD_3D : FMOD_2D;
 	mode |= loop == "true" ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
+	mode |= FMOD_NONBLOCKING;
 	//mode |= FMOD_CREATESTREAM;
 
 	FMOD::Sound* sound;
@@ -141,9 +140,9 @@ void ResourcesManager::loadSound(const std::string& filename)
 		return;
 	}
 
-	soundMutex.lock();
+	// lock_guard secures unlock on destruction
+	std::lock_guard<std::mutex> lock(soundMutex);
 	sounds[name] = sound;
-	soundMutex.unlock();
 
 	printf("RESOURCES MANAGER: Sound loaded: %s\n", soundfile.c_str());
 }
@@ -433,9 +432,8 @@ void ResourcesManager::loadOgreResources(const std::string& filename)
 		Ogre::ResourceGroupManager::getSingleton().addResourceLocation(shaderPath + "/HLSL", type, sec);
 	}
 
+	//Initialize (REMEMBER TO INITIALIZE OGRE)
+	//Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
+	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 	printf("RESOURCES MANAGER: Ogre resources loaded\n");
-}
-
-void ResourcesManager::loadInterfaceResources(const std::string& filename)
-{
 }

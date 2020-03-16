@@ -64,6 +64,13 @@ FMOD::Channel* SoundSystem::playSound(const std::string& name)
 {
 	Channel* channel;
 	Sound* sound = ResourcesManager::getSound(name);
+
+	// Wait till loaded
+	FMOD_OPENSTATE state;
+	do {
+		sound->getOpenState(&state, nullptr, nullptr, nullptr);
+	} while (state != FMOD_OPENSTATE_READY);
+
 	FMOD_RESULT result = system->playSound(sound, soundEfects, false, &channel);
 	ERRCHECK(result);
 	channel->set3DMinMaxDistance(50, 10000);
@@ -74,6 +81,13 @@ FMOD::Channel* SoundSystem::playMusic(const std::string& name)
 {
 	Channel* channel;
 	Sound* sound = ResourcesManager::getSound(name);
+
+	// Wait till loaded
+	FMOD_OPENSTATE state;
+	do {
+		sound->getOpenState(&state, nullptr, nullptr, nullptr);
+	} while (state != FMOD_OPENSTATE_READY);
+
 	FMOD_RESULT result = system->playSound(sound, music, false, &channel);
 	ERRCHECK(result);
 	channel->set3DMinMaxDistance(50, 10000);

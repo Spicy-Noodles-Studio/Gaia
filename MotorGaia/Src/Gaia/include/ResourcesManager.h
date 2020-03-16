@@ -37,7 +37,6 @@ private:
 	void loadBlueprints(const std::string& filename);
 	void loadSounds(const std::string& filename);
 	void loadOgreResources(const std::string& filename);
-	void loadInterfaceResources(const std::string& filename);
 
 	void loadScene(const std::string& filename);
 	void loadBlueprint(const std::string& filename);
@@ -50,7 +49,6 @@ private:
 	std::mutex sceneDataMutex;
 	std::mutex blueprintMutex;
 	std::mutex soundMutex;
-	std::mutex interfaceMutex;
 
 	std::string resourcesPath;
 	DataLoader dataLoader;

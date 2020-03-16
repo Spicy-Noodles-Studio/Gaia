@@ -3,13 +3,19 @@
 #define SCENE_H
 
 #include <vector>
-#include <OgreRoot.h>
-#include "GameObject.h"
-#include "Camera.h"
-#include "DebugDrawer.h"
 
-#include "GaiaComponent.h"
 #include "UserComponent.h"
+
+namespace Ogre {
+	class Root;
+	class SceneManager;
+	class Entity;
+	class AnimationStateSet;
+}
+
+class Camera;
+class GameObject;
+class DebugDrawer;
 
 class GAIA_API Scene {
 	friend class SceneManager;

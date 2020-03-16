@@ -1,5 +1,5 @@
 #include "gTime.h"
-
+#include <OgreRoot.h>
 
 gTime::gTime()
 {

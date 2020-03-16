@@ -3,13 +3,16 @@
 #define UILAYOUT_H
 
 #include "GaiaComponent.h"
-#include <CEGUI/CEGUI.h>
-#include "InterfaceSystem.h"
+
+namespace CEGUI {
+	class Window;
+}
+typedef CEGUI::Window UIElement;
 
 class GAIA_API UILayout : public GaiaComponent
 {
 private:
-	CEGUI::Window* layout;
+	UIElement* layout;
 
 public:
 	UILayout(GameObject* gameObject);

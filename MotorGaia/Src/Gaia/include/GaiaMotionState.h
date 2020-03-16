@@ -5,6 +5,7 @@
 
 #include "btBulletDynamicsCommon.h"
 #include "Vector3.h"
+
 class Transform;
 
 // This class extends the Motion State from Bullet Physics Library

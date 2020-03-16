@@ -1,5 +1,17 @@
 #include "GaiaCore.h"
 
+#include <OgreRoot.h>
+#include "Window.h"
+
+#include "RenderSystem.h"
+#include "InputSystem.h"
+#include "InterfaceSystem.h"
+#include "PhysicsSystem.h"
+#include "SoundSystem.h"
+
+#include "ComponentManager.h"
+#include "SceneManager.h"
+
 GaiaCore::GaiaCore() :	root(nullptr), win(nullptr),
 						renderSystem(nullptr), inputSystem(nullptr), interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
 						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)

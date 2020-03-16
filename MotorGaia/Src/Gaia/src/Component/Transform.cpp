@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "ComponentData.h"
 #include <OgreQuaternion.h>
+#include <OgreRoot.h>
 #include <sstream>
 #include <cmath>
 

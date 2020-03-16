@@ -1,6 +1,6 @@
 #include "SoundEmitter.h"
 #include "GameObject.h"
-
+#include <sstream>
 
 SoundEmitter::SoundEmitter(GameObject* gameObject) : GaiaComponent(gameObject)
 {

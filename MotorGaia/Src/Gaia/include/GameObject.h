@@ -2,15 +2,19 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include <OgreSceneNode.h>
 #include <string>
 #include <map>
+#include <vector>
 
 #include "ComponentManager.h"
-#include "UserComponent.h"
 #include "Transform.h"
 
+namespace Ogre {
+    class SceneNode;
+}
+
 class Scene;
+class UserComponent;
 
 class GAIA_API GameObject {
     friend class Scene;

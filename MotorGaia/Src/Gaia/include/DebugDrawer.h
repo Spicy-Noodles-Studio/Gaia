@@ -3,9 +3,18 @@
 #ifndef DEBUG_DRAWER_H
 #define DEBUG_DRAWER_H
 
+#include <vector>
+#include <LinearMath/btIDebugDraw.h>
+#include <LinearMath/btScalar.h>
+#include <OgreFrameListener.h>
+#include <OgreVector3.h>
+#include <OgreColourValue.h>
 
-#include "btBulletDynamicsCommon.h"
-#include "Ogre.h"
+namespace Ogre {
+	class SceneManager;
+	class FrameEvent;
+	class ManualObject;
+}
 
 class DebugDrawer : public btIDebugDraw, public Ogre::FrameListener {
 public:

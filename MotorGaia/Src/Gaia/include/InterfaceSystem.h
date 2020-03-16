@@ -1,15 +1,15 @@
 #pragma once
 
-#include <OgreRoot.h>
 #include "Singleton.h"
+#include <string>
 
-#include <CEGUI/CEGUI.h>
-#include <CEGUI/Renderer.h>
-#include <CEGUI/RendererModules/Ogre/Renderer.h>
-
-#include "Window.h"
-
+namespace CEGUI {
+	class Window;
+	class OgreRenderer;
+}
 typedef CEGUI::Window UIElement;
+
+class Window;
 
 class GAIA_API InterfaceSystem : public Singleton<InterfaceSystem>
 {

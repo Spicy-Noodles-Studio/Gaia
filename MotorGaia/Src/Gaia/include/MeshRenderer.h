@@ -3,7 +3,11 @@
 #define MESH_RENDERER_H
 
 #include "GaiaComponent.h"
-#include "RenderSystem.h"
+#include <map>
+
+namespace Ogre {
+	class Entity;
+}
 
 class GAIA_API MeshRenderer : public GaiaComponent
 {

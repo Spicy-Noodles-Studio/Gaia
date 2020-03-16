@@ -2,8 +2,9 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
-class btVector3;
 #include "GaiaExports.h"
+
+class btVector3;
 
 struct GAIA_API Vector3
 {

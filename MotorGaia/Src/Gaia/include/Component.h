@@ -4,9 +4,9 @@
 
 #include <string>
 #include "GaiaExports.h"
+#include "ComponentData.h"
 
 class GameObject;
-class ComponentData;
 
 class GAIA_API Component
 {

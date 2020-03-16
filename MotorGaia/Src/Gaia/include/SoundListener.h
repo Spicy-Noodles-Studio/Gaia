@@ -3,7 +3,6 @@
 #define SOUND_LISTENER_H
 
 #include "GaiaComponent.h"
-#include "SoundSystem.h"
 #include "Vector3.h"
 
 class GAIA_API SoundListener : public GaiaComponent

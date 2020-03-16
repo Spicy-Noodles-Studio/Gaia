@@ -2,6 +2,9 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "ComponentData.h"
+#include <OgreRoot.h>
+#include <OgreSceneManager.h>
+#include <OgreEntity.h>
 #include <sstream>
 
 MeshRenderer::MeshRenderer(GameObject* gameObject) : GaiaComponent(gameObject), visible(true)

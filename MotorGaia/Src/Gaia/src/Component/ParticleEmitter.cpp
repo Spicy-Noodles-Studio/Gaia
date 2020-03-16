@@ -1,4 +1,8 @@
 #include "ParticleEmitter.h"
+#include <OgreParticleSystem.h>
+#include <OgreSceneNode.h>
+#include <OgreSceneManager.h>
+#include "GameObject.h"
 #include "Scene.h"
 
 ParticleEmitter::ParticleEmitter(GameObject* gameObject) : GaiaComponent(gameObject), particleSystem(nullptr)

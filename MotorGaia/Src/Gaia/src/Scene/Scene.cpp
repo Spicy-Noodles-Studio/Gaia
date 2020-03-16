@@ -1,5 +1,9 @@
 #include "Scene.h"
+#include <OgreRoot.h>
 #include "PhysicsSystem.h"
+#include "GameObject.h"
+#include "Camera.h"
+#include "DebugDrawer.h"
 
 Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager()), mainCamera(nullptr)
 {

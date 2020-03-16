@@ -2,8 +2,8 @@
 #ifndef G_TIME_H
 #define G_TIME_H
 
-#include "Ogre.h"
 #include "Singleton.h"
+#include <OgreFrameListener.h>
 
 class GAIA_API gTime : public Ogre::FrameListener, public Singleton<gTime>
 {

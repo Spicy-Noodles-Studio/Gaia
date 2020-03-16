@@ -3,8 +3,11 @@
 #define CAMERA_H
 
 #include "GaiaComponent.h"
-#include "RenderSystem.h"
 #include "Vector3.h"
+
+namespace Ogre {
+	class Camera;
+}
 
 class GAIA_API Camera : public GaiaComponent
 {

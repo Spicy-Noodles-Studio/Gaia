@@ -2,19 +2,14 @@
 #ifndef SOUND_SYSTEM_H
 #define SOUND_SYSTEM_H
 
-#include "Vector3.h"
+#include "Singleton.h"
 
-
-#include <fmod.h>
 #include <fmod.hpp>
 #include <map>
-#include "Singleton.h"
-#include <string.h>
+#include <vector>
 #include <string>
 #include "Quaternion.h"
-#include <vector>
-
-
+#include "Vector3.h"
 
 class GAIA_API SoundSystem : public Singleton<SoundSystem>
 {

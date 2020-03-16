@@ -7,6 +7,11 @@
 
 #include "GaiaComponent.h"
 
+namespace Ogre {
+	class AnimationStateSet;
+	class AnimationState;
+}
+
 class GAIA_API Animator : public GaiaComponent
 {
 private:

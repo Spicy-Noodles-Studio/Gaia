@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <set>
+#include <string>
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_gamecontroller.h"

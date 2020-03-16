@@ -1,6 +1,7 @@
 #include "Reverb.h"
 #include "GameObject.h"
-
+#include "SoundSystem.h"
+#include <sstream>
 
 Reverb::Reverb(GameObject* gameObject) : GaiaComponent(gameObject)
 {

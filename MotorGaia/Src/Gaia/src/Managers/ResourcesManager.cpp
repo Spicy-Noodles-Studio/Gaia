@@ -56,25 +56,11 @@ void ResourcesManager::init()
 
 	// Start loading resources
 	/* Code for main thread */
-	/*for (int i = 0; i < filePaths.size(); i++) {
+	for (int i = 0; i < filePaths.size(); i++) {
 		std::string type = filePaths[i].first;
 		std::string path = filePaths[i].second;
 		loadResources(type, path);
-	}*/
-
-	/* Code for multithreading */
-	std::vector<std::thread> resourceThreads;
-	for (int i = 0; i < filePaths.size(); i++) {
-		if(filePaths[i].first != "Ogre") // Little hack, OgreResources does not load correctly on multithreading
-			resourceThreads.push_back(std::thread(&ResourcesManager::loadResources, std::ref(*this), filePaths[i].first, filePaths[i].second));
-		else
-			loadResources(filePaths[i].first, filePaths[i].second);
 	}
-
-	for (int i = 0; i < resourceThreads.size(); i++) {
-		resourceThreads[i].join();
-	}
-
 }
 
 void ResourcesManager::close()
@@ -143,8 +129,6 @@ void ResourcesManager::loadSound(const std::string& filename)
 		return;
 	}
 
-	// lock_guard secures unlock on destruction
-	std::lock_guard<std::mutex> lock(soundMutex);
 	sounds[name] = sound;
 
 	LOG("RESOURCES MANAGER: Sound loaded: %s\n", soundfile.c_str());
@@ -193,8 +177,6 @@ void ResourcesManager::destroyShaderSystem()
 
 bool ResourcesManager::registerSceneData(SceneData* data)
 {
-	// lock_guard secures unlock on destruction
-	std::lock_guard<std::mutex> lock(sceneDataMutex);
 	if (sceneData.find(data->name) != sceneData.end()) {
 		LOG("RESOURCES MANAGER: trying to add an already existing SceneData: %s.\n", data->name.c_str());
 		return false;
@@ -206,8 +188,6 @@ bool ResourcesManager::registerSceneData(SceneData* data)
 
 bool ResourcesManager::registerBlueprint(GameObjectData* data)
 {
-	// lock_guard secures unlock on destruction
-	std::lock_guard<std::mutex> lock(blueprintMutex);
 	if (blueprintData.find(data->name) != blueprintData.end()) {
 		LOG("RESOURCES MANAGER: trying to add an already existing Blueprint: %s.\n", data->name.c_str());
 		return false;
@@ -280,19 +260,9 @@ void ResourcesManager::loadScenes(const std::string& filename)
 	while (file >> f) paths.push_back(f);
 	file.close();
 
-	/*Code to load in the main thread*/
-	/*for (std::string pName : paths)
-		loadScene(pName);*/
-
-	/* Code to load using multithreading */
-	std::vector<std::thread> threads;
-	for (int i = 0; i < paths.size(); i++) 
-		threads.push_back(std::thread(&ResourcesManager::loadScene, std::ref(*this), paths[i]));
-
-	//Wait to finish
-	for (int i = 0; i < threads.size(); i++)
-		threads[i].join();
-
+	/* Code to load in the main thread */
+	for (std::string pName : paths)
+		loadScene(pName);
 }
 
 void ResourcesManager::loadBlueprints(const std::string& filename)
@@ -307,17 +277,8 @@ void ResourcesManager::loadBlueprints(const std::string& filename)
 	while (file >> f) paths.push_back(f);
 	file.close();
 
-	/*for (std::string pName : paths)
-		loadBlueprint(pName);*/
-
-	/* Code to load using multithreading */
-	std::vector<std::thread> threads;
-	for (int i = 0; i < paths.size(); i++)
-		threads.push_back(std::thread(&ResourcesManager::loadBlueprint, std::ref(*this), paths[i]));
-
-	//Wait to finish
-	for (int i = 0; i < threads.size(); i++)
-		threads[i].join();
+	for (std::string pName : paths)
+		loadBlueprint(pName);
 }
 
 void ResourcesManager::loadSounds(const std::string& filename)
@@ -334,18 +295,10 @@ void ResourcesManager::loadSounds(const std::string& filename)
 	std::getline(stream, line);
 
 	std::vector<std::string> lines;
-	while (std::getline(stream, line))
-		lines.push_back(line);		
+	while (std::getline(stream, line)) {
+		loadSound(line);
+	}
 	stream.close();
-
-	/* Multi-threading */
-	std::vector<std::thread> threads;
-	for (int i = 0; i < lines.size(); i++)
-		threads.push_back(std::thread(&ResourcesManager::loadSound, std::ref(*this), lines[i]));
-
-	for (int i = 0; i < threads.size(); i++)
-		threads[i].join();
-
 }
 
 void ResourcesManager::loadOgreResources(const std::string& filename)

@@ -46,10 +46,6 @@ private:
 	void destroyShaderSystem();
 
 private:
-	std::mutex sceneDataMutex;
-	std::mutex blueprintMutex;
-	std::mutex soundMutex;
-
 	std::string resourcesPath;
 	DataLoader dataLoader;
 

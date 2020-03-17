@@ -29,6 +29,10 @@ public:
 	virtual void onTriggerStay(GameObject* other);
 	virtual void onTriggerExit(GameObject* other);
 
+	virtual void onObjectEnter(GameObject* other);
+	virtual void onObjectStay(GameObject* other);
+	virtual void onObjectExit(GameObject* other);
+
 	GameObject* instantiate(const std::string& blueprintName, const Vector3& position = Vector3( 0, 0, 0));
 	void destroy(GameObject* gameObject);
 

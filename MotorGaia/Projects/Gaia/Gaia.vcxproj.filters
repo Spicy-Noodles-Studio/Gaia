@@ -130,6 +130,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\Events\ControllerEventListener.cpp">
       <Filter>Archivos de código fuente\Events</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Loadable.cpp">
+      <Filter>Archivos de código fuente\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
@@ -277,6 +280,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtils.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Loadable.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
     </ClInclude>
   </ItemGroup>

@@ -53,6 +53,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
     <ClInclude Include="..\..\Src\Gaia\include\KeyboardEventListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Loadable.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MathUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MouseEventListener.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ParticleEmitter.h" />
@@ -114,6 +115,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Systems\InputSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Loadable.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\DebugDrawer.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\gTime.cpp" />

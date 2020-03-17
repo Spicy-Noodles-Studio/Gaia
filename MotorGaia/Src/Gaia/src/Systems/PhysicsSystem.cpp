@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "gTime.h"
 #include "DebugDrawer.h"
+#include "MeshStrider.h"
 
 
 PhysicsSystem::PhysicsSystem() :	dynamicsWorld(nullptr), collisionConfiguration(nullptr),
@@ -193,6 +194,24 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 	btQuaternion quat = (btQuaternion(btScalar(rot.z) * SIMD_RADS_PER_DEG, btScalar(rot.y) * SIMD_RADS_PER_DEG, btScalar(rot.x) * SIMD_RADS_PER_DEG)); quat.normalize();
 	t.setRotation(quat);
 	return t;
+}
+
+void PhysicsSystem::bodyFromStrider(MeshStrider* strider, const Vector3& pos)
+{
+	btCollisionShape* colShape = new btBvhTriangleMeshShape(strider, true, true);
+	collisionShapes.push_back(colShape);
+
+	btScalar mass=0;//Always static
+	btVector3 localInertia(0, 0, 0);
+
+	btTransform trans; trans.setIdentity();
+	trans.setOrigin({ btScalar(pos.x), btScalar(pos.y), btScalar(pos.z) });
+	btDefaultMotionState *mState = new btDefaultMotionState(trans);
+
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	dynamicsWorld->addRigidBody(body);
 }
 
 void PhysicsSystem::checkCollisions()

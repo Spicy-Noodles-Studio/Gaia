@@ -130,6 +130,12 @@
     <ClCompile Include="..\..\Src\Gaia\src\Events\ControllerEventListener.cpp">
       <Filter>Archivos de código fuente\Events</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\MeshStrider.cpp">
+      <Filter>Archivos de código fuente\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Strider.cpp">
+      <Filter>Archivos de código fuente\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
@@ -278,6 +284,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtils.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\MeshStrider.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Strider.h">
+      <Filter>Archivos de encabezado\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

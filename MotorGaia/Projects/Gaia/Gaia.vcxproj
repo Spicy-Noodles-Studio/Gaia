@@ -78,6 +78,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\gTime.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Transform.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\UIElement.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UILayout.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Vector3.h" />
@@ -96,6 +97,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\SoundListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\RigidBody.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\UIElement.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\UILayout.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Events\ControllerEventListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Events\EventListener.cpp" />

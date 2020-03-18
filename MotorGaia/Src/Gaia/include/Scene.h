@@ -3,7 +3,7 @@
 #define SCENE_H
 
 #include <vector>
-
+#include <map>
 #include "UserComponent.h"
 
 namespace Ogre {

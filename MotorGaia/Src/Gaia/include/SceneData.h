@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "GameObjectData.h"
+#include "BlueprintData.h"
 
 class GAIA_API SceneData {
 public:
@@ -22,7 +23,8 @@ public:
 
 public:
 	std::string name;
-	std::vector<GameObjectData*> gData;
+	std::vector<GameObjectData*> gameObjectData;
+	std::vector<BlueprintData*> blueprintData;
 };
 
 #endif

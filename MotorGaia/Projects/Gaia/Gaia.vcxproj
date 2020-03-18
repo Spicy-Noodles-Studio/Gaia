@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\Animator.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\BlueprintData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Camera.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Component.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentData.h" />
@@ -103,6 +104,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Events\KeyboardEventListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Events\MouseEventListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Events\WindowEventListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\GameObject\BlueprintData.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\DataLoader.cpp" />

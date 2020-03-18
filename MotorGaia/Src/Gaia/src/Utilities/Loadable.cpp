@@ -2,11 +2,14 @@
 #include "DebugUtils.h"
 #include <fstream>
 
-Loadable::Loadable() : state(LoadState::INVALID), data()
+Loadable::Loadable(void* alloc) : state(LoadState::INVALID), data(alloc)
 {
+
 }
+
 Loadable::~Loadable()
 {
+
 }
 
 Loadable::LoadState Loadable::getLoadState()
@@ -29,11 +32,11 @@ void Loadable::locate(std::string filename)
 
 	// Try if format file is valid
 	try {
-		fs >> rawData;
+		fs >> fileData;
 	}
 	catch (std::exception message) {
 		LOG_ERROR("LOADABLE","File \"%s\" invalid format. Should be .json formatting", filename.c_str());
-		rawData.clear();
+		fileData.clear();
 		fs.close();
 	}
 	fs.close();
@@ -45,6 +48,12 @@ void Loadable::locate(std::string filename)
 
 void Loadable::load()
 {
+	if (state != LoadState::LOCATED) {
+		LOG_ERROR("LOADABLE", "Trying to load a non located file \"%s\"", filename.c_str());
+		return;
+	}
+
+	LOG("File \"%s\" loading...", filename.c_str());
 	state = LoadState::LOADING;
 	if (!load_internal()) {
 		LOG_ERROR("LOADABLE", "Error while loading \"%s\"", filename.c_str());
@@ -52,12 +61,18 @@ void Loadable::load()
 		return;
 	}
 	state = LoadState::READY;
+	LOG("File \"%s\" loaded", filename.c_str());
 }
 
 void Loadable::loadAsync()
 {
+	if (state != LoadState::LOCATED) {
+		LOG_ERROR("LOADABLE", "Trying to load a non located file \"%s\"", filename.c_str());
+		return;
+	}
+	LOG("File \"%s\" loading...", filename.c_str());
 	state = LoadState::LOADING;
-	loadThread = std::thread(&load_aync_internal);
+	loadThread = std::thread(&Loadable::load_aync_internal, std::ref(*this));
 }
 
 void Loadable::load_aync_internal()
@@ -68,4 +83,5 @@ void Loadable::load_aync_internal()
 		return;
 	}
 	state = LoadState::READY;
+	LOG("File \"%s\" loaded", filename.c_str());
 }

@@ -21,7 +21,7 @@ public:
 
 protected:
 	LoadState state;
-	RawData rawData;
+	RawData fileData;
 
 private:
 	std::string filename;
@@ -30,14 +30,14 @@ private:
 	std::thread loadThread;
 
 public:
-	Loadable();
-	~Loadable();
+	Loadable(void* alloc);
+	virtual ~Loadable();
 
 	/*	Return the state of the loadable 
 	 *	returns INVALID does not exist or failed 
 	 *	returns LOCATED when loadable was located
 	 *	returns LOADING when loadable is loading
-	 *	returns READY when loadable is loaded
+	 *	returns READY when loadable is loaded and ready to use
 	 */
 	LoadState getLoadState();
 	void* getData();
@@ -46,7 +46,8 @@ protected:
 	/* Has to be defined, use rawData(json) */
 	virtual bool load_internal() = 0;
 
-private:
+	// TODO: cambiar a private
+public:
 	void locate(std::string filename);
 	void load();
 	void loadAsync();

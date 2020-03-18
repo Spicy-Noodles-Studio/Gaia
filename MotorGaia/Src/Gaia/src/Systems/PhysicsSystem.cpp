@@ -12,8 +12,8 @@
 #include "MeshStrider.h"
 
 
-PhysicsSystem::PhysicsSystem() :	dynamicsWorld(nullptr), collisionConfiguration(nullptr),
-									dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr), time(0.0)
+PhysicsSystem::PhysicsSystem() : dynamicsWorld(nullptr), collisionConfiguration(nullptr),
+								 dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr), time(0.0)
 {
 }
 
@@ -71,7 +71,8 @@ void PhysicsSystem::postUpdate()
 		if (body != nullptr)
 		{
 			RigidBody* rb = (RigidBody*)body->getUserPointer();
-			rb->updateTransform();
+			if (rb != nullptr && !rb->isStatic())
+				rb->updateTransform();
 		}
 	}
 }
@@ -175,14 +176,16 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 
 void PhysicsSystem::deleteRigidBody(btRigidBody* body)
 {
-	btCollisionObject* obj = body;
-	btCollisionShape* shape = obj->getCollisionShape();
-	deleteBody(obj);
+	if (body != nullptr) {
+		btCollisionObject* obj = body;
+		btCollisionShape* shape = obj->getCollisionShape();
+		deleteBody(obj);
 
-	auto it = std::find(collisionShapes.begin(), collisionShapes.end(), shape);
-	if (it != collisionShapes.end())
-		collisionShapes.erase(it);
-	delete shape;
+		auto it = std::find(collisionShapes.begin(), collisionShapes.end(), shape);
+		if (it != collisionShapes.end())
+			collisionShapes.erase(it);
+		delete shape;
+	}
 }
 
 btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
@@ -196,22 +199,25 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 	return t;
 }
 
-void PhysicsSystem::bodyFromStrider(MeshStrider* strider, const Vector3& pos)
+btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, const Vector3& pos, const Vector3& dim)
 {
 	btCollisionShape* colShape = new btBvhTriangleMeshShape(strider, true, true);
 	collisionShapes.push_back(colShape);
+	colShape->setLocalScaling({ btScalar(dim.x), btScalar(dim.y), btScalar(dim.z) });
 
-	btScalar mass=0;//Always static
+	btScalar mass = 0;//Always static
 	btVector3 localInertia(0, 0, 0);
 
 	btTransform trans; trans.setIdentity();
 	trans.setOrigin({ btScalar(pos.x), btScalar(pos.y), btScalar(pos.z) });
-	btDefaultMotionState *mState = new btDefaultMotionState(trans);
+	btDefaultMotionState* mState = new btDefaultMotionState(trans);
 
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
 	dynamicsWorld->addRigidBody(body);
+
+	return body;
 }
 
 void PhysicsSystem::checkCollisions()

@@ -6,8 +6,13 @@
 #include "GameObject.h"
 #include "OgreEntity.h"
 
-Strider::Strider(GameObject* gameObject) : GaiaComponent(gameObject)
+Strider::Strider(GameObject* gameObject) : RigidBody(gameObject), meshStrider(nullptr)
 {
+}
+
+Strider::~Strider()
+{
+	delete meshStrider;
 }
 
 void Strider::handleData(ComponentData* data)
@@ -29,9 +34,15 @@ void Strider::stride(const std::string& mesh)
 	MeshRenderer* mRend = gameObject->getComponent<MeshRenderer>();
 	if (mRend != nullptr)
 	{
-		Ogre::MeshPtr mPtr= mRend->getMesh(mesh)->getMesh();
-		MeshStrider* meshStrider = new MeshStrider(mPtr.getPointer());
-		PhysicsSystem::GetInstance()->bodyFromStrider(meshStrider, gameObject->transform->getWorldPosition());
+		Ogre::Entity* ent = mRend->getMesh(mesh);
+		if (ent != nullptr) {
+			Ogre::MeshPtr mPtr = ent->getMesh();
+			if (meshStrider != nullptr) delete meshStrider;
+			meshStrider = new MeshStrider(mPtr.getPointer());
+			PhysicsSystem::GetInstance()->bodyFromStrider(meshStrider, gameObject->transform->getWorldPosition(), gameObject->transform->getWorldScale());
+		}
+		else
+			LOG("STRIDER: Gameobject %s does not have an Entity called.\n", mesh.c_str());
 	}
 	else
 		LOG("STRIDER: Gameobject %s does not have a MeshRenderer component.\n", gameObject->getName().c_str());

@@ -1,0 +1,27 @@
+{
+    "ObjectType": "GAMEOBJECT",
+    "ObjectName": "Suelo",
+    "Tag": "suelo",
+    "Components":
+    [
+        {
+            "ComponentName": "Transform",
+            "ComponentProperties": {
+                "position": "0 -100 -400",
+                "scale": "1 1 1"
+            }
+        },
+        {
+            "ComponentName": "MeshRenderer",
+            "ComponentProperties": {
+                "mesh": "suelo Barrel.mesh"
+            }
+        },
+        {
+            "ComponentName": "Strider",
+            "ComponentProperties": {
+                "mesh": "suelo"
+            }
+        }
+    ]
+}

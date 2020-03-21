@@ -18,7 +18,7 @@ public:
 		LOADING,
 		READY
 	};
-
+	std::string id;
 protected:
 	LoadState state;
 	RawData fileData;

@@ -32,7 +32,7 @@ public:
 	void addComponentData(const std::string& componentName, ComponentData* data);
 	void addChildrenData(const std::string& childrenName, GameObjectData* data);
 
-	void setBlueprint(BlueprintData* bpRef);
+	void setBlueprint(const BlueprintData* bpRef);
 
 	bool modifyComponentData(const std::string& componentName, const std::string& propertyName, const std::string& value);
 	bool modifyChildData(const std::string& childName, const std::string& componentName, const std::string& propertyName, const std::string& value);
@@ -49,7 +49,7 @@ public:
 public:
 	std::string name;
 	std::string tag;
-	BlueprintData* blueprintRef;
+	const BlueprintData* blueprintRef;
 
 	std::unordered_map<std::string, ComponentData*> components;
 	std::unordered_map<std::string, GameObjectData*> children;

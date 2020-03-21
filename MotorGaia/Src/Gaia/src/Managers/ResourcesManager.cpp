@@ -9,7 +9,7 @@
 #include <OgreGpuProgramManager.h>
 
 std::map<std::string, SceneData*> ResourcesManager::sceneData;
-std::map<std::string, GameObjectData*> ResourcesManager::blueprintData;
+std::map<std::string, BlueprintData*> ResourcesManager::blueprintData;
 std::map<std::string, Sound*> ResourcesManager::sounds;
 
 ResourcesManager::ResourcesManager(const std::string& filePath) :	dataLoader(), resourcesPath(filePath), fileSystemLayer(nullptr), 
@@ -212,7 +212,7 @@ bool ResourcesManager::registerBlueprint(GameObjectData* data)
 		LOG("RESOURCES MANAGER: trying to add an already existing Blueprint: %s.\n", data->name.c_str());
 		return false;
 	}
-	blueprintData[data->name] = data;
+	//blueprintData[data->name] = data;
 	return true;
 }
 
@@ -236,7 +236,7 @@ const SceneData* ResourcesManager::getSceneData(int index)
 	return (*it).second;
 }
 
-const GameObjectData* ResourcesManager::getBlueprint(const std::string& name)
+const BlueprintData* ResourcesManager::getBlueprint(const std::string& name)
 {
 	if (blueprintData.find(name) == blueprintData.end()) {
 		LOG("RESOURCES MANAGER: trying to get not existing Blueprint: %s.\n", name.c_str());

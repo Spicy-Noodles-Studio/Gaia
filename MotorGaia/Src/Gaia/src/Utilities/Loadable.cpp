@@ -1,8 +1,9 @@
 #include "Loadable.h"
 #include "DebugUtils.h"
 #include <fstream>
+#include <stdlib.h>
 
-Loadable::Loadable(void* alloc) : state(LoadState::INVALID), data(alloc)
+Loadable::Loadable(void* alloc) : state(LoadState::INVALID), data(alloc), id("")
 {
 
 }
@@ -33,6 +34,9 @@ void Loadable::locate(std::string filename)
 	// Try if format file is valid
 	try {
 		fs >> fileData;
+		char id[120];
+		_splitpath_s(filename.c_str(), nullptr, 0, nullptr, 0, id, 20, nullptr, 0);
+		this->id = id;
 	}
 	catch (std::exception message) {
 		LOG_ERROR("LOADABLE","File \"%s\" invalid format. Should be .json formatting", filename.c_str());

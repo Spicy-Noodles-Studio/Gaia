@@ -8,7 +8,7 @@
 #include "GameObjectData.h"
 #include "BlueprintData.h"
 
-class GAIA_API SceneData {
+class GAIA_API SceneData : public Loadable {
 public:
 	SceneData();
 	~SceneData();
@@ -20,6 +20,9 @@ public:
 	const std::vector<GameObjectData*>& getGameObjectsData() const;
 
 	static SceneData* empty();
+
+protected:
+	virtual bool load_internal();
 
 public:
 	std::string name;

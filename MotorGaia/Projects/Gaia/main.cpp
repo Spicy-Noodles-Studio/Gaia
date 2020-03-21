@@ -22,9 +22,18 @@ WinMain(HINSTANCE hinstance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nCmdSh
 	//_CrtSetBreakAlloc(94345);
 #endif
 
-	BlueprintData data;
-	data.locate("./Assets/Blueprints/nudo.blueprint");
-	data.loadAsync();
+	BlueprintData nudoBP;
+	BlueprintData sinbadBP;
+	nudoBP.locate("./Assets/Blueprints/nudo.blueprint");
+	sinbadBP.locate("./Assets/Blueprints/Sinbad.blueprint");
+	nudoBP.loadAsync();
+	sinbadBP.loadAsync();
+	ResourcesManager::blueprintData[nudoBP.id] = &nudoBP;
+	ResourcesManager::blueprintData[sinbadBP.id] = &sinbadBP;
+
+	SceneData sceneData;
+	sceneData.locate("./Assets/Scenes/mainScene.scene");
+	sceneData.load();
 	
 	
 	GaiaCore engine;

@@ -27,7 +27,7 @@ public:
 
 	static const SceneData* getSceneData(const std::string& name);
 	static const SceneData* getSceneData(int index);
-	static const GameObjectData* getBlueprint(const std::string& name);
+	static const BlueprintData* getBlueprint(const std::string& name);
 	static Sound* getSound(const std::string& name);
 
 private:
@@ -45,7 +45,7 @@ private:
 	bool initShaderSystem();
 	void destroyShaderSystem();
 
-private:
+public:
 	std::mutex sceneDataMutex;
 	std::mutex blueprintMutex;
 	std::mutex soundMutex;
@@ -54,7 +54,7 @@ private:
 	DataLoader dataLoader;
 
 	static std::map<std::string, SceneData*> sceneData;
-	static std::map<std::string, GameObjectData*> blueprintData;
+	static std::map<std::string, BlueprintData*> blueprintData;
 	static std::map<std::string, Sound*> sounds;
 
 	Ogre::FileSystemLayer* fileSystemLayer;

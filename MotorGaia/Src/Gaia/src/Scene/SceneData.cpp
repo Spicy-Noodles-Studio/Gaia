@@ -1,6 +1,7 @@
 #include "SceneData.h"
+#include "DebugUtils.h"
 
-SceneData::SceneData()
+SceneData::SceneData() : Loadable(this)
 {
 }
 
@@ -35,7 +36,7 @@ const std::vector<GameObjectData*>& SceneData::getGameObjectsData() const
 
 SceneData* SceneData::empty()
 {
-	SceneData* s = new SceneData();
+	/*SceneData* s = new SceneData();
 	s->name = "Default";
 	
 	// Camera with white light
@@ -64,5 +65,30 @@ SceneData* SceneData::empty()
 	s->setGameObjectData(camera);
 	s->setGameObjectData(cube);
 
-	return s;
+	return s;*/
+	return nullptr;
+}
+
+bool SceneData::load_internal()
+{
+	nlohmann::json::const_iterator name = fileData.find("SceneName");
+	if (name == fileData.end()) {
+		LOG("DATA LOADER: SceneName not found\n");
+		return false;
+	}
+	setName(*name);
+
+	nlohmann::json::const_iterator objects = fileData.find("SceneObjects");
+	if (objects != fileData.end()) {
+		for (auto& gameObject : (*objects).items()) {
+			GameObjectData* gameObjectData = new GameObjectData();
+			if (!gameObjectData->loadData(gameObject.value())) {
+				LOG_ERROR("SCENE DATA", "Error ocurred trying to load \"%s\" GameObject in Scene \"%s\"", gameObjectData->name.c_str(), this->name.c_str());
+				return false;
+			}
+			setGameObjectData(gameObjectData);
+		}
+	}
+
+	return true;
 }

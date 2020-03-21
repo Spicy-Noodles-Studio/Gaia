@@ -1,5 +1,6 @@
 #include "GameObjectData.h"
 #include "DebugUtils.h"
+#include "ResourcesManager.h"
 #include <stdio.h>
 
 
@@ -44,8 +45,8 @@ bool GameObjectData::loadData(const RawData& data)
 		return false;
 	}
 
-	name = *objectName;
-	tag = *objectTag;
+	setName(*objectName);
+	setTag(*objectTag);
 
 	nlohmann::json::const_iterator objectType = data.find("ObjectType");
 	if (objectType == data.end()) {
@@ -65,7 +66,7 @@ bool GameObjectData::loadData(const RawData& data)
 		}
 		std::string bpName = *bpPath;
 		// Coge la referencia del blueprint
-		//setBlueprint(ResourcesManager::getBlueprint(bpName));
+		setBlueprint(ResourcesManager::getBlueprint(bpName));
 		// Buscar modificicadores
 
 		//Se modifican los componentes si es necesario
@@ -302,7 +303,7 @@ void GameObjectData::addChildrenData(const std::string& childrenName, GameObject
 	children[childrenName] = data;
 }
 
-void GameObjectData::setBlueprint(BlueprintData* bpRef)
+void GameObjectData::setBlueprint(const BlueprintData* bpRef)
 {
 	blueprintRef = bpRef;
 }

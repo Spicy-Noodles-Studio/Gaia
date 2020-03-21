@@ -40,6 +40,8 @@ public:
 	void setLinearVelocity(const Vector3& vel);
 	void setFriction(float friction);
 	void setRestitution(float restitution);
+	void setMovementConstraints(const Vector3& constraints);
+	void setRotationConstraints(const Vector3& constraints);
 
 	void setTrigger(bool trigger);
 	void setKinematic(bool kinematic);

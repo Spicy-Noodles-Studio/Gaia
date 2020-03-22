@@ -68,9 +68,14 @@ void SceneManager::postUpdate(float deltaTime)
 bool SceneManager::changeScene(const std::string& name, bool async)
 {
 	// Check if scene exists
-	const SceneData* data = ResourcesManager::getSceneData(name);
-	if (data == nullptr)
-		LOG("SCENE MANAGER: scene with name %s not found\n", name.c_str());
+	const SceneData* data = nullptr;
+	do {
+		data = ResourcesManager::getSceneData(name);
+		if (data == nullptr) {
+			LOG_ERROR("SCENE MANAGER", "scene with name %s not found", name.c_str());
+			return false;
+		}
+	} while (data->getLoadState() != Loadable::LoadState::READY);
 
 	loadScene(data);
 
@@ -89,11 +94,36 @@ Scene* SceneManager::createScene(const SceneData* data)
 
 GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* scene, GameObject* parent)
 {
-	GameObject* gameObject = new GameObject(data->getName(), data->getTag(), scene);
-	scene->addGameObject(gameObject);
+	GameObject* gameObject = nullptr;
+	// Check if it is a blueprint
+	if (data->blueprintRef != nullptr) {
+		GameObjectData bpData(*data->blueprintRef);
+		bpData.name = data->name;
+		bpData.tag = data->tag;
+
+		//Children mods
+		for (auto childMod : data->childrenModifications) {
+			bpData.applyChildModification(childMod.first, childMod.second);
+		}
+		//Component mods
+		for (auto compMod : data->componentModifications) {
+			bpData.applyComponentModification(compMod.first, compMod.second);
+		}
+		
+		gameObject = createGameObject(&bpData, scene, parent);
+	}
+	else {
+		gameObject = new GameObject(data->getName(), data->getTag(), scene);
+		scene->addGameObject(gameObject);
+	}
 
 	if (parent != nullptr)
 		parent->addChild(gameObject);
+
+	// For each child, create the child
+	for (auto childData : data->getChildrenData()) {
+		GameObject* child = createGameObject(childData.second, scene, gameObject);
+	}
 
 	// Component
 	for (auto compData : data->getComponentData()) {
@@ -107,10 +137,7 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 				delete comp;
 		}
 	}
-	// For each child, create the child
-	for (auto childData : data->getChildrenData()) {
-		GameObject* child = createGameObject(childData.second, scene, gameObject);
-	}
+
 
 	return gameObject;
 }

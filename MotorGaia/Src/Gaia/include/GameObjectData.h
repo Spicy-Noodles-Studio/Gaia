@@ -34,6 +34,8 @@ public:
 
 	void setBlueprint(const BlueprintData* bpRef);
 
+	void applyChildModification(const std::string& name, GameObjectData* data);
+	void applyComponentModification(const std::string& name, ComponentData* data);
 	bool modifyComponentData(const std::string& componentName, const std::string& propertyName, const std::string& value);
 	bool modifyChildData(const std::string& childName, const std::string& componentName, const std::string& propertyName, const std::string& value);
 

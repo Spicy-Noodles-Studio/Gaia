@@ -9,13 +9,10 @@ class BlueprintData : public Loadable, public GameObjectData
 {
 public:
 	BlueprintData();
-	~BlueprintData();
+	virtual ~BlueprintData();
 
 protected:
 	virtual bool load_internal();
-
-private:
-	
 
 };
 

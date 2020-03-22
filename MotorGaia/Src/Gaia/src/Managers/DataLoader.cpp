@@ -15,6 +15,32 @@ DataLoader::~DataLoader()
 {
 }
 
+SceneData* DataLoader::locateScene(const std::string filepath)
+{
+	SceneData* sceneData = new SceneData();
+	sceneData->locate(filepath);
+
+	if (sceneData->getLoadState() == Loadable::LoadState::INVALID) {
+		delete sceneData;
+		return nullptr;
+	}
+
+	return sceneData;
+}
+
+BlueprintData* DataLoader::locateBlueprint(const std::string filepath)
+{
+	BlueprintData* blueprintData = new BlueprintData();
+	blueprintData->locate(filepath);
+
+	if (blueprintData->getLoadState() == Loadable::LoadState::INVALID) {
+		delete blueprintData;
+		return nullptr;
+	}
+
+	return blueprintData;
+}
+
 SceneData* DataLoader::loadScene(const std::string& filename, bool& loaded)
 {
 	std::fstream i;

@@ -30,8 +30,8 @@ bool ComponentData::modifyProperty(const std::string& propName, const std::strin
 {
 	if (properties.find(propName) == properties.end())
 	{
-		LOG("COMPONENT DATA: tried to modify in %s component an undefined property %s\n", name.c_str(), propName.c_str());
-		return false;
+		LOG_ERROR("COMPONENT DATA", "Tried to modify in %s component an undefined property %s. It would be overwitten", name.c_str(), propName.c_str());
+		//return false;
 	}
 	properties[propName] = propValue;
 	return true;

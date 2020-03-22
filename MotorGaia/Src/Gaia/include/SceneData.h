@@ -11,7 +11,7 @@
 class GAIA_API SceneData : public Loadable {
 public:
 	SceneData();
-	~SceneData();
+	virtual ~SceneData();
 
 	void setName(const std::string& sceneName);
 	void setGameObjectData(GameObjectData* data);
@@ -27,7 +27,6 @@ protected:
 public:
 	std::string name;
 	std::vector<GameObjectData*> gameObjectData;
-	std::vector<BlueprintData*> blueprintData;
 };
 
 #endif

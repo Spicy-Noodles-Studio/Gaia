@@ -5,10 +5,9 @@
 
 #include <nlohmann/json.hpp>
 
-
-class ComponentData;
-class GameObjectData;
 class SceneData;
+class BlueprintData;
+
 
 using json = nlohmann::json;
 

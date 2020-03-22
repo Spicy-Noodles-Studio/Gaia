@@ -2,12 +2,13 @@
 #include "DebugUtils.h"
 #include "ResourcesManager.h"
 
-BlueprintData::BlueprintData() : Loadable(this)
+BlueprintData::BlueprintData() : Loadable()
 {
 }
 
 BlueprintData::~BlueprintData()
 {
+
 }
 
 bool BlueprintData::load_internal()

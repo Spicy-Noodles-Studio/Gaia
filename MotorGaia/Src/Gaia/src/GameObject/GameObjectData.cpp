@@ -12,12 +12,35 @@ GameObjectData::GameObjectData(const GameObjectData& other)
 {
 	name = other.name;
 	tag = other.tag;
+	
+	if (other.blueprintRef != nullptr) {
+		GameObjectData bp(*other.blueprintRef);
+
+		for (auto c : bp.components)
+			components[c.first] = new ComponentData(*c.second);
+
+		for (auto c : bp.children)
+			children[c.first] = new GameObjectData(*c.second);
+
+		for (auto c : bp.componentModifications)
+			bp.applyComponentModification(c.first, c.second);
+
+		for (auto c : bp.childrenModifications)
+			bp.applyChildModification(c.first, c.second);
+	}
 
 	for (auto c : other.components)
 		components[c.first] = new ComponentData(*c.second);
 
 	for (auto c : other.children)
 		children[c.first] = new GameObjectData(*c.second);
+
+	for (auto c : other.componentModifications)
+		applyComponentModification(c.first, c.second);
+
+	for (auto c : other.childrenModifications)
+		applyChildModification(c.first, c.second);
+
 }
 
 GameObjectData::~GameObjectData()
@@ -32,8 +55,20 @@ GameObjectData::~GameObjectData()
 		c.second = nullptr;
 	}
 
+	for (auto c : componentModifications) {
+		delete c.second;
+		c.second = nullptr;
+	}
+
+	for (auto c : childrenModifications) {
+		delete c.second;
+		c.second = nullptr;
+	}
+
 	components.clear();
 	children.clear();
+	componentModifications.clear();
+	childrenModifications.clear();
 }
 
 bool GameObjectData::loadData(const RawData& data)
@@ -306,6 +341,23 @@ void GameObjectData::addChildrenData(const std::string& childrenName, GameObject
 void GameObjectData::setBlueprint(const BlueprintData* bpRef)
 {
 	blueprintRef = bpRef;
+}
+
+void GameObjectData::applyChildModification(const std::string& name, GameObjectData* data)
+{
+	for (auto child : data->children) {
+		for (auto comp : child.second->components) {
+			for (auto prop : comp.second->getProperties())
+				modifyChildData(child.first, comp.first, prop.first, prop.second);
+		}
+	}
+}
+
+void GameObjectData::applyComponentModification(const std::string& name, ComponentData* data)
+{
+	for (auto prop : data->getProperties())
+		modifyComponentData(data->getName(), prop.first, prop.second);
+
 }
 
 bool GameObjectData::modifyComponentData(const std::string& componentName, const std::string& propertyName, const std::string& value)

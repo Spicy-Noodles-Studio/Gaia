@@ -3,25 +3,21 @@
 #include <fstream>
 #include <stdlib.h>
 
-Loadable::Loadable(void* alloc) : state(LoadState::INVALID), data(alloc), id("")
-{
 
+Loadable::Loadable() : state(LoadState::INVALID), id("")
+{
 }
 
 Loadable::~Loadable()
 {
-
+	loadThread.detach();
 }
 
-Loadable::LoadState Loadable::getLoadState()
+Loadable::LoadState Loadable::getLoadState() const
 {
 	return state;
 }
 
-void* Loadable::getData()
-{
-	return data;
-}
 
 void Loadable::locate(std::string filename)
 {
@@ -29,6 +25,7 @@ void Loadable::locate(std::string filename)
 	fs.open(filename);
 	if (!fs.is_open()) {
 		LOG_ERROR("LOADABLE","Filename \"%s\" not found", filename.c_str());
+		return;
 	}
 
 	// Try if format file is valid
@@ -42,6 +39,7 @@ void Loadable::locate(std::string filename)
 		LOG_ERROR("LOADABLE","File \"%s\" invalid format. Should be .json formatting", filename.c_str());
 		fileData.clear();
 		fs.close();
+		return;
 	}
 	fs.close();
 

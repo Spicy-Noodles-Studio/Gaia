@@ -46,9 +46,6 @@
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp">
       <Filter>Archivos de código fuente\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Managers\DataLoader.cpp">
-      <Filter>Archivos de código fuente\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ResourcesManager.cpp">
       <Filter>Archivos de código fuente\Managers</Filter>
     </ClCompile>
@@ -181,9 +178,6 @@
       <Filter>Archivos de encabezado\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h">
-      <Filter>Archivos de encabezado\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h">
       <Filter>Archivos de encabezado\Managers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\ResourcesManager.h">

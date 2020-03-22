@@ -1,7 +1,7 @@
 #include "SceneData.h"
 #include "DebugUtils.h"
 
-SceneData::SceneData() : Loadable(this)
+SceneData::SceneData() : Loadable()
 {
 }
 

@@ -25,6 +25,9 @@ public:
 	void setSize(int x, int y);
 
 	UIElement getChild(const std::string& name);
+	UIElement createChild(const std::string& type, const std::string& name);
+
+	void setVisible(bool visible);
 };
 
 

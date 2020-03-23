@@ -44,3 +44,14 @@ UIElement UIElement::getChild(const std::string& name)
 {
 	return element->getChild(name);
 }
+
+UIElement UIElement::createChild(const std::string& type, const std::string& name)
+{
+	element->addChild(CEGUI::WindowManager::getSingleton().createWindow(type, name));
+	return element->getChild(name);
+}
+
+void UIElement::setVisible(bool visible)
+{
+	element->setVisible(visible);
+}

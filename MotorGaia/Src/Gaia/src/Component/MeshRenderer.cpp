@@ -25,6 +25,16 @@ Ogre::Entity* MeshRenderer::getMesh(std::string mesh)
 	return entities[mesh];
 }
 
+std::string MeshRenderer::getMeshId() const
+{
+	return id;
+}
+
+std::string MeshRenderer::getMeshName() const
+{
+	return name;
+}
+
 void MeshRenderer::setMesh(const std::string& id, const std::string& mesh)
 {
 	if (entities.find(id) == entities.end())
@@ -65,7 +75,7 @@ void MeshRenderer::handleData(ComponentData* data)
 
 		if (prop.first == "mesh")
 		{
-			std::string id, name; ss >> id >> name;
+			ss >> id >> name;
 			setMesh(id, name);
 			attachEntityToNode(id);
 		}

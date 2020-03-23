@@ -126,7 +126,10 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 void SceneManager::loadScene(const SceneData* data)
 {
 	if (data == nullptr) {
-		LOG("SCENE MANAGER: given SceneData not valid. Loading default SceneData\n");
+		LOG("SCENE MANAGER: given SceneData not valid. Loading default SceneData");
+		SceneData* emptyScene = SceneData::empty();
+		stackScene = createScene(emptyScene);
+		delete emptyScene;
 		return;
 	}
 	// Creates the Scene by its data (assuming creation was succesfull)

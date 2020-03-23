@@ -36,7 +36,7 @@ const std::vector<GameObjectData*>& SceneData::getGameObjectsData() const
 
 SceneData* SceneData::empty()
 {
-	/*SceneData* s = new SceneData();
+	SceneData* s = new SceneData();
 	s->name = "Default";
 	
 	// Camera with white light
@@ -58,6 +58,7 @@ SceneData* SceneData::empty()
 	cube->components["Transform"] = new ComponentData();
 	cube->components["Transform"]->name = "Transform";
 	cube->components["Transform"]->addProperty("position", "0 0 0");
+	cube->components["Transform"]->addProperty("rotation", "45 45 45");
 	cube->components["MeshRenderer"] = new ComponentData();
 	cube->components["MeshRenderer"]->name = "MeshRenderer";
 	cube->components["MeshRenderer"]->addProperty("mesh", "cube cube.mesh");
@@ -65,8 +66,7 @@ SceneData* SceneData::empty()
 	s->setGameObjectData(camera);
 	s->setGameObjectData(cube);
 
-	return s;*/
-	return nullptr;
+	return s;
 }
 
 bool SceneData::load_internal()

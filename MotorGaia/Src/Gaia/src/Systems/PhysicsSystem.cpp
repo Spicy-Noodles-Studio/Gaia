@@ -9,10 +9,11 @@
 #include "GameObject.h"
 #include "gTime.h"
 #include "DebugDrawer.h"
+#include "MeshStrider.h"
 
 
-PhysicsSystem::PhysicsSystem() :	dynamicsWorld(nullptr), collisionConfiguration(nullptr),
-									dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr), time(0.0)
+PhysicsSystem::PhysicsSystem() : dynamicsWorld(nullptr), collisionConfiguration(nullptr),
+								 dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr), time(0.0)
 {
 }
 
@@ -40,6 +41,8 @@ void PhysicsSystem::init()
 
 	dynamicsWorld->setGravity(btVector3(0, -10, 0));
 
+	dynamicsWorld->setForceUpdateAllAabbs(false);
+
 	time = 0;
 
 	///-----initialization_end-----
@@ -55,7 +58,7 @@ void PhysicsSystem::update(float deltaTime)
 	time += deltaTime;
 	while (time >= 1.0f / 50.0f)
 	{
-		dynamicsWorld->stepSimulation(1.0f / 50.0f, 10);
+		dynamicsWorld->stepSimulation(1.0f / 50.0f, 1);
 		checkCollisions();
 		time -= 1.0f / 50.0f;
 	}
@@ -70,7 +73,8 @@ void PhysicsSystem::postUpdate()
 		if (body != nullptr)
 		{
 			RigidBody* rb = (RigidBody*)body->getUserPointer();
-			rb->updateTransform();
+			if (rb != nullptr && !rb->isStatic())
+				rb->updateTransform();
 		}
 	}
 }
@@ -174,14 +178,16 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 
 void PhysicsSystem::deleteRigidBody(btRigidBody* body)
 {
-	btCollisionObject* obj = body;
-	btCollisionShape* shape = obj->getCollisionShape();
-	deleteBody(obj);
+	if (body != nullptr) {
+		btCollisionObject* obj = body;
+		btCollisionShape* shape = obj->getCollisionShape();
+		deleteBody(obj);
 
-	auto it = std::find(collisionShapes.begin(), collisionShapes.end(), shape);
-	if (it != collisionShapes.end())
-		collisionShapes.erase(it);
-	delete shape;
+		auto it = std::find(collisionShapes.begin(), collisionShapes.end(), shape);
+		if (it != collisionShapes.end())
+			collisionShapes.erase(it);
+		delete shape;
+	}
 }
 
 btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
@@ -193,6 +199,23 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 	btQuaternion quat = (btQuaternion(btScalar(rot.z) * SIMD_RADS_PER_DEG, btScalar(rot.y) * SIMD_RADS_PER_DEG, btScalar(rot.x) * SIMD_RADS_PER_DEG)); quat.normalize();
 	t.setRotation(quat);
 	return t;
+}
+
+btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim)
+{
+	btCollisionShape* colShape = new btBvhTriangleMeshShape(strider, true, true);
+	collisionShapes.push_back(colShape);
+	colShape->setLocalScaling({ btScalar(dim.x), btScalar(dim.y), btScalar(dim.z) });
+
+	btScalar mass = 0;//Always static
+	btVector3 localInertia(0, 0, 0);
+
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	dynamicsWorld->addRigidBody(body);
+
+	return body;
 }
 
 void PhysicsSystem::checkCollisions()

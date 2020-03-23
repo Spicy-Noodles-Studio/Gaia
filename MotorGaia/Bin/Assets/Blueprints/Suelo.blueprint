@@ -1,0 +1,28 @@
+{
+    "ObjectType": "GAMEOBJECT",
+    "ObjectName": "Suelo",
+    "Tag": "suelo",
+    "Components":
+    [
+        {
+            "ComponentName": "Transform",
+            "ComponentProperties": {
+                "position": "0 -100 -400",
+                "scale": "5 5 5",
+                "rotation": "-90 0 0"
+            }
+        },
+        {
+            "ComponentName": "MeshRenderer",
+            "ComponentProperties": {
+                "mesh": "suelo testLevel.mesh"
+            }
+        },
+        {
+            "ComponentName": "Strider",
+            "ComponentProperties": {
+                "mesh": "suelo"
+            }
+        }
+    ]
+}

@@ -14,9 +14,9 @@ class ComponentData;
 
 class GAIA_API RigidBody : public GaiaComponent
 {
-private:
+protected:
 	btRigidBody* body = nullptr;
-	GaiaMotionState* motionState;
+	GaiaMotionState* motionState = nullptr;
 
 	// Turns a Gaia Vector3 into a Bullet Physics Vector3
 	const btVector3 parseToBulletVector(const Vector3& v) const;
@@ -40,6 +40,8 @@ public:
 	void setLinearVelocity(const Vector3& vel);
 	void setFriction(float friction);
 	void setRestitution(float restitution);
+	void setMovementConstraints(const Vector3& constraints);
+	void setRotationConstraints(const Vector3& constraints);
 
 	void setTrigger(bool trigger);
 	void setKinematic(bool kinematic);

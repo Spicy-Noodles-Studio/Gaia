@@ -5,6 +5,7 @@
 #include "PhysicsSystem.h"
 #include "GameObject.h"
 #include "OgreEntity.h"
+#include "GaiaMotionState.h"
 
 Strider::Strider(GameObject* gameObject) : RigidBody(gameObject), meshStrider(nullptr)
 {
@@ -39,7 +40,8 @@ void Strider::stride(const std::string& mesh)
 			Ogre::MeshPtr mPtr = ent->getMesh();
 			if (meshStrider != nullptr) delete meshStrider;
 			meshStrider = new MeshStrider(mPtr.getPointer());
-			PhysicsSystem::GetInstance()->bodyFromStrider(meshStrider, gameObject->transform->getWorldPosition(), gameObject->transform->getWorldScale());
+			motionState = new GaiaMotionState(gameObject->transform);
+			body = PhysicsSystem::GetInstance()->bodyFromStrider(meshStrider, motionState, gameObject->transform->getWorldScale());
 		}
 		else
 			LOG("STRIDER: Gameobject %s does not have an Entity called.\n", mesh.c_str());

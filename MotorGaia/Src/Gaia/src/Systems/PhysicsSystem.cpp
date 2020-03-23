@@ -199,7 +199,7 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 	return t;
 }
 
-btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, const Vector3& pos, const Vector3& dim)
+btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim)
 {
 	btCollisionShape* colShape = new btBvhTriangleMeshShape(strider, true, true);
 	collisionShapes.push_back(colShape);
@@ -207,10 +207,6 @@ btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, const Vector3&
 
 	btScalar mass = 0;//Always static
 	btVector3 localInertia(0, 0, 0);
-
-	btTransform trans; trans.setIdentity();
-	trans.setOrigin({ btScalar(pos.x), btScalar(pos.y), btScalar(pos.z) });
-	btDefaultMotionState* mState = new btDefaultMotionState(trans);
 
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);

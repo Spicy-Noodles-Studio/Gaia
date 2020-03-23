@@ -50,7 +50,7 @@ public:
 	void deleteRigidBody(btRigidBody* body);
 	// Turns a Gaia Transform into a Bullet Physics Transform
 	btTransform parseToBulletTransform(Transform* transform);
-	btRigidBody* bodyFromStrider(MeshStrider* strider, const Vector3& pos, const Vector3& dim);
+	btRigidBody* bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim);
 
 	void checkCollisions();
 

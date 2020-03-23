@@ -26,6 +26,10 @@ public:
 
 	Ogre::Camera* getCamera();
 
+	Vector3 worldToScreen(const Vector3& worldPoint);
+
+	Vector3 worldToScreenPixel(const Vector3& worldPoint);
+
 	void setClipDistances(double near, double far);
 
 	virtual void handleData(ComponentData* data);

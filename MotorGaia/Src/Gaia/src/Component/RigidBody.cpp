@@ -29,9 +29,9 @@ void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, 
 
 void RigidBody::handleData(ComponentData* data)
 {
-	float mass = 1.0, damping = 0.0, friction = 0.0,restitution = 0.0, angularDamping = 0.0;
+	float mass = 1.0, damping = 0.0, friction = 0.0, restitution = 0.0, angularDamping = 0.0;
 	RB_Shape shape;
-	Vector3 off = Vector3(), dim = Vector3(1, 1, 1), gravity = PhysicsSystem::GetInstance()->getWorldGravity();
+	Vector3 off = Vector3(), dim = Vector3(1, 1, 1), gravity = PhysicsSystem::GetInstance()->getWorldGravity(), movConstraints = { 1,1,1 }, rotConstraints = { 1,1,1 };
 	bool isTrigger = false, kinematic = false;
 
 	for (auto prop : data->getProperties()) {
@@ -73,7 +73,13 @@ void RigidBody::handleData(ComponentData* data)
 			ss >> kinematic;
 		}
 		else if (prop.first == "gravity") {
-			ss >> gravity.x>>gravity.y>>gravity.z;
+			ss >> gravity.x >> gravity.y >> gravity.z;
+		}
+		else if (prop.first == "movementConstraints") {
+			ss >> movConstraints.x >> movConstraints.y >> movConstraints.z;
+		}
+		else if (prop.first == "rotationConstraints") {
+			ss >> rotConstraints.x >> rotConstraints.y >> rotConstraints.z;
 		}
 	}
 	setRigidBody(mass, shape, off, dim);
@@ -83,6 +89,8 @@ void RigidBody::handleData(ComponentData* data)
 	setAngularDamping(angularDamping);
 	setFriction(friction);
 	setRestitution(restitution);
+	setMovementConstraints(movConstraints);
+	setRotationConstraints(rotConstraints);
 
 	setKinematic(kinematic);
 	setTrigger(isTrigger);
@@ -158,6 +166,18 @@ void RigidBody::setRestitution(float restitution)
 	body->setRestitution(restitution);
 }
 
+// 1 to allow movement 0 to add a constraint
+void RigidBody::setMovementConstraints(const Vector3& constraints)
+{
+	body->setLinearFactor(parseToBulletVector(constraints));
+}
+
+// 1 to allow rotation 0 to add a constraint
+void RigidBody::setRotationConstraints(const Vector3& constraints)
+{
+	body->setAngularFactor(parseToBulletVector(constraints));
+}
+
 void RigidBody::setTrigger(bool trigger)
 {
 	int flag = 0;
@@ -178,8 +198,8 @@ void RigidBody::setStatic(bool stat)
 {
 	int flag = 0;
 	if (isStatic() && !stat) flag = -body->CF_STATIC_OBJECT;
-	else if (!isStatic() && stat && body->getMass()>0) flag = body->CF_STATIC_OBJECT;
-	body->setCollisionFlags(body->getCollisionFlags() +flag);
+	else if (!isStatic() && stat && body->getMass() > 0) flag = body->CF_STATIC_OBJECT;
+	body->setCollisionFlags(body->getCollisionFlags() + flag);
 }
 
 void RigidBody::setActive(bool active)

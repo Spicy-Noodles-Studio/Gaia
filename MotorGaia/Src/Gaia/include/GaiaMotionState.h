@@ -17,7 +17,7 @@ protected:
 	Transform* transform;
 	Vector3 offset = Vector3();
 public:
-	GaiaMotionState(Transform* transform, const Vector3& offset);
+	GaiaMotionState(Transform* transform, const Vector3& offset = { 0,0,0 });
 	~GaiaMotionState();
 
 	Transform* getTransform() const;

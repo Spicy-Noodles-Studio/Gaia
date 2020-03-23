@@ -13,6 +13,7 @@ class DebugDrawer;
 class Transform;
 class GaiaMotionState;
 class RigidBody;
+class MeshStrider;
 
 class btRigidBody;
 class btTransform;
@@ -49,6 +50,7 @@ public:
 	void deleteRigidBody(btRigidBody* body);
 	// Turns a Gaia Transform into a Bullet Physics Transform
 	btTransform parseToBulletTransform(Transform* transform);
+	btRigidBody* bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim);
 
 	void checkCollisions();
 

@@ -244,10 +244,14 @@ void PhysicsSystem::CollisionEnterCallbacks(const std::pair<RigidBody*, RigidBod
 		goA->onCollisionEnter(goB);
 		goB->onCollisionEnter(goA);
 	}
-	else if (aTrigger && !bTrigger)
+	else if (aTrigger && !bTrigger) {
 		goB->onTriggerEnter(goA);
-	else if (bTrigger && !aTrigger)
+		goA->onObjectEnter(goB);
+	}
+	else if (bTrigger && !aTrigger) {
 		goA->onTriggerEnter(goB);
+		goB->onObjectEnter(goA);
+	}
 }
 
 void PhysicsSystem::CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
@@ -259,10 +263,14 @@ void PhysicsSystem::CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody
 		goA->onCollisionExit(goB);
 		goB->onCollisionExit(goA);
 	}
-	else if (aTrigger && !bTrigger)
+	else if (aTrigger && !bTrigger) {
 		goB->onTriggerExit(goA);
-	else if (bTrigger && !aTrigger)
+		goA->onObjectExit(goB);
+	}
+	else if (bTrigger && !aTrigger) {
 		goA->onTriggerExit(goB);
+		goB->onObjectExit(goA);
+	}
 }
 
 void PhysicsSystem::CollisionStayCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
@@ -274,10 +282,14 @@ void PhysicsSystem::CollisionStayCallbacks(const std::pair<RigidBody*, RigidBody
 		goA->onCollisionStay(goB);
 		goB->onCollisionStay(goA);
 	}
-	else if (aTrigger && !bTrigger)
+	else if (aTrigger && !bTrigger) {
 		goB->onTriggerStay(goA);
-	else if (bTrigger && !aTrigger)
+		goA->onObjectStay(goB);
+	}
+	else if (bTrigger && !aTrigger) {
 		goA->onTriggerStay(goB);
+		goB->onObjectStay(goA);
+	}
 }
 
 void PhysicsSystem::deleteBody(btCollisionObject* obj)

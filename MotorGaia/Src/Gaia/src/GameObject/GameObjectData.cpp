@@ -165,7 +165,7 @@ bool GameObjectData::addComponentModifications(const RawData& data)
 			continue;
 		}
 
-		// Todo bien, añadimos
+		// Todo bien, aï¿½adimos
 		ComponentData* cData = new ComponentData();
 		componentModifications[*name] = cData;
 
@@ -208,7 +208,7 @@ bool GameObjectData::addChildrenModifications(const RawData& data)
 			if (!childData->addChildrenModifications(*childModMod))
 				LOG_ERROR("GAMEOBJECT DATA", "Adding ChildrenModifications \"%s\" failed", childCompMod.key().c_str());
 
-		// Añadir componentes a los ya existentes
+		// Aï¿½adir componentes a los ya existentes
 		nlohmann::json::const_iterator childComp = mod.value().find("Components");
 		if (childComp != mod.value().end()) {
 			LOG("\"Components\" keyword found. Loading...");
@@ -219,7 +219,7 @@ bool GameObjectData::addChildrenModifications(const RawData& data)
 			LOG("\"Components\" loaded successfully");
 		}
 
-		// Añadir hijos a los ya existentes
+		// Aï¿½adir hijos a los ya existentes
 		nlohmann::json::const_iterator childChildren = mod.value().find("Children");
 		if (childChildren != mod.value().end()) {
 			LOG("\"Children\" keyword found. Loading...");

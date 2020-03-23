@@ -118,6 +118,13 @@ void GameObject::onTriggerEnter(GameObject* other)
     //LOG("%s entered the trigger %s.\n", name.c_str(), other->getName().c_str());
 }
 
+void GameObject::onObjectEnter(GameObject* other)
+{
+    for (UserComponent* c : userComponents)
+        c->onObjectEnter(other);
+    //LOG("The trigger %s was entered by %s.\n", name.c_str(), other->getName().c_str());
+}
+
 void GameObject::onCollisionStay(GameObject* other)
 {
     for (UserComponent* c : userComponents)
@@ -132,6 +139,13 @@ void GameObject::onTriggerStay(GameObject* other)
    //LOG("%s is in the trigger %s.\n", name.c_str(), other->getName().c_str());
 }
 
+void GameObject::onObjectStay(GameObject* other)
+{
+    for (UserComponent* c : userComponents)
+        c->onObjectStay(other);
+    //LOG("The trigger %s has inside object %s.\n", name.c_str(), other->getName().c_str());
+}
+
 void GameObject::onCollisionExit(GameObject* other)
 {
     for (UserComponent* c : userComponents)
@@ -144,6 +158,13 @@ void GameObject::onTriggerExit(GameObject* other)
     for (UserComponent* c : userComponents)
         c->onTriggerExit(other);
     //LOG("%s exited the trigger %s.\n", name.c_str(), other->getName().c_str());
+}
+
+void GameObject::onObjectExit(GameObject* other)
+{
+    for (UserComponent* c : userComponents)
+        c->onObjectExit(other);
+    //LOG("The trigger %s was exited by %s.\n", name.c_str(), other->getName().c_str());
 }
 
 void GameObject::setActive(bool active)

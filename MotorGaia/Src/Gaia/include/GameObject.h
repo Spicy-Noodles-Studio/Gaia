@@ -58,13 +58,16 @@ public:
     void setActive(bool active);
 
 	void onCollisionEnter(GameObject* other);
-	void onTriggerEnter(GameObject* other);
+	void onTriggerEnter(GameObject* other);//An object enters a trigger
+	void onObjectEnter(GameObject* other);//A trigger is entered by an object
 
 	void onCollisionStay(GameObject* other);
 	void onTriggerStay(GameObject* other);
+	void onObjectStay(GameObject* other);
 
 	void onCollisionExit(GameObject* other);
 	void onTriggerExit(GameObject* other);
+	void onObjectExit(GameObject* other);
 
 private:
     void addUserComponent(UserComponent* component);

@@ -83,7 +83,7 @@ void ResourcesManager::close()
 {
 	for (auto sData : sceneData)
 		delete sData.second;
-
+		
 	for (auto bData : blueprintData)
 		delete bData.second;
 
@@ -178,7 +178,7 @@ void ResourcesManager::initializeAllResources()
 	threads.push_back(std::thread(&ResourcesManager::initializeBlueprints, std::ref(*this)));
 
 	//Sounds
-	threads.push_back(std::thread(&ResourcesManager::initializeSounds, std::ref(*this)));
+	//threads.push_back(std::thread(&ResourcesManager::initializeSounds, std::ref(*this)));
 
 	//Wait
 	for (int i = 0; i < threads.size(); i++)

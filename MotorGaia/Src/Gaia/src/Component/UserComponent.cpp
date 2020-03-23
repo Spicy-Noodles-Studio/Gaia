@@ -143,3 +143,15 @@ void UserComponent::onTriggerExit(GameObject* other)
 {
 
 }
+
+void UserComponent::onObjectEnter(GameObject* other)
+{
+}
+
+void UserComponent::onObjectStay(GameObject* other)
+{
+}
+
+void UserComponent::onObjectExit(GameObject* other)
+{
+}

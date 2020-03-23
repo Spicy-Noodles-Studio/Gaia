@@ -6,7 +6,6 @@
 
 #include <iostream>
 #include "GaiaCore.h"
-#include "BlueprintData.h"
 
 
 #ifdef _DEBUG

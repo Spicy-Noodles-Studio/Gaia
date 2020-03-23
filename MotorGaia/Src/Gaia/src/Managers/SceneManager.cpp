@@ -94,39 +94,15 @@ Scene* SceneManager::createScene(const SceneData* data)
 
 GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* scene, GameObject* parent)
 {
-	GameObject* gameObject = nullptr;
-	// Check if it is a blueprint
-	if (data->blueprintRef != nullptr) {
-		GameObjectData bpData(*data->blueprintRef);
-		bpData.name = data->name;
-		bpData.tag = data->tag;
-
-		//Children mods
-		for (auto childMod : data->childrenModifications) {
-			bpData.applyChildModification(childMod.first, childMod.second);
-		}
-		//Component mods
-		for (auto compMod : data->componentModifications) {
-			bpData.applyComponentModification(compMod.first, compMod.second);
-		}
-		
-		gameObject = createGameObject(&bpData, scene, parent);
-	}
-	else {
-		gameObject = new GameObject(data->getName(), data->getTag(), scene);
-		scene->addGameObject(gameObject);
-	}
+	GameObjectData gData(*data);
+	GameObject* gameObject = new GameObject(gData.getName(), gData.getTag(), scene);
+	scene->addGameObject(gameObject);
 
 	if (parent != nullptr)
 		parent->addChild(gameObject);
 
-	// For each child, create the child
-	for (auto childData : data->getChildrenData()) {
-		GameObject* child = createGameObject(childData.second, scene, gameObject);
-	}
-
 	// Component
-	for (auto compData : data->getComponentData()) {
+	for (auto compData : gData.getComponentData()) {
 		ComponentData* cData = compData.second;
 		auto constructor = ComponentManager::GetInstance()->getComponentFactory(cData->getName());
 		if (constructor != nullptr)
@@ -136,6 +112,11 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 			if (!gameObject->addComponent(cData->getName(), comp))
 				delete comp;
 		}
+	}
+
+	// For each child, create the child
+	for (auto childData : gData.getChildrenData()) {
+		GameObject* child = createGameObject(childData.second, scene, gameObject);
 	}
 
 

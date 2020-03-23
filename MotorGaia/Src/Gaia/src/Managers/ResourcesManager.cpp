@@ -83,6 +83,7 @@ void ResourcesManager::close()
 {
 	for (auto sData : sceneData)
 		delete sData.second;
+
 	for (auto bData : blueprintData)
 		delete bData.second;
 

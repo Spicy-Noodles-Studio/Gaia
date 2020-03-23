@@ -38,7 +38,8 @@ void UILayout::setLayout(const std::string& filename)
 
 void UILayout::setEvent(const std::string& element, const std::string& event)
 {
-	getElement("StaticImage")->getChild(element)->
+	if (getElement("StaticImage") != nullptr)
+		getElement("StaticImage")->getChild(element)->
 		subscribeEvent(InterfaceSystem::GetInstance()->getEvent(event).first, InterfaceSystem::GetInstance()->getEvent(event).second);
 }
 

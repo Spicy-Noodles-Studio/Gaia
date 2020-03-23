@@ -14,6 +14,7 @@ GameObjectData::GameObjectData(const GameObjectData& other)
 	tag = other.tag;
 	
 	if (other.blueprintRef != nullptr) {
+		while (other.blueprintRef->getLoadState() != Loadable::LoadState::READY); //Wait till loaded
 		GameObjectData bp(*other.blueprintRef);
 
 		for (auto c : bp.components)
@@ -22,11 +23,11 @@ GameObjectData::GameObjectData(const GameObjectData& other)
 		for (auto c : bp.children)
 			children[c.first] = new GameObjectData(*c.second);
 
-		for (auto c : bp.componentModifications)
-			bp.applyComponentModification(c.first, c.second);
+		for (auto c : other.componentModifications)
+			applyComponentModification(c.first, c.second);
 
-		for (auto c : bp.childrenModifications)
-			bp.applyChildModification(c.first, c.second);
+		for (auto c : other.childrenModifications)
+			applyChildModification(c.first, c.second);
 	}
 
 	for (auto c : other.components)
@@ -34,12 +35,6 @@ GameObjectData::GameObjectData(const GameObjectData& other)
 
 	for (auto c : other.children)
 		children[c.first] = new GameObjectData(*c.second);
-
-	for (auto c : other.componentModifications)
-		applyComponentModification(c.first, c.second);
-
-	for (auto c : other.childrenModifications)
-		applyChildModification(c.first, c.second);
 
 }
 
@@ -101,7 +96,11 @@ bool GameObjectData::loadData(const RawData& data)
 		}
 		std::string bpName = *bpPath;
 		// Coge la referencia del blueprint
-		setBlueprint(ResourcesManager::getBlueprint(bpName));
+		const BlueprintData* bpData = ResourcesManager::getBlueprint(bpName);
+		if (bpData->getLoadState() == Loadable::LoadState::INVALID || bpData == nullptr)
+			return false;
+
+		setBlueprint(bpData);
 		// Buscar modificicadores
 
 		//Se modifican los componentes si es necesario

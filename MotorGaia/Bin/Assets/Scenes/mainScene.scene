@@ -131,14 +131,6 @@
             "BlueprintPath": "Sinbad",
             "Components" : [
                 {
-                    "ComponentName": "SoundEmitter",
-                    "ComponentProperties": {
-                        "volume" : "1",
-                        "pitch" : "1",
-                        "playSound" : "prueba2"
-                    }
-                },
-                {
                     "ComponentName": "ParticleEmitter",
                     "ComponentProperties": {
                         "emitter":"Smoke",

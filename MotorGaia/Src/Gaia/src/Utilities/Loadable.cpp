@@ -10,7 +10,8 @@ Loadable::Loadable() : state(LoadState::INVALID), id("")
 
 Loadable::~Loadable()
 {
-	loadThread.detach();
+	if(loadThread.joinable())
+		loadThread.detach();
 }
 
 Loadable::LoadState Loadable::getLoadState() const
@@ -86,4 +87,5 @@ void Loadable::load_aync_internal()
 	}
 	state = LoadState::READY;
 	LOG("File \"%s\" loaded", filename.c_str());
+	loadThread.detach();
 }

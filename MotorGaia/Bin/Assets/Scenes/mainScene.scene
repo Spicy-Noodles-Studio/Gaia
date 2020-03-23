@@ -36,33 +36,10 @@
             ]
         },
          {
-            "ObjectType": "GAMEOBJECT",
+            "ObjectType": "BLUEPRINT",
             "ObjectName": "Suelo",
-            "Tag": "suelo",
-            "Components":
-            [
-                {
-                    "ComponentName": "Transform",
-                    "ComponentProperties": {
-                        "scale" : "5 0.05 5",
-                        "position" : "0 -100 -500"
-                    }
-                },
-                {
-                    "ComponentName": "MeshRenderer",
-                    "ComponentProperties": {
-                        "mesh": "knot cube.mesh"
-                    }
-                },
-                {
-                    "ComponentName": "RigidBody",
-                    "ComponentProperties": {
-                        "shape": "Box",
-                        "scale": "50 50 50",
-                        "mass": "0"
-                    }
-                }
-            ]
+            "Tag": "suelo1",
+            "BlueprintPath": "Suelo"
         },
         {
             "ObjectType": "BLUEPRINT",

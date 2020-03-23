@@ -11,6 +11,7 @@
 #include "SoundListener.h"
 #include "Reverb.h"
 #include "ParticleEmitter.h"
+#include "Strider.h"
 
 ComponentManager::ComponentManager()
 {
@@ -36,6 +37,7 @@ void ComponentManager::init()
 	registerComponent<SoundListener>("SoundListener");
 	registerComponent<Reverb>("Reverb");
 	registerComponent<ParticleEmitter>("ParticleEmitter");
+	registerComponent<Strider>("Strider");
 }
 
 void ComponentManager::close()

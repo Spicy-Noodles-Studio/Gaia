@@ -55,6 +55,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\KeyboardEventListener.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Loadable.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MathUtils.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\MeshStrider.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MouseEventListener.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ParticleEmitter.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InterfaceSystem.h" />
@@ -78,6 +79,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\SoundListener.h" />
     <ClInclude Include="..\..\Src\Gaia\include\SoundSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\gTime.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Strider.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Transform.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UILayout.h" />
     <ClInclude Include="..\..\Src\Gaia\include\UserComponent.h" />
@@ -96,6 +98,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\SoundEmitter.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\SoundListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\RigidBody.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Strider.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Transform.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\UILayout.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Events\ControllerEventListener.cpp" />
@@ -116,6 +119,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Loadable.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\MeshStrider.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\DebugDrawer.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\gTime.cpp" />

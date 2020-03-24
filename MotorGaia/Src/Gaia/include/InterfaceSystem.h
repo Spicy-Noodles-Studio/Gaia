@@ -8,6 +8,7 @@
 #include "WindowEventListener.h"
 #include "ControllerEventListener.h"
 #include <CEGUI\CEGUI.h>
+#include "UIElement.h"
 #include <string>
 
 namespace CEGUI {
@@ -18,8 +19,8 @@ namespace CEGUI {
 }
 class Window;
 
-typedef CEGUI::Window UIElement;
 typedef std::pair<CEGUI::String, std::function<bool(const CEGUI::EventArgs&)>> UIEvent;
+
 
 class GAIA_API InterfaceSystem : public Singleton<InterfaceSystem>, public MouseEventListener, public KeyboardEventListener, public WindowEventListener, public ControllerEventListener
 {

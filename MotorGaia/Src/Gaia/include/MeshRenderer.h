@@ -14,7 +14,8 @@ class GAIA_API MeshRenderer : public GaiaComponent
 private:
 	std::map<std::string, Ogre::Entity*> entities;
 	bool visible;
-	std::string id, name;
+	// The id and name of the current mesh
+	std::string meshId, meshName;
 public:
 	MeshRenderer(GameObject* gameObject);
 	~MeshRenderer();
@@ -25,6 +26,7 @@ public:
 	
 	void setMesh(const std::string& id, const std::string& mesh);
 	void setMaterial(const std::string& id, const std::string& material);
+	void changeMesh(const std::string& id, const std::string& mesh);
 
 	void attachEntityToNode(const std::string& mesh);
 	void attachEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh);

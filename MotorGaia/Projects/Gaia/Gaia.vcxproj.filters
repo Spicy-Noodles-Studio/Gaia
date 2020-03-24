@@ -131,7 +131,7 @@
       <Filter>Archivos de código fuente\Events</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Component\UIElement.cpp">
-    <Filter>Archivos de código fuente\Component</Filter>
+      <Filter>Archivos de código fuente\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\MeshStrider.cpp">
       <Filter>Archivos de código fuente\Utilities</Filter>
@@ -290,7 +290,7 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\UIElement.h">
       <Filter>Archivos de encabezado\Component</Filter>
-    </ClCompile>
+    </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\MeshStrider.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
     </ClInclude>

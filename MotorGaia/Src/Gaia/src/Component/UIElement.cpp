@@ -55,3 +55,9 @@ void UIElement::setVisible(bool visible)
 {
 	element->setVisible(visible);
 }
+
+void UIElement::flipHorizontal()
+{
+	element->getGeometryBuffer().setPivot(CEGUI::Vector3f(element->getPixelSize().d_width / 2.0f, 0.0f, 0.0f));
+	element->getGeometryBuffer().setRotation( CEGUI::Quaternion::eulerAnglesDegrees(0.0f, 180.0f, 0.0f));
+}

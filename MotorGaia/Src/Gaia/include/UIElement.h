@@ -28,6 +28,8 @@ public:
 	UIElement createChild(const std::string& type, const std::string& name);
 
 	void setVisible(bool visible);
+
+	void flipHorizontal();
 };
 
 

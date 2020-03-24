@@ -44,8 +44,8 @@ UIElement* InterfaceSystem::getRoot()
 
 void InterfaceSystem::createRoot()
 {
-	root = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root");
-	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(root);
+	root = new UIElement(CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root"));
+	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(root->getElement());
 }
 
 void InterfaceSystem::init(Window* window)
@@ -103,7 +103,7 @@ void InterfaceSystem::update(float deltaTime)
 UIElement* InterfaceSystem::loadLayout(const std::string& filename)
 {
 	try {
-        return CEGUI::WindowManager::getSingleton().loadLayoutFromFile(filename);
+        return new UIElement(CEGUI::WindowManager::getSingleton().loadLayoutFromFile(filename));
 	}
 	catch (std::exception e) {
 		LOG_ERROR("INTERFACE SYSTEM","trying to load \"%s\" layout", filename.c_str());
@@ -126,9 +126,9 @@ void InterfaceSystem::initDefaultResources()
 
 
 #ifdef _DEBUG
-    fpsText = root->createChild("TaharezLook/StaticText", "FPSText");
-    fpsText->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
-    fpsText->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
+    fpsText = new UIElement(root->getElement()->createChild("TaharezLook/StaticText", "FPSText"));
+    fpsText->setPosition(0.9f, 0.0f);
+    fpsText->setSize(0.1f,0.1f);
 #endif
 }
 

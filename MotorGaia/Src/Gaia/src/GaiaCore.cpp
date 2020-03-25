@@ -2,6 +2,7 @@
 
 #include <OgreRoot.h>
 #include "Window.h"
+#include "Timer.h"
 
 #include "EventSystem.h"
 #include "RenderSystem.h"
@@ -9,7 +10,6 @@
 #include "InterfaceSystem.h"
 #include "PhysicsSystem.h"
 #include "SoundSystem.h"
-#include "Timer.h"
 
 #include "ComponentManager.h"
 #include "SceneManager.h"
@@ -81,16 +81,18 @@ void GaiaCore::init()
 	sceneManager = SceneManager::GetInstance();
 	sceneManager->init(root, window);
 
-	Timer::GetInstance()->init();
+	// Main Engine Timer
+	timer = Timer::GetInstance();
+	timer->init();
 }
 
 void GaiaCore::run()
 {
-	float deltaTime = Timer::GetInstance()->getDeltaTime();
+	float deltaTime = timer->getDeltaTime();
 	while (!window->isClosed()) {
 		// Update elapsed time
-		Timer::GetInstance()->update();
-		deltaTime = Timer::GetInstance()->getDeltaTime();
+		timer->update();
+		deltaTime = timer->getDeltaTime();
 
 		// Render
 		render(deltaTime);

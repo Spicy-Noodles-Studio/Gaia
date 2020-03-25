@@ -40,27 +40,45 @@ void PhysicsSystem::init()
 
 	dynamicsWorld->setGravity(btVector3(0, -10, 0));
 
-	dynamicsWorld->setForceUpdateAllAabbs(false);
+	//dynamicsWorld->setForceUpdateAllAabbs(false);
 
 	time = 0;
 
 	///-----initialization_end-----
+
+	//DEBUG PURPOSES
+#ifdef _DEBUG
+	//Plano estatico
+	/*btTransform* transform = new btTransform();
+	transform->setIdentity();
+	transform->setOrigin(btVector3(0, 0, -2));
+	btBoxShape* plane = new btBoxShape(btVector3(1, 1, 1));
+	btMotionState* motionState = new btDefaultMotionState(*transform);
+	btRigidBody::btRigidBodyConstructionInfo info(0.0, motionState, plane);
+	btRigidBody* rigidBody = new btRigidBody(info);
+	dynamicsWorld->addRigidBody(rigidBody);*/
+	
+
+
+#endif 
+
 }
 
 void PhysicsSystem::render()
 {
+	dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
 	dynamicsWorld->debugDrawWorld();
 }
 
 void PhysicsSystem::update(float deltaTime)
 {
-	time += deltaTime;
-	while (time >= 1.0f / 50.0f)
-	{
-		dynamicsWorld->stepSimulation(1.0f / 50.0f, 1);
-		checkCollisions();
-		time -= 1.0f / 50.0f;
-	}
+	//time += deltaTime;
+	//while (time >= 1.0f / 50.0f)
+	//{
+		dynamicsWorld->stepSimulation(deltaTime);
+	//	checkCollisions();
+	//	time -= 1.0f / 50.0f;
+	//}
 }
 
 void PhysicsSystem::postUpdate()
@@ -141,7 +159,7 @@ void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
 
 // Creates a btRigidBody with the specified properties, adds it to the dynamicWorld
 // and returns a reference to it
-btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim, uint16_t myGroup, uint16_t mask)
+btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim)
 {
 	btCollisionShape* colShape;
 	switch (shape)

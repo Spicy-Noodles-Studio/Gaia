@@ -7,21 +7,21 @@
         {
             "ComponentName": "Transform",
             "ComponentProperties": {
-                "position": "0 -100 -400",
-                "scale": "5 5 5",
-                "rotation": "-90 0 0"
+                "position": "0 0 0",
+                "scale": "10 0.2 10"
             }
         },
         {
-            "ComponentName": "MeshRenderer",
-            "ComponentProperties": {
-                "mesh": "suelo testLevel.mesh"
+            "ComponentName" : "MeshRenderer",
+            "ComponentProperties" : {
+                "mesh" : "Cube Cube.mesh"
             }
         },
         {
-            "ComponentName": "Strider",
-            "ComponentProperties": {
-                "mesh": "suelo"
+            "ComponentName" : "RigidBody",
+            "ComponentProperties" : {
+                "mass" : "0",
+                "scale" : "1 1 1"
             }
         }
     ]

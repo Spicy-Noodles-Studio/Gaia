@@ -14,7 +14,7 @@ Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera
 	camera->setAutoAspectRatio(true);
 	gameObject->node->attachObject(camera);
 
-	
+	setClipDistances(0.01, 10000);
 }
 
 Camera::~Camera()

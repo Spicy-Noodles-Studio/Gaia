@@ -87,6 +87,21 @@
             ]
         },
         {
+            "ObjectType": "GAMEOBJECT",
+            "ObjectName": "Layout",
+            "Tag": "LayoutTag",
+            "Components":
+            [
+                {
+                    "ComponentName": "UILayout",
+                    "ComponentProperties": {
+                        "layout" : "TaharezLookOverview.layout",
+                        "event" : "button clickevent | slider volumeEvent"
+                    }
+                }
+            ]
+        },
+        {
             "ObjectType": "BLUEPRINT",
             "ObjectName": "Sinbad",
             "Tag": "sinbad",

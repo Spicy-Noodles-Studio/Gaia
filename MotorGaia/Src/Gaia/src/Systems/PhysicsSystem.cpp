@@ -7,7 +7,6 @@
 #include "GaiaMotionState.h"
 #include "RigidBody.h"
 #include "GameObject.h"
-#include "gTime.h"
 #include "DebugDrawer.h"
 #include "MeshStrider.h"
 

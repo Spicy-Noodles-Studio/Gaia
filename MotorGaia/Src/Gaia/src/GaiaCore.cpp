@@ -9,7 +9,7 @@
 #include "InterfaceSystem.h"
 #include "PhysicsSystem.h"
 #include "SoundSystem.h"
-#include "gTime.h"
+#include "Timer.h"
 
 #include "ComponentManager.h"
 #include "SceneManager.h"
@@ -81,13 +81,17 @@ void GaiaCore::init()
 	sceneManager = SceneManager::GetInstance();
 	sceneManager->init(root, window);
 
-	gTime::GetInstance()->setup();
+	Timer::GetInstance()->init();
 }
 
 void GaiaCore::run()
 {
-	float deltaTime = gTime::GetInstance()->getDeltaTime();
+	float deltaTime = Timer::GetInstance()->getDeltaTime();
 	while (!window->isClosed()) {
+		// Update elapsed time
+		Timer::GetInstance()->update();
+		deltaTime = Timer::GetInstance()->getDeltaTime();
+
 		// Render
 		render(deltaTime);
 
@@ -99,14 +103,12 @@ void GaiaCore::run()
 
 		// Post-process
 		postUpdate(deltaTime);
-
-		deltaTime = gTime::GetInstance()->getDeltaTime();
 	}
 }
 
 void GaiaCore::close()
 {
-	gTime::GetInstance()->destroy();
+	Timer::GetInstance()->close();
 	// SceneManager termination
 	sceneManager->close();
 	// ComponentManager termination

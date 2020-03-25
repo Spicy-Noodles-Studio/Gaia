@@ -14,7 +14,8 @@ UILayout::UILayout(GameObject* gameObject) : GaiaComponent(gameObject), layout(n
 UILayout::~UILayout()
 {
 	if (layout != nullptr)
-		InterfaceSystem::GetInstance()->getRoot()->destroyChild(layout);
+		InterfaceSystem::GetInstance()->getRoot()->getElement()->destroyChild(layout->getElement());
+	delete layout;
 }
 
 void UILayout::setLayout(const std::string& filename)
@@ -22,24 +23,21 @@ void UILayout::setLayout(const std::string& filename)
 	layout = InterfaceSystem::GetInstance()->loadLayout(filename);
 	if (layout == nullptr)
 		return;
-	InterfaceSystem::GetInstance()->getRoot()->addChild(layout);
+	InterfaceSystem::GetInstance()->getRoot()->getElement()->addChild(layout->getElement());
 
-	//esto esta MU FEO***
-
-	layout->getChild("StaticImage")->setAlpha(0.0f);
+	layout->getElement()->getChild("StaticImage")->setAlpha(0.0f);
 
 	size_t index = 0;
-	while (index < layout->getChild("StaticImage")->getChildCount())
+	while (index < layout->getElement()->getChild("StaticImage")->getChildCount())
 	{
-		layout->getChild("StaticImage")->getChildAtIdx(index)->setInheritsAlpha(false);
+		layout->getElement()->getChild("StaticImage")->getChildAtIdx(index)->setInheritsAlpha(false);
 		++index;
 	}
 }
 
 void UILayout::setEvent(const std::string& element, const std::string& event)
 {
-	if (getElement("StaticImage") != nullptr)
-		getElement("StaticImage")->getChild(element)->
+	getUIElement("StaticImage").getElement()->getChild(element)->
 		subscribeEvent(InterfaceSystem::GetInstance()->getEvent(event).first, InterfaceSystem::GetInstance()->getEvent(event).second);
 }
 
@@ -68,16 +66,16 @@ void UILayout::handleData(ComponentData* data)
 	}
 }
 
-UIElement* UILayout::getElement(const std::string& name)
+UIElement UILayout::getUIElement(const std::string& name)
 {
 	if (layout == nullptr)
 		return nullptr;
-	return layout->getChild(name);
+	return UIElement(layout->getElement()->getChild(name));
 }
 
 void UILayout::setVisible(bool visible)
 {
 	if (layout == nullptr)
 		return;
-	layout->setVisible(visible);
+	layout->getElement()->setVisible(visible);
 }

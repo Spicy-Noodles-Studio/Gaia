@@ -3,11 +3,7 @@
 #define UI_LAYOUT_H
 
 #include "GaiaComponent.h"
-
-namespace CEGUI {
-	class Window;
-}
-typedef CEGUI::Window UIElement;
+#include "UIElement.h"
 
 class GAIA_API UILayout : public GaiaComponent
 {
@@ -23,7 +19,7 @@ public:
 	virtual void handleData(ComponentData* data);
 
 	void setLayout(const std::string& filename);
-	UIElement* getElement(const std::string& name);
+	UIElement getUIElement(const std::string& name);
 	void setVisible(bool visible);
 };
 

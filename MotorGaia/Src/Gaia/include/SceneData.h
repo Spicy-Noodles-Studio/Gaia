@@ -6,11 +6,12 @@
 #include <vector>
 
 #include "GameObjectData.h"
+#include "BlueprintData.h"
 
-class GAIA_API SceneData {
+class GAIA_API SceneData : public Loadable {
 public:
 	SceneData();
-	~SceneData();
+	virtual ~SceneData();
 
 	void setName(const std::string& sceneName);
 	void setGameObjectData(GameObjectData* data);
@@ -20,9 +21,12 @@ public:
 
 	static SceneData* empty();
 
+protected:
+	virtual bool load_internal();
+
 public:
 	std::string name;
-	std::vector<GameObjectData*> gData;
+	std::vector<GameObjectData*> gameObjectData;
 };
 
 #endif

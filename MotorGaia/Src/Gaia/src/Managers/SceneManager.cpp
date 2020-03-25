@@ -68,9 +68,14 @@ void SceneManager::postUpdate(float deltaTime)
 bool SceneManager::changeScene(const std::string& name, bool async)
 {
 	// Check if scene exists
-	const SceneData* data = ResourcesManager::getSceneData(name);
-	if (data == nullptr)
-		LOG("SCENE MANAGER: scene with name %s not found\n", name.c_str());
+	const SceneData* data = nullptr;
+	do {
+		data = ResourcesManager::getSceneData(name);
+		if (data == nullptr) {
+			LOG_ERROR("SCENE MANAGER", "scene with name %s not found", name.c_str());
+			return false;
+		}
+	} while (data->getLoadState() != Loadable::LoadState::READY);
 
 	loadScene(data);
 
@@ -89,14 +94,15 @@ Scene* SceneManager::createScene(const SceneData* data)
 
 GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* scene, GameObject* parent)
 {
-	GameObject* gameObject = new GameObject(data->getName(), data->getTag(), scene);
+	GameObjectData gData(*data);
+	GameObject* gameObject = new GameObject(gData.getName(), gData.getTag(), scene);
 	scene->addGameObject(gameObject);
 
 	if (parent != nullptr)
 		parent->addChild(gameObject);
 
 	// Component
-	for (auto compData : data->getComponentData()) {
+	for (auto compData : gData.getComponentData()) {
 		ComponentData* cData = compData.second;
 		auto constructor = ComponentManager::GetInstance()->getComponentFactory(cData->getName());
 		if (constructor != nullptr)
@@ -107,10 +113,12 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 				delete comp;
 		}
 	}
+
 	// For each child, create the child
-	for (auto childData : data->getChildrenData()) {
+	for (auto childData : gData.getChildrenData()) {
 		GameObject* child = createGameObject(childData.second, scene, gameObject);
 	}
+
 
 	return gameObject;
 }
@@ -118,7 +126,10 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 void SceneManager::loadScene(const SceneData* data)
 {
 	if (data == nullptr) {
-		LOG("SCENE MANAGER: given SceneData not valid. Loading default SceneData\n");
+		LOG("SCENE MANAGER: given SceneData not valid. Loading default SceneData");
+		SceneData* emptyScene = SceneData::empty();
+		stackScene = createScene(emptyScene);
+		delete emptyScene;
 		return;
 	}
 	// Creates the Scene by its data (assuming creation was succesfull)

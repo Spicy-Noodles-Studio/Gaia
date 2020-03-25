@@ -1,23 +1,10 @@
 {
-    "ObjectType": "GAMEOBJECT",
+    "ObjectType": "BLUEPRINT",
     "ObjectName": "Nudo",
+    "BlueprintPath" : "Sinbad",
     "Tag": "nudo",
     "Components":
     [
-        {
-            "ComponentName": "Transform",
-            "ComponentProperties": {
-                "position": "0 0 -400",
-                "scale": "0.5 0.5 0.5",
-                "rotation" : "0 45 0"
-            }
-        },
-        {
-            "ComponentName": "MeshRenderer",
-            "ComponentProperties": {
-                "mesh": "knot cube.mesh"
-            }
-        },
         {
             "ComponentName": "RigidBody",
             "ComponentProperties": {
@@ -34,5 +21,16 @@
                 "trigger": "0"
             }
         }
-    ]
+    ],
+    "ComponentModifications": [
+        {
+            "ComponentName":"Transform",
+            "ComponentProperties":{
+                "position" : " 80 80 -400"
+            }
+        }
+    ],
+    "ChildrenModifications": [
+
+    ]    
 }

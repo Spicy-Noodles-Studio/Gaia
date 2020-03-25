@@ -46,9 +46,6 @@
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp">
       <Filter>Archivos de código fuente\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Managers\DataLoader.cpp">
-      <Filter>Archivos de código fuente\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ResourcesManager.cpp">
       <Filter>Archivos de código fuente\Managers</Filter>
     </ClCompile>
@@ -130,6 +127,12 @@
     <ClCompile Include="..\..\Src\Gaia\src\Events\ControllerEventListener.cpp">
       <Filter>Archivos de código fuente\Events</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Loadable.cpp">
+      <Filter>Archivos de código fuente\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\GameObject\BlueprintData.cpp">
+      <Filter>Archivos de código fuente\GameObject</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Component\UIElement.cpp">
       <Filter>Archivos de código fuente\Component</Filter>
     </ClCompile>
@@ -184,9 +187,6 @@
       <Filter>Archivos de encabezado\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h">
-      <Filter>Archivos de encabezado\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h">
       <Filter>Archivos de encabezado\Managers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\ResourcesManager.h">
@@ -287,6 +287,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtils.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Loadable.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\BlueprintData.h">
+      <Filter>Archivos de encabezado\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\UIElement.h">
       <Filter>Archivos de encabezado\Component</Filter>

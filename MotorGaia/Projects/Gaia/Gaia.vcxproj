@@ -36,12 +36,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\Animator.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\BlueprintData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Camera.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Component.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ControllerEventListener.h" />
-    <ClInclude Include="..\..\Src\Gaia\include\DataLoader.h" />
     <ClInclude Include="..\..\Src\Gaia\include\DebugDrawer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\DebugUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\EventListener.h" />
@@ -53,6 +53,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
     <ClInclude Include="..\..\Src\Gaia\include\KeyboardEventListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Loadable.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MathUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshStrider.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MouseEventListener.h" />
@@ -107,9 +108,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\Events\KeyboardEventListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Events\MouseEventListener.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Events\WindowEventListener.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\GameObject\BlueprintData.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\GameObject.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />
-    <ClCompile Include="..\..\Src\Gaia\src\Managers\DataLoader.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ResourcesManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\SceneManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\EventSystem.cpp" />
@@ -119,6 +120,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Systems\InputSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\Loadable.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\MeshStrider.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\DebugDrawer.cpp" />

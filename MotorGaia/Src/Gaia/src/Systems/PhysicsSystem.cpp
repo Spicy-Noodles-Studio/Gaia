@@ -12,7 +12,7 @@
 
 
 PhysicsSystem::PhysicsSystem() : dynamicsWorld(nullptr), collisionConfiguration(nullptr),
-								 dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr), time(0.0)
+								 dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr), timeAccumulator(0.0)
 {
 }
 
@@ -39,14 +39,12 @@ void PhysicsSystem::init()
 
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
-	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+	dynamicsWorld->setGravity(btVector3(0, -9.81, 0));
 
 	dynamicsWorld->setForceUpdateAllAabbs(false);
 
-	time = 0;
-
 	///-----initialization_end-----
-
+	
 }
 
 void PhysicsSystem::render()
@@ -57,12 +55,12 @@ void PhysicsSystem::render()
 
 void PhysicsSystem::update(float deltaTime)
 {
-	time += deltaTime;
-	while (time >= 1.0f / 60.0f)
+	timeAccumulator += deltaTime;
+	while (timeAccumulator >= 1.0f / 50.0f)
 	{
-		dynamicsWorld->stepSimulation(1.0f / 60.0f, 0);
-		//checkCollisions();
-		time -= 1.0f / 60.0f;
+		dynamicsWorld->stepSimulation(1.0f / 50.0f, 0);
+		checkCollisions();
+		timeAccumulator -= 1.0f / 50.0f;
 	}
 }
 
@@ -161,6 +159,9 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	case CYLINDER_RB_SHAPE:
 		colShape = new btCylinderShape(btVector3(btScalar(dim.x / 2.0f), btScalar(dim.y / 2.0f), btScalar(dim.z / 2.0f)));
 		break;
+	case CONE_RB_SHAPE:
+		colShape = new btConeShape(btScalar(std::max(dim.x / 2.0f, dim.z / 2.0f)), btScalar(dim.y));
+		break;
 	default:
 		break;
 	}
@@ -238,7 +239,7 @@ void PhysicsSystem::checkCollisions()
 
 		RigidBody* rbA = (RigidBody*)obA->getUserPointer(), * rbB = (RigidBody*)obB->getUserPointer();
 
-		if (rbA == nullptr or rbB == nullptr) return;
+		if (rbA == nullptr || rbB == nullptr) return;
 
 		// Orden A < B, para el mapa
 		if (rbA > rbB) std::swap(rbA, rbB);

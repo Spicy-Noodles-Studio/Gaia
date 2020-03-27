@@ -74,7 +74,7 @@ private:
 	std::map<std::pair<RigidBody*, RigidBody*>, bool> contacts;
 
 
-	float time;
+	float timeAccumulator;
 };
 
 #endif

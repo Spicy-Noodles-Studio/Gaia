@@ -9,6 +9,12 @@
             "ComponentName": "Transform"
         },
         {
+            "ComponentName" : "MeshRenderer",
+            "ComponentProperties" : {
+                "mesh" : "Cube Cube.mesh"
+            }
+        },
+        {
             "ComponentName" : "RigidBody",
             "ComponentProperties" : {
                 "shape" : "Box",

@@ -46,6 +46,8 @@ void RigidBody::handleData(ComponentData* data)
 				shape = CAPSULE_RB_SHAPE;
 			else if (prop.second == "Cylinder")
 				shape = CYLINDER_RB_SHAPE;
+			else if (prop.second == "Cone")
+				shape = CONE_RB_SHAPE;
 			else
 				LOG("RIGIDBODY: %s not valid rigidbody shape type\n", prop.second.c_str());
 		}

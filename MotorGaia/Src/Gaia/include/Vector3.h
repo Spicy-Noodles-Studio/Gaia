@@ -43,7 +43,7 @@ public:
 	void normalize();
 	double magnitudeSquared();
 	double magnitude();
-	Vector3& normalized();
+	Vector3 normalized();
 	Vector3 cross(const Vector3& v);
 	double dot(const Vector3& v);
 

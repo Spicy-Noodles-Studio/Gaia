@@ -1,0 +1,20 @@
+{
+    "ObjectType" : "GAMEOBJECT",
+    "ObjectType": "GAMEOBJECT",
+    "ObjectName": "Bola",
+    "Tag": "bola",
+    "Components":
+    [
+        {
+            "ComponentName": "Transform"
+        },
+        {
+            "ComponentName" : "RigidBody",
+            "ComponentProperties" : {
+                "shape" : "Sphere",
+                "mass" : "1",
+                "scale" : "1 1 1"
+            }
+        }
+    ]
+}

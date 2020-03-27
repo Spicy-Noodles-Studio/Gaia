@@ -2,32 +2,10 @@
     "SceneName": "MainScene",
     "SceneObjects": [
         {
-            "ObjectType": "GAMEOBJECT",
+            "ObjectType": "BLUEPRINT",
             "ObjectName": "MainCamera",
             "Tag": "MainCamera",
-            "Components":
-            [
-                 {
-                    "ComponentName": "Transform",
-                    "ComponentProperties": {
-                        "position": "0 10 10",
-                        "rotation": "-45 0 0"
-                    }
-                },
-                {
-                    "ComponentName": "Camera",
-                    "ComponentProperties": {
-                        "main": "true"
-                    }
-                },
-                {
-                    "ComponentName": "Light",
-                    "ComponentProperties": {
-                        "type": "Point",
-                        "colour": "1 1 1"
-                    }
-                }
-            ]
+            "BlueprintPath" : "DebugCamera"
         },
         {
             "ObjectType": "BLUEPRINT",

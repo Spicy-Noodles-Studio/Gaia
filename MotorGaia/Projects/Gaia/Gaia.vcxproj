@@ -38,6 +38,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\Animator.h" />
     <ClInclude Include="..\..\Src\Gaia\include\BlueprintData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Camera.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\CameraDebugControl.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Component.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h" />
@@ -120,6 +121,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Systems\InputSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\CameraDebugControl.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Loadable.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\MeshStrider.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp" />

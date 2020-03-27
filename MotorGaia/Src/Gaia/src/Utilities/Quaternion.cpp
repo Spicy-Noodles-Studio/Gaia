@@ -247,7 +247,25 @@ Quaternion& Quaternion::rotationFromTo(const Vector3& from, const Vector3& to)
 	return set(c.x, c.y, c.z, s * 0.5f).normalize();
 }
 
-Vector3 Quaternion::toEuler()
+Quaternion Quaternion::rotate(const Quaternion& other)
+{
+	Vector3 euler = toEuler() + other.toEuler();
+	return Quaternion(euler);
+}
+
+Vector3 Quaternion::rotate(const Vector3& v)
+{
+	const double vx = 2.0 * v.x;
+	const double vy = 2.0 * v.y;
+	const double vz = 2.0 * v.z;
+	const double w2 = w * w - 0.5;
+	const double dot2 = (x * vx + y * vy + z * vz);
+	return Vector3(	(vx * w2 + (y * vz - z * vy) * w + x * dot2), 
+					(vy * w2 + (z * vx - x * vz) * w + y * dot2),
+					(vz * w2 + (x * vy - y * vx) * w + z * dot2));
+}
+
+Vector3 Quaternion::toEuler() const
 {
 	Vector3 euler;
 	const double sqw = w * w;

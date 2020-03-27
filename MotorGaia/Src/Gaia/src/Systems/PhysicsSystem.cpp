@@ -40,27 +40,11 @@ void PhysicsSystem::init()
 
 	dynamicsWorld->setGravity(btVector3(0, -10, 0));
 
-	//dynamicsWorld->setForceUpdateAllAabbs(false);
+	dynamicsWorld->setForceUpdateAllAabbs(false);
 
 	time = 0;
 
 	///-----initialization_end-----
-
-	//DEBUG PURPOSES
-#ifdef _DEBUG
-	//Plano estatico
-	/*btTransform* transform = new btTransform();
-	transform->setIdentity();
-	transform->setOrigin(btVector3(0, 0, -2));
-	btBoxShape* plane = new btBoxShape(btVector3(1, 1, 1));
-	btMotionState* motionState = new btDefaultMotionState(*transform);
-	btRigidBody::btRigidBodyConstructionInfo info(0.0, motionState, plane);
-	btRigidBody* rigidBody = new btRigidBody(info);
-	dynamicsWorld->addRigidBody(rigidBody);*/
-	
-
-
-#endif 
 
 }
 
@@ -76,7 +60,7 @@ void PhysicsSystem::update(float deltaTime)
 	//while (time >= 1.0f / 50.0f)
 	//{
 		dynamicsWorld->stepSimulation(deltaTime);
-	//	checkCollisions();
+		//checkCollisions();
 	//	time -= 1.0f / 50.0f;
 	//}
 }
@@ -165,10 +149,16 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	switch (shape)
 	{
 	case BOX_RB_SHAPE:
-		colShape = new btBoxShape(btVector3(btScalar(dim.x), btScalar(dim.y), btScalar(dim.z)));
+		colShape = new btBoxShape(btVector3(btScalar(dim.x / 2.0f), btScalar(dim.y / 2.0f), btScalar(dim.z / 2.0f)));
 		break;
 	case SPHERE_RB_SHAPE:
-		colShape = new btSphereShape(btScalar(std::max(std::max(dim.x, dim.y), dim.z)));
+		colShape = new btSphereShape(btScalar(std::max(std::max(dim.x / 2.0f, dim.y / 2.0f), dim.z / 2.0f)));
+		break;
+	case CAPSULE_RB_SHAPE:
+		colShape = new btCapsuleShape(btScalar(std::max(dim.x / 2.0f, dim.z / 2.0f)), btScalar(dim.y));
+		break;
+	case CYLINDER_RB_SHAPE:
+		colShape = new btCylinderShape(btVector3(btScalar(dim.x / 2.0f), btScalar(dim.y / 2.0f), btScalar(dim.z / 2.0f)));
 		break;
 	default:
 		break;
@@ -224,7 +214,7 @@ btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, GaiaMotionStat
 	collisionShapes.push_back(colShape);
 	colShape->setLocalScaling({ btScalar(dim.x), btScalar(dim.y), btScalar(dim.z) });
 
-	btScalar mass = 0;//Always static
+	btScalar mass = 0; //Always static
 	btVector3 localInertia(0, 0, 0);
 
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);

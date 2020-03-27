@@ -29,9 +29,9 @@ private:
 	UIElement* root;
 
 	double deltaX, deltaY;
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	UIElement* fpsText;
-#endif // _DEBUG
+//#endif // _DEBUG
 
 	static std::map<std::string, UIEvent> events;
 

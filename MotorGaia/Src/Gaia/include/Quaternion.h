@@ -46,7 +46,9 @@ public:
     Quaternion getNormalize();
 
     Quaternion& rotationFromTo(const Vector3& from, const Vector3& to);
-    Vector3 toEuler();
+    Quaternion rotate(const Quaternion& other);
+    Vector3 rotate(const Vector3& v);
+    Vector3 toEuler() const;
     void toAngleAxis(double& angle, Vector3& axis);
 
     static Quaternion AnglesToQuaternion(double yaw, double pitch, double roll);

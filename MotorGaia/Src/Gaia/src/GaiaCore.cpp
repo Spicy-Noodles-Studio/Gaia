@@ -14,7 +14,7 @@
 #include "ComponentManager.h"
 #include "SceneManager.h"
 
-GaiaCore::GaiaCore() :	root(nullptr), window(nullptr),
+GaiaCore::GaiaCore() :	root(nullptr), window(nullptr), timer(nullptr), 
 						eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr), 
 						interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
 						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
@@ -144,10 +144,10 @@ void GaiaCore::render(float deltaTime)
 	// RenderSystem
 	renderSystem->render(deltaTime);
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	// PhysicsSystem
 	physicsSystem->render();
-#endif
+//#endif
 
 	// InterfaceSystem
 	interfaceSystem->render();

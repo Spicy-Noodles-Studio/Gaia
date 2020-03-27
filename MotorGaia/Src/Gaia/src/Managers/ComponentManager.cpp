@@ -1,5 +1,9 @@
 #include "ComponentManager.h"
 
+//#ifdef _DEBUG
+#include "CameraDebugControl.h"
+//#endif 
+
 #include "Transform.h"
 #include "Camera.h"
 #include "Light.h"
@@ -38,6 +42,11 @@ void ComponentManager::init()
 	registerComponent<Reverb>("Reverb");
 	registerComponent<ParticleEmitter>("ParticleEmitter");
 	registerComponent<Strider>("Strider");
+
+//#ifdef _DEBUG
+	registerComponent<CameraDebugControl>("CameraDebugControl");
+//#endif
+
 }
 
 void ComponentManager::close()

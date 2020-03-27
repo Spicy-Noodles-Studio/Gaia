@@ -1,21 +1,18 @@
 {
+    "ObjectType" : "GAMEOBJECT",
     "ObjectType": "GAMEOBJECT",
-    "ObjectName": "Suelo",
-    "Tag": "suelo",
+    "ObjectName": "Cubo",
+    "Tag": "cubo",
     "Components":
     [
         {
-            "ComponentName": "Transform",
-            "ComponentProperties": {
-                "position": "0 0 0",
-                "scale": "20 1 20"
-            }
+            "ComponentName": "Transform"
         },
         {
             "ComponentName" : "RigidBody",
             "ComponentProperties" : {
                 "shape" : "Box",
-                "mass" : "0",
+                "mass" : "1",
                 "scale" : "1 1 1"
             }
         }

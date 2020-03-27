@@ -146,8 +146,6 @@ void Scene::addUserComponent(UserComponent* component)
 
 bool Scene::addGameObject(GameObject* gameObject)
 {
-	// TODO: Antes deberia de mirar si el objeto ya existe, o si hay alguno con el mismo nombre o tag
-	/* Hacer aqui */
 	std::string objectName = gameObject->getName();
 	if (repeatedNames.find(objectName) != repeatedNames.end()) {
 		objectName += ("(" + std::to_string(++repeatedNames[objectName]) + ")");
@@ -185,6 +183,18 @@ void Scene::destroyGameObject(GameObject* gameObject)
 
 void Scene::instantiate(GameObject* gameObject)
 {
+	//Comprueba nombres antes de meter en la cola de intanciacion
+	std::string objectName = gameObject->getName();
+	if (repeatedNames.find(objectName) != repeatedNames.end()) {
+		objectName += ("(" + std::to_string(++repeatedNames[objectName]) + ")");
+		LOG("SCENE: Trying to add gameobject with name %s that already exists in scene %s\n", gameObject->getName().c_str(), name.c_str());
+		LOG("SCENE: Adding gameobject with name %s\n", objectName.c_str());
+		gameObject->name = objectName;
+		// Try to add again
+		instantiate(gameObject);
+		return;
+	}
+
 	gameObject->node->setVisible(false);
 	gameObject->setActive(false);
 	instantiateQueue.push_back(gameObject);

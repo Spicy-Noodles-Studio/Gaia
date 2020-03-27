@@ -29,6 +29,7 @@ void PhysicsSystem::init()
 
 	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
 	dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	
 
 	///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
 	overlappingPairCache = new btDbvtBroadphase();
@@ -56,13 +57,13 @@ void PhysicsSystem::render()
 
 void PhysicsSystem::update(float deltaTime)
 {
-	//time += deltaTime;
-	//while (time >= 1.0f / 50.0f)
-	//{
-		dynamicsWorld->stepSimulation(deltaTime);
+	time += deltaTime;
+	while (time >= 1.0f / 60.0f)
+	{
+		dynamicsWorld->stepSimulation(1.0f / 60.0f, 0);
 		//checkCollisions();
-	//	time -= 1.0f / 50.0f;
-	//}
+		time -= 1.0f / 60.0f;
+	}
 }
 
 void PhysicsSystem::postUpdate()

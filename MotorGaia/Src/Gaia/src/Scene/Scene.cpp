@@ -195,6 +195,8 @@ void Scene::instantiate(GameObject* gameObject)
 		return;
 	}
 
+	repeatedNames[gameObject->getName()] = 0;
+
 	gameObject->node->setVisible(false);
 	gameObject->setActive(false);
 	instantiateQueue.push_back(gameObject);
@@ -207,7 +209,8 @@ void Scene::instantiatePendingGameObjects()
 	for (auto gameObject : instantiateQueue) {
 		gameObject->node->setVisible(true);
 		gameObject->setActive(true);
-		addGameObject(gameObject);
+		gameObject->myScene = this;
+		sceneObjects.push_back(gameObject);
 	}
 	instantiateQueue.clear();
 }

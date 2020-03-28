@@ -10,23 +10,23 @@
         },
         {
             "ComponentName" : "MeshRenderer",
-            "ComponentProperties" : {
-                "mesh" : "Cube Knight.mesh"
-            }
+            "ComponentProperties" : [
+                ["mesh", "Cube Knight.mesh"]
+            ]
         },
         {
             "ComponentName" : "Animator",
-            "ComponentProperties" : {
-                "anim" : "my_animation Cube"
-            }
+            "ComponentProperties" : [
+                ["anim", "my_animation Cube"]
+            ]
         },
         {
             "ComponentName" : "RigidBody",
-            "ComponentProperties" : {
-                "shape" : "Box",
-                "mass" : "1",
-                "scale" : "1 1 1"
-            }
+            "ComponentProperties" : [
+                ["shape", "Box"],
+                ["mass", "1"],
+                ["scale", "1 1 1"]
+            ]
         }
     ]
 }

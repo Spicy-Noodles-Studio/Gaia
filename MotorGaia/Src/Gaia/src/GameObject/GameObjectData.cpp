@@ -264,7 +264,7 @@ bool GameObjectData::addComponent(const RawData& data)
 	if (properties != data.end()) {
 		LOG("Loading %s properties", cData->getName().c_str());
 		for (auto& property : (*properties).items()) {
-			if (!cData->addProperty(property.key(), property.value())) {
+			if (property.value().size() != 2 || !cData->addProperty(property.value()[0], property.value()[1])) {
 				return false;
 			}
 		}

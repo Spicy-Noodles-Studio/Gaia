@@ -7,27 +7,27 @@
     [
         {
             "ComponentName": "RigidBody",
-            "ComponentProperties": {
-                "shape": "Box",
-                "mass": "3",
-                "friction": "0",
-                "restitution": "0",
-                "damping": "0",
-                "angularDamping": "0",
-                "gravity": "0 -10 0",
-                "offset": "0 0 0",
-                "scale": "50 50 50",
-                "kinematic": "0",
-                "trigger": "0"
-            }
+            "ComponentProperties": [
+                ["shape": "Box"],
+                ["mass": "3"],
+                ["friction": "0"],
+                ["restitution": "0"],
+                ["damping": "0"],
+                ["angularDamping": "0"],
+                ["gravity": "0 -10 0"],
+                ["offset": "0 0 0"],
+                ["scale": "50 50 50"],
+                ["kinematic": "0"],
+                ["trigger": "0"]
+            ]
         }
     ],
     "ComponentModifications": [
         {
             "ComponentName":"Transform",
-            "ComponentProperties":{
-                "position" : " 80 80 -400"
-            }
+            "ComponentProperties": [
+                ["position", " 80 80 -400"]
+            ]
         }
     ],
     "ChildrenModifications": [

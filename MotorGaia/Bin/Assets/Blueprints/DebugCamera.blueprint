@@ -6,23 +6,23 @@
     [
         {
             "ComponentName": "Transform",
-            "ComponentProperties": {
-                "position": "0 10 10",
-                "rotation": "-45 0 0"
-            }
+            "ComponentProperties": [
+                ["position", "0 10 10"],
+                ["rotation", "-45 0 0"]
+            ]
         },
         {
             "ComponentName": "Camera",
-            "ComponentProperties": {
-                "main": "true"
-            }
+            "ComponentProperties": [
+                ["main", "true"]
+            ]
         },
         {
             "ComponentName": "Light",
-            "ComponentProperties": {
-                "type": "Point",
-                "colour": "1 1 1"
-            }
+            "ComponentProperties": [
+                ["type", "Point"],
+                ["colour", "1 1 1"]
+            ]
         },
         {
             "ComponentName": "CameraDebugControl"

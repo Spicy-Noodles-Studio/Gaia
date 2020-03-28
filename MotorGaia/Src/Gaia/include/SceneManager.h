@@ -19,6 +19,8 @@ class DebugDrawer;
 
 class GAIA_API  SceneManager : public Singleton<SceneManager>
 {
+	friend class Scene;
+	friend class GameObject;
 public:
 	SceneManager();
 	~SceneManager();
@@ -48,12 +50,16 @@ private:
 	void processCameraChange();
 	void processDontDestroyObjects();
 
+	std::string getNextNodeID();
+
 private:
 	Scene* currentScene;
 	Scene* stackScene;
 
 	Ogre::Root* root;
+	Ogre::SceneManager* sceneManager;
 	Window* window;
+	int countNodeIDs;
 
 	DebugDrawer* debugDrawer;
 };

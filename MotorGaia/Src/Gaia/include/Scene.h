@@ -16,12 +16,14 @@ namespace Ogre {
 
 class Camera;
 class GameObject;
+class SceneManager;
 
 class GAIA_API Scene {
+	friend class GameObject;
 	friend class SceneManager;
 	friend class UserComponent;
 public:
-	Scene(const std::string& sceneName, Ogre::Root* root);
+	Scene(const std::string& sceneName, SceneManager* sceneManager);
 	~Scene();
 
 	//Component Calls
@@ -61,8 +63,7 @@ private:
 
 private:
 	const std::string name;
-	Ogre::Root* root;
-	Ogre::SceneManager* sceneManager;
+	SceneManager* sceneManager;
 
 	std::vector<UserComponent*> userComponents;
 

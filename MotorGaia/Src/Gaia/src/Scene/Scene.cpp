@@ -4,10 +4,11 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "DebugDrawer.h"
+#include "SceneManager.h"
 
-Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), mainCamera(nullptr)
+Scene::Scene(const std::string& sceneName, SceneManager* sceneManager) : name(sceneName), sceneManager(sceneManager), mainCamera(nullptr)
 {
-	sceneManager = root->createSceneManager();
+
 }
 
 Scene::~Scene()
@@ -30,13 +31,9 @@ Scene::~Scene()
 	destroyQueue.clear();
 	dontDestroyObjects.clear();
 	instantiateQueue.clear();
-
-	sceneManager->clearScene();
-	root->destroySceneManager(sceneManager);
+	animationSets.clear();
 
 	mainCamera = nullptr;
-
-	animationSets.clear();
 }
 
 void Scene::awake()
@@ -96,12 +93,12 @@ const std::string& Scene::getName()
 
 Ogre::SceneManager* Scene::getSceneManager() const
 {
-	return sceneManager;
+	return sceneManager->sceneManager;
 }
 
 Ogre::Entity* Scene::createEntity(const std::string& name)
 {
-	return sceneManager->createEntity(name);
+	return getSceneManager()->createEntity(name);
 }
 
 GameObject* Scene::getGameObjectWithName(const std::string& name)

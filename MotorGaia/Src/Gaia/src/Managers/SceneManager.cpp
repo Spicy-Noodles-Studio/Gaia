@@ -6,7 +6,7 @@
 #include "PhysicsSystem.h"
 #include "DebugDrawer.h"
 
-SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), window(nullptr), debugDrawer(nullptr)
+SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), window(nullptr), countNodeIDs(0), debugDrawer(nullptr)
 {
 
 }
@@ -20,6 +20,7 @@ void SceneManager::init(Ogre::Root* root, Window* window)
 {
 	this->root = root;
 	this->window = window;
+	this->sceneManager = root->createSceneManager();
 
 	loadScene(ResourcesManager::getSceneData(0));
 	// Let it change runtime
@@ -89,7 +90,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 
 Scene* SceneManager::createScene(const SceneData* data)
 {
-	Scene* myScene = new Scene(data->name, root);
+	Scene* myScene = new Scene(data->name, this);
 	// For each GameObjectData, create the gameObject
 	for (GameObjectData* gData : data->getGameObjectsData()) {
 		createGameObject(gData, myScene);
@@ -120,10 +121,8 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 	}
 
 	// For each child, create the child
-	for (auto childData : gData.getChildrenData()) {
+	for (auto childData : gData.getChildrenData())
 		GameObject* child = createGameObject(childData.second, scene, gameObject);
-	}
-
 
 	return gameObject;
 }
@@ -190,9 +189,12 @@ void SceneManager::processDontDestroyObjects()
 			stackScene->addUserComponent(component);
 		}
 		stackScene->addGameObject(gameObject);
-		currentScene->getSceneManager()->getRootSceneNode()->removeChild(gameObject->node);
-		stackScene->getSceneManager()->getRootSceneNode()->addChild(gameObject->node);
 	}
+}
+
+std::string SceneManager::getNextNodeID()
+{
+	return std::string(std::to_string(countNodeIDs++));
 }
 
 bool SceneManager::exist(const std::string& name)

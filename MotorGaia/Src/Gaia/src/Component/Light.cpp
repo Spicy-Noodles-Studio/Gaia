@@ -7,12 +7,13 @@
 
 Light::Light(GameObject* gameObject) : GaiaComponent(gameObject)
 {
-	light = gameObject->getScene()->getSceneManager()->createLight(gameObject->getName() + " -L");
+	light = gameObject->getScene()->getSceneManager()->createLight(gameObject->node->getName() + " -L");
 	gameObject->node->attachObject(light);
 }
 
 Light::~Light()
 {
+	gameObject->node->detachObject(light);
 	gameObject->getScene()->getSceneManager()->destroyLight(light);
 	light = nullptr;
 }

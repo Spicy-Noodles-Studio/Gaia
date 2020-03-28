@@ -19,8 +19,7 @@ namespace CEGUI {
 }
 class Window;
 
-typedef std::pair<CEGUI::String, std::function<bool(const CEGUI::EventArgs&)>> UIEvent;
-
+typedef std::pair<std::string, std::function<bool()>> UIEvent;
 
 class GAIA_API InterfaceSystem : public Singleton<InterfaceSystem>, public MouseEventListener, public KeyboardEventListener, public WindowEventListener, public ControllerEventListener
 {
@@ -34,6 +33,8 @@ private:
 #endif // _DEBUG
 
 	static std::map<std::string, UIEvent> events;
+
+	std::map<std::string, CEGUI::String> eventTypes;
 
 	void setupResources();
 	CEGUI::Key::Scan SDLKeyToCEGUIKey(int key);
@@ -49,6 +50,8 @@ public:
 	void render();
 	void update(float deltaTime);
 	void close();
+
+	CEGUI::String getEventType(std::string eventType);
 
 	static void registerEvent(const std::string& eventName, UIEvent event);
 	static UIEvent getEvent(const std::string& eventName);

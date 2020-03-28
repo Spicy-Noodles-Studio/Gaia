@@ -168,6 +168,9 @@ void SceneManager::processCameraChange()
 
 void SceneManager::processDontDestroyObjects()
 {
+	if (currentScene == nullptr)
+		return;
+
 	for (GameObject* gameObject : currentScene->dontDestroyObjects) {
 		//Reset components
 		for (auto component : gameObject->userComponents) {

@@ -28,6 +28,13 @@ void InterfaceSystem::close()
 	destroy();
 }
 
+CEGUI::String InterfaceSystem::getEventType(std::string eventType)
+{
+    if (eventTypes.find(eventType) == eventTypes.end())
+        return "";
+    return eventTypes[eventType];
+}
+
 void InterfaceSystem::setupResources()
 {
     CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
@@ -56,6 +63,11 @@ void InterfaceSystem::init(Window* window)
 
 	setupResources();
 	createRoot();
+
+    // event types
+
+    eventTypes["ButtonClicked"] = CEGUI::PushButton::EventClicked;
+
 
 	// Callback definitions
 	onKeyDown([this](std::string keyName, int key) { CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(SDLKeyToCEGUIKey(key)); });

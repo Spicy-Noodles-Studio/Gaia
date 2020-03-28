@@ -8,7 +8,7 @@
 #include <OgreTextureManager.h>
 #include <OgreGpuProgramManager.h>
 
-std::map<std::string, SceneData*> ResourcesManager::sceneData;
+std::unordered_map<std::string, SceneData*> ResourcesManager::sceneData;
 std::map<std::string, BlueprintData*> ResourcesManager::blueprintData;
 std::map<std::string, Sound*> ResourcesManager::sounds;
 

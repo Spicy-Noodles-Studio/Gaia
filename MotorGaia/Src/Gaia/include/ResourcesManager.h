@@ -5,6 +5,7 @@
 
 #include <thread>
 #include <map>
+#include <unordered_map>
 #include "SceneData.h"
 #include "GameObjectData.h"
 
@@ -56,7 +57,7 @@ public:
 
 	std::string resourcesPath;
 
-	static std::map<std::string, SceneData*> sceneData;
+	static std::unordered_map<std::string, SceneData*> sceneData;
 	static std::map<std::string, BlueprintData*> blueprintData;
 	static std::map<std::string, Sound*> sounds;
 

@@ -3,8 +3,10 @@
 #include "ComponentManager.h"
 #include "GameObject.h"
 #include "SceneData.h"
+#include "PhysicsSystem.h"
+#include "DebugDrawer.h"
 
-SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), window(nullptr)
+SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), window(nullptr), debugDrawer(nullptr)
 {
 
 }
@@ -26,11 +28,14 @@ void SceneManager::init(Ogre::Root* root, Window* window)
 
 void SceneManager::close()
 {
+	if (debugDrawer != nullptr)
+		delete debugDrawer;
 	if (currentScene != nullptr)
 		delete currentScene;
 	if (stackScene != nullptr)
 		delete stackScene;
 
+	debugDrawer = nullptr;
 	currentScene = nullptr;
 	stackScene = nullptr;
 
@@ -151,6 +156,12 @@ void SceneManager::processSceneChange()
 		delete oldScene;
 
 	processCameraChange();
+
+	if (debugDrawer != nullptr)
+		delete debugDrawer;
+
+	debugDrawer = new DebugDrawer(currentScene->getSceneManager());
+	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
 }
 
 void SceneManager::processCameraChange()
@@ -176,8 +187,11 @@ void SceneManager::processDontDestroyObjects()
 		for (auto component : gameObject->userComponents) {
 			component->sleeping = true;
 			component->started = false;
+			stackScene->addUserComponent(component);
 		}
 		stackScene->addGameObject(gameObject);
+		currentScene->getSceneManager()->getRootSceneNode()->removeChild(gameObject->node);
+		stackScene->getSceneManager()->getRootSceneNode()->addChild(gameObject->node);
 	}
 }
 

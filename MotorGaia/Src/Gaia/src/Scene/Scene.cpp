@@ -5,15 +5,18 @@
 #include "Camera.h"
 #include "DebugDrawer.h"
 
-Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager()), mainCamera(nullptr)
+Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), mainCamera(nullptr)
 {
-	debugDrawer = new DebugDrawer(sceneManager);
-	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
+	sceneManager = root->createSceneManager();
 }
 
 Scene::~Scene()
 {
 	for (GameObject* gameObject : sceneObjects) {
+		//If it has to be destroyed
+		if (std::find(dontDestroyObjects.begin(), dontDestroyObjects.end(), gameObject) != dontDestroyObjects.end())
+			continue;
+
 		delete gameObject;
 		gameObject = nullptr;
 	}
@@ -25,6 +28,7 @@ Scene::~Scene()
 
 	sceneObjects.clear();
 	destroyQueue.clear();
+	dontDestroyObjects.clear();
 	instantiateQueue.clear();
 
 	sceneManager->clearScene();
@@ -33,8 +37,6 @@ Scene::~Scene()
 	mainCamera = nullptr;
 
 	animationSets.clear();
-
-	delete debugDrawer;
 }
 
 void Scene::awake()

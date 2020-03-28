@@ -16,7 +16,6 @@ namespace Ogre {
 
 class Camera;
 class GameObject;
-class DebugDrawer;
 
 class GAIA_API Scene {
 	friend class SceneManager;
@@ -64,7 +63,6 @@ private:
 	const std::string name;
 	Ogre::Root* root;
 	Ogre::SceneManager* sceneManager;
-	DebugDrawer* debugDrawer;
 
 	std::vector<UserComponent*> userComponents;
 

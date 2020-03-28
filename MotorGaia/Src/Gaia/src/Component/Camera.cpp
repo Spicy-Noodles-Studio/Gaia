@@ -13,8 +13,6 @@ Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera
 
 	camera->setAutoAspectRatio(true);
 	gameObject->node->attachObject(camera);
-
-	
 }
 
 Camera::~Camera()

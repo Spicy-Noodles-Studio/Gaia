@@ -40,6 +40,7 @@ private:
 		size_t dieTime;
 	};
 	DebugDrawModes mDebugModes;
+	Ogre::SceneManager* sceneManager;
 	Ogre::ManualObject* mLines;
 	Ogre::ManualObject* mTriangles;
 	std::vector<ContactPoint>* mContactPoints;

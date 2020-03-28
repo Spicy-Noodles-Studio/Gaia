@@ -2,7 +2,7 @@
 #include "OgreBulletUtils.h"
 
 
-DebugDrawer::DebugDrawer(Ogre::SceneManager* scm)
+DebugDrawer::DebugDrawer(Ogre::SceneManager* scm) : sceneManager(scm)
 {
 	mContactPoints = &mContactPoints1;
 	mLines = new Ogre::ManualObject("physics lines");
@@ -53,6 +53,7 @@ DebugDrawer::DebugDrawer(Ogre::SceneManager* scm)
 DebugDrawer::~DebugDrawer()
 {
 	Ogre::Root::getSingleton().removeFrameListener(this);
+
 	delete mLines;
 	delete mTriangles;
 }

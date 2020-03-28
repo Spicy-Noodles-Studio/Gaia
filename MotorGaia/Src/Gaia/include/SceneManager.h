@@ -15,6 +15,7 @@
 #include "Window.h"
 #include "Camera.h"
 
+class DebugDrawer;
 
 class GAIA_API  SceneManager : public Singleton<SceneManager>
 {
@@ -53,6 +54,8 @@ private:
 
 	Ogre::Root* root;
 	Window* window;
+
+	DebugDrawer* debugDrawer;
 };
 
 #endif

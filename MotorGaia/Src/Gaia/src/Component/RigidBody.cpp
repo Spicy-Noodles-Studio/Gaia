@@ -131,6 +131,11 @@ void RigidBody::addTorque(const Vector3& torque)
 	body->applyTorque(parseToBulletVector(torque));
 }
 
+void RigidBody::clearForces()
+{
+	body->clearForces();
+}
+
 void RigidBody::setGravity(const Vector3& grav)
 {
 	body->setGravity(parseToBulletVector(grav));

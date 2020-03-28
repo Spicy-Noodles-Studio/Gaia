@@ -181,6 +181,10 @@ void Scene::destroyPendingGameObjects()
 void Scene::destroyGameObject(GameObject* gameObject)
 {
 	destroyQueue.push_back(gameObject);
+	
+	//Mira si esta en dontDestroy para sacarlo
+	if (dontDestroyObjects.find(gameObject) != dontDestroyObjects.end())
+		dontDestroyObjects.erase(gameObject);
 }
 
 void Scene::instantiate(GameObject* gameObject)
@@ -210,4 +214,16 @@ void Scene::updateAllAnimations(float deltaTime)
 		for (auto anim : set.second->getEnabledAnimationStates())
 			anim->addTime(deltaTime);
 	}
+}
+
+void Scene::dontDestroyOnLoad(GameObject* gameObject)
+{
+	// Dont register an already existing object
+	if (dontDestroyObjects.find(gameObject) != dontDestroyObjects.end())
+		return;
+	//Check if it is on the destroy queue
+	if (std::find(destroyQueue.begin(), destroyQueue.end(), gameObject) != destroyQueue.end())
+		return;
+
+	dontDestroyObjects.insert(gameObject);
 }

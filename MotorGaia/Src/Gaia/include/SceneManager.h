@@ -45,6 +45,7 @@ private:
 
 	void processSceneChange();
 	void processCameraChange();
+	void processDontDestroyObjects();
 
 private:
 	Scene* currentScene;

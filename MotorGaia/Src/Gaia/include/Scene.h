@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <map>
+#include <set>
 #include "UserComponent.h"
 
 namespace Ogre {
@@ -57,6 +58,8 @@ private:
 
 	void updateAllAnimations(float deltaTime);
 
+	void dontDestroyOnLoad(GameObject* gameObject);
+
 private:
 	const std::string name;
 	Ogre::Root* root;
@@ -72,6 +75,8 @@ private:
 	std::vector<GameObject*> sceneObjects;
 	std::vector<GameObject*> destroyQueue;
 	std::vector<GameObject*> instantiateQueue;
+
+	std::set<GameObject*> dontDestroyObjects;
 
 	Camera* mainCamera;
 

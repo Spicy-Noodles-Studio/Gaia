@@ -119,6 +119,11 @@ std::vector<GameObject*> UserComponent::findGameObjectsWithTag(const std::string
 	return gameObject->myScene->getGameObjectsWithTag(tag);
 }
 
+void UserComponent::dontDestroyOnLoad(GameObject* gameObject)
+{
+	gameObject->myScene->dontDestroyOnLoad(gameObject);
+}
+
 bool UserComponent::hasStarted()
 {
 	return started;

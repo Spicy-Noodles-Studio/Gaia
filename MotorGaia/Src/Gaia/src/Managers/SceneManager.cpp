@@ -141,9 +141,12 @@ void SceneManager::processSceneChange()
 	if (stackScene == nullptr)
 		return;
 
+	processDontDestroyObjects();
+
 	Scene* oldScene = currentScene;
 	currentScene = stackScene;
 	stackScene = nullptr;
+
 	if (oldScene != nullptr)
 		delete oldScene;
 
@@ -161,6 +164,18 @@ void SceneManager::processCameraChange()
 	}
 	window->removeAllViewports();
 	window->addViewport(camera->getCamera());
+}
+
+void SceneManager::processDontDestroyObjects()
+{
+	for (GameObject* gameObject : currentScene->dontDestroyObjects) {
+		//Reset components
+		for (auto component : gameObject->userComponents) {
+			component->sleeping = true;
+			component->started = false;
+		}
+		stackScene->addGameObject(gameObject);
+	}
 }
 
 bool SceneManager::exist(const std::string& name)

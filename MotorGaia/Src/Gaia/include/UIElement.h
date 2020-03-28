@@ -25,11 +25,19 @@ public:
 	void setSize(int x, int y);
 
 	UIElement getChild(const std::string& name);
+	UIElement getChildAtIndex(int index);
 	UIElement createChild(const std::string& type, const std::string& name);
+	int getChildCount();
 
 	void setVisible(bool visible);
+	bool isVisible();
 
 	void flipHorizontal();
+
+	void setInheritsAlpha(bool inherits);
+	void setAlpha(float alpha);
+
+
 };
 
 

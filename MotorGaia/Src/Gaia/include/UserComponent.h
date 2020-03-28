@@ -10,6 +10,7 @@
 
 class GAIA_API UserComponent : public Component
 {
+	friend class SceneManager;
 	friend class Scene;
 public:
 	UserComponent(GameObject* gameObject);
@@ -43,6 +44,9 @@ public:
 	// Busca a partir de la referencia de Scene desde el owner un objeto en la misma escena
 	// con el tag indicado
 	std::vector<GameObject*> findGameObjectsWithTag(const std::string& tag);
+
+	/* El objeto no se destruye en el cambio de escena */
+	void dontDestroyOnLoad(GameObject* gameObject);
 
 private:
 	bool hasStarted();

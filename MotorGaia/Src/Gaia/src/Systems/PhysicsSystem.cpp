@@ -188,6 +188,22 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 void PhysicsSystem::deleteRigidBody(btRigidBody* body)
 {
 	if (body != nullptr) {
+
+		RigidBody* rigidBody = (RigidBody*)body->getUserPointer();
+		//Buscar en la lista de contactos
+		//Registramos presencia
+		std::vector<std::pair<RigidBody*, RigidBody*>> presence;
+		for (auto contact : contacts) {
+			if (contact.first.first == rigidBody || contact.first.second == rigidBody)
+				presence.push_back(contact.first);
+		}
+
+		for (auto contact : presence) {
+			//TODO: a lo mejor llamar a OnExitCallback del que no se elimina??
+			contacts.erase(contact);
+		}
+
+
 		btCollisionObject* obj = body;
 		btCollisionShape* shape = obj->getCollisionShape();
 		deleteBody(obj);
@@ -288,6 +304,9 @@ void PhysicsSystem::CollisionEnterCallbacks(const std::pair<RigidBody*, RigidBod
 
 void PhysicsSystem::CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
 {
+	if (col.first->gameObject == nullptr || col.second->gameObject == nullptr)
+		return;
+
 	bool aTrigger = col.first->isTrigger(), bTrigger = col.second->isTrigger();
 	GameObject* goA = col.first->gameObject, * goB = col.second->gameObject;
 

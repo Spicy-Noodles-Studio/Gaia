@@ -9,7 +9,7 @@
 
 Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera(false)
 {
-	camera = gameObject->getScene()->getSceneManager()->createCamera(gameObject->getName() + "Cam");
+	camera = gameObject->getScene()->getSceneManager()->createCamera(gameObject->node->getName() + "Cam");
 
 	camera->setAutoAspectRatio(true);
 	gameObject->node->attachObject(camera);
@@ -19,6 +19,7 @@ Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera
 
 Camera::~Camera()
 {
+	gameObject->node->detachObject(camera);
 	gameObject->getScene()->getSceneManager()->destroyCamera(camera);
 	camera = nullptr;
 }

@@ -4,16 +4,20 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "DebugDrawer.h"
+#include "SceneManager.h"
 
-Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager()), mainCamera(nullptr)
+Scene::Scene(const std::string& sceneName, SceneManager* sceneManager) : name(sceneName), sceneManager(sceneManager), mainCamera(nullptr)
 {
-	debugDrawer = new DebugDrawer(sceneManager);
-	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
+
 }
 
 Scene::~Scene()
 {
 	for (GameObject* gameObject : sceneObjects) {
+		//If it has to be destroyed
+		if (std::find(dontDestroyObjects.begin(), dontDestroyObjects.end(), gameObject) != dontDestroyObjects.end())
+			continue;
+
 		delete gameObject;
 		gameObject = nullptr;
 	}
@@ -25,16 +29,11 @@ Scene::~Scene()
 
 	sceneObjects.clear();
 	destroyQueue.clear();
+	dontDestroyObjects.clear();
 	instantiateQueue.clear();
-
-	sceneManager->clearScene();
-	root->destroySceneManager(sceneManager);
-
-	mainCamera = nullptr;
-
 	animationSets.clear();
 
-	delete debugDrawer;
+	mainCamera = nullptr;
 }
 
 void Scene::awake()
@@ -94,12 +93,12 @@ const std::string& Scene::getName()
 
 Ogre::SceneManager* Scene::getSceneManager() const
 {
-	return sceneManager;
+	return sceneManager->sceneManager;
 }
 
 Ogre::Entity* Scene::createEntity(const std::string& name)
 {
-	return sceneManager->createEntity(name);
+	return getSceneManager()->createEntity(name);
 }
 
 GameObject* Scene::getGameObjectWithName(const std::string& name)
@@ -179,6 +178,10 @@ void Scene::destroyPendingGameObjects()
 void Scene::destroyGameObject(GameObject* gameObject)
 {
 	destroyQueue.push_back(gameObject);
+	
+	//Mira si esta en dontDestroy para sacarlo
+	if (dontDestroyObjects.find(gameObject) != dontDestroyObjects.end())
+		dontDestroyObjects.erase(gameObject);
 }
 
 void Scene::instantiate(GameObject* gameObject)
@@ -223,4 +226,16 @@ void Scene::updateAllAnimations(float deltaTime)
 		for (auto anim : set.second->getEnabledAnimationStates())
 			anim->addTime(deltaTime);
 	}
+}
+
+void Scene::dontDestroyOnLoad(GameObject* gameObject)
+{
+	// Dont register an already existing object
+	if (dontDestroyObjects.find(gameObject) != dontDestroyObjects.end())
+		return;
+	//Check if it is on the destroy queue
+	if (std::find(destroyQueue.begin(), destroyQueue.end(), gameObject) != destroyQueue.end())
+		return;
+
+	dontDestroyObjects.insert(gameObject);
 }

@@ -45,10 +45,20 @@ UIElement UIElement::getChild(const std::string& name)
 	return element->getChild(name);
 }
 
+UIElement UIElement::getChildAtIndex(int index)
+{
+	return element->getChildAtIdx(index);
+}
+
 UIElement UIElement::createChild(const std::string& type, const std::string& name)
 {
 	element->addChild(CEGUI::WindowManager::getSingleton().createWindow(type, name));
 	return element->getChild(name);
+}
+
+int UIElement::getChildCount()
+{
+	return element->getChildCount();
 }
 
 void UIElement::setVisible(bool visible)
@@ -56,8 +66,23 @@ void UIElement::setVisible(bool visible)
 	element->setVisible(visible);
 }
 
+bool UIElement::isVisible()
+{
+	return element->isVisible();
+}
+
 void UIElement::flipHorizontal()
 {
 	element->getGeometryBuffer().setPivot(CEGUI::Vector3f(element->getPixelSize().d_width / 2.0f, 0.0f, 0.0f));
 	element->getGeometryBuffer().setRotation( CEGUI::Quaternion::eulerAnglesDegrees(0.0f, 180.0f, 0.0f));
+}
+
+void UIElement::setInheritsAlpha(bool inherits)
+{
+	element->setInheritsAlpha(inherits);
+}
+
+void UIElement::setAlpha(float alpha)
+{
+	element->setAlpha(alpha);
 }

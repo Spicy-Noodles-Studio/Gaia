@@ -2,17 +2,16 @@
 #include "Scene.h"
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
+#include "SceneManager.h"
 
 
 GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene)
 {
-	node = scene->getSceneManager()->getRootSceneNode()->createChildSceneNode();
+	node = scene->getSceneManager()->getRootSceneNode()->createChildSceneNode(scene->sceneManager->getNextNodeID());
 }
 
 GameObject::~GameObject()
 {
-    node->detachAllObjects();
-
     for (auto c : components) {
         delete c.second;
         c.second = nullptr;

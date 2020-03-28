@@ -1,8 +1,8 @@
 #include "CameraDebugControl.h"
 #include "InputSystem.h"
 #include "GameObject.h"
-#include "MathUtils.h"
 #include "RigidBody.h"
+#include "SceneManager.h"
 
 CameraDebugControl::CameraDebugControl(GameObject* gameObject) : UserComponent(gameObject), camera(nullptr)
 {
@@ -65,4 +65,11 @@ void CameraDebugControl::update(float deltaTime)
 		gObject->getComponent<RigidBody>()->setLinearVelocity(camDir * 20);
 	}
 
+
+	if (input->getKeyPress("Escape")) {
+		if(gameObject->getScene()->getName() == "MainScene")
+			SceneManager::GetInstance()->changeScene("otherScene");
+		else
+			SceneManager::GetInstance()->changeScene("mainScene");
+	}
 }

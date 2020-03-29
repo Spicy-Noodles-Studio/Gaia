@@ -37,7 +37,7 @@ void UILayout::setLayout(const std::string& filename)
 
 void UILayout::setEvent(const std::string& element, const std::string& event)
 {
-	layout->getElement()->getChild(element)->
+	layout->getElement()->getChildRecursive(element)->
 		subscribeEvent(InterfaceSystem::GetInstance()->getEventType(InterfaceSystem::GetInstance()->getEvent(event).first),
 			InterfaceSystem::GetInstance()->getEvent(event).second);
 }

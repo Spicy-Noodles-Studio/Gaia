@@ -61,7 +61,7 @@ private:
         
         int ID = -1;
         int controllerIndex = -1;
-        bool isConected = false;
+        bool isConnected = false;
 
         bool Up = false;
         bool Down = false;
@@ -164,6 +164,8 @@ public:
 
     void controllerRumble(int controllerIndex, float strength, int length);
     void setDeadZone(int controller, int zone);
+
+    bool isControllerConnected(int index);
 };
 
 #endif

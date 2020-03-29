@@ -38,6 +38,8 @@ Scene::~Scene()
 
 void Scene::awake()
 {
+	std::vector<UserComponent*> userComponents = this->userComponents;
+
 	// awake components
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && c->isSleeping()) {
@@ -49,6 +51,8 @@ void Scene::awake()
 
 void Scene::start()
 {
+	std::vector<UserComponent*> userComponents = this->userComponents;
+
 	// start components
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && !c->isSleeping() && !c->hasStarted()) {
@@ -60,6 +64,8 @@ void Scene::start()
 
 void Scene::preUpdate(float deltaTime)
 {
+	std::vector<UserComponent*> userComponents = this->userComponents;
+
 	//Preupdate components
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && !c->isSleeping() && c->hasStarted())
@@ -70,6 +76,8 @@ void Scene::preUpdate(float deltaTime)
 
 void Scene::update(float deltaTime)
 {
+	std::vector<UserComponent*> userComponents = this->userComponents;
+
 	// update components
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && !c->isSleeping() && c->hasStarted())
@@ -79,6 +87,8 @@ void Scene::update(float deltaTime)
 
 void Scene::postUpdate(float deltaTime)
 {
+	std::vector<UserComponent*> userComponents = this->userComponents;
+
 	// postUpdate compoenent
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && !c->isSleeping() && c->hasStarted())

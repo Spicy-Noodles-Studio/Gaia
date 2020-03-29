@@ -10,6 +10,12 @@
                 ["position", "0 0 0"],
                 ["scale", "20 1 20"]
             ]
+        },        
+        {
+            "ComponentName" : "MeshRenderer",
+            "ComponentProperties" : [
+                ["mesh", "Cube Cube.mesh"]
+            ]
         },
         {
             "ComponentName" : "RigidBody",

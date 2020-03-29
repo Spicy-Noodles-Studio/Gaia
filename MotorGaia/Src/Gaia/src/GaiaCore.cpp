@@ -144,10 +144,10 @@ void GaiaCore::render(float deltaTime)
 	// RenderSystem
 	renderSystem->render(deltaTime);
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	// PhysicsSystem
 	physicsSystem->render();
-//#endif
+#endif
 
 	// InterfaceSystem
 	interfaceSystem->render();

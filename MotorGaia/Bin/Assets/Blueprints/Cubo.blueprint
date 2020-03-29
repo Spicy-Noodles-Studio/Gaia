@@ -11,13 +11,7 @@
         {
             "ComponentName" : "MeshRenderer",
             "ComponentProperties" : [
-                ["mesh", "Cube Knight.mesh"]
-            ]
-        },
-        {
-            "ComponentName" : "Animator",
-            "ComponentProperties" : [
-                ["anim", "my_animation Cube"]
+                ["mesh", "Cube Cube.mesh"]
             ]
         },
         {

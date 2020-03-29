@@ -10,9 +10,9 @@
 std::map<std::string, UIEvent> InterfaceSystem::events;
 
 InterfaceSystem::InterfaceSystem() : renderer(nullptr), root(nullptr), deltaX(0), deltaY(0)
-//#ifdef _DEBUG
+#ifdef _DEBUG
 , fpsText(nullptr)
-//#endif // _DEBUG
+#endif // _DEBUG
 {
 
 }
@@ -107,9 +107,9 @@ void InterfaceSystem::update(float deltaTime)
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectTimePulse(deltaTime);
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(deltaX, deltaY);
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	fpsText->setText("FPS: " + std::to_string((int)(1.0 / deltaTime)));
-//#endif
+#endif
 }
 
 UIElement* InterfaceSystem::loadLayout(const std::string& filename)
@@ -137,11 +137,11 @@ void InterfaceSystem::initDefaultResources()
     CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang", 16, true, "batang.ttf");
 
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
     fpsText = new UIElement(root->getElement()->createChild("TaharezLook/StaticText", "FPSText"));
     fpsText->setPosition(0.9f, 0.0f);
     fpsText->setSize(0.1f,0.1f);
-//#endif
+#endif
 }
 
 CEGUI::Key::Scan InterfaceSystem::SDLKeyToCEGUIKey(int key)

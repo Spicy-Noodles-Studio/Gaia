@@ -9,6 +9,12 @@
             "ComponentName": "Transform"
         },
         {
+            "ComponentName" : "MeshRenderer",
+            "ComponentProperties" : [
+                ["mesh", "Sphere Sphere.mesh"]
+            ]
+        },
+        {
             "ComponentName" : "RigidBody",
             "ComponentProperties" : [
                 ["shape", "Sphere"],

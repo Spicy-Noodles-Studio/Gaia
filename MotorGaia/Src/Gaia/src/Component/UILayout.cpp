@@ -44,8 +44,6 @@ void UILayout::setEvent(const std::string& element, const std::string& event)
 
 void UILayout::handleData(ComponentData* data)
 {
-	std::vector<std::pair<std::string, std::string>> aux;
-
 	for (auto prop : data->getProperties())
 	{
 		std::stringstream ss(prop.second);
@@ -59,18 +57,13 @@ void UILayout::handleData(ComponentData* data)
 			char c;
 			while (ss >> element >> event)
 			{
-				aux.push_back({ element, event });
+				setEvent(element, event);
 				if (ss)
 					ss >> c;
 			}
 		}
 		else
 			LOG("UILAYOUT: invalid property name \"%s\"", prop.first.c_str());
-	}
-
-	for (int i = 0; i < aux.size(); i++)
-	{
-		setEvent(aux[i].first, aux[i].second);
 	}
 }
 

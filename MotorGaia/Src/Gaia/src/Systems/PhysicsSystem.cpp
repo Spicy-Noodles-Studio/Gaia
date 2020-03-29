@@ -251,25 +251,46 @@ void PhysicsSystem::checkCollisions()
 	for (int i = 0; i < numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+
+		//Comprobamos que realmente hay contacto
+		int numContacts = contactManifold->getNumContacts(), j = 0;
+		bool contact = false;
+		btManifoldPoint pt;
 		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0()), * obB = (btCollisionObject*)(contactManifold->getBody1());
 
-		RigidBody* rbA = (RigidBody*)obA->getUserPointer(), * rbB = (RigidBody*)obB->getUserPointer();
+		btVector3 aux;
+		btScalar dim1, dim2;
+		obA->getCollisionShape()->getBoundingSphere(aux, dim1);
+		obB->getCollisionShape()->getBoundingSphere(aux, dim2);
+		dim1 = std::min(dim1, dim2);
 
-		if (rbA == nullptr || rbB == nullptr) return;
+		while (!contact && j < numContacts)
+		{
+			pt = contactManifold->getContactPoint(j);
+			contact = pt.getDistance() < 0.f && pt.getDistance()> -dim1;
+			j++;
+		}
 
-		// Orden A < B, para el mapa
-		if (rbA > rbB) std::swap(rbA, rbB);
+		if (contact)
+		{
+			RigidBody* rbA = (RigidBody*)obA->getUserPointer(), * rbB = (RigidBody*)obB->getUserPointer();
 
-		std::pair<RigidBody*, RigidBody*> col = { rbA,rbB };
-		newContacts[col] = true;
+			if (!(rbA == nullptr || rbB == nullptr))
+			{
+				// Orden A < B, para el mapa
+				if (rbA > rbB) std::swap(rbA, rbB);
 
-		//Llamamos al collisionEnter si no estaban registrados.
-		if (!contacts[col])
-			CollisionEnterCallbacks(col);
-		// Si ya estaban llamamos al collisionStay.
-		else
-			CollisionStayCallbacks(col);
+				std::pair<RigidBody*, RigidBody*> col = { rbA,rbB };
+				newContacts[col] = true;
 
+				//Llamamos al collisionEnter si no estaban registrados.
+				if (contacts.find(col) == contacts.end())
+					CollisionEnterCallbacks(col);
+				// Si ya estaban llamamos al collisionStay.
+				else
+					CollisionStayCallbacks(col);
+			}
+		}
 	}
 
 	//Comprobamos que contactos ya no estan

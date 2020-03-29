@@ -182,9 +182,9 @@ bool GameObjectData::addComponentModifications(const RawData& data)
 		cData->setName(*name);
 		// Por cada propiedad
 		for (auto& prop : properties.value().items()) {
-			std::string cName = prop.key();
-			std::string cValue = prop.value();
-			if (!cData->addProperty(prop.key(), prop.value())) {
+			std::string cName = prop.value()[0];
+			std::string cValue = prop.value()[1];
+			if (!cData->addProperty(cName, cValue)) {
 				LOG_ERROR("GAMEOBJECT DATA", "Error trying to add a ComponentProperty: \"%s\" : \"%s\"", cName.c_str(), cValue.c_str());
 				return false;
 			}

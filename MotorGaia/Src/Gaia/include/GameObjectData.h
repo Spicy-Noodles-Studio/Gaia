@@ -53,6 +53,7 @@ public:
 	std::string tag;
 	const BlueprintData* blueprintRef;
 
+	//Cambiar para que vaya en orden
 	std::unordered_map<std::string, ComponentData*> components;
 	std::unordered_map<std::string, GameObjectData*> children;
 

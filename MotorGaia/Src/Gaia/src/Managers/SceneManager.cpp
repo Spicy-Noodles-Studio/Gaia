@@ -113,7 +113,7 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 
 	// Component
 	for (auto compData : gData.getComponentData()) {
-		ComponentData* cData = compData.second;
+		ComponentData* cData = compData;
 		auto constructor = ComponentManager::GetInstance()->getComponentFactory(cData->getName());
 		if (constructor != nullptr)
 		{
@@ -126,7 +126,7 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 
 	// For each child, create the child
 	for (auto childData : gData.getChildrenData())
-		GameObject* child = createGameObject(childData.second, scene, gameObject);
+		GameObject* child = createGameObject(childData, scene, gameObject);
 
 	return gameObject;
 }

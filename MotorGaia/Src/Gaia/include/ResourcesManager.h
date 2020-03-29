@@ -5,7 +5,6 @@
 
 #include <thread>
 #include <map>
-#include <unordered_map>
 #include "SceneData.h"
 #include "GameObjectData.h"
 
@@ -37,7 +36,7 @@ private:
 	void locateSounds(const std::string& filename);
 	void locateOgreResources(const std::string& filename);
 
-	void locateScene(const std::string& filename);
+	void locateScene(const std::string& filename, int index);
 	void locateBlueprint(const std::string& filename);
 	void loadSound(const std::string& filename);
 
@@ -57,7 +56,9 @@ public:
 
 	std::string resourcesPath;
 
-	static std::unordered_map<std::string, SceneData*> sceneData;
+	// Scene Graph - RealIndex
+	static std::map<std::string, std::pair<int, int>> sceneDataIndexes;
+	static std::vector<SceneData*> sceneData;
 	static std::map<std::string, BlueprintData*> blueprintData;
 	static std::map<std::string, Sound*> sounds;
 

@@ -22,7 +22,7 @@ RigidBody::~RigidBody()
 void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, const Vector3& dim, uint16_t myGroup, uint16_t collidesWith)
 {
 	motionState = new GaiaMotionState(gameObject->transform, offset);
-	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getWorldScale() * dim, myGroup, collidesWith);
+	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getWorldScale() * dim);
 	body->setUserPointer(this);
 	if (mass > 0) disableDeactivation();
 }
@@ -30,7 +30,7 @@ void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, 
 void RigidBody::handleData(ComponentData* data)
 {
 	float mass = 1.0, damping = 0.0, friction = 0.0, restitution = 0.0, angularDamping = 0.0;
-	RB_Shape shape;
+	RB_Shape shape = BOX_RB_SHAPE;
 	Vector3 off = Vector3(), dim = Vector3(1, 1, 1), gravity = PhysicsSystem::GetInstance()->getWorldGravity(), movConstraints = { 1,1,1 }, rotConstraints = { 1,1,1 };
 	bool isTrigger = false, kinematic = false;
 
@@ -42,6 +42,12 @@ void RigidBody::handleData(ComponentData* data)
 				shape = BOX_RB_SHAPE;
 			else if (prop.second == "Sphere")
 				shape = SPHERE_RB_SHAPE;
+			else if (prop.second == "Capsule")
+				shape = CAPSULE_RB_SHAPE;
+			else if (prop.second == "Cylinder")
+				shape = CYLINDER_RB_SHAPE;
+			else if (prop.second == "Cone")
+				shape = CONE_RB_SHAPE;
 			else
 				LOG("RIGIDBODY: %s not valid rigidbody shape type\n", prop.second.c_str());
 		}

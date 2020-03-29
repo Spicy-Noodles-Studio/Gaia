@@ -13,6 +13,8 @@ Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera
 
 	camera->setAutoAspectRatio(true);
 	gameObject->node->attachObject(camera);
+
+	setClipDistances(0.01, 10000);
 }
 
 Camera::~Camera()
@@ -40,9 +42,26 @@ void Camera::lookAt(const Vector3& pos, SpaceReference space)
 	}
 }
 
+Vector3 Camera::getDirection() const
+{
+	auto dir = gameObject->node->getOrientation().zAxis() * -1;
+	return Vector3(dir.x, dir.y, dir.z);
+}
+
 void Camera::setDirection(const Vector3& dir)
 {
 	gameObject->node->setDirection(Ogre::Vector3(dir.x, dir.y, dir.z));
+}
+
+Quaternion Camera::getOrientation() const
+{
+	auto dir = gameObject->node->getOrientation();
+	return Quaternion(dir.x, dir.y, dir.z, dir.w);
+}
+
+void Camera::setOrientation(const Quaternion& q)
+{
+	gameObject->node->setOrientation(q.w, q.x, q.y, q.z);
 }
 
 Ogre::Camera* Camera::getCamera()
@@ -60,23 +79,23 @@ Ogre::Camera* Camera::getCamera()
 //	return Vector2(screenPoint.x * 0.5f / screenPoint.w + 0.5f,
 //		screenPoint.y * 0.5f / screenPoint.w + 0.5f);
 //}
-Vector3 Camera::worldToScreen(const Vector3& worldPoint )
+Vector3 Camera::worldToScreen(const Vector3& worldPoint)
 {
 	Ogre::Vector3 world;
-	
+
 	world.x = worldPoint.x;
 	world.y = worldPoint.y;
 	world.z = worldPoint.z;
-	Ogre::Vector3 screenPoint =   camera->getProjectionMatrix() * camera->getViewMatrix() * world;//*world;
-	
+	Ogre::Vector3 screenPoint = camera->getProjectionMatrix() * camera->getViewMatrix() * world;//*world;
+
 	//camera->getViewport()
 
- 	Vector3 x;
-	x.x = (screenPoint.x*0.5 +0.5 );
+	Vector3 x;
+	x.x = (screenPoint.x * 0.5 + 0.5);
 	x.y = (-screenPoint.y * 0.5 + 0.5);
 	x.z = screenPoint.z * 0.5 + 0.5;
 
-	
+
 	return x;
 }
 

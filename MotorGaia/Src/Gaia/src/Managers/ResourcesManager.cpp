@@ -8,7 +8,8 @@
 #include <OgreTextureManager.h>
 #include <OgreGpuProgramManager.h>
 
-std::unordered_map<std::string, SceneData*> ResourcesManager::sceneData;
+std::map<std::string, std::pair<int, int>> ResourcesManager::sceneDataIndexes;
+std::vector<SceneData*> ResourcesManager::sceneData;
 std::map<std::string, BlueprintData*> ResourcesManager::blueprintData;
 std::map<std::string, Sound*> ResourcesManager::sounds;
 
@@ -82,7 +83,7 @@ void ResourcesManager::init()
 void ResourcesManager::close()
 {
 	for (auto sData : sceneData)
-		delete sData.second;
+		delete sData;
 		
 	for (auto bData : blueprintData)
 		delete bData.second;
@@ -104,10 +105,11 @@ void ResourcesManager::close()
 }
 
 
-void ResourcesManager::locateScene(const std::string& filename)
+void ResourcesManager::locateScene(const std::string& filename, int index)
 {
 	SceneData* sceneData = new SceneData();
 	sceneData->locate(filename);
+	sceneData->index = index;
 
 	if (sceneData->getLoadState() == Loadable::LoadState::INVALID) {
 		delete sceneData;
@@ -194,7 +196,7 @@ void ResourcesManager::initializeOgreResources()
 void ResourcesManager::initializeScenes()
 {
 	for (auto data : sceneData)
-		data.second->loadAsync();
+		data->loadAsync();
 }
 
 void ResourcesManager::initializeBlueprints()
@@ -252,11 +254,12 @@ bool ResourcesManager::registerSceneData(SceneData* data)
 {
 	// lock_guard secures unlock on destruction
 	std::lock_guard<std::mutex> lock(sceneDataMutex);
-	if (sceneData.find(data->id) != sceneData.end()) {
+	if (sceneDataIndexes.find(data->id) != sceneDataIndexes.end()) {
 		LOG("RESOURCES MANAGER: trying to add an already existing SceneData: %s.\n", data->id.c_str());
 		return false;
 	}
-	sceneData[data->id] = data;
+	sceneData.push_back(data);
+	sceneDataIndexes[data->id] = { data->index, sceneData.size() - 1 };
 
 	return true;
 }
@@ -275,22 +278,26 @@ bool ResourcesManager::registerBlueprint(BlueprintData* data)
 
 const SceneData* ResourcesManager::getSceneData(const std::string& name)
 {
-	if (sceneData.find(name) == sceneData.end()) {
+	if (sceneDataIndexes.find(name) == sceneDataIndexes.end()) {
 		LOG("RESOURCES MANAGER: trying to get not existing SceneData: %s.\n", name.c_str());
 		return nullptr;
 	}
-	return sceneData[name];
+	return sceneData[sceneDataIndexes[name].second];
 }
 
 const SceneData* ResourcesManager::getSceneData(int index)
 {
-	if (index >= sceneData.size()) {
-		LOG("RESOURCES MANAGER: trying to get not existing SceneData index: %i.\n", index);
+	if (index >= sceneDataIndexes.size()) {
+		LOG("RESOURCES MANAGER: trying to get not existing SceneData index: %i", index);
 		return nullptr;
 	}
-	auto it = sceneData.begin(); 
-	std::advance(it, index);
-	return (*it).second;
+
+	for (auto scene : sceneDataIndexes) {
+		if (scene.second.first == index)
+			return sceneData[scene.second.second];
+	}
+
+	return nullptr;
 }
 
 const BlueprintData* ResourcesManager::getBlueprint(const std::string& name)
@@ -344,7 +351,7 @@ void ResourcesManager::locateScenes(const std::string& filename)
 	/* Code to load using multithreading */
 	std::vector<std::thread> threads;
 	for (int i = 0; i < paths.size(); i++) 
-		threads.push_back(std::thread(&ResourcesManager::locateScene, std::ref(*this), paths[i]));
+		threads.push_back(std::thread(&ResourcesManager::locateScene, std::ref(*this), paths[i], i));
 
 	//Wait to finish
 	for (int i = 0; i < threads.size(); i++)

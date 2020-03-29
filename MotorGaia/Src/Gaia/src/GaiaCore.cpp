@@ -2,6 +2,7 @@
 
 #include <OgreRoot.h>
 #include "Window.h"
+#include "Timer.h"
 
 #include "EventSystem.h"
 #include "RenderSystem.h"
@@ -9,12 +10,11 @@
 #include "InterfaceSystem.h"
 #include "PhysicsSystem.h"
 #include "SoundSystem.h"
-#include "gTime.h"
 
 #include "ComponentManager.h"
 #include "SceneManager.h"
 
-GaiaCore::GaiaCore() :	root(nullptr), window(nullptr),
+GaiaCore::GaiaCore() :	root(nullptr), window(nullptr), timer(nullptr), 
 						eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr), 
 						interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
 						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
@@ -81,13 +81,19 @@ void GaiaCore::init()
 	sceneManager = SceneManager::GetInstance();
 	sceneManager->init(root, window);
 
-	gTime::GetInstance()->setup();
+	// Main Engine Timer
+	timer = Timer::GetInstance();
+	timer->init();
 }
 
 void GaiaCore::run()
 {
-	float deltaTime = gTime::GetInstance()->getDeltaTime();
+	float deltaTime = timer->getDeltaTime();
 	while (!window->isClosed()) {
+		// Update elapsed time
+		timer->update();
+		deltaTime = timer->getDeltaTime();
+
 		// Render
 		render(deltaTime);
 
@@ -99,14 +105,12 @@ void GaiaCore::run()
 
 		// Post-process
 		postUpdate(deltaTime);
-
-		deltaTime = gTime::GetInstance()->getDeltaTime();
 	}
 }
 
 void GaiaCore::close()
 {
-	gTime::GetInstance()->destroy();
+	Timer::GetInstance()->close();
 	// SceneManager termination
 	sceneManager->close();
 	// ComponentManager termination

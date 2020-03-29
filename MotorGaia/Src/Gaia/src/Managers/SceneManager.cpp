@@ -22,6 +22,10 @@ void SceneManager::init(Ogre::Root* root, Window* window)
 	this->window = window;
 	this->sceneManager = root->createSceneManager();
 
+	debugDrawer = new DebugDrawer(this->sceneManager);
+	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
+
+
 	loadScene(ResourcesManager::getSceneData(0));
 	// Let it change runtime
 	processSceneChange();
@@ -156,11 +160,6 @@ void SceneManager::processSceneChange()
 
 	processCameraChange();
 
-	if (debugDrawer != nullptr)
-		delete debugDrawer;
-
-	debugDrawer = new DebugDrawer(currentScene->getSceneManager());
-	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
 }
 
 void SceneManager::processCameraChange()

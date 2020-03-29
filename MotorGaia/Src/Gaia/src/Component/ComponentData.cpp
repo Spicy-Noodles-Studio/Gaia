@@ -17,23 +17,24 @@ void ComponentData::setName(const std::string& componentName)
 
 bool ComponentData::addProperty(const std::string& propName, const std::string& propValue)
 {
-	if (properties.find(propName) != properties.end()) 
+	if (nameID.find(propName) != nameID.end())
 	{
 		LOG("COMPONENT DATA: tried to add to %s a property %s already defined\n", name.c_str(), propName.c_str());
 		return false;
 	}
-	properties[propName] = propValue;
+	properties.push_back({ propName, propValue });
+	nameID[propName] = properties.size() - 1;
 	return true;
 }
 
 bool ComponentData::modifyProperty(const std::string& propName, const std::string& propValue)
 {
-	if (properties.find(propName) == properties.end())
+	if (nameID.find(propName) == nameID.end())
 	{
 		LOG_ERROR("COMPONENT DATA", "Tried to modify in %s component an undefined property %s. It would be overwitten", name.c_str(), propName.c_str());
-		//return false;
+		return addProperty(propName, propValue);
 	}
-	properties[propName] = propValue;
+	properties[nameID[propName]].second = propValue;
 	return true;
 }
 
@@ -42,7 +43,7 @@ const std::string& ComponentData::getName() const
 	return name;
 }
 
-const std::unordered_map<std::string, std::string>& ComponentData::getProperties() const
+const std::vector<std::pair<std::string, std::string>>& ComponentData::getProperties() const
 {
 	return properties;
 }

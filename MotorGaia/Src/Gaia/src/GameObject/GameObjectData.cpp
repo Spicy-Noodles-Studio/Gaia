@@ -97,7 +97,7 @@ bool GameObjectData::loadData(const RawData& data)
 		std::string bpName = *bpPath;
 		// Coge la referencia del blueprint
 		const BlueprintData* bpData = ResourcesManager::getBlueprint(bpName);
-		if (bpData->getLoadState() == Loadable::LoadState::INVALID || bpData == nullptr)
+		if (bpData == nullptr || bpData->getLoadState() == Loadable::LoadState::INVALID)
 			return false;
 
 		setBlueprint(bpData);
@@ -264,7 +264,7 @@ bool GameObjectData::addComponent(const RawData& data)
 	if (properties != data.end()) {
 		LOG("Loading %s properties", cData->getName().c_str());
 		for (auto& property : (*properties).items()) {
-			if (!cData->addProperty(property.key(), property.value())) {
+			if (property.value().size() != 2 || !cData->addProperty(property.value()[0], property.value()[1])) {
 				return false;
 			}
 		}

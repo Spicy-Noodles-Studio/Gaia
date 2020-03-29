@@ -8,6 +8,7 @@ Component::Component(GameObject* gameObject) : gameObject(gameObject), active(tr
 
 Component::~Component()
 {
+	gameObject = nullptr;
 }
 
 void Component::setActive(bool active)

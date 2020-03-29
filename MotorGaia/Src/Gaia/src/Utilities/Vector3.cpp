@@ -175,7 +175,7 @@ void Vector3::normalize()
 	*this /= magnitude();
 }
 
-Vector3& Vector3::normalized()
+Vector3 Vector3::normalized()
 {
 	Vector3 aux = *this / magnitude();
 	return aux;

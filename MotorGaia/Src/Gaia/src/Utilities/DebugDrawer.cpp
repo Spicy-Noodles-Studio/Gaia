@@ -19,19 +19,16 @@ DebugDrawer::DebugDrawer(Ogre::SceneManager* scm) : sceneManager(scm)
 
 
 	static const char* matName = "OgreBulletCollisionsDebugDefault";
+	Ogre::MaterialPtr mtl = Ogre::MaterialManager::getSingleton().getDefaultSettings()->clone(matName);
+	mtl->setReceiveShadows(false);
+	mtl->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+	mtl->setDepthBias(0.1, 0);
+	Ogre::TextureUnitState* tu = mtl->getTechnique(0)->getPass(0)->createTextureUnitState();
+	assert(tu);
+	tu->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_DIFFUSE);
+	mtl->getTechnique(0)->setLightingEnabled(false);
+	//mtl->getTechnique(0)->setSelfIllumination( ColourValue::White ); 
 
-	if (Ogre::MaterialManager::getSingleton().getResourceByName(matName) != nullptr)
-	{
-		Ogre::MaterialPtr mtl = Ogre::MaterialManager::getSingleton().getDefaultSettings()->clone(matName);
-		mtl->setReceiveShadows(false);
-		mtl->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-		mtl->setDepthBias(0.1, 0);
-		Ogre::TextureUnitState* tu = mtl->getTechnique(0)->getPass(0)->createTextureUnitState();
-		assert(tu);
-		tu->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_DIFFUSE);
-		mtl->getTechnique(0)->setLightingEnabled(false);
-		//mtl->getTechnique(0)->setSelfIllumination( ColourValue::White ); 
-	}
 	mLines->begin(matName, Ogre::RenderOperation::OT_LINE_LIST);
 	mLines->position(Ogre::Vector3::ZERO);
 	mLines->colour(Ogre::ColourValue::Blue);

@@ -67,9 +67,6 @@
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\DebugDrawer.cpp">
       <Filter>Archivos de código fuente\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Component\GaiaMotionState.cpp">
-      <Filter>Archivos de código fuente\Component</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp">
       <Filter>Archivos de código fuente\Utilities</Filter>
     </ClCompile>
@@ -130,9 +127,6 @@
     <ClCompile Include="..\..\Src\Gaia\src\GameObject\BlueprintData.cpp">
       <Filter>Archivos de código fuente\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Gaia\src\Component\UIElement.cpp">
-      <Filter>Archivos de código fuente\Component</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\MeshStrider.cpp">
       <Filter>Archivos de código fuente\Utilities</Filter>
     </ClCompile>
@@ -143,6 +137,12 @@
       <Filter>Archivos de código fuente\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\CameraDebugControl.cpp">
+      <Filter>Archivos de código fuente\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaMotionState.cpp">
+      <Filter>Archivos de código fuente\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\UIElement.cpp">
       <Filter>Archivos de código fuente\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
@@ -228,9 +228,6 @@
     <ClInclude Include="..\..\Src\Gaia\include\OgreBulletUtils.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h">
-      <Filter>Archivos de encabezado\Component</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h">
       <Filter>Archivos de encabezado\Systems</Filter>
     </ClInclude>
@@ -294,9 +291,6 @@
     <ClInclude Include="..\..\Src\Gaia\include\BlueprintData.h">
       <Filter>Archivos de encabezado\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\Gaia\include\UIElement.h">
-      <Filter>Archivos de encabezado\Component</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\MeshStrider.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
     </ClInclude>
@@ -307,6 +301,15 @@
       <Filter>Archivos de encabezado\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\CameraDebugControl.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\ComponentRegister.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\UIElement.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
     </ClInclude>
   </ItemGroup>

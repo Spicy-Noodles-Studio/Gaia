@@ -1,11 +1,16 @@
 #include "Transform.h"
+
+#include <cmath>
+#include <sstream>
+#include <OgreRoot.h>
+#include <OgreQuaternion.h>
+
 #include "GameObject.h"
 #include "ComponentData.h"
-#include <OgreQuaternion.h>
-#include <OgreRoot.h>
-#include <sstream>
-#include <cmath>
 #include "DebugUtils.h"
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(Transform);
 
 Transform::Transform(GameObject* gameObject) : GaiaComponent(gameObject)
 {

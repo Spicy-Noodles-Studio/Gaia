@@ -40,6 +40,8 @@ private:
 	void update(float deltaTime);
 	void postUpdate(float deltaTime);
 
+	void initLib();
+
 	Ogre::Root* root;
 	Window* window;
 

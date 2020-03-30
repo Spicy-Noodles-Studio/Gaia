@@ -1,13 +1,16 @@
 #include "RigidBody.h"
 
 #include <btBulletDynamicsCommon.h>
+#include <sstream>
 
 #include "GameObject.h"
 #include "GaiaMotionState.h"
 #include "ComponentData.h"
 #include "PhysicsSystem.h"
 #include "ComponentData.h"
-#include <sstream>
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(RigidBody);
 
 RigidBody::RigidBody(GameObject* gameObject) : GaiaComponent(gameObject), body(nullptr), motionState(nullptr)
 {
@@ -52,40 +55,52 @@ void RigidBody::handleData(ComponentData* data)
 				LOG("RIGIDBODY: %s not valid rigidbody shape type\n", prop.second.c_str());
 		}
 		else if (prop.first == "mass") {
-			ss >> mass;
+			if (!(ss >> mass))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "friction") {
-			ss >> friction;
+			if (!(ss >> friction))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "restitution") {
-			ss >> restitution;
+			if (!(ss >> restitution))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "damping") {
-			ss >> damping;
+			if (!(ss >> damping))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "angularDamping") {
-			ss >> angularDamping;
+			if (!(ss >> angularDamping))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "offset") {
-			ss >> off.x >> off.y >> off.z;
+			if(!(ss >> off.x >> off.y >> off.z))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "scale") {
-			ss >> dim.x >> dim.y >> dim.z;
+			if(!(ss >> dim.x >> dim.y >> dim.z))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "trigger") {
-			ss >> isTrigger;
+			if (!(ss >> isTrigger))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "kinematic") {
-			ss >> kinematic;
+			if (!(ss >> kinematic))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "gravity") {
-			ss >> gravity.x >> gravity.y >> gravity.z;
+			if(!(ss >> gravity.x >> gravity.y >> gravity.z))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "movementConstraints") {
-			ss >> movConstraints.x >> movConstraints.y >> movConstraints.z;
+			if(!(ss >> movConstraints.x >> movConstraints.y >> movConstraints.z))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str()); 
 		}
 		else if (prop.first == "rotationConstraints") {
-			ss >> rotConstraints.x >> rotConstraints.y >> rotConstraints.z;
+			if(!(ss >> rotConstraints.x >> rotConstraints.y >> rotConstraints.z))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str()); 
 		}
 	}
 	setRigidBody(mass, shape, off, dim);

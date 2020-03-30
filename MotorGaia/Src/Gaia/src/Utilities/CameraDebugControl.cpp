@@ -1,8 +1,14 @@
 #include "CameraDebugControl.h"
+
 #include "InputSystem.h"
 #include "GameObject.h"
 #include "RigidBody.h"
 #include "SceneManager.h"
+#include "ComponentRegister.h"
+
+#ifdef _DEBUG
+REGISTER_FACTORY(CameraDebugControl);
+#endif 
 
 CameraDebugControl::CameraDebugControl(GameObject* gameObject) : UserComponent(gameObject), camera(nullptr)
 {

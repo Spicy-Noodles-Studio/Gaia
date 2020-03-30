@@ -1,9 +1,14 @@
 #include "Light.h"
+
+#include <sstream>
+#include <OgreSceneManager.h>
+
 #include "GameObject.h"
 #include "Scene.h"
 #include "ComponentData.h"
-#include <OgreSceneManager.h>
-#include <sstream>
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(Light);
 
 Light::Light(GameObject* gameObject) : GaiaComponent(gameObject)
 {
@@ -95,8 +100,11 @@ void Light::handleData(ComponentData* data)
 				LOG("LIGHT: %s not valid light type\n", prop.second.c_str());
 		}
 		else if (prop.first == "colour") {
-			double x, y, z; ss >> x >> y >> z;
-			setColour(x, y, z);
+			double x, y, z;
+			if (ss >> x >> y >> z)
+				setColour(x, y, z);
+			else
+				LOG("LIGHT: wrong value for property %s.\n", prop.first.c_str());
 		}
 	}
 }

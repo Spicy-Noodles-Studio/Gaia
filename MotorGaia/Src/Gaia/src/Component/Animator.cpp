@@ -1,11 +1,16 @@
 #include "Animator.h"
+
+#include <sstream>
 #include <OgreAnimationState.h>
 #include <OgreEntity.h>
+
 #include "GameObject.h"
 #include "MeshRenderer.h"
 #include "Scene.h"
 #include "ComponentData.h"
-#include <sstream>
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(Animator);
 
 Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject)
 {
@@ -42,11 +47,15 @@ void Animator::handleData(ComponentData* data)
 
 		if (prop.first == "anim")
 		{
-			std::string anim, mesh; ss >> anim >> mesh;
-			setMesh(mesh);
+			std::string anim, mesh; 
+			if (ss >> anim >> mesh) {
+				setMesh(mesh);
 
-			Ogre::AnimationState* aux = getAnimation(anim);
-			aux->setEnabled(true);
+				Ogre::AnimationState* aux = getAnimation(anim);
+				aux->setEnabled(true);
+			}
+			else
+				LOG("ANIMATOR: wrong value for property %s.\n", prop.first.c_str());
 		}
 	}
 }

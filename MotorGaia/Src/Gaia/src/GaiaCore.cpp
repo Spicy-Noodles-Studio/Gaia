@@ -14,6 +14,22 @@
 #include "ComponentManager.h"
 #include "SceneManager.h"
 
+
+#include "Transform.h"
+#include "Camera.h"
+#include "Light.h"
+#include "MeshRenderer.h"
+#include "Animator.h"
+#include "RigidBody.h"
+#include "UILayout.h"
+#include "SoundEmitter.h"
+#include "SoundListener.h"
+#include "Reverb.h"
+#include "ParticleEmitter.h"
+#include "Strider.h"
+
+#define FORCE_LINK_THAT(x) { extern int force_link_##x; force_link_##x = 1; }
+
 GaiaCore::GaiaCore() :	root(nullptr), window(nullptr), timer(nullptr), 
 						eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr), 
 						interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
@@ -188,4 +204,23 @@ void GaiaCore::postUpdate(float deltaTime)
 
 	// Systems 
 	physicsSystem->postUpdate();
+}
+
+//Si exportamos un .lib hacemos que los componentes basicos se exporten siempre
+void GaiaCore::initLib()
+{
+#ifndef USE_DLL
+	FORCE_LINK_THAT(Animator);
+	FORCE_LINK_THAT(Camera);
+	FORCE_LINK_THAT(Light);
+	FORCE_LINK_THAT(MeshRenderer);
+	FORCE_LINK_THAT(ParticleEmitter);
+	FORCE_LINK_THAT(Reverb);
+	FORCE_LINK_THAT(RigidBody);
+	FORCE_LINK_THAT(SoundEmitter);
+	FORCE_LINK_THAT(SoundListener);
+	FORCE_LINK_THAT(Strider);
+	FORCE_LINK_THAT(Transform);
+	FORCE_LINK_THAT(UILayout);
+#endif
 }

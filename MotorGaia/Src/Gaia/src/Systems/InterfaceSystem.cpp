@@ -25,6 +25,10 @@ InterfaceSystem::~InterfaceSystem()
 void InterfaceSystem::close()
 {
     renderer->destroySystem();
+    delete root;
+#ifdef _DEBUG
+    delete fpsText;
+#endif
 	destroy();
 }
 

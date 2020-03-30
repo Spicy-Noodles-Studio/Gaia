@@ -1,22 +1,5 @@
 #include "ComponentManager.h"
 
-//#ifdef _DEBUG
-#include "CameraDebugControl.h"
-//#endif 
-
-#include "Transform.h"
-#include "Camera.h"
-#include "Light.h"
-#include "MeshRenderer.h"
-#include "Animator.h"
-#include "RigidBody.h"
-#include "UILayout.h"
-#include "SoundEmitter.h"
-#include "SoundListener.h"
-#include "Reverb.h"
-#include "ParticleEmitter.h"
-#include "Strider.h"
-
 ComponentManager::ComponentManager()
 {
 
@@ -29,23 +12,6 @@ ComponentManager::~ComponentManager()
 
 void ComponentManager::init()
 {
-	// Register Gaia base components 
-	registerComponent<Transform>("Transform");
-	registerComponent<Camera>("Camera");
-	registerComponent<Light>("Light");
-	registerComponent<MeshRenderer>("MeshRenderer");
-	registerComponent<Animator>("Animator");
-	registerComponent<RigidBody>("RigidBody");
-	registerComponent<UILayout>("UILayout");
-	registerComponent<SoundEmitter>("SoundEmitter");
-	registerComponent<SoundListener>("SoundListener");
-	registerComponent<Reverb>("Reverb");
-	registerComponent<ParticleEmitter>("ParticleEmitter");
-	registerComponent<Strider>("Strider");
-
-//#ifdef _DEBUG
-	registerComponent<CameraDebugControl>("CameraDebugControl");
-//#endif
 
 }
 

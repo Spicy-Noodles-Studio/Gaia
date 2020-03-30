@@ -4,6 +4,7 @@
 
 #include "GaiaComponent.h"
 #include "Vector3.h"
+#include "ComponentRegister.h"
 
 namespace Ogre {
 	class Light;
@@ -32,5 +33,4 @@ public:
 
 	virtual void handleData(ComponentData* data);
 };
-
 #endif

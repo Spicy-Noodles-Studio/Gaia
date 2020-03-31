@@ -32,6 +32,7 @@ public:
 	void preUpdate(float deltaTime);
 	void update(float deltaTime);
 	void postUpdate(float deltaTime);
+	void fixedUpdate(float deltaTime);
 	
 	const std::string& getName();
 	Ogre::SceneManager* getSceneManager() const;
@@ -80,6 +81,8 @@ private:
 	Camera* mainCamera;
 
 	std::map<std::string, Ogre::AnimationStateSet*> animationSets;
+	
+	float timeAccumulator;
 };
 
 #endif

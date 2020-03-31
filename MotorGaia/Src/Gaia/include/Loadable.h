@@ -50,7 +50,7 @@ public:
 	void loadAsync();
 
 protected:
-	void load_aync_internal();
+	void load_async_internal();
 };
 
 

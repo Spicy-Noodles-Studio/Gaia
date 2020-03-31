@@ -6,7 +6,7 @@
 #include "DebugDrawer.h"
 #include "SceneManager.h"
 
-Scene::Scene(const std::string& sceneName, SceneManager* sceneManager) : name(sceneName), sceneManager(sceneManager), mainCamera(nullptr)
+Scene::Scene(const std::string& sceneName, SceneManager* sceneManager) : name(sceneName), sceneManager(sceneManager), mainCamera(nullptr), timeAccumulator(0.0f)
 {
 
 }
@@ -93,6 +93,21 @@ void Scene::postUpdate(float deltaTime)
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && !c->isSleeping() && c->hasStarted())
 			c->postUpdate(deltaTime);
+	}
+}
+
+void Scene::fixedUpdate(float deltaTime)
+{
+	timeAccumulator += deltaTime;
+	while (timeAccumulator >= 1.0f / 50.0f)
+	{
+		std::vector<UserComponent*> userComponents = this->userComponents;
+
+		for (UserComponent* c : userComponents) {
+			if (c->isActive() && !c->isSleeping() && c->hasStarted())
+				c->fixedUpdate(deltaTime);
+		}
+		timeAccumulator -= 1.0f / 50.0f;
 	}
 }
 

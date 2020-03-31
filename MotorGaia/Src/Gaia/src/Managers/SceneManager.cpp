@@ -63,6 +63,7 @@ void SceneManager::update(float deltaTime)
 	currentScene->start();
 	currentScene->preUpdate(deltaTime);
 	currentScene->update(deltaTime);
+	currentScene->fixedUpdate(deltaTime);
 	currentScene->postUpdate(deltaTime);
 }
 

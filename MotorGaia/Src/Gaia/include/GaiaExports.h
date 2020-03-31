@@ -3,7 +3,7 @@
 #ifndef GAIA_EXPORTS_H
 #define GAIA_EXPORTS_H
 
-#ifdef USEDLL
+#ifdef USE_DLL
 #ifdef GAIA_EXPORTS
 #define GAIA_API __declspec(dllexport)
 #else

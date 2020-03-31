@@ -1,11 +1,16 @@
 #include "MeshRenderer.h"
-#include "GameObject.h"
-#include "Scene.h"
-#include "ComponentData.h"
+
 #include <OgreRoot.h>
 #include <OgreSceneManager.h>
 #include <OgreEntity.h>
 #include <sstream>
+
+#include "GameObject.h"
+#include "Scene.h"
+#include "ComponentData.h"
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(MeshRenderer);
 
 MeshRenderer::MeshRenderer(GameObject* gameObject) : GaiaComponent(gameObject), visible(true)
 {
@@ -18,7 +23,7 @@ MeshRenderer::~MeshRenderer()
 		gameObject->node->detachObject(entity.second);
 		gameObject->getScene()->getSceneManager()->destroyEntity(entity.second);
 	}
-	
+
 	entities.clear();
 }
 
@@ -88,14 +93,20 @@ void MeshRenderer::handleData(ComponentData* data)
 
 		if (prop.first == "mesh")
 		{
-			ss >> meshId >> meshName;
-			setMesh(meshId, meshName);
-			attachEntityToNode(meshId);
+			if (ss >> meshId >> meshName) {
+				setMesh(meshId, meshName);
+				attachEntityToNode(meshId);
+			}
+			else
+				LOG("MESH RENDERER: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "material")
 		{
-			std::string id, name; ss >> id >> name;
-			setMaterial(id, name);
+			std::string id, name;
+			if (ss >> id >> name)
+				setMaterial(id, name);
+			else
+				LOG("MESH RENDERER: wrong value for property %s.\n", prop.first.c_str());
 		}
 	}
 }

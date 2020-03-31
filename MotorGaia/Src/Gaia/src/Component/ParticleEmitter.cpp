@@ -1,9 +1,14 @@
 #include "ParticleEmitter.h"
+
 #include <OgreParticleSystem.h>
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
+
 #include "GameObject.h"
 #include "Scene.h"
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(ParticleEmitter);
 
 ParticleEmitter::ParticleEmitter(GameObject* gameObject) : GaiaComponent(gameObject), particleSystem(nullptr)
 {

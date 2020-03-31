@@ -1,6 +1,11 @@
 #include "SoundEmitter.h"
-#include "GameObject.h"
+
 #include <sstream>
+
+#include "GameObject.h"
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(SoundEmitter);
 
 SoundEmitter::SoundEmitter(GameObject* gameObject) : GaiaComponent(gameObject)
 {
@@ -33,7 +38,7 @@ void SoundEmitter::playSound(std::string soundName, bool reverb)
 
 void SoundEmitter::playMusic(std::string soundName, bool reverb)
 {
-	if (emitterData->channel) 
+	if (emitterData->channel)
 		emitterData->channel->stop();
 
 	emitterData->channel = SoundSystem::GetInstance()->playMusic(soundName);
@@ -88,12 +93,18 @@ void SoundEmitter::handleData(ComponentData* data)
 		std::stringstream ss(prop.second);
 
 		if (prop.first == "volume") {
-			float volume; ss >> volume;
-			setVolume(volume);
+			float volume;
+			if (ss >> volume)
+				setVolume(volume);
+			else
+				LOG("SOUND EMITTER: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "pitch") {
-			float pitch; ss >> pitch;
-			setPitch(pitch);
+			float pitch;
+			if (ss >> pitch)
+				setPitch(pitch);
+			else
+				LOG("SOUND EMITTER: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "playSound")
 		{

@@ -69,8 +69,10 @@ GameObject* UserComponent::instantiate(const std::string& blueprintName, const V
 	// check if blueprint name is valid
 	const GameObjectData* data = ResourcesManager::getBlueprint(blueprintName);
 	if (data == nullptr) return nullptr;
+
+	GameObjectData d = GameObjectData(*data);
 	// create object and add to pending
-	GameObject* instance = instantiate(data);
+	GameObject* instance = instantiate(&d);
 
 	if (instance->transform != nullptr)
 		instance->transform->setPosition(position);

@@ -1,11 +1,16 @@
 #include "Camera.h"
+
+#include <OgreViewport.h>
+#include <OgreSceneManager.h>
+#include <sstream>
+
 #include "GameObject.h"
 #include "Scene.h"
 #include "ComponentData.h"
-#include <OgreSceneManager.h>
-#include <sstream>
 #include "DebugUtils.h"
-#include <OgreViewport.h>
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(Camera);
 
 Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera(false)
 {

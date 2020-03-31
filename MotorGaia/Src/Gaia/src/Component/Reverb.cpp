@@ -1,7 +1,12 @@
 #include "Reverb.h"
+
+#include <sstream>
+
 #include "GameObject.h"
 #include "SoundSystem.h"
-#include <sstream>
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(Reverb);
 
 Reverb::Reverb(GameObject* gameObject) : GaiaComponent(gameObject)
 {
@@ -53,21 +58,27 @@ void Reverb::handleData(ComponentData* data)
 		std::stringstream ss(prop.second);
 
 		if (prop.first == "preset") {
-			
+
 			if (presets.find(prop.second) != presets.end())
 			{
 				reverbProperties = presets[prop.second];
 			}
-			
+
 			else LOG("REVERB: error loading preset %s\n", prop.second.c_str());
 		}
 		else if (prop.first == "maxDistance") {
-			float maxDistance; ss >> maxDistance;
-			setReverbMaxDistance(maxDistance);
+			float maxDistance;
+			if (ss >> maxDistance)
+				setReverbMaxDistance(maxDistance);
+			else
+				LOG("REVERB: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "minDistance") {
-			float minDistance; ss >> minDistance;
-			setReverbMinDistance(minDistance);
+			float minDistance;
+			if (ss >> minDistance)
+				setReverbMinDistance(minDistance);
+			else
+				LOG("REVERB: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else
 		{

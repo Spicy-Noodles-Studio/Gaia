@@ -5,6 +5,9 @@
 #include "GameObject.h"
 #include "ComponentData.h"
 #include "InterfaceSystem.h"
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(UILayout);
 
 UILayout::UILayout(GameObject* gameObject) : GaiaComponent(gameObject), layout(nullptr)
 {

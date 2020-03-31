@@ -1,12 +1,16 @@
 #include "Strider.h"
 
 #include <sstream>
+
 #include "MeshStrider.h"
 #include "MeshRenderer.h"
 #include "PhysicsSystem.h"
 #include "GameObject.h"
 #include "OgreEntity.h"
 #include "GaiaMotionState.h"
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(Strider);
 
 Strider::Strider(GameObject *gameObject) : RigidBody(gameObject), meshStrider(nullptr)
 {
@@ -39,13 +43,16 @@ void Strider::handleData(ComponentData *data)
 				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "restitution") {
-			ss >> restitution;
+			if (!(ss >> restitution))
+				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "damping") {
-			ss >> damping;
+			if (!(ss >> damping))
+				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "angularDamping") {
-			ss >> angularDamping;
+			if (!(ss >> angularDamping))
+				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else
 			LOG("STRIDER: property %s does not exist\n", prop.first.c_str());

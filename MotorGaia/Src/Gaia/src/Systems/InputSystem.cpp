@@ -64,7 +64,7 @@ void InputSystem::close()
 		{
 			SDL_GameControllerClose(controllers[ControllerIndex].controller);
 			if (controllers[ControllerIndex].controllerRumble) SDL_HapticClose(controllers[ControllerIndex].controllerRumble);
-			controllers[ControllerIndex].isConected = false;
+			controllers[ControllerIndex].isConnected = false;
 		}
 	}
 
@@ -85,7 +85,7 @@ void InputSystem::update()
 
 	for (int i = 0; i < MAX_CONTROLLERS; i++)
 	{
-		if (controllers[i].isConected)
+		if (controllers[i].isConnected)
 		{
 			// Left joystick
 			controllers[i].LeftStickX = abs(SDL_GameControllerGetAxis(controllers[i].controller, SDL_CONTROLLER_AXIS_LEFTX)) > controllers[i].JOYSTICK_DEAD_ZONE ?
@@ -118,6 +118,11 @@ void InputSystem::setDeadZone(int controller, int zone)
 	if (controller > 0 && controller < 4)
 		controllers[controller].JOYSTICK_DEAD_ZONE = zone;
 	if (flags) LOG("Controller: %i | Deadzone: %i", controller, zone);
+}
+
+bool InputSystem::isControllerConnected(int index)
+{
+	return controllers[index].isConnected;
 }
 
 // KEYBOARD
@@ -258,7 +263,7 @@ bool InputSystem::getMouseButtonRelease(char button)
 
 void InputSystem::controllerInputDown(int index)
 {
-	if (!controllers[index].isConected)return;
+	if (!controllers[index].isConnected)return;
 
 	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_UP) && !controllers[index].Up) {
 		controllers[index].Up = true;
@@ -312,7 +317,7 @@ void InputSystem::controllerInputDown(int index)
 
 void InputSystem::controllerInputUp(int index)
 {
-	if (!controllers[index].isConected)return;
+	if (!controllers[index].isConnected)return;
 
 	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_UP) && controllers[index].Up) {
 		controllers[index].Up = false;
@@ -445,7 +450,7 @@ void InputSystem::processControllerButtonDown(int index, int button)
 	int controllerIndex = -1;
 	if ((controllerIndex = getControllerFromEvent(index)) == -1) return;
 
-	if (controllers[controllerIndex].isConected) controllerInputDown(controllerIndex);
+	if (controllers[controllerIndex].isConnected) controllerInputDown(controllerIndex);
 
 	if (flags) LOG("Controller: %i Button Down", controllerIndex);
 }
@@ -455,7 +460,7 @@ void InputSystem::processControllerButtonUp(int index, int button)
 	int controllerIndex = -1;
 	if ((controllerIndex = getControllerFromEvent(index)) == -1) return;
 
-	if (controllers[controllerIndex].isConected) controllerInputUp(controllerIndex);
+	if (controllers[controllerIndex].isConnected) controllerInputUp(controllerIndex);
 
 	if (flags) LOG("Controller: %i Button Up", controllerIndex);
 }
@@ -468,7 +473,7 @@ void InputSystem::processControllerDeviceAdded(int index)
 		if ((controllerIndex = getFirstFreeController()) == -1) return;
 
 		controllers[controllerIndex].controller = SDL_GameControllerOpen(index);
-		controllers[controllerIndex].isConected = true;
+		controllers[controllerIndex].isConnected = true;
 		controllers[controllerIndex].ID = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controllers[controllerIndex].controller));
 
 		// Checks if controller has rumble device & asigns it
@@ -501,7 +506,7 @@ void InputSystem::processControllerDeviceRemoved(int index)
 	}
 
 	controllers[controllerIndex].controller = nullptr;
-	controllers[controllerIndex].isConected = false;
+	controllers[controllerIndex].isConnected = false;
 
 	currentControllers--;
 
@@ -520,7 +525,7 @@ void InputSystem::processControllerAxisLeftX(int index, double value)
 
 bool InputSystem::isButtonPressed(int controllerIndex, std::string button)
 {
-	if (!controllers[controllerIndex].isConected) return false;
+	if (!controllers[controllerIndex].isConnected) return false;
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 
@@ -566,7 +571,7 @@ bool InputSystem::isButtonPressed(int controllerIndex, std::string button)
 
 bool InputSystem::getButtonPress(int controllerIndex, std::string button)
 {
-	if (!controllers[controllerIndex].isConected) return false;
+	if (!controllers[controllerIndex].isConnected) return false;
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 	const bool is_in = controllers[controllerIndex].buttonPress.find(button) != controllers[controllerIndex].buttonPress.end();
@@ -575,7 +580,7 @@ bool InputSystem::getButtonPress(int controllerIndex, std::string button)
 
 bool InputSystem::getButtonRelease(int controllerIndex, std::string button)
 {
-	if (!controllers[controllerIndex].isConected) return false;
+	if (!controllers[controllerIndex].isConnected) return false;
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 	const bool is_in = controllers[controllerIndex].buttonRelease.find(button) != controllers[controllerIndex].buttonRelease.end();
@@ -587,7 +592,7 @@ void InputSystem::controllerRumble(int controllerIndex, float strength, int leng
 {
 	if (strength > 1.0f) strength = 1.0f;
 	if (length > 10000) length = 10000;
-	if (controllers[controllerIndex].isConected && controllers[controllerIndex].controllerRumble)
+	if (controllers[controllerIndex].isConnected && controllers[controllerIndex].controllerRumble)
 	{
 		SDL_HapticRumblePlay(controllers[controllerIndex].controllerRumble, strength, length);
 	}
@@ -617,7 +622,7 @@ void InputSystem::clearInputs()
 int InputSystem::getFirstFreeController()
 {
 	for (int i = 0; i < 4; i++) {
-		if (!controllers[i].isConected) return i;
+		if (!controllers[i].isConnected) return i;
 	}
 	return -1;
 }

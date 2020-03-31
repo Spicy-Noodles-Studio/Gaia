@@ -24,7 +24,8 @@ void Animator::setMesh(const std::string& mesh)
 	if (aux != nullptr)
 	{
 		animations = aux->getMesh(mesh)->getAllAnimationStates();
-		gameObject->getScene()->addAnimationSet(gameObject->getName(), animations);
+		if(animations != 0)
+			gameObject->getScene()->addAnimationSet(gameObject->getName(), animations);
 	}
 }
 

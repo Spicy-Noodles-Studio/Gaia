@@ -4,6 +4,7 @@
 
 #include "GaiaComponent.h"
 #include "Vector3.h"
+#include "Quaternion.h"
 
 namespace Ogre {
 	class Camera;
@@ -22,7 +23,11 @@ public:
 	enum SpaceReference { LocalSpace, WorldSpace, ParentSpace };
 
 	void lookAt(const Vector3& pos, SpaceReference space);
+
+	Vector3 getDirection() const;
 	void setDirection(const Vector3& dir);
+	Quaternion getOrientation() const;
+	void setOrientation(const Quaternion& q);
 
 	Ogre::Camera* getCamera();
 

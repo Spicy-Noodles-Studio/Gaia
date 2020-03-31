@@ -1,27 +1,24 @@
 {
+    "ObjectType" : "GAMEOBJECT",
     "ObjectType": "GAMEOBJECT",
-    "ObjectName": "Suelo",
-    "Tag": "suelo",
+    "ObjectName": "Bola",
+    "Tag": "bola",
     "Components":
     [
         {
-            "ComponentName": "Transform",
-            "ComponentProperties": [
-                ["position", "0 0 0"],
-                ["scale", "20 1 20"]
-            ]
-        },        
+            "ComponentName": "Transform"
+        },
         {
             "ComponentName" : "MeshRenderer",
             "ComponentProperties" : [
-                ["mesh", "Cube Cube.mesh"]
+                ["mesh", "Sphere Sphere.mesh"]
             ]
         },
         {
             "ComponentName" : "RigidBody",
             "ComponentProperties" : [
-                ["shape", "Box"],
-                ["mass", "0"],
+                ["shape", "Sphere"],
+                ["mass", "1"],
                 ["scale", "1 1 1"]
             ]
         }

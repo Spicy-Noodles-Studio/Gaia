@@ -17,11 +17,15 @@ GameObjectData::GameObjectData(const GameObjectData& other)
 		while (other.blueprintRef->getLoadState() != Loadable::LoadState::READY); //Wait till loaded
 		GameObjectData bp(*other.blueprintRef);
 
-		for (auto c : bp.components)
-			components[c.first] = new ComponentData(*c.second);
+		for (auto c : bp.components) {
+			components.push_back(new ComponentData(*c));
+			componentsIndexes[c->name] = components.size() - 1;
+		}
 
-		for (auto c : bp.children)
-			children[c.first] = new GameObjectData(*c.second);
+		for (auto c : bp.children) {
+			children.push_back(new GameObjectData(*c));
+			childrenIndexes[c->name] = children.size() - 1;
+		}
 
 		for (auto c : other.componentModifications)
 			applyComponentModification(c.first, c.second);
@@ -30,24 +34,28 @@ GameObjectData::GameObjectData(const GameObjectData& other)
 			applyChildModification(c.first, c.second);
 	}
 
-	for (auto c : other.components)
-		components[c.first] = new ComponentData(*c.second);
+	for (auto c : other.components) {
+		components.push_back(new ComponentData(*c));
+		componentsIndexes[c->name] = components.size() - 1;
+	}
 
-	for (auto c : other.children)
-		children[c.first] = new GameObjectData(*c.second);
+	for (auto c : other.children) {
+		children.push_back(new GameObjectData(*c));
+		childrenIndexes[c->name] = children.size() - 1;
+	}
 
 }
 
 GameObjectData::~GameObjectData()
 {
 	for (auto c : components) {
-		delete c.second;
-		c.second = nullptr;
+		delete c;
+		c = nullptr;
 	}
 
 	for (auto c : children) {
-		delete c.second;
-		c.second = nullptr;
+		delete c;
+		c = nullptr;
 	}
 
 	for (auto c : componentModifications) {
@@ -61,7 +69,9 @@ GameObjectData::~GameObjectData()
 	}
 
 	components.clear();
+	componentsIndexes.clear();
 	children.clear();
+	childrenIndexes.clear();
 	componentModifications.clear();
 	childrenModifications.clear();
 }
@@ -97,7 +107,7 @@ bool GameObjectData::loadData(const RawData& data)
 		std::string bpName = *bpPath;
 		// Coge la referencia del blueprint
 		const BlueprintData* bpData = ResourcesManager::getBlueprint(bpName);
-		if (bpData->getLoadState() == Loadable::LoadState::INVALID || bpData == nullptr)
+		if (bpData == nullptr || bpData->getLoadState() == Loadable::LoadState::INVALID)
 			return false;
 
 		setBlueprint(bpData);
@@ -172,9 +182,9 @@ bool GameObjectData::addComponentModifications(const RawData& data)
 		cData->setName(*name);
 		// Por cada propiedad
 		for (auto& prop : properties.value().items()) {
-			std::string cName = prop.key();
-			std::string cValue = prop.value();
-			if (!cData->addProperty(prop.key(), prop.value())) {
+			std::string cName = prop.value()[0];
+			std::string cValue = prop.value()[1];
+			if (!cData->addProperty(cName, cValue)) {
 				LOG_ERROR("GAMEOBJECT DATA", "Error trying to add a ComponentProperty: \"%s\" : \"%s\"", cName.c_str(), cValue.c_str());
 				return false;
 			}
@@ -208,7 +218,7 @@ bool GameObjectData::addChildrenModifications(const RawData& data)
 			if (!childData->addChildrenModifications(*childModMod))
 				LOG_ERROR("GAMEOBJECT DATA", "Adding ChildrenModifications \"%s\" failed", childCompMod.key().c_str());
 
-		// A�adir componentes a los ya existentes
+		// Anyadir componentes a los ya existentes
 		nlohmann::json::const_iterator childComp = mod.value().find("Components");
 		if (childComp != mod.value().end()) {
 			LOG("\"Components\" keyword found. Loading...");
@@ -219,7 +229,7 @@ bool GameObjectData::addChildrenModifications(const RawData& data)
 			LOG("\"Components\" loaded successfully");
 		}
 
-		// A�adir hijos a los ya existentes
+		// Anyadir hijos a los ya existentes
 		nlohmann::json::const_iterator childChildren = mod.value().find("Children");
 		if (childChildren != mod.value().end()) {
 			LOG("\"Children\" keyword found. Loading...");
@@ -251,20 +261,21 @@ bool GameObjectData::addComponent(const RawData& data)
 	nlohmann::json::const_iterator name = data.find("ComponentName");
 	nlohmann::json::const_iterator properties = data.find("ComponentProperties");
 
-	if (components.find(*name) != components.end()) {
+	if (componentsIndexes.find(*name) != componentsIndexes.end()) {
 		std::string nameAux = *name;
 		LOG_ERROR("GAMEOBJECT DATA", "Trying to add an already exiting component \"%s\"", nameAux.c_str());
 		return false;
 	}
 
 	ComponentData* cData = new ComponentData();
-	components[*name] = cData;
+	components.push_back(cData);
+	componentsIndexes[*name] = components.size() - 1;;
 
 	cData->setName(*name);
 	if (properties != data.end()) {
 		LOG("Loading %s properties", cData->getName().c_str());
 		for (auto& property : (*properties).items()) {
-			if (!cData->addProperty(property.key(), property.value())) {
+			if (property.value().size() != 2 || !cData->addProperty(property.value()[0], property.value()[1])) {
 				return false;
 			}
 		}
@@ -294,13 +305,14 @@ bool GameObjectData::addChild(const RawData& data)
 {
 	nlohmann::json::const_iterator objectName = data.find("ObjectName");
 
-	if (children.find(*objectName) != children.end()) {
+	if (childrenIndexes.find(*objectName) != childrenIndexes.end()) {
 		LOG_ERROR("GAMEOBJECT DATA", "Trying to load a children modification \"%s\" that already was registered", *objectName.key().c_str());
 		return false;
 	}
 
 	GameObjectData* gData = new GameObjectData();
-	children[*objectName] = gData;
+	children.push_back(gData);
+	childrenIndexes[*objectName] = children.size() - 1;;
 
 	if (!gData->loadData(data)) {
 		LOG_ERROR("GAMEOBJECT DATA", "Adding Child \"%s\" failed", *objectName.key().c_str());
@@ -321,20 +333,26 @@ void GameObjectData::setTag(const std::string& gameObjectTag)
 
 void GameObjectData::addComponentData(const std::string& componentName, ComponentData* data)
 {
-	if (components.find(componentName) != components.end()) {
+	if (componentsIndexes.find(componentName) != componentsIndexes.end()) {
 		LOG("GAMEOBJECT DATA: object %s component %s data has been overwritten\n", name.c_str(), componentName.c_str());
-		delete components[componentName];
+		delete components[componentsIndexes[componentName]];
+		components[componentsIndexes[componentName]] = data;
+		return;
 	}
-	components[componentName] = data;
+	components.push_back(data);
+	componentsIndexes[componentName] = components.size() - 1;
 }
 
 void GameObjectData::addChildrenData(const std::string& childrenName, GameObjectData* data)
 {
-	if (children.find(childrenName) != children.end()) {
+	if (childrenIndexes.find(childrenName) != childrenIndexes.end()) {
 		LOG("GAMEOBJECT DATA: object %s child %s data has been overwritten\n", name.c_str(), childrenName.c_str());
-		delete children[childrenName];
+		delete children[childrenIndexes[childrenName]];
+		children[childrenIndexes[childrenName]] = data;
+		return;
 	}
-	children[childrenName] = data;
+	children.push_back(data);
+	childrenIndexes[childrenName] = children.size() - 1;
 }
 
 void GameObjectData::setBlueprint(const BlueprintData* bpRef)
@@ -345,9 +363,9 @@ void GameObjectData::setBlueprint(const BlueprintData* bpRef)
 void GameObjectData::applyChildModification(const std::string& name, GameObjectData* data)
 {
 	for (auto child : data->children) {
-		for (auto comp : child.second->components) {
-			for (auto prop : comp.second->getProperties())
-				modifyChildData(child.first, comp.first, prop.first, prop.second);
+		for (auto comp : child->components) {
+			for (auto prop : comp->getProperties())
+				modifyChildData(child->name, comp->name, prop.first, prop.second);
 		}
 	}
 }
@@ -361,21 +379,21 @@ void GameObjectData::applyComponentModification(const std::string& name, Compone
 
 bool GameObjectData::modifyComponentData(const std::string& componentName, const std::string& propertyName, const std::string& value)
 {
-	if (components.find(componentName) == components.end()) {
+	if (componentsIndexes.find(componentName) == componentsIndexes.end()) {
 		LOG("GAMEOBJECT DATA: tried to modify component %s, does not exist in object %s\n", componentName.c_str(), name.c_str());
 		return false;
 	}
-	components[componentName]->modifyProperty(propertyName, value);
+	components[componentsIndexes[componentName]]->modifyProperty(propertyName, value);
 	return true;
 }
 
 bool GameObjectData::modifyChildData(const std::string& childName, const std::string& componentName, const std::string& propertyName, const std::string& value)
 {
-	if (children.find(childName) == children.end()) {
+	if (childrenIndexes.find(childName) == childrenIndexes.end()) {
 		LOG("GAMEOBJECT DATA: tried to modify child %s, does not exist in object %s\n", childName.c_str(), name.c_str());
 		return false;
 	}
-	return children[childName]->modifyComponentData(componentName, propertyName, value);
+	return children[childrenIndexes[childName]]->modifyComponentData(componentName, propertyName, value);
 
 }
 
@@ -389,38 +407,38 @@ const std::string& GameObjectData::getTag() const
 	return tag;
 }
 
-const std::unordered_map<std::string, ComponentData*>& GameObjectData::getComponentData() const
+const std::vector<ComponentData*>& GameObjectData::getComponentData() const
 {
 	return components;
 }
 
-const std::unordered_map<std::string, GameObjectData*>& GameObjectData::getChildrenData() const
+const std::vector<GameObjectData*>& GameObjectData::getChildrenData() const
 {
 	return children;
 }
 
 GameObjectData* GameObjectData::getChild(const std::string& childName, bool& exists)
 {
-	auto child = children.find(childName);
-	if (child == children.end()) {
+	auto child = childrenIndexes.find(childName);
+	if (child == childrenIndexes.end()) {
 		exists = false;
 		LOG("GAMEOBJECT DATA: child with name %s does not exist in object %s\n", childName.c_str(), name.c_str());
 		return GameObjectData::empty();
 	}
 	exists = true;
-	return  (*child).second;
+	return children[(*child).second];
 }
 
 ComponentData* GameObjectData::getComponent(const std::string& componentName, bool& exists)
 {
-	auto component = components.find(componentName);
-	if (component == components.end()) {
+	auto component = componentsIndexes.find(componentName);
+	if (component == componentsIndexes.end()) {
 		exists = false;
 		LOG("GAMEOBJECT DATA: component with name %s does not exist in object %s\n", componentName.c_str(), name.c_str());
 		return ComponentData::empty();
 	}
 	exists = true;
-	return  (*component).second;
+	return components[(*component).second];
 }
 
 GameObjectData* GameObjectData::empty()

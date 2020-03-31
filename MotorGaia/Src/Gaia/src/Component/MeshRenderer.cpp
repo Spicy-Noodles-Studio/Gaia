@@ -14,8 +14,10 @@ MeshRenderer::MeshRenderer(GameObject* gameObject) : GaiaComponent(gameObject), 
 
 MeshRenderer::~MeshRenderer()
 {
-	for (auto entity : entities) 
+	for (auto entity : entities) {
+		gameObject->node->detachObject(entity.second);
 		gameObject->getScene()->getSceneManager()->destroyEntity(entity.second);
+	}
 	
 	entities.clear();
 }

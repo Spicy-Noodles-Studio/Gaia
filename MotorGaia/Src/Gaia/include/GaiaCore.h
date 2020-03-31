@@ -11,6 +11,8 @@ namespace Ogre {
 
 class Window;
 
+class Timer;
+
 class EventSystem;
 class RenderSystem;
 class InputSystem;
@@ -40,6 +42,9 @@ private:
 
 	Ogre::Root* root;
 	Window* window;
+
+	//Timer (main engine timer)
+	Timer* timer;
 
 	//Systems
 	EventSystem* eventSystem;

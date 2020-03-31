@@ -41,8 +41,8 @@ public:
 
 	const std::string& getName() const;
 	const std::string& getTag() const;
-	const std::unordered_map<std::string, ComponentData*>& getComponentData() const;
-	const std::unordered_map<std::string, GameObjectData*>& getChildrenData() const;
+	const std::vector<ComponentData*>& getComponentData() const;
+	const std::vector<GameObjectData*>& getChildrenData() const;
 	GameObjectData* getChild(const std::string& childName, bool& exists);
 	ComponentData* getComponent(const std::string& componentName, bool& exists);
 
@@ -53,8 +53,11 @@ public:
 	std::string tag;
 	const BlueprintData* blueprintRef;
 
-	std::unordered_map<std::string, ComponentData*> components;
-	std::unordered_map<std::string, GameObjectData*> children;
+	//Cambiar para que vaya en orden
+	std::vector<ComponentData*> components;
+	std::unordered_map<std::string, int> componentsIndexes;
+	std::vector<GameObjectData*> children;
+	std::unordered_map<std::string, int> childrenIndexes;
 
 	std::unordered_map<std::string, ComponentData*> componentModifications;
 	std::unordered_map<std::string, GameObjectData*> childrenModifications;

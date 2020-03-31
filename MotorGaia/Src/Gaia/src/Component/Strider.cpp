@@ -8,7 +8,7 @@
 #include "OgreEntity.h"
 #include "GaiaMotionState.h"
 
-Strider::Strider(GameObject* gameObject) : RigidBody(gameObject), meshStrider(nullptr)
+Strider::Strider(GameObject *gameObject) : RigidBody(gameObject), meshStrider(nullptr)
 {
 }
 
@@ -17,34 +17,58 @@ Strider::~Strider()
 	delete meshStrider;
 }
 
-void Strider::handleData(ComponentData* data)
+void Strider::handleData(ComponentData *data)
 {
+	float friction = 0.0f,restitution = 0.0, damping = 0.0f, angularDamping = 0.0f;
+	bool trigger = false;
 	for (auto prop : data->getProperties())
 	{
-		float friction = 0.0f;
 		std::stringstream ss(prop.second);
 		if (prop.first == "mesh")
 		{
 			stride(prop.second);
 		}
-		else if (prop.first == "friction") {
+		else if (prop.first == "friction")
+		{
 			if (!(ss >> friction))
 				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+		}
+		else if (prop.first == "trigger")
+		{
+			if (!(ss >> trigger))
+				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+		}
+		else if (prop.first == "restitution") {
+			ss >> restitution;
+		}
+		else if (prop.first == "damping") {
+			ss >> damping;
+		}
+		else if (prop.first == "angularDamping") {
+			ss >> angularDamping;
 		}
 		else
 			LOG("STRIDER: property %s does not exist\n", prop.first.c_str());
 	}
+	body->setFriction(friction);
+	setTrigger(trigger);
+	setDamping(damping);
+	setAngularDamping(angularDamping);
+	setFriction(friction);
+	setRestitution(restitution);
 }
 
-void Strider::stride(const std::string& mesh)
+void Strider::stride(const std::string &mesh)
 {
-	MeshRenderer* mRend = gameObject->getComponent<MeshRenderer>();
+	MeshRenderer *mRend = gameObject->getComponent<MeshRenderer>();
 	if (mRend != nullptr)
 	{
-		Ogre::Entity* ent = mRend->getMesh(mesh);
-		if (ent != nullptr) {
+		Ogre::Entity *ent = mRend->getMesh(mesh);
+		if (ent != nullptr)
+		{
 			Ogre::MeshPtr mPtr = ent->getMesh();
-			if (meshStrider != nullptr) delete meshStrider;
+			if (meshStrider != nullptr)
+				delete meshStrider;
 			meshStrider = new MeshStrider(mPtr.getPointer());
 			motionState = new GaiaMotionState(gameObject->transform);
 

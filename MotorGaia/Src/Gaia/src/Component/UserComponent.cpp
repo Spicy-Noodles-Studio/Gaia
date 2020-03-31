@@ -81,9 +81,11 @@ GameObject* UserComponent::instantiate(const std::string& blueprintName, const V
 GameObject* UserComponent::instantiate(const GameObjectData* data)
 {
 	GameObject* instance = new GameObject(data->getName(), data->getTag(), gameObject->getScene());
+	gameObject->getScene()->instantiate(instance);
+
 	// Component
 	for (auto compData : data->getComponentData()) {
-		ComponentData* cData = compData.second;
+		ComponentData* cData = compData;
 		auto constructor = ComponentManager::GetInstance()->getComponentFactory(cData->getName());
 		if (constructor != nullptr)
 		{
@@ -95,11 +97,9 @@ GameObject* UserComponent::instantiate(const GameObjectData* data)
 	}
 	// For each child, create the child
 	for (auto childData : data->getChildrenData()) {
-		GameObject* child = instantiate(childData.second);
+		GameObject* child = instantiate(childData);
 		instance->addChild(child);
 	}
-
-	gameObject->getScene()->instantiate(instance);
 
 	return instance;
 }
@@ -117,6 +117,11 @@ GameObject* UserComponent::findGameObjectWithName(const std::string& name)
 std::vector<GameObject*> UserComponent::findGameObjectsWithTag(const std::string& tag)
 {
 	return gameObject->myScene->getGameObjectsWithTag(tag);
+}
+
+void UserComponent::dontDestroyOnLoad(GameObject* gameObject)
+{
+	gameObject->myScene->dontDestroyOnLoad(gameObject);
 }
 
 bool UserComponent::hasStarted()

@@ -42,26 +42,36 @@ SceneData* SceneData::empty()
 	// Camera with white light
 	GameObjectData* camera = new GameObjectData();
 	camera->name = "MainCamera";
-	camera->components["Transform"] = new ComponentData();
-	camera->components["Transform"]->name = "Transform";
-	camera->components["Transform"]->addProperty("position", "0 0 400");
-	camera->components["Camera"] = new ComponentData();
-	camera->components["Camera"]->name = "Camera";
-	camera->components["Camera"]->addProperty("main", "true");
-	camera->components["Light"] = new ComponentData();
-	camera->components["Light"]->name = "Light";
-	camera->components["Light"]->addProperty("colour", "1.0 1.0 1.0");
-	camera->components["Light"]->addProperty("type", "Point");
+	//Transform
+	camera->components.push_back(new ComponentData());
+	camera->componentsIndexes["Transform"] = camera->components.size() - 1;
+	camera->components[0]->name = "Transform";
+	camera->components[0]->addProperty("position", "0 0 400");
+	//Camera
+	camera->components.push_back(new ComponentData());
+	camera->componentsIndexes["Camera"] = camera->components.size() - 1;
+	camera->components[1]->name = "Camera";
+	camera->components[1]->addProperty("main", "true");
+	//Light
+	camera->components.push_back(new ComponentData());
+	camera->componentsIndexes["Light"] = camera->components.size() - 1;
+	camera->components[2]->name = "Light";
+	camera->components[2]->addProperty("colour", "1.0 1.0 1.0");
+	camera->components[2]->addProperty("type", "Point");
 	// Cube with tranform
 	GameObjectData* cube = new GameObjectData();
 	cube->name = "Cube";
-	cube->components["Transform"] = new ComponentData();
-	cube->components["Transform"]->name = "Transform";
-	cube->components["Transform"]->addProperty("position", "0 0 0");
-	cube->components["Transform"]->addProperty("rotation", "45 45 45");
-	cube->components["MeshRenderer"] = new ComponentData();
-	cube->components["MeshRenderer"]->name = "MeshRenderer";
-	cube->components["MeshRenderer"]->addProperty("mesh", "cube cube.mesh");
+	//Transform
+	cube->components.push_back(new ComponentData());
+	cube->componentsIndexes["Transform"] = cube->components.size() - 1;
+	cube->components[0]->name = "Transform";
+	cube->components[0]->addProperty("position", "0 0 0");
+	cube->components[0]->addProperty("rotation", "45 45 45");
+	//Mesh renderer
+	cube->components.push_back(new ComponentData());
+	cube->componentsIndexes["MeshRenderer"] = cube->components.size() - 1;
+	cube->components[1]->name = "MeshRenderer";
+	cube->components[1]->addProperty("mesh", "Cube Cube.mesh");
 
 	s->setGameObjectData(camera);
 	s->setGameObjectData(cube);

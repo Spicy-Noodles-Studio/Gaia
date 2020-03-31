@@ -20,6 +20,7 @@ public:
 
 	void setLayout(const std::string& filename);
 	UIElement getUIElement(const std::string& name);
+	UIElement getRoot();
 	void setVisible(bool visible);
 };
 

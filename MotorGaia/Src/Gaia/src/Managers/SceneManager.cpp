@@ -3,8 +3,10 @@
 #include "ComponentManager.h"
 #include "GameObject.h"
 #include "SceneData.h"
+#include "PhysicsSystem.h"
+#include "DebugDrawer.h"
 
-SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), window(nullptr)
+SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), window(nullptr), countNodeIDs(0), debugDrawer(nullptr)
 {
 
 }
@@ -18,6 +20,11 @@ void SceneManager::init(Ogre::Root* root, Window* window)
 {
 	this->root = root;
 	this->window = window;
+	this->sceneManager = root->createSceneManager();
+
+	debugDrawer = new DebugDrawer(this->sceneManager);
+	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
+
 
 	loadScene(ResourcesManager::getSceneData(0));
 	// Let it change runtime
@@ -26,11 +33,14 @@ void SceneManager::init(Ogre::Root* root, Window* window)
 
 void SceneManager::close()
 {
+	if (debugDrawer != nullptr)
+		delete debugDrawer;
 	if (currentScene != nullptr)
 		delete currentScene;
 	if (stackScene != nullptr)
 		delete stackScene;
 
+	debugDrawer = nullptr;
 	currentScene = nullptr;
 	stackScene = nullptr;
 
@@ -84,7 +94,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 
 Scene* SceneManager::createScene(const SceneData* data)
 {
-	Scene* myScene = new Scene(data->name, root);
+	Scene* myScene = new Scene(data->name, this);
 	// For each GameObjectData, create the gameObject
 	for (GameObjectData* gData : data->getGameObjectsData()) {
 		createGameObject(gData, myScene);
@@ -103,7 +113,7 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 
 	// Component
 	for (auto compData : gData.getComponentData()) {
-		ComponentData* cData = compData.second;
+		ComponentData* cData = compData;
 		auto constructor = ComponentManager::GetInstance()->getComponentFactory(cData->getName());
 		if (constructor != nullptr)
 		{
@@ -115,10 +125,8 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 	}
 
 	// For each child, create the child
-	for (auto childData : gData.getChildrenData()) {
-		GameObject* child = createGameObject(childData.second, scene, gameObject);
-	}
-
+	for (auto childData : gData.getChildrenData())
+		GameObject* child = createGameObject(childData, scene, gameObject);
 
 	return gameObject;
 }
@@ -141,13 +149,17 @@ void SceneManager::processSceneChange()
 	if (stackScene == nullptr)
 		return;
 
+	processDontDestroyObjects();
+
 	Scene* oldScene = currentScene;
 	currentScene = stackScene;
 	stackScene = nullptr;
+
 	if (oldScene != nullptr)
 		delete oldScene;
 
 	processCameraChange();
+
 }
 
 void SceneManager::processCameraChange()
@@ -161,6 +173,27 @@ void SceneManager::processCameraChange()
 	}
 	window->removeAllViewports();
 	window->addViewport(camera->getCamera());
+}
+
+void SceneManager::processDontDestroyObjects()
+{
+	if (currentScene == nullptr)
+		return;
+
+	for (GameObject* gameObject : currentScene->dontDestroyObjects) {
+		//Reset components
+		for (auto component : gameObject->userComponents) {
+			component->sleeping = true;
+			component->started = false;
+			stackScene->addUserComponent(component);
+		}
+		stackScene->addGameObject(gameObject);
+	}
+}
+
+std::string SceneManager::getNextNodeID()
+{
+	return std::string(std::to_string(countNodeIDs++));
 }
 
 bool SceneManager::exist(const std::string& name)

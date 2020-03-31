@@ -25,20 +25,21 @@ void UILayout::setLayout(const std::string& filename)
 		return;
 	InterfaceSystem::GetInstance()->getRoot()->getElement()->addChild(layout->getElement());
 
-	layout->getElement()->getChild("StaticImage")->setAlpha(0.0f);
+	layout->getElement()->setAlpha(0.0f);
 
 	size_t index = 0;
-	while (index < layout->getElement()->getChild("StaticImage")->getChildCount())
+	while (index < layout->getElement()->getChildCount())
 	{
-		layout->getElement()->getChild("StaticImage")->getChildAtIdx(index)->setInheritsAlpha(false);
+		layout->getElement()->getChildAtIdx(index)->setInheritsAlpha(false);
 		++index;
 	}
 }
 
 void UILayout::setEvent(const std::string& element, const std::string& event)
 {
-	getUIElement("StaticImage").getElement()->getChild(element)->
-		subscribeEvent(InterfaceSystem::GetInstance()->getEvent(event).first, InterfaceSystem::GetInstance()->getEvent(event).second);
+	layout->getElement()->getChildRecursive(element)->
+		subscribeEvent(InterfaceSystem::GetInstance()->getEventType(InterfaceSystem::GetInstance()->getEvent(event).first),
+			InterfaceSystem::GetInstance()->getEvent(event).second);
 }
 
 void UILayout::handleData(ComponentData* data)
@@ -71,6 +72,11 @@ UIElement UILayout::getUIElement(const std::string& name)
 	if (layout == nullptr)
 		return nullptr;
 	return UIElement(layout->getElement()->getChild(name));
+}
+
+UIElement UILayout::getRoot()
+{
+	return *layout;
 }
 
 void UILayout::setVisible(bool visible)

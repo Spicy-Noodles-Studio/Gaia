@@ -4,16 +4,20 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "DebugDrawer.h"
+#include "SceneManager.h"
 
-Scene::Scene(const std::string& sceneName, Ogre::Root* root) : name(sceneName), root(root), sceneManager(root->createSceneManager()), mainCamera(nullptr)
+Scene::Scene(const std::string& sceneName, SceneManager* sceneManager) : name(sceneName), sceneManager(sceneManager), mainCamera(nullptr)
 {
-	debugDrawer = new DebugDrawer(sceneManager);
-	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
+
 }
 
 Scene::~Scene()
 {
 	for (GameObject* gameObject : sceneObjects) {
+		//If it has to be destroyed
+		if (std::find(dontDestroyObjects.begin(), dontDestroyObjects.end(), gameObject) != dontDestroyObjects.end())
+			continue;
+
 		delete gameObject;
 		gameObject = nullptr;
 	}
@@ -25,20 +29,17 @@ Scene::~Scene()
 
 	sceneObjects.clear();
 	destroyQueue.clear();
+	dontDestroyObjects.clear();
 	instantiateQueue.clear();
-
-	sceneManager->clearScene();
-	root->destroySceneManager(sceneManager);
-
-	mainCamera = nullptr;
-
 	animationSets.clear();
 
-	delete debugDrawer;
+	mainCamera = nullptr;
 }
 
 void Scene::awake()
 {
+	std::vector<UserComponent*> userComponents = this->userComponents;
+
 	// awake components
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && c->isSleeping()) {
@@ -50,6 +51,8 @@ void Scene::awake()
 
 void Scene::start()
 {
+	std::vector<UserComponent*> userComponents = this->userComponents;
+
 	// start components
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && !c->isSleeping() && !c->hasStarted()) {
@@ -61,6 +64,8 @@ void Scene::start()
 
 void Scene::preUpdate(float deltaTime)
 {
+	std::vector<UserComponent*> userComponents = this->userComponents;
+
 	//Preupdate components
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && !c->isSleeping() && c->hasStarted())
@@ -71,6 +76,8 @@ void Scene::preUpdate(float deltaTime)
 
 void Scene::update(float deltaTime)
 {
+	std::vector<UserComponent*> userComponents = this->userComponents;
+
 	// update components
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && !c->isSleeping() && c->hasStarted())
@@ -80,6 +87,8 @@ void Scene::update(float deltaTime)
 
 void Scene::postUpdate(float deltaTime)
 {
+	std::vector<UserComponent*> userComponents = this->userComponents;
+
 	// postUpdate compoenent
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && !c->isSleeping() && c->hasStarted())
@@ -94,12 +103,12 @@ const std::string& Scene::getName()
 
 Ogre::SceneManager* Scene::getSceneManager() const
 {
-	return sceneManager;
+	return sceneManager->sceneManager;
 }
 
 Ogre::Entity* Scene::createEntity(const std::string& name)
 {
-	return sceneManager->createEntity(name);
+	return getSceneManager()->createEntity(name);
 }
 
 GameObject* Scene::getGameObjectWithName(const std::string& name)
@@ -146,8 +155,6 @@ void Scene::addUserComponent(UserComponent* component)
 
 bool Scene::addGameObject(GameObject* gameObject)
 {
-	// TODO: Antes deberia de mirar si el objeto ya existe, o si hay alguno con el mismo nombre o tag
-	/* Hacer aqui */
 	std::string objectName = gameObject->getName();
 	if (repeatedNames.find(objectName) != repeatedNames.end()) {
 		objectName += ("(" + std::to_string(++repeatedNames[objectName]) + ")");
@@ -181,10 +188,28 @@ void Scene::destroyPendingGameObjects()
 void Scene::destroyGameObject(GameObject* gameObject)
 {
 	destroyQueue.push_back(gameObject);
+	
+	//Mira si esta en dontDestroy para sacarlo
+	if (dontDestroyObjects.find(gameObject) != dontDestroyObjects.end())
+		dontDestroyObjects.erase(gameObject);
 }
 
 void Scene::instantiate(GameObject* gameObject)
 {
+	//Comprueba nombres antes de meter en la cola de intanciacion
+	std::string objectName = gameObject->getName();
+	if (repeatedNames.find(objectName) != repeatedNames.end()) {
+		objectName += ("(" + std::to_string(++repeatedNames[objectName]) + ")");
+		LOG("SCENE: Trying to add gameobject with name %s that already exists in scene %s\n", gameObject->getName().c_str(), name.c_str());
+		LOG("SCENE: Adding gameobject with name %s\n", objectName.c_str());
+		gameObject->name = objectName;
+		// Try to add again
+		instantiate(gameObject);
+		return;
+	}
+
+	repeatedNames[gameObject->getName()] = 0;
+
 	gameObject->node->setVisible(false);
 	gameObject->setActive(false);
 	instantiateQueue.push_back(gameObject);
@@ -197,7 +222,8 @@ void Scene::instantiatePendingGameObjects()
 	for (auto gameObject : instantiateQueue) {
 		gameObject->node->setVisible(true);
 		gameObject->setActive(true);
-		addGameObject(gameObject);
+		gameObject->myScene = this;
+		sceneObjects.push_back(gameObject);
 	}
 	instantiateQueue.clear();
 }
@@ -210,4 +236,16 @@ void Scene::updateAllAnimations(float deltaTime)
 		for (auto anim : set.second->getEnabledAnimationStates())
 			anim->addTime(deltaTime);
 	}
+}
+
+void Scene::dontDestroyOnLoad(GameObject* gameObject)
+{
+	// Dont register an already existing object
+	if (dontDestroyObjects.find(gameObject) != dontDestroyObjects.end())
+		return;
+	//Check if it is on the destroy queue
+	if (std::find(destroyQueue.begin(), destroyQueue.end(), gameObject) != destroyQueue.end())
+		return;
+
+	dontDestroyObjects.insert(gameObject);
 }

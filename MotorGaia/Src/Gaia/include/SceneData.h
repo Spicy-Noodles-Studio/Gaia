@@ -25,6 +25,7 @@ protected:
 	virtual bool load_internal();
 
 public:
+	int index;
 	std::string name;
 	std::vector<GameObjectData*> gameObjectData;
 };

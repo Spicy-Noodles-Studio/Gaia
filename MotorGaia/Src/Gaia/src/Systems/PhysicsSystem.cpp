@@ -7,13 +7,12 @@
 #include "GaiaMotionState.h"
 #include "RigidBody.h"
 #include "GameObject.h"
-#include "gTime.h"
 #include "DebugDrawer.h"
 #include "MeshStrider.h"
 
 
 PhysicsSystem::PhysicsSystem() : dynamicsWorld(nullptr), collisionConfiguration(nullptr),
-								 dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr), time(0.0)
+								 dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr), timeAccumulator(0.0)
 {
 }
 
@@ -30,6 +29,7 @@ void PhysicsSystem::init()
 
 	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
 	dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	
 
 	///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
 	overlappingPairCache = new btDbvtBroadphase();
@@ -39,28 +39,28 @@ void PhysicsSystem::init()
 
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
-	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+	dynamicsWorld->setGravity(btVector3(0, -9.81, 0));
 
 	dynamicsWorld->setForceUpdateAllAabbs(false);
 
-	time = 0;
-
 	///-----initialization_end-----
+	
 }
 
 void PhysicsSystem::render()
 {
+	dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
 	dynamicsWorld->debugDrawWorld();
 }
 
 void PhysicsSystem::update(float deltaTime)
 {
-	time += deltaTime;
-	while (time >= 1.0f / 50.0f)
+	timeAccumulator += deltaTime;
+	while (timeAccumulator >= 1.0f / 50.0f)
 	{
-		dynamicsWorld->stepSimulation(1.0f / 50.0f, 1);
+		dynamicsWorld->stepSimulation(1.0f / 50.0f, 0);
 		checkCollisions();
-		time -= 1.0f / 50.0f;
+		timeAccumulator -= 1.0f / 50.0f;
 	}
 }
 
@@ -142,16 +142,25 @@ void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
 
 // Creates a btRigidBody with the specified properties, adds it to the dynamicWorld
 // and returns a reference to it
-btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim, uint16_t myGroup, uint16_t mask)
+btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim)
 {
 	btCollisionShape* colShape;
 	switch (shape)
 	{
 	case BOX_RB_SHAPE:
-		colShape = new btBoxShape(btVector3(btScalar(dim.x), btScalar(dim.y), btScalar(dim.z)));
+		colShape = new btBoxShape(btVector3(btScalar(dim.x / 2.0f), btScalar(dim.y / 2.0f), btScalar(dim.z / 2.0f)));
 		break;
 	case SPHERE_RB_SHAPE:
-		colShape = new btSphereShape(btScalar(std::max(std::max(dim.x, dim.y), dim.z)));
+		colShape = new btSphereShape(btScalar(std::max(std::max(dim.x / 2.0f, dim.y / 2.0f), dim.z / 2.0f)));
+		break;
+	case CAPSULE_RB_SHAPE:
+		colShape = new btCapsuleShape(btScalar(std::max(dim.x / 2.0f, dim.z / 2.0f)), btScalar(dim.y));
+		break;
+	case CYLINDER_RB_SHAPE:
+		colShape = new btCylinderShape(btVector3(btScalar(dim.x / 2.0f), btScalar(dim.y / 2.0f), btScalar(dim.z / 2.0f)));
+		break;
+	case CONE_RB_SHAPE:
+		colShape = new btConeShape(btScalar(std::max(dim.x / 2.0f, dim.z / 2.0f)), btScalar(dim.y));
 		break;
 	default:
 		break;
@@ -179,6 +188,22 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 void PhysicsSystem::deleteRigidBody(btRigidBody* body)
 {
 	if (body != nullptr) {
+
+		RigidBody* rigidBody = (RigidBody*)body->getUserPointer();
+		//Buscar en la lista de contactos
+		//Registramos presencia
+		std::vector<std::pair<RigidBody*, RigidBody*>> presence;
+		for (auto contact : contacts) {
+			if (contact.first.first == rigidBody || contact.first.second == rigidBody)
+				presence.push_back(contact.first);
+		}
+
+		for (auto contact : presence) {
+			//TODO: a lo mejor llamar a OnExitCallback del que no se elimina??
+			contacts.erase(contact);
+		}
+
+
 		btCollisionObject* obj = body;
 		btCollisionShape* shape = obj->getCollisionShape();
 		deleteBody(obj);
@@ -207,7 +232,7 @@ btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, GaiaMotionStat
 	collisionShapes.push_back(colShape);
 	colShape->setLocalScaling({ btScalar(dim.x), btScalar(dim.y), btScalar(dim.z) });
 
-	btScalar mass = 0;//Always static
+	btScalar mass = 0; //Always static
 	btVector3 localInertia(0, 0, 0);
 
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
@@ -226,25 +251,46 @@ void PhysicsSystem::checkCollisions()
 	for (int i = 0; i < numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+
+		//Comprobamos que realmente hay contacto
+		int numContacts = contactManifold->getNumContacts(), j = 0;
+		bool contact = false;
+		btManifoldPoint pt;
 		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0()), * obB = (btCollisionObject*)(contactManifold->getBody1());
 
-		RigidBody* rbA = (RigidBody*)obA->getUserPointer(), * rbB = (RigidBody*)obB->getUserPointer();
+		btVector3 aux;
+		btScalar dim1, dim2;
+		obA->getCollisionShape()->getBoundingSphere(aux, dim1);
+		obB->getCollisionShape()->getBoundingSphere(aux, dim2);
+		dim1 = std::min(dim1, dim2);
 
-		if (rbA == nullptr or rbB == nullptr) return;
+		while (!contact && j < numContacts)
+		{
+			pt = contactManifold->getContactPoint(j);
+			contact = pt.getDistance() < 0.f && pt.getDistance()> -dim1;
+			j++;
+		}
 
-		// Orden A < B, para el mapa
-		if (rbA > rbB) std::swap(rbA, rbB);
+		if (contact)
+		{
+			RigidBody* rbA = (RigidBody*)obA->getUserPointer(), * rbB = (RigidBody*)obB->getUserPointer();
 
-		std::pair<RigidBody*, RigidBody*> col = { rbA,rbB };
-		newContacts[col] = true;
+			if (!(rbA == nullptr || rbB == nullptr))
+			{
+				// Orden A < B, para el mapa
+				if (rbA > rbB) std::swap(rbA, rbB);
 
-		//Llamamos al collisionEnter si no estaban registrados.
-		if (!contacts[col])
-			CollisionEnterCallbacks(col);
-		// Si ya estaban llamamos al collisionStay.
-		else
-			CollisionStayCallbacks(col);
+				std::pair<RigidBody*, RigidBody*> col = { rbA,rbB };
+				newContacts[col] = true;
 
+				//Llamamos al collisionEnter si no estaban registrados.
+				if (contacts.find(col) == contacts.end())
+					CollisionEnterCallbacks(col);
+				// Si ya estaban llamamos al collisionStay.
+				else
+					CollisionStayCallbacks(col);
+			}
+		}
 	}
 
 	//Comprobamos que contactos ya no estan
@@ -279,6 +325,9 @@ void PhysicsSystem::CollisionEnterCallbacks(const std::pair<RigidBody*, RigidBod
 
 void PhysicsSystem::CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
 {
+	if (col.first->gameObject == nullptr || col.second->gameObject == nullptr)
+		return;
+
 	bool aTrigger = col.first->isTrigger(), bTrigger = col.second->isTrigger();
 	GameObject* goA = col.first->gameObject, * goB = col.second->gameObject;
 

@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <map>
+#include <set>
 #include "UserComponent.h"
 
 namespace Ogre {
@@ -15,13 +16,14 @@ namespace Ogre {
 
 class Camera;
 class GameObject;
-class DebugDrawer;
+class SceneManager;
 
 class GAIA_API Scene {
+	friend class GameObject;
 	friend class SceneManager;
 	friend class UserComponent;
 public:
-	Scene(const std::string& sceneName, Ogre::Root* root);
+	Scene(const std::string& sceneName, SceneManager* sceneManager);
 	~Scene();
 
 	//Component Calls
@@ -57,11 +59,11 @@ private:
 
 	void updateAllAnimations(float deltaTime);
 
+	void dontDestroyOnLoad(GameObject* gameObject);
+
 private:
 	const std::string name;
-	Ogre::Root* root;
-	Ogre::SceneManager* sceneManager;
-	DebugDrawer* debugDrawer;
+	SceneManager* sceneManager;
 
 	std::vector<UserComponent*> userComponents;
 
@@ -72,6 +74,8 @@ private:
 	std::vector<GameObject*> sceneObjects;
 	std::vector<GameObject*> destroyQueue;
 	std::vector<GameObject*> instantiateQueue;
+
+	std::set<GameObject*> dontDestroyObjects;
 
 	Camera* mainCamera;
 

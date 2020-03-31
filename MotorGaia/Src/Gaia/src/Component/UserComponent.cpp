@@ -80,7 +80,12 @@ GameObject* UserComponent::instantiate(const std::string& blueprintName, const V
 
 GameObject* UserComponent::instantiate(const GameObjectData* data)
 {
-	GameObject* instance = new GameObject(data->getName(), data->getTag(), gameObject->getScene());
+	GameObject* instance;
+	if (data->blueprintRef != nullptr)
+		instance = instantiate(data->blueprintRef->name);
+	else
+		instance = new GameObject(data->getName(), data->getTag(), gameObject->getScene());
+
 	gameObject->getScene()->instantiate(instance);
 
 	// Component
@@ -97,7 +102,9 @@ GameObject* UserComponent::instantiate(const GameObjectData* data)
 	}
 	// For each child, create the child
 	for (auto childData : data->getChildrenData()) {
+
 		GameObject* child = instantiate(childData);
+
 		instance->addChild(child);
 	}
 

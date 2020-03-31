@@ -54,6 +54,7 @@ public:
 	CEGUI::String getEventType(std::string eventType);
 
 	static void registerEvent(const std::string& eventName, UIEvent event);
+	void unregisterEvent(const std::string& eventName);
 	static UIEvent getEvent(const std::string& eventName);
 
 	void createRoot();

@@ -177,8 +177,15 @@ void Scene::destroyPendingGameObjects()
 
 	for (GameObject* g : destroyQueue) {
 		// Sacarlo de almacenamiento
-		std::vector<GameObject*>::iterator it = std::find(sceneObjects.begin(), sceneObjects.end(), g);
-		sceneObjects.erase(it);
+		std::vector<GameObject*>::iterator goIt = std::find(sceneObjects.begin(), sceneObjects.end(), g);
+
+		for (auto component : g->userComponents) {
+			auto it = std::find(userComponents.begin(), userComponents.end(), component);
+			userComponents.erase(it);
+		}
+		
+		sceneObjects.erase(goIt);
+
 		delete g;
 		g = nullptr;
 	}

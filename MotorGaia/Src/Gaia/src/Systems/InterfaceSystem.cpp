@@ -283,6 +283,15 @@ void InterfaceSystem::registerEvent(const std::string& eventName, UIEvent event)
 	events[eventName] = event;
 }
 
+void InterfaceSystem::unregisterEvent(const std::string& eventName)
+{
+    if (events.erase(eventName) == 0)
+    {
+        LOG("INTERFACE SYSTEM: Error unregistering event %s\n", eventName.c_str());
+        return;
+    }
+}
+
 UIEvent InterfaceSystem::getEvent(const std::string& eventName)
 {
 	if (events.find(eventName) == events.end())

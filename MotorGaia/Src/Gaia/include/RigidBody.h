@@ -33,6 +33,8 @@ public:
 	void addImpulse(const Vector3 &impulse, ImpulseMode mode = IMPULSE, Vector3 relPos = { 0.0f, 0.0f, 0.0f });
 	void addTorque(const Vector3 &torque);
 
+	void clearForces();
+
 	void setGravity(const Vector3 &grav);
 	void setDamping(float damping);
 	void setAngularDamping(float damping);

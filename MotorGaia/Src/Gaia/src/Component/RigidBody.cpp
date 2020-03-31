@@ -232,7 +232,7 @@ void RigidBody::setActive(bool active)
 {
 	Component::setActive(active);
 
-	int state = (active) ? ACTIVE_TAG : DISABLE_SIMULATION;
+	int state = (active) ? DISABLE_DEACTIVATION : DISABLE_SIMULATION;
 	body->forceActivationState(state);
 }
 
@@ -253,7 +253,7 @@ void RigidBody::updateTransform()
 
 void RigidBody::disableDeactivation()
 {
-	body->setActivationState(DISABLE_DEACTIVATION);
+	body->forceActivationState(DISABLE_DEACTIVATION);//body->setActivationState(DISABLE_DEACTIVATION);
 }
 
 bool RigidBody::isTrigger() const

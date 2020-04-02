@@ -2,6 +2,7 @@
 
 #include <Bullet3Common/b3Scalar.h>
 #include <btBulletDynamicsCommon.h>
+#include <BulletCollision/NarrowPhaseCollision/btRaycastCallback.h>
 
 #include "Transform.h"
 #include "GaiaMotionState.h"
@@ -9,7 +10,7 @@
 #include "GameObject.h"
 #include "DebugDrawer.h"
 #include "MeshStrider.h"
-
+#include "RaycastHit.h"
 
 PhysicsSystem::PhysicsSystem() : dynamicsWorld(nullptr), collisionConfiguration(nullptr),
 								 dispatcher(nullptr), overlappingPairCache(nullptr), solver(nullptr), timeAccumulator(0.0)
@@ -29,7 +30,7 @@ void PhysicsSystem::init()
 
 	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
 	dispatcher = new btCollisionDispatcher(collisionConfiguration);
-	
+
 
 	///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
 	overlappingPairCache = new btDbvtBroadphase();
@@ -44,7 +45,7 @@ void PhysicsSystem::init()
 	dynamicsWorld->setForceUpdateAllAabbs(false);
 
 	///-----initialization_end-----
-	
+
 }
 
 void PhysicsSystem::render()
@@ -267,7 +268,7 @@ void PhysicsSystem::checkCollisions()
 		while (!contact && j < numContacts)
 		{
 			pt = contactManifold->getContactPoint(j);
-			contact = pt.getDistance() < 0.f && pt.getDistance()> -dim1;
+			contact = pt.getDistance() < 0.f && pt.getDistance() > -dim1;
 			j++;
 		}
 
@@ -373,4 +374,72 @@ void PhysicsSystem::deleteBody(btCollisionObject* obj)
 	}
 	dynamicsWorld->removeCollisionObject(obj);
 	delete obj;
+}
+
+std::vector<RaycastHit> PhysicsSystem::raycastAll(const btVector3& from, const btVector3& to)
+{
+	std::vector<RaycastHit> hits;
+#ifdef _DEBUG
+	dynamicsWorld->getDebugDrawer()->drawLine(from, to, btVector4(0, 0, 0, 1));
+#endif
+	btCollisionWorld::AllHitsRayResultCallback allResults(from, to);
+	allResults.m_flags |= btTriangleRaycastCallback::kF_KeepUnflippedNormal;
+	allResults.m_flags |= btTriangleRaycastCallback::kF_UseSubSimplexConvexCastRaytest;
+
+	dynamicsWorld->rayTest(from, to, allResults);
+
+	for (int i = 0; i < allResults.m_hitFractions.size(); i++)
+	{
+		RaycastHit hit = RaycastHit();
+		btVector3 p = from.lerp(to, allResults.m_hitFractions[i]);
+		float distance = (from).distance(p);
+		RigidBody* rb = (RigidBody*)allResults.m_collisionObjects[i]->getUserPointer();
+		hit.createRaycastHit(rb, allResults.m_hitNormalWorld[i], p, distance);
+#ifdef _DEBUG
+		dynamicsWorld->getDebugDrawer()->drawSphere(p, 0.1, btVector3(1, 0, 0));
+		dynamicsWorld->getDebugDrawer()->drawLine(p, p + allResults.m_hitNormalWorld[i], btVector3(1,0,0));
+#endif
+	}
+
+	return hits;
+}
+
+std::vector<RaycastHit> PhysicsSystem::raycastAll(const btVector3& from, const btVector3& dir, float maxDistance)
+{
+	btVector3 to = dir.normalized() * maxDistance;
+	return raycastAll(from, to);
+}
+
+bool PhysicsSystem::raycast(const btVector3& from, const btVector3& to, RaycastHit& hit)
+{
+#ifdef _DEBUG
+	dynamicsWorld->getDebugDrawer()->drawLine(from, to, btVector4(0, 0, 1, 1));
+#endif
+
+	btCollisionWorld::ClosestRayResultCallback closestResults(from, to);
+	closestResults.m_flags |= btTriangleRaycastCallback::kF_FilterBackfaces;
+
+	dynamicsWorld->rayTest(from, to, closestResults);
+
+	if (closestResults.hasHit())
+	{
+		btVector3 p = from.lerp(to, closestResults.m_closestHitFraction);
+		RigidBody* rb = (RigidBody*)closestResults.m_collisionObject->getUserPointer();
+		float distance = (from).distance(p);
+		hit.createRaycastHit(rb, closestResults.m_hitNormalWorld, p, distance);
+#ifdef _DEBUG
+		dynamicsWorld->getDebugDrawer()->drawSphere(p, 0.1, btVector3(0, 0, 1));
+		dynamicsWorld->getDebugDrawer()->drawLine(p, p + closestResults.m_hitNormalWorld, btVector3(0, 0, 1));
+#endif
+		return true;
+	}
+	else
+		return false;
+
+}
+
+bool PhysicsSystem::raycast(const btVector3& from, const btVector3& dir, float maxDistance, RaycastHit& hit)
+{
+	btVector3 to = dir.normalized() * maxDistance;
+	return raycast(from, to, hit);
 }

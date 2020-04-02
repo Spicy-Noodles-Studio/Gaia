@@ -24,6 +24,7 @@ class btCollisionDispatcher;
 class btBroadphaseInterface;
 class btSequentialImpulseConstraintSolver;
 class btCollisionShape;
+class RaycastHit;
 
 class GAIA_API PhysicsSystem : public Singleton<PhysicsSystem>
 {
@@ -52,6 +53,11 @@ public:
 	btTransform parseToBulletTransform(Transform* transform);
 	btRigidBody* bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim);
 
+	std::vector<RaycastHit> raycastAll(const btVector3& from, const btVector3& to);
+	std::vector<RaycastHit> raycastAll(const btVector3& from, const btVector3& dir, float maxDistance);
+	bool raycast(const btVector3& from, const btVector3& to, RaycastHit& hit);
+	bool raycast(const btVector3& from, const btVector3& dir, float maxDistance, RaycastHit& hit);
+
 	void checkCollisions();
 
 private:
@@ -72,7 +78,6 @@ private:
 	std::vector<btCollisionShape*> collisionShapes;
 
 	std::map<std::pair<RigidBody*, RigidBody*>, bool> contacts;
-
 
 	float timeAccumulator;
 };

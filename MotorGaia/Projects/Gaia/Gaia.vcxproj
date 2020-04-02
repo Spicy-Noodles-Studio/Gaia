@@ -82,6 +82,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\RaycastHit.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Reverb.h" />
     <ClInclude Include="..\..\Src\Gaia\include\OgreBulletUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsSystem.h" />
@@ -142,6 +143,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\MeshStrider.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\DebugDrawer.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\RaycastHit.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Timer.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\UIElement.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Vector3.cpp" />

@@ -14,6 +14,7 @@ class ComponentData;
 
 class GAIA_API RigidBody : public GaiaComponent
 {
+friend struct RaycastHit;
 protected:
 	btRigidBody* body = nullptr;
 	GaiaMotionState* motionState = nullptr;

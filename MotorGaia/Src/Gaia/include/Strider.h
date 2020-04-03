@@ -11,6 +11,7 @@ class Strider : public RigidBody
 {
 private:
 	MeshStrider* meshStrider;
+	uint16_t myGroup, collidesWith;
 
 public:
 	Strider(GameObject* gameObject);

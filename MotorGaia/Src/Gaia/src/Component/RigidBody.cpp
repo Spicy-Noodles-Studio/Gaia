@@ -14,7 +14,7 @@ REGISTER_FACTORY(RigidBody);
 
 RigidBody::RigidBody(GameObject* gameObject) : GaiaComponent(gameObject), body(nullptr), motionState(nullptr)
 {
-
+	initPresets();
 }
 
 RigidBody::~RigidBody()
@@ -25,7 +25,7 @@ RigidBody::~RigidBody()
 void RigidBody::setRigidBody(float mass, RB_Shape shape, const Vector3& offset, const Vector3& dim, uint16_t myGroup, uint16_t collidesWith)
 {
 	motionState = new GaiaMotionState(gameObject->transform, offset);
-	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getWorldScale() * dim);
+	body = PhysicsSystem::GetInstance()->createRigidBody(mass, shape, motionState, gameObject->transform->getWorldScale() * dim, myGroup, collidesWith);
 	body->setUserPointer(this);
 	if (mass > 0) disableDeactivation();
 }
@@ -36,6 +36,7 @@ void RigidBody::handleData(ComponentData* data)
 	RB_Shape shape = BOX_RB_SHAPE;
 	Vector3 off = Vector3(), dim = Vector3(1, 1, 1), gravity = PhysicsSystem::GetInstance()->getWorldGravity(), movConstraints = { 1,1,1 }, rotConstraints = { 1,1,1 };
 	bool isTrigger = false, kinematic = false;
+	uint16_t myGroup = DEFAULT, collidesWith = ALL;
 
 	for (auto prop : data->getProperties()) {
 		std::stringstream ss(prop.second);
@@ -75,11 +76,11 @@ void RigidBody::handleData(ComponentData* data)
 				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "offset") {
-			if(!(ss >> off.x >> off.y >> off.z))
+			if (!(ss >> off.x >> off.y >> off.z))
 				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "scale") {
-			if(!(ss >> dim.x >> dim.y >> dim.z))
+			if (!(ss >> dim.x >> dim.y >> dim.z))
 				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "trigger") {
@@ -91,19 +92,35 @@ void RigidBody::handleData(ComponentData* data)
 				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "gravity") {
-			if(!(ss >> gravity.x >> gravity.y >> gravity.z))
+			if (!(ss >> gravity.x >> gravity.y >> gravity.z))
 				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "movementConstraints") {
-			if(!(ss >> movConstraints.x >> movConstraints.y >> movConstraints.z))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str()); 
+			if (!(ss >> movConstraints.x >> movConstraints.y >> movConstraints.z))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
 		else if (prop.first == "rotationConstraints") {
-			if(!(ss >> rotConstraints.x >> rotConstraints.y >> rotConstraints.z))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str()); 
+			if (!(ss >> rotConstraints.x >> rotConstraints.y >> rotConstraints.z))
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
 		}
+		else if (prop.first == "collisionGroup") {
+			auto it = (colPresets.find(prop.second));
+			if (it != colPresets.end())
+				myGroup = (*it).second;
+			else
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+		}
+		else if (prop.first == "collidesWith") {
+			auto it = (colPresets.find(prop.second));
+			if (it != colPresets.end())
+				collidesWith = (*it).second;
+			else
+				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+		}
+		else
+			LOG("RIGIDBODY: property %s does not exist\n", prop.first.c_str());
 	}
-	setRigidBody(mass, shape, off, dim);
+	setRigidBody(mass, shape, off, dim, myGroup, collidesWith);
 
 	setGravity(gravity);
 	setDamping(damping);
@@ -329,4 +346,12 @@ const btVector3 RigidBody::parseToBulletVector(const Vector3& v) const
 const Vector3 RigidBody::parseFromBulletVector(const btVector3& v) const
 {
 	return Vector3(double(v.x()), double(v.y()), double(v.z()));
+}
+
+void RigidBody::initPresets()
+{
+	colPresets["IgnoreRaycast"] = IGNORE_RAYCAST;
+	colPresets["Default"] = DEFAULT;
+	colPresets["None"] = NONE;
+	colPresets["All"] = ALL;
 }

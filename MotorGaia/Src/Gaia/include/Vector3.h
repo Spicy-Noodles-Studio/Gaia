@@ -41,9 +41,9 @@ public:
 	Vector3	operator/(double n) const;
 
 	void normalize();
-	double magnitudeSquared();
-	double magnitude();
-	Vector3 normalized();
+	double magnitudeSquared() const;
+	double magnitude() const;
+	Vector3 normalized() const;
 	Vector3 cross(const Vector3& v);
 	double dot(const Vector3& v);
 

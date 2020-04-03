@@ -175,7 +175,7 @@ void Vector3::normalize()
 	*this /= magnitude();
 }
 
-Vector3 Vector3::normalized()
+Vector3 Vector3::normalized() const
 {
 	Vector3 aux = *this / magnitude();
 	return aux;
@@ -239,12 +239,12 @@ void Vector3::lerp(const Vector3& v, const Vector3& percentage)
 	*this = { x + (v.x - x) * percentage.x, y + (v.y - y) * percentage.y, z + (v.z - z) * percentage.z };
 }
 
-double Vector3::magnitudeSquared()
+double Vector3::magnitudeSquared() const
 {
 	return x * x + y * y + z * z;
 }
 
-double Vector3::magnitude()
+double Vector3::magnitude() const
 {
 	return sqrt(magnitudeSquared());
 }

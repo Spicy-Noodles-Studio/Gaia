@@ -47,16 +47,16 @@ public:
 	void setDebugDrawer(DebugDrawer* debugDrawer);
 
 	// Rigid Body methods
-	btRigidBody* createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim);
+	btRigidBody* createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim, uint16_t myGroup, uint16_t collidesWith);
 	void deleteRigidBody(btRigidBody* body);
 	// Turns a Gaia Transform into a Bullet Physics Transform
 	btTransform parseToBulletTransform(Transform* transform);
-	btRigidBody* bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim);
+	btRigidBody* bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim, uint16_t myGroup, uint16_t collidesWith);
 
-	std::vector<RaycastHit> raycastAll(const btVector3& from, const btVector3& to);
-	std::vector<RaycastHit> raycastAll(const btVector3& from, const btVector3& dir, float maxDistance);
-	bool raycast(const btVector3& from, const btVector3& to, RaycastHit& hit);
-	bool raycast(const btVector3& from, const btVector3& dir, float maxDistance, RaycastHit& hit);
+	std::vector<RaycastHit> raycastAll(const Vector3& from, const Vector3& to, uint16_t mask = ALL);
+	std::vector<RaycastHit> raycastAll(const Vector3& from, const Vector3& dir, float maxDistance, uint16_t mask = ALL);
+	bool raycast(const Vector3& from, const Vector3& to, RaycastHit& hit, uint16_t mask = ALL);
+	bool raycast(const Vector3& from, const Vector3& dir, float maxDistance, RaycastHit& hit, uint16_t mask = ALL);
 
 	void checkCollisions();
 

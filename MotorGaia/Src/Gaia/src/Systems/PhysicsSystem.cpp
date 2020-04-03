@@ -143,7 +143,7 @@ void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
 
 // Creates a btRigidBody with the specified properties, adds it to the dynamicWorld
 // and returns a reference to it
-btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim)
+btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionState* mState, Vector3 dim, uint16_t myGroup, uint16_t collidesWith)
 {
 	btCollisionShape* colShape;
 	switch (shape)
@@ -181,7 +181,7 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
-	dynamicsWorld->addRigidBody(body);
+	dynamicsWorld->addRigidBody(body, myGroup, collidesWith);
 
 	return body;
 }
@@ -227,7 +227,7 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 	return t;
 }
 
-btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim)
+btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim, uint16_t myGroup, uint16_t collidesWith)
 {
 	btCollisionShape* colShape = new btBvhTriangleMeshShape(strider, true, true);
 	collisionShapes.push_back(colShape);
@@ -239,7 +239,7 @@ btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, GaiaMotionStat
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
-	dynamicsWorld->addRigidBody(body);
+	dynamicsWorld->addRigidBody(body, myGroup, collidesWith);
 
 	return body;
 }
@@ -376,60 +376,68 @@ void PhysicsSystem::deleteBody(btCollisionObject* obj)
 	delete obj;
 }
 
-std::vector<RaycastHit> PhysicsSystem::raycastAll(const btVector3& from, const btVector3& to)
+std::vector<RaycastHit> PhysicsSystem::raycastAll(const Vector3& from, const Vector3& to, uint16_t mask)
 {
+	mask = mask & ~IGNORE_RAYCAST;//Siempre ignora la capa ignore raycast
 	std::vector<RaycastHit> hits;
+	btVector3 start = btVector3(btScalar(from.x), btScalar(from.y), btScalar(from.z));
+	btVector3 end = btVector3(btScalar(to.x), btScalar(to.y), btScalar(to.z));
 #ifdef _DEBUG
-	dynamicsWorld->getDebugDrawer()->drawLine(from, to, btVector4(0, 0, 0, 1));
+	dynamicsWorld->getDebugDrawer()->drawLine(start, end, btVector4(0, 0, 1, 1));
 #endif
-	btCollisionWorld::AllHitsRayResultCallback allResults(from, to);
+	btCollisionWorld::AllHitsRayResultCallback allResults(start, end);
 	allResults.m_flags |= btTriangleRaycastCallback::kF_KeepUnflippedNormal;
 	allResults.m_flags |= btTriangleRaycastCallback::kF_UseSubSimplexConvexCastRaytest;
+	allResults.m_collisionFilterMask = mask;
 
-	dynamicsWorld->rayTest(from, to, allResults);
+	dynamicsWorld->rayTest(start, end, allResults);
 
 	for (int i = 0; i < allResults.m_hitFractions.size(); i++)
 	{
 		RaycastHit hit = RaycastHit();
-		btVector3 p = from.lerp(to, allResults.m_hitFractions[i]);
-		float distance = (from).distance(p);
+		btVector3 p = start.lerp(end, allResults.m_hitFractions[i]);
+		float distance = (start).distance(p);
 		RigidBody* rb = (RigidBody*)allResults.m_collisionObjects[i]->getUserPointer();
 		hit.createRaycastHit(rb, allResults.m_hitNormalWorld[i], p, distance);
 #ifdef _DEBUG
-		dynamicsWorld->getDebugDrawer()->drawSphere(p, 0.1, btVector3(1, 0, 0));
-		dynamicsWorld->getDebugDrawer()->drawLine(p, p + allResults.m_hitNormalWorld[i], btVector3(1,0,0));
+		dynamicsWorld->getDebugDrawer()->drawSphere(p, 0.1, btVector3(0, 1, 0));
+		dynamicsWorld->getDebugDrawer()->drawLine(p, p + allResults.m_hitNormalWorld[i], btVector3(1, 0, 0));
 #endif
 	}
 
 	return hits;
 }
 
-std::vector<RaycastHit> PhysicsSystem::raycastAll(const btVector3& from, const btVector3& dir, float maxDistance)
+std::vector<RaycastHit> PhysicsSystem::raycastAll(const Vector3& from, const Vector3& dir, float maxDistance, uint16_t mask)
 {
-	btVector3 to = dir.normalized() * maxDistance;
+	Vector3 to = dir.normalized() * maxDistance;
 	return raycastAll(from, to);
 }
 
-bool PhysicsSystem::raycast(const btVector3& from, const btVector3& to, RaycastHit& hit)
+bool PhysicsSystem::raycast(const Vector3& from, const Vector3& to, RaycastHit& hit, uint16_t mask)
 {
+	mask = mask & !IGNORE_RAYCAST;//Siempre ignora la capa ignore raycast
+	btVector3 start = btVector3(btScalar(from.x), btScalar(from.y), btScalar(from.z));
+	btVector3 end = btVector3(btScalar(to.x), btScalar(to.y), btScalar(to.z));
 #ifdef _DEBUG
-	dynamicsWorld->getDebugDrawer()->drawLine(from, to, btVector4(0, 0, 1, 1));
+	dynamicsWorld->getDebugDrawer()->drawLine(start, end, btVector4(0, 0, 1, 1));
 #endif
 
-	btCollisionWorld::ClosestRayResultCallback closestResults(from, to);
+	btCollisionWorld::ClosestRayResultCallback closestResults(start, end);
 	closestResults.m_flags |= btTriangleRaycastCallback::kF_FilterBackfaces;
+	closestResults.m_collisionFilterMask = mask;
 
-	dynamicsWorld->rayTest(from, to, closestResults);
+	dynamicsWorld->rayTest(start, end, closestResults);
 
 	if (closestResults.hasHit())
 	{
-		btVector3 p = from.lerp(to, closestResults.m_closestHitFraction);
+		btVector3 p = start.lerp(end, closestResults.m_closestHitFraction);
 		RigidBody* rb = (RigidBody*)closestResults.m_collisionObject->getUserPointer();
-		float distance = (from).distance(p);
+		float distance = (start).distance(p);
 		hit.createRaycastHit(rb, closestResults.m_hitNormalWorld, p, distance);
 #ifdef _DEBUG
-		dynamicsWorld->getDebugDrawer()->drawSphere(p, 0.1, btVector3(0, 0, 1));
-		dynamicsWorld->getDebugDrawer()->drawLine(p, p + closestResults.m_hitNormalWorld, btVector3(0, 0, 1));
+		dynamicsWorld->getDebugDrawer()->drawSphere(p, 0.1, btVector3(0, 1, 0));
+		dynamicsWorld->getDebugDrawer()->drawLine(p, p + closestResults.m_hitNormalWorld, btVector3(1, 0, 0));
 #endif
 		return true;
 	}
@@ -438,8 +446,8 @@ bool PhysicsSystem::raycast(const btVector3& from, const btVector3& to, RaycastH
 
 }
 
-bool PhysicsSystem::raycast(const btVector3& from, const btVector3& dir, float maxDistance, RaycastHit& hit)
+bool PhysicsSystem::raycast(const Vector3& from, const Vector3& dir, float maxDistance, RaycastHit& hit, uint16_t mask)
 {
-	btVector3 to = dir.normalized() * maxDistance;
+	Vector3 to = dir.normalized() * maxDistance;
 	return raycast(from, to, hit);
 }

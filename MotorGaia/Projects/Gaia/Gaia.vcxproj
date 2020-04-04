@@ -66,6 +66,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\EventSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaExports.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
@@ -138,6 +139,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\CameraDebugControl.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaData.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaMotionState.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Loadable.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\MeshStrider.cpp" />

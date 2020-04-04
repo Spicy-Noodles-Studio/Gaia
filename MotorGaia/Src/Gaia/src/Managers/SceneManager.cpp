@@ -206,5 +206,3 @@ Scene* SceneManager::getCurrentScene()
 {
 	return currentScene;
 }
-
-

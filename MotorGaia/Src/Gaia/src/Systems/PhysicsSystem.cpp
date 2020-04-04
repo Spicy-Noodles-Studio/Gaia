@@ -74,7 +74,7 @@ void PhysicsSystem::postUpdate()
 		if (body != nullptr)
 		{
 			RigidBody* rb = (RigidBody*)body->getUserPointer();
-			if (rb != nullptr && !rb->isStatic())
+			if (rb != nullptr)
 				rb->updateTransform();
 		}
 	}

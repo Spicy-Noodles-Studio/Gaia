@@ -148,6 +148,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\RaycastHit.cpp">
       <Filter>Archivos de código fuente\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaData.cpp">
+      <Filter>Archivos de código fuente\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
@@ -316,6 +319,9 @@
       <Filter>Archivos de encabezado\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\RaycastHit.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaData.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
     </ClInclude>
   </ItemGroup>

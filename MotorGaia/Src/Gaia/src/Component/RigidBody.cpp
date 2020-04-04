@@ -249,7 +249,7 @@ void RigidBody::setActive(bool active)
 {
 	Component::setActive(active);
 
-	int state = (active) ? DISABLE_DEACTIVATION : DISABLE_SIMULATION;
+	int state = (active) ? ((!isStatic()) ? DISABLE_DEACTIVATION : ACTIVE_TAG) : DISABLE_SIMULATION;
 	body->forceActivationState(state);
 }
 

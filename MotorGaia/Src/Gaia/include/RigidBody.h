@@ -66,12 +66,12 @@ public:
 	float getLinearDamping() const;
 	float getFriction() const;
 	float getRestitution() const;
-	const Vector3& getGravity() const;
-	const Vector3& getAngularVelocity() const;
-	const Vector3& getLinearVelocity() const;
-	const Vector3& getTotalForce() const;
-	const Vector3& getTotalTorque() const;
-	const Vector3& getOrientation() const;
+	Vector3 getGravity() const;
+	Vector3 getAngularVelocity() const;
+	Vector3 getLinearVelocity() const;
+	Vector3 getTotalForce() const;
+	Vector3 getTotalTorque() const;
+	Vector3 getOrientation() const;
 };
 
 #endif

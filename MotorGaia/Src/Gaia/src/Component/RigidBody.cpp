@@ -249,7 +249,7 @@ void RigidBody::setActive(bool active)
 {
 	Component::setActive(active);
 
-	int state = (active) ? ((!isStatic()) ? DISABLE_DEACTIVATION : ACTIVE_TAG) : DISABLE_SIMULATION;
+	int state = (active) ? DISABLE_DEACTIVATION : DISABLE_SIMULATION;
 	body->forceActivationState(state);
 }
 
@@ -303,39 +303,38 @@ float RigidBody::getRestitution() const
 	return body->getRestitution();
 }
 
-const Vector3& RigidBody::getGravity() const
+Vector3 RigidBody::getGravity() const
 {
 	return parseFromBulletVector(body->getGravity());
 }
 
-const Vector3& RigidBody::getAngularVelocity() const
+Vector3 RigidBody::getAngularVelocity() const
 {
 	return parseFromBulletVector(body->getAngularVelocity());
 }
 
-const Vector3& RigidBody::getLinearVelocity() const
+Vector3 RigidBody::getLinearVelocity() const
 {
 	return parseFromBulletVector(body->getLinearVelocity());
 }
 
-const Vector3& RigidBody::getTotalForce() const
+Vector3 RigidBody::getTotalForce() const
 {
 	return parseFromBulletVector(body->getTotalForce());
 }
 
-const Vector3& RigidBody::getTotalTorque() const
+Vector3 RigidBody::getTotalTorque() const
 {
 	return parseFromBulletVector(body->getTotalTorque());
 }
 
-const Vector3& RigidBody::getOrientation() const
+Vector3 RigidBody::getOrientation() const
 {
 	btQuaternion btq = body->getOrientation();
 	btScalar x, y, z;
 	btq.getEulerZYX(z, y, x);
 	return { x,y,z };
 }
-
 
 
 const btVector3 RigidBody::parseToBulletVector(const Vector3& v) const

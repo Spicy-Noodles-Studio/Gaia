@@ -39,6 +39,21 @@ Ogre::AnimationState* Animator::getAnimation(const std::string& animation)
 	return animations->getAnimationState(animation);
 }
 
+void Animator::playAnimation(const std::string& animation)
+{
+	Ogre::AnimationState* prev = getAnimation(currentAnimation);
+	prev->setTimePosition(0);
+	prev->setEnabled(false);
+
+	getAnimation(animation)->setEnabled(true);
+	currentAnimation = animation;
+}
+
+std::string Animator::getCurrentAnimation()
+{
+	return currentAnimation;
+}
+
 void Animator::handleData(ComponentData* data)
 {
 	for (auto prop : data->getProperties())
@@ -53,6 +68,7 @@ void Animator::handleData(ComponentData* data)
 
 				Ogre::AnimationState* aux = getAnimation(anim);
 				aux->setEnabled(true);
+				currentAnimation = anim;
 			}
 			else
 				LOG("ANIMATOR: wrong value for property %s.\n", prop.first.c_str());

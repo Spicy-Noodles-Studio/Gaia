@@ -2,6 +2,7 @@
 
 #include <OgreRoot.h>
 #include <OgreSceneManager.h>
+#include <OgreSkeletonInstance.h>
 #include <OgreEntity.h>
 #include <sstream>
 
@@ -67,12 +68,24 @@ void MeshRenderer::changeMesh(const std::string& id, const std::string& mesh)
 
 void MeshRenderer::attachEntityToNode(const std::string& mesh)
 {
-	gameObject->node->attachObject(entities[mesh]);
+	if (entities.find(mesh) != entities.end())
+		gameObject->node->attachObject(entities[mesh]);
+	else
+		LOG("MESH RENDERER: Trying to attach non existing mesh %s", mesh.c_str());
 }
 
 void MeshRenderer::attachEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh)
 {
-	entities[owner]->attachObjectToBone(bone, entities[mesh]);
+	auto ownerIt = entities.find(owner), meshIt = entities.find(mesh);
+	if (ownerIt != entities.end() && meshIt != entities.end()) {
+		Ogre::Entity* ownerEnt = (*ownerIt).second, * meshEnt = (*meshIt).second;
+		if (ownerEnt->hasSkeleton() && ownerEnt->getSkeleton()->hasBone(bone))
+			ownerEnt->attachObjectToBone(bone, meshEnt);
+		else
+			LOG("MESH RENDERER: The mesh %s does not have a skeleton or bone %s does not exist", owner.c_str(), bone.c_str());
+	}
+	else
+		LOG("MESH RENDERER: One of the meshes specified does not exist in object %s", gameObject->getName().c_str());
 }
 
 void MeshRenderer::setVisible(bool visible)
@@ -93,12 +106,23 @@ void MeshRenderer::handleData(ComponentData* data)
 
 		if (prop.first == "mesh")
 		{
-			if (ss >> meshId >> meshName) {
+			char c;
+			while (ss >> meshId >> meshName) {
 				setMesh(meshId, meshName);
 				attachEntityToNode(meshId);
+				if (ss) ss >> c;
 			}
-			else
-				LOG("MESH RENDERER: wrong value for property %s.\n", prop.first.c_str());
+		}
+		else if (prop.first == "attachToBone")
+		{
+			//Al ser un attach to bone no modificamos meshId o meshName->no es una mesh principal
+			std::string id, name, bone, owner;
+			char c;
+			while (ss >> id >> name >> owner >> bone) {
+				setMesh(id, name);
+				attachEntityToBone(owner, bone, id);
+				if (ss) ss >> c;
+			}
 		}
 		else if (prop.first == "material")
 		{

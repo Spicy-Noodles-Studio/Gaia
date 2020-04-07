@@ -77,6 +77,7 @@ void GameObject::removeChild(GameObject* child)
     if (child == nullptr) return;
 
     // Check if given child is in my children vector
+    if (children.size() == 0) return;
     auto it = std::find(children.begin(), children.end(), child);
     if (it == children.end()) return;
     // Remove from children vector

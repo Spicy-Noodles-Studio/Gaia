@@ -72,6 +72,7 @@ void InterfaceSystem::init(Window* window)
 
     eventTypes["ButtonClicked"] = CEGUI::PushButton::EventClicked;
     eventTypes["ToggleClicked"] = CEGUI::ToggleButton::EventSelectStateChanged;
+    eventTypes["ScrollChange"] = CEGUI::Scrollbar::EventScrollPositionChanged;
 
 
 	// Callback definitions

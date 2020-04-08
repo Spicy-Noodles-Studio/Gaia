@@ -37,6 +37,8 @@ public:
 	void setInheritsAlpha(bool inherits);
 	void setAlpha(float alpha);
 
+	float getScrollPositionScrollBar();
+
 
 };
 

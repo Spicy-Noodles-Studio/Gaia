@@ -48,6 +48,7 @@ UIElement UIElement::getChild(const std::string& name)
 UIElement UIElement::getChildAtIndex(int index)
 {
 	return element->getChildAtIdx(index);
+	
 }
 
 UIElement UIElement::createChild(const std::string& type, const std::string& name)
@@ -85,4 +86,16 @@ void UIElement::setInheritsAlpha(bool inherits)
 void UIElement::setAlpha(float alpha)
 {
 	element->setAlpha(alpha);
+}
+
+float UIElement::getScrollPositionScrollBar()
+{
+	if (element->getWindowRendererName() == "Core/Scrollbar") {
+		CEGUI::Scrollbar* x = static_cast<CEGUI::Scrollbar*>(element);
+		return x->getScrollPosition();
+	}
+	else
+		return -1;
+	
+	
 }

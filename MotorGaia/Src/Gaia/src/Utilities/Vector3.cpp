@@ -4,6 +4,16 @@
 #include <btBulletDynamicsCommon.h>
 #include "MathUtils.h"
 
+const Vector3 Vector3::ZERO					= Vector3(0.0, 0.0, 0.0);
+const Vector3 Vector3::IDENTITY				= Vector3(1.0, 1.0, 1.0);
+const Vector3 Vector3::NEGATIVE_IDENTITY	= Vector3(-1.0, -1.0, -1.0);
+const Vector3 Vector3::RIGHT				= Vector3(1.0, 0.0, 0.0);
+const Vector3 Vector3::NEGATIVE_RIGHT		= Vector3(-1.0, 0.0, 0.0);
+const Vector3 Vector3::UP					= Vector3(0.0, 1.0, 0.0);
+const Vector3 Vector3::NEGATIVE_UP			= Vector3(0.0, -1.0, 0.0);
+const Vector3 Vector3::FORWARD				= Vector3(0.0, 0.0, 1.0);
+const Vector3 Vector3::NEGATIVE_FORWARD		= Vector3(0.0, 0.0, -1.0);
+
 Vector3::Vector3()
 {
 	x = 0;
@@ -177,6 +187,7 @@ void Vector3::normalize()
 
 Vector3 Vector3::normalized() const
 {
+	if (*this == Vector3::ZERO) return *this;
 	Vector3 aux = *this / magnitude();
 	return aux;
 }
@@ -209,10 +220,10 @@ Vector3 Vector3::rotateAroundPivot(const Vector3& point, const Vector3& pivot, c
 	return (v + pivot);
 }
 
-void Vector3::rotateAroundAxis(const Vector3& axis, double angle)
+void Vector3::rotateAroundAxis(const Vector3& axis, double degrees)
 {
 	Vector3 result = *this;
-	double ang = angle * RAD_TO_DEG;
+	double ang = degrees * DEG_TO_RAD;
 	if (axis == Vector3(0, 0, 1)) {
 		result.x = x * cos(ang) - y * sin(ang);
 		result.y = x * sin(ang) + y * cos(ang);

@@ -5,6 +5,7 @@
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
+#include "GaiaExports.h"
 
 #include <SDL2/SDL.h>
 

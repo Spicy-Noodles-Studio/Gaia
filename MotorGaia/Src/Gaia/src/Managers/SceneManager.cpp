@@ -4,7 +4,9 @@
 #include "GameObject.h"
 #include "SceneData.h"
 #include "PhysicsSystem.h"
+#include "RenderSystem.h"
 #include "DebugDrawer.h"
+
 
 SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), window(nullptr), countNodeIDs(0), debugDrawer(nullptr)
 {
@@ -173,7 +175,9 @@ void SceneManager::processCameraChange()
 		return;
 	}
 	window->removeAllViewports();
-	window->addViewport(camera->getCamera());
+	Viewport* v=window->addViewport(camera->getCamera());
+
+	RenderSystem::GetInstance()->ApplyBrightnessToVp(v);
 }
 
 void SceneManager::processDontDestroyObjects()
@@ -201,6 +205,7 @@ bool SceneManager::exist(const std::string& name)
 {
 	return ResourcesManager::getSceneData(name) != nullptr;
 }
+
 
 Scene* SceneManager::getCurrentScene()
 {

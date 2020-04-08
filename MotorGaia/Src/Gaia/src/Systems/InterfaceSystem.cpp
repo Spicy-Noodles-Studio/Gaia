@@ -71,6 +71,7 @@ void InterfaceSystem::init(Window* window)
     // event types
 
     eventTypes["ButtonClicked"] = CEGUI::PushButton::EventClicked;
+    eventTypes["ToggleClicked"] = CEGUI::ToggleButton::EventSelectStateChanged;
 
 
 	// Callback definitions

@@ -14,5 +14,6 @@ void RaycastHit::createRaycastHit(RigidBody* rb, const btVector3& normal, const 
 	this->rb = rb;
 	transform = rb->gameObject->transform;
 	this->normal = rb->parseFromBulletVector(normal);
+	this->normal.normalize();
 	this->point = rb->parseFromBulletVector(point);
 }

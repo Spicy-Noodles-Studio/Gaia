@@ -142,6 +142,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaData.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaMotionState.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Loadable.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\MathUtils.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\MeshStrider.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\DebugDrawer.cpp" />

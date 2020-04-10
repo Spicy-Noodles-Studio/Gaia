@@ -151,6 +151,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaData.cpp">
       <Filter>Archivos de código fuente\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\MathUtils.cpp">
+      <Filter>Archivos de código fuente\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">

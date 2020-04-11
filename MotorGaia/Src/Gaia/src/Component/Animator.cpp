@@ -69,7 +69,7 @@ void Animator::printAllAnimationsNames()
 {
 	printf("%s MESH ANIMATIONS: \n");
 	for (auto anim : animations->getAnimationStateIterator())
-		printf(" - %s\n", anim.first);
+		printf(" - %s\n", anim.first.c_str());
 	printf("\n");
 }
 

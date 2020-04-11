@@ -46,6 +46,7 @@ void Animator::playAnimation(const std::string& animation)
 	prev->setTimePosition(0);
 	prev->setEnabled(false);
 
+	getAnimation(animation)->setEnabled(true);
 	currentAnimation = animation;
 }
 

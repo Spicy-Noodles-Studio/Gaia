@@ -57,6 +57,7 @@ void Animator::playAnimationSequence(const std::vector<std::string>& sequence, b
 
 	// play first animation
 	playAnimation(sequence[0]);
+	setLoop(false);
 
 	// add the rest to the queue
 	for (int i = 1; i < sequence.size(); i++)

@@ -50,6 +50,27 @@ void Animator::playAnimation(const std::string& animation)
 	currentAnimation = animation;
 }
 
+void Animator::playAnimationSequence(const std::vector<std::string>& sequence)
+{
+	// clear previous sequence
+	while (!animSequence.empty()) animSequence.pop();
+
+	// play first animation
+	playAnimation(sequence[0]);
+
+	// add the rest to the queue
+	for (int i = 1; i < sequence.size(); i++)
+		animSequence.push(sequence[i]);
+}
+
+void Animator::updateAnimationSequence()
+{
+	if (!animSequence.empty() && hasEnded())
+	{
+		playAnimation(animSequence.front()); animSequence.pop();
+	}
+}
+
 std::string Animator::getCurrentAnimation()
 {
 	return currentAnimation;
@@ -126,4 +147,9 @@ float Animator::getTimePosition()
 float Animator::getLength()
 {
 	return float(getAnimation(currentAnimation)->getLength());
+}
+
+bool Animator::hasEnded()
+{
+	return getAnimation(currentAnimation)->hasEnded();
 }

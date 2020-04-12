@@ -3,6 +3,7 @@
 #define ANIMATOR_H
 
 #include <map>
+#include <queue>
 #include <OgreAnimationState.h>
 
 #include "GaiaComponent.h"
@@ -20,6 +21,7 @@ private:
 	std::string currentAnimation;
 	std::string currentMesh;
 
+	std::queue<std::string> animSequence;
 public:
 	Animator(GameObject* gameObject);
 	~Animator();
@@ -29,6 +31,8 @@ public:
 	Ogre::AnimationState* getAnimation(const std::string& animation);
 
 	void playAnimation(const std::string& animation);
+	void playAnimationSequence(const std::vector<std::string>& sequence);
+	void updateAnimationSequence();
 	std::string getCurrentAnimation();
 	std::vector<std::string> getAllAnimationsNames();
 	void printAllAnimationsNames();
@@ -42,6 +46,7 @@ public:
 	bool getLoop();
 	float getTimePosition();
 	float getLength();
+	bool hasEnded();
 };
 
 #endif

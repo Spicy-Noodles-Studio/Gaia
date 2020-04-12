@@ -12,7 +12,7 @@
 
 REGISTER_FACTORY(Animator);
 
-Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject)
+Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject), endSequenceWithLoop(false)
 {
 
 }
@@ -50,7 +50,7 @@ void Animator::playAnimation(const std::string& animation)
 	currentAnimation = animation;
 }
 
-void Animator::playAnimationSequence(const std::vector<std::string>& sequence)
+void Animator::playAnimationSequence(const std::vector<std::string>& sequence, bool endWithLoop)
 {
 	// clear previous sequence
 	while (!animSequence.empty()) animSequence.pop();
@@ -61,6 +61,8 @@ void Animator::playAnimationSequence(const std::vector<std::string>& sequence)
 	// add the rest to the queue
 	for (int i = 1; i < sequence.size(); i++)
 		animSequence.push(sequence[i]);
+
+	endSequenceWithLoop = endWithLoop;
 }
 
 void Animator::updateAnimationSequence()
@@ -68,6 +70,11 @@ void Animator::updateAnimationSequence()
 	if (!animSequence.empty() && hasEnded())
 	{
 		playAnimation(animSequence.front()); animSequence.pop();
+
+		if (animSequence.empty() && endSequenceWithLoop)
+			setLoop(true);
+		else
+			setLoop(false);
 	}
 }
 
@@ -152,4 +159,9 @@ float Animator::getLength()
 bool Animator::hasEnded()
 {
 	return getAnimation(currentAnimation)->hasEnded();
+}
+
+bool Animator::isPlayingSequence() const
+{
+	return !animSequence.empty();
 }

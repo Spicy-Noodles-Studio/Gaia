@@ -22,6 +22,7 @@ private:
 	std::string currentMesh;
 
 	std::queue<std::string> animSequence;
+	bool endSequenceWithLoop;
 public:
 	Animator(GameObject* gameObject);
 	~Animator();
@@ -31,7 +32,7 @@ public:
 	Ogre::AnimationState* getAnimation(const std::string& animation);
 
 	void playAnimation(const std::string& animation);
-	void playAnimationSequence(const std::vector<std::string>& sequence);
+	void playAnimationSequence(const std::vector<std::string>& sequence, bool endWithLoop = false);
 	void updateAnimationSequence();
 	std::string getCurrentAnimation();
 	std::vector<std::string> getAllAnimationsNames();
@@ -47,6 +48,7 @@ public:
 	float getTimePosition();
 	float getLength();
 	bool hasEnded();
+	bool isPlayingSequence() const;
 };
 
 #endif

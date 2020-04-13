@@ -47,7 +47,7 @@ void Animator::playAnimation(const std::string& animation)
 	prev->setEnabled(false);
 
 	// clear sequence
-	while (!animSequence.empty()) animSequence.pop();
+	std::queue<std::string>().swap(animSequence);
 
 	getAnimation(animation)->setEnabled(true);
 	currentAnimation = animation;
@@ -56,7 +56,7 @@ void Animator::playAnimation(const std::string& animation)
 void Animator::playAnimationSequence(const std::vector<std::string>& sequence, bool endWithLoop)
 {
 	// clear previous sequence
-	while (!animSequence.empty()) animSequence.pop();
+	std::queue<std::string>().swap(animSequence);
 
 	// play first animation
 	playAnimation(sequence[0]);
@@ -170,7 +170,7 @@ bool Animator::isPlayingSequence() const
 	return !animSequence.empty();
 }
 
-std::queue<std::string> Animator::getAnimationSequence()
+std::queue<std::string>& Animator::getAnimationSequence()
 {
 	return animSequence;
 }

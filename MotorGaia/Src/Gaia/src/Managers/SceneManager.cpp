@@ -6,6 +6,7 @@
 #include "PhysicsSystem.h"
 #include "RenderSystem.h"
 #include "DebugDrawer.h"
+#include "InterfaceSystem.h"
 
 
 SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), window(nullptr), countNodeIDs(0), debugDrawer(nullptr)
@@ -53,7 +54,7 @@ void SceneManager::preUpdate(float deltaTime)
 {
 	// If stack not empty, change scene and delete the current one
 	processSceneChange();
-
+	
 	//Update all animations
 	currentScene->updateAllAnimations(deltaTime);
 }
@@ -102,6 +103,7 @@ Scene* SceneManager::createScene(const SceneData* data)
 	for (GameObjectData* gData : data->getGameObjectsData()) {
 		createGameObject(gData, myScene);
 	}
+
 	return myScene;
 }
 
@@ -162,7 +164,7 @@ void SceneManager::processSceneChange()
 		delete oldScene;
 
 	processCameraChange();
-
+	InterfaceSystem::GetInstance()->clearControllerMenuInput();
 }
 
 void SceneManager::processCameraChange()

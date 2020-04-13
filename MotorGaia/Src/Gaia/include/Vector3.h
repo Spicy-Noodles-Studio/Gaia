@@ -2,8 +2,6 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
-#include <string>
-
 #include "GaiaExports.h"
 
 #define CHECK_VALID( _v ) 0
@@ -55,8 +53,6 @@ public:
 	void lerp(const Vector3& v, double percentage);
 	void lerp(const Vector3& v, const Vector3& percentage);
 	Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles);
-
-	std::string toString() const;
 
 	Vector3 operator+(const btVector3& v);
 

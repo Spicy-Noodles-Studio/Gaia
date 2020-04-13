@@ -305,14 +305,6 @@ void PhysicsSystem::checkCollisions()
 	contacts = newContacts;
 }
 
-void PhysicsSystem::drawLine(const Vector3& ini, const Vector3& end, const Vector3& color)
-{
-	btVector3 start = btVector3(btScalar(ini.x), btScalar(ini.y), btScalar(ini.z));
-	btVector3 to = btVector3(btScalar(end.x), btScalar(end.y), btScalar(end.z));
-	btVector3 btColor = btVector3(btScalar(color.x), btScalar(color.y), btScalar(color.z));
-	dynamicsWorld->getDebugDrawer()->drawLine(start,to,btColor);
-}
-
 void PhysicsSystem::CollisionEnterCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
 {
 	bool aTrigger = col.first->isTrigger(), bTrigger = col.second->isTrigger();
@@ -407,7 +399,6 @@ std::vector<RaycastHit> PhysicsSystem::raycastAll(const Vector3& from, const Vec
 		float distance = (start).distance(p);
 		RigidBody* rb = (RigidBody*)allResults.m_collisionObjects[i]->getUserPointer();
 		hit.createRaycastHit(rb, allResults.m_hitNormalWorld[i], p, distance);
-		hits.push_back(hit);
 #ifdef _DEBUG
 		dynamicsWorld->getDebugDrawer()->drawSphere(p, 0.1, btVector3(0, 1, 0));
 		dynamicsWorld->getDebugDrawer()->drawLine(p, p + allResults.m_hitNormalWorld[i], btVector3(1, 0, 0));
@@ -419,16 +410,13 @@ std::vector<RaycastHit> PhysicsSystem::raycastAll(const Vector3& from, const Vec
 
 std::vector<RaycastHit> PhysicsSystem::raycastAll(const Vector3& from, const Vector3& dir, float maxDistance, uint16_t mask)
 {
-	if (maxDistance <= 0)
-		return std::vector<RaycastHit>();
-
-	Vector3 to = from + dir.normalized() * maxDistance;
-	return raycastAll(from, to, mask);
+	Vector3 to = dir.normalized() * maxDistance;
+	return raycastAll(from, to);
 }
 
 bool PhysicsSystem::raycast(const Vector3& from, const Vector3& to, RaycastHit& hit, uint16_t mask)
 {
-	mask = mask & ~IGNORE_RAYCAST;//Siempre ignora la capa ignore raycast
+	mask = mask & !IGNORE_RAYCAST;//Siempre ignora la capa ignore raycast
 	btVector3 start = btVector3(btScalar(from.x), btScalar(from.y), btScalar(from.z));
 	btVector3 end = btVector3(btScalar(to.x), btScalar(to.y), btScalar(to.z));
 #ifdef _DEBUG
@@ -460,9 +448,6 @@ bool PhysicsSystem::raycast(const Vector3& from, const Vector3& to, RaycastHit& 
 
 bool PhysicsSystem::raycast(const Vector3& from, const Vector3& dir, float maxDistance, RaycastHit& hit, uint16_t mask)
 {
-	if (maxDistance <= 0) 
-		return false;
-	
-	Vector3 to = from + dir.normalized() * maxDistance;
-	return raycast(from, to, hit, mask);
+	Vector3 to = dir.normalized() * maxDistance;
+	return raycast(from, to, hit);
 }

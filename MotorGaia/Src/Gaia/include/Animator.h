@@ -18,7 +18,6 @@ private:
 	Ogre::AnimationStateSet* animations;
 
 	std::string currentAnimation;
-	std::string currentMesh;
 
 public:
 	Animator(GameObject* gameObject);
@@ -30,18 +29,8 @@ public:
 
 	void playAnimation(const std::string& animation);
 	std::string getCurrentAnimation();
-	std::vector<std::string> getAllAnimationsNames();
-	void printAllAnimationsNames();
 
 	virtual void handleData(ComponentData* data);
-
-	void setLoop(bool loop);
-	void setTimePosition(float pos);
-	void setLength(float length);
-
-	bool getLoop();
-	float getTimePosition();
-	float getLength();
 };
 
 #endif

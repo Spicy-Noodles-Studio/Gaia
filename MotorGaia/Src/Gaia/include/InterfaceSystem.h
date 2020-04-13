@@ -10,6 +10,9 @@
 #include <CEGUI\CEGUI.h>
 #include "UIElement.h"
 #include <string>
+#include "Window.h"
+
+#include <map>
 
 namespace CEGUI {
 	class Window;
@@ -27,6 +30,14 @@ private:
 	CEGUI::OgreRenderer* renderer;
 	UIElement* root;
 
+	// For controller input
+	UIElement* currentLayout;
+	std::map<std::string, UIElement*> buttons;
+	std::string currentButton;
+
+	void initControllerMenuInput();
+	void layoutButtonSearch(UIElement parent);
+
 	double deltaX, deltaY;
 #ifdef _DEBUG
 	UIElement* fpsText;
@@ -41,6 +52,12 @@ private:
 
 	void processControllerButtonDown(int index, int button);
 	void processControllerButtonUp(int index, int button);
+	void moveControllerToButton();
+
+	void processMouseMotion(int x, int y);
+
+	void processKeyDown(std::string keyName, int key);
+	void processKeyUp(std::string keyName, int key);
 
 public:
 	InterfaceSystem();
@@ -62,6 +79,8 @@ public:
 
 	UIElement* loadLayout(const std::string& filename);
 	void initDefaultResources();
+
+	void clearControllerMenuInput();
 };
 
 #endif

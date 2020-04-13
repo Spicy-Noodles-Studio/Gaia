@@ -1,10 +1,9 @@
 #include "GaiaData.h"
 
 #include <fstream>
-#include <iomanip>
 #include "DebugUtils.h"
 
-GaiaData::GaiaData() : data()
+GaiaData::GaiaData()
 {
 
 }
@@ -19,13 +18,13 @@ void GaiaData::create(nlohmann::json data)
 	this->data = data;
 }
 
-bool GaiaData::load(const std::string& filename)
+void GaiaData::load(const std::string& filename)
 {
 	std::fstream fs;
 	fs.open(filename);
 	if (!fs.is_open()) {
 		LOG_ERROR("GAIA DATA", "Filename \"%s\" not found", filename.c_str());
-		return false;
+		return;
 	}
 
 	// Try if format file is valid
@@ -36,13 +35,12 @@ bool GaiaData::load(const std::string& filename)
 		LOG_ERROR("GAIA DATA", "File \"%s\" invalid format. Should be .json formatting", filename.c_str());
 		data.clear();
 		fs.close();
-		return false;
+		return;
 	}
 	fs.close();
-	return true;
 }
 
-GaiaData GaiaData::find(const std::string& key) const
+GaiaData GaiaData::find(const std::string& key)
 {
 	GaiaData gaiaData = GaiaData();
 	nlohmann::json::const_iterator it = data.find(key);
@@ -67,7 +65,7 @@ GaiaData GaiaData::operator[](int index) const
 	return gaiaData;
 }
 
-int GaiaData::size() const
+int GaiaData::size()
 {
 	if (data.is_array())
 		return data.size();
@@ -77,47 +75,17 @@ int GaiaData::size() const
 	return 0;
 }
 
-void GaiaData::save(const std::string& filename) const
-{
-	std::ofstream fs;
-	fs.open(filename);
-
-	// Try if format file is valid
-	try {
-		fs << std::setw(4) << data << std::endl;
-	}
-	catch (std::exception message) {
-		LOG_ERROR("GAIA DATA", "File \"%s\" invalid format. Should be .json formatting", filename.c_str());
-		fs.close();
-		return;
-	}
-	fs.close();
-}
-
-void GaiaData::addElement(const std::string& element, const GaiaData& value)
-{
-	data[element] = value.data;
-}
-
-void GaiaData::addElement(const std::string& element, const std::vector<GaiaData>& value)
-{
-	std::vector<nlohmann::json> dataVector;
-	for (GaiaData d : value)
-		dataVector.push_back(d.data);
-	data[element] = dataVector;
-}
-
-GaiaData::iterator GaiaData::begin() const
+GaiaData::iterator GaiaData::begin()
 {
 	return iterator(data.begin());
 }
 
-GaiaData::iterator GaiaData::end() const 
+GaiaData::iterator GaiaData::end()
 {
 	return iterator(data.end());
 }
 
-std::string GaiaData::getValue() const
+std::string GaiaData::getValue()
 {
 	if (data.is_string())
 		return data;

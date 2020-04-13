@@ -49,6 +49,7 @@ public:
 	float getLength();
 	bool hasEnded();
 	bool isPlayingSequence() const;
+	std::queue<std::string> getAnimationSequence();
 };
 
 #endif

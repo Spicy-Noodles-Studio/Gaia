@@ -46,6 +46,9 @@ void Animator::playAnimation(const std::string& animation)
 	prev->setTimePosition(0);
 	prev->setEnabled(false);
 
+	// clear sequence
+	while (!animSequence.empty()) animSequence.pop();
+
 	getAnimation(animation)->setEnabled(true);
 	currentAnimation = animation;
 }
@@ -165,4 +168,9 @@ bool Animator::hasEnded()
 bool Animator::isPlayingSequence() const
 {
 	return !animSequence.empty();
+}
+
+std::queue<std::string> Animator::getAnimationSequence()
+{
+	return animSequence;
 }

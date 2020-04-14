@@ -291,7 +291,10 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowLeft);
         if (!buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
-                currentButton = buttons[currentButton]->getProperty("LeftButton").c_str();
+                do {
+                    currentButton = buttons[currentButton]->getProperty("LeftButton").c_str();
+                } while (!buttons[currentButton]->isVisible());
+
                 if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
                     moveScrollBar(buttons[currentButton], -5);
                 }
@@ -303,7 +306,9 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowRight);
         if (!buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
-                currentButton = buttons[currentButton]->getProperty("RightButton").c_str();
+                do {
+                    currentButton = buttons[currentButton]->getProperty("RightButton").c_str();
+                } while (!buttons[currentButton]->isVisible());
                 if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
                     moveScrollBar(buttons[currentButton], 5);
                 }
@@ -315,7 +320,9 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowUp);
         if (!buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
-                currentButton = buttons[currentButton]->getProperty("UpButton").c_str();
+                do {
+                    currentButton = buttons[currentButton]->getProperty("UpButton").c_str();
+                } while (!buttons[currentButton]->isVisible());
                 if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
                     moveScrollBar(buttons[currentButton], -5);
                 }
@@ -327,15 +334,17 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowDown);
         if (!buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
-                currentButton = buttons[currentButton]->getProperty("DownButton").c_str();
+                do {
+                    currentButton = buttons[currentButton]->getProperty("DownButton").c_str();
+                } while (!buttons[currentButton]->isVisible());
                 if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
                     moveScrollBar(buttons[currentButton], 5);
                 }
                 else moveControllerToButton();
             }
         }
-        std::cout << currentButton << std::endl;
     }
+    std::cout << currentButton << std::endl;
 }
 
 void InterfaceSystem::processControllerButtonUp(int index, int button)
@@ -422,28 +431,36 @@ void InterfaceSystem::processKeyDown(std::string keyName, int key)
     if (!buttons.empty() && buttons[currentButton]->isVisible() && !checkFirstControllerInput()) {
         switch (key) {
         case SDLK_UP:
-            currentButton = buttons[currentButton]->getProperty("UpButton").c_str();
+            do {
+                currentButton = buttons[currentButton]->getProperty("UpButton").c_str();
+            } while (!buttons[currentButton]->isVisible());
             if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
                 moveScrollBar(buttons[currentButton], -5);
             }
             else moveControllerToButton();
             break;
         case SDLK_DOWN:
-            currentButton = buttons[currentButton]->getProperty("DownButton").c_str();
+            do {
+                currentButton = buttons[currentButton]->getProperty("DownButton").c_str();
+            } while (!buttons[currentButton]->isVisible());
             if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
                 moveScrollBar(buttons[currentButton], 5);
             }
             else moveControllerToButton();
             break;
         case SDLK_RIGHT:
-            currentButton = buttons[currentButton]->getProperty("RightButton").c_str();
+            do {
+                currentButton = buttons[currentButton]->getProperty("RightButton").c_str();
+            } while (!buttons[currentButton]->isVisible());
             if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
                 moveScrollBar(buttons[currentButton], 5);
             }
             else moveControllerToButton();
             break;
         case SDLK_LEFT:
-            currentButton = buttons[currentButton]->getProperty("LeftButton").c_str();
+            do {
+                currentButton = buttons[currentButton]->getProperty("LeftButton").c_str();
+            } while (!buttons[currentButton]->isVisible());
             if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
                 moveScrollBar(buttons[currentButton], -5);
             }
@@ -453,6 +470,7 @@ void InterfaceSystem::processKeyDown(std::string keyName, int key)
             CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
             break;
         }
+        std::cout << currentButton << std::endl;
     }
     
 }
@@ -460,7 +478,7 @@ void InterfaceSystem::processKeyDown(std::string keyName, int key)
 void InterfaceSystem::processKeyUp(std::string keyName, int key)
 {
     CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(SDLKeyToCEGUIKey(key));
-    if (key == SDLK_KP_ENTER) {
+    if (key == SDLK_RETURN) {
         CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MouseButton::LeftButton);
     }
 }

@@ -31,12 +31,13 @@ private:
 	UIElement* root;
 
 	// For controller input
-	UIElement* currentLayout;
-	std::map<std::string, UIElement*> buttons;
+	CEGUI::Window* currentLayout;
+	std::map<std::string, CEGUI::Window*> buttons;
+	std::string firstButton;
 	std::string currentButton;
 
 	void initControllerMenuInput();
-	void layoutButtonSearch(UIElement parent);
+	void layoutButtonSearch(UIElement* parent);
 
 	double deltaX, deltaY;
 #ifdef _DEBUG
@@ -52,7 +53,10 @@ private:
 
 	void processControllerButtonDown(int index, int button);
 	void processControllerButtonUp(int index, int button);
+	void moveScrollBar(CEGUI::Window* scrollBar, float amount);
+
 	void moveControllerToButton();
+	bool checkFirstControllerInput();
 
 	void processMouseMotion(int x, int y);
 

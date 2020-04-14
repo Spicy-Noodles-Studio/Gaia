@@ -92,7 +92,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 	} while (data->getLoadState() != Loadable::LoadState::READY);
 
 	loadScene(data);
-
+	InterfaceSystem::GetInstance()->clearControllerMenuInput();
 	return data == nullptr ? false : true;
 }
 
@@ -164,7 +164,6 @@ void SceneManager::processSceneChange()
 		delete oldScene;
 
 	processCameraChange();
-	InterfaceSystem::GetInstance()->clearControllerMenuInput();
 }
 
 void SceneManager::processCameraChange()

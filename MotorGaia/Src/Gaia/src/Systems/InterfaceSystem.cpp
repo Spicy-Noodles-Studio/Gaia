@@ -282,8 +282,8 @@ CEGUI::Key::Scan InterfaceSystem::SDLKeyToCEGUIKey(int key)
 #pragma region UI_Controller_Input
 void InterfaceSystem::processControllerButtonDown(int index, int button)
 {
-    if (currentLayout == nullptr) initControllerMenuInput();
-    std::cout << currentLayout->getName().c_str() << std::endl;
+    if (currentLayout == nullptr)
+        initControllerMenuInput();
 
     if (button == SDL_CONTROLLER_BUTTON_A)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
@@ -477,12 +477,11 @@ void InterfaceSystem::initControllerMenuInput()
 {
     if (root->getChildCount() <= 0) return;
 
-    UIElement* aux = &SceneManager::GetInstance()->getCurrentScene()->getMainCamera()->gameObject->getComponent<UILayout>()->getRoot();
-
-    if (aux) currentLayout = aux->getElement();
+    UILayout* sceneLayout = SceneManager::GetInstance()->getCurrentScene()->getMainCamera()->gameObject->getComponent<UILayout>();
+    if(sceneLayout) currentLayout = sceneLayout->getRoot().getElement();
     else return;
 
-    layoutButtonSearch(aux);
+    layoutButtonSearch(&sceneLayout->getRoot());
 
 }
 

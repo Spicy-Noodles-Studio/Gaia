@@ -423,7 +423,6 @@ void InterfaceSystem::processMouseMotion(int x, int y)
 
 void InterfaceSystem::moveScrollBar(CEGUI::Window* scrollBar, float amount)
 {
-    std::string type = scrollBar->getType().c_str();
    
     CEGUI::Vector2f pos = scrollBar->getChildElement("__auto_thumb__")->getPixelPosition();
 
@@ -434,29 +433,11 @@ void InterfaceSystem::moveScrollBar(CEGUI::Window* scrollBar, float amount)
     if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible())
         CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
 
-    float amountInPixels;
-  //  scrollBar->setProperty("ScrollPosition",scrollBar->getProperty("ScrollPosition")+(amount));
    if( scrollBar->getWindowRendererName() == "Core/Scrollbar") {
     CEGUI::Scrollbar* x = static_cast<CEGUI::Scrollbar*>(scrollBar);
     x->getScrollPosition();
     x->setScrollPosition(x->getScrollPosition() + amount/100.0);
-     }
-    
-    /*
-
-    CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
-    if (type == "TaharezLook/HorizontalScrollbar") {
-        amountInPixels = (amount / 100) * ( scrollBar->getPixelSize().d_width - 
-            ( scrollBar->getChildElement("__auto_incbtn__")->getPixelSize().d_width * 2) );
-        CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(amountInPixels, 0);
-    }
-    else if (type == "TaharezLook/VerticalScrollbar") {
-        amountInPixels = (amount / 100) * (scrollBar->getPixelSize().d_height - 
-            (scrollBar->getChildElement("__auto_incbtn__")->getPixelSize().d_height * 2));
-        CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(0, amountInPixels);
-    }
-    */
-    CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MouseButton::LeftButton);
+   }
 }
 
 void InterfaceSystem::setScrollbarControllerAmount(float percent)
@@ -538,7 +519,7 @@ void InterfaceSystem::searchNextVisibleButton(std::string direction)
                 LOG("UI Input Error: Button in direction %s does not exist\n", direction);
                 return;
             }
-        } while (!buttons[currentButton]->isVisible() && i < buttons.size());
+        } while (!buttons[nextButton]->isVisible() && i < buttons.size());
         currentButton = nextButton;
     }
 }

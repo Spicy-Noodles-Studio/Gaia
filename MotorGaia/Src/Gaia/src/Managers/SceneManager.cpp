@@ -6,6 +6,7 @@
 #include "PhysicsSystem.h"
 #include "RenderSystem.h"
 #include "DebugDrawer.h"
+#include "InterfaceSystem.h"
 
 
 SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), window(nullptr), countNodeIDs(0), debugDrawer(nullptr)
@@ -91,7 +92,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 	} while (data->getLoadState() != Loadable::LoadState::READY);
 
 	loadScene(data);
-
+	InterfaceSystem::GetInstance()->clearControllerMenuInput();
 	return data == nullptr ? false : true;
 }
 

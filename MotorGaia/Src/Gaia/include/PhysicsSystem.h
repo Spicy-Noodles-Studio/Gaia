@@ -60,6 +60,8 @@ public:
 
 	void checkCollisions();
 
+	void drawLine(const Vector3& ini, const Vector3& end, const Vector3& color);
+
 private:
 	void CollisionEnterCallbacks(const std::pair<RigidBody*, RigidBody*>& col);
 	void CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody*>& col);

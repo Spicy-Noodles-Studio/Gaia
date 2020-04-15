@@ -31,6 +31,7 @@ void Animator::setMesh(const std::string& mesh)
 		animations = aux->getMesh(mesh)->getAllAnimationStates();
 		if(animations != 0)
 			gameObject->getScene()->addAnimationSet(gameObject->getName(), animations);
+		currentMesh = mesh;
 	}
 }
 
@@ -54,6 +55,24 @@ std::string Animator::getCurrentAnimation()
 	return currentAnimation;
 }
 
+std::vector<std::string> Animator::getAllAnimationsNames()
+{
+	std::vector<std::string> names;
+
+	for (auto anim : animations->getAnimationStateIterator())
+		names.push_back(anim.first);
+
+	return names;
+}
+
+void Animator::printAllAnimationsNames()
+{
+	printf("%s MESH ANIMATIONS: \n");
+	for (auto anim : animations->getAnimationStateIterator())
+		printf(" - %s\n", anim.first);
+	printf("\n");
+}
+
 void Animator::handleData(ComponentData* data)
 {
 	for (auto prop : data->getProperties())
@@ -74,4 +93,37 @@ void Animator::handleData(ComponentData* data)
 				LOG("ANIMATOR: wrong value for property %s.\n", prop.first.c_str());
 		}
 	}
+}
+
+void Animator::setLoop(bool loop)
+{
+	auto anim = getAnimation(currentAnimation);
+	anim->setLoop(loop);
+}
+
+void Animator::setTimePosition(float pos)
+{
+	auto anim = getAnimation(currentAnimation);
+	anim->setTimePosition(Ogre::Real(pos));
+}
+
+void Animator::setLength(float length)
+{
+	auto anim = getAnimation(currentAnimation);
+	anim->setLength(Ogre::Real(length));
+}
+
+bool Animator::getLoop()
+{
+	return getAnimation(currentAnimation)->getLoop();
+}
+
+float Animator::getTimePosition()
+{
+	return float(getAnimation(currentAnimation)->getTimePosition());
+}
+
+float Animator::getLength()
+{
+	return float(getAnimation(currentAnimation)->getLength());
 }

@@ -54,7 +54,7 @@ void SceneManager::preUpdate(float deltaTime)
 {
 	// If stack not empty, change scene and delete the current one
 	processSceneChange();
-	
+
 	//Update all animations
 	currentScene->updateAllAnimations(deltaTime);
 }
@@ -103,7 +103,6 @@ Scene* SceneManager::createScene(const SceneData* data)
 	for (GameObjectData* gData : data->getGameObjectsData()) {
 		createGameObject(gData, myScene);
 	}
-
 	return myScene;
 }
 
@@ -164,6 +163,7 @@ void SceneManager::processSceneChange()
 		delete oldScene;
 
 	processCameraChange();
+
 }
 
 void SceneManager::processCameraChange()

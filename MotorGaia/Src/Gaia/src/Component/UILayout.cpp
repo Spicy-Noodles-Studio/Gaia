@@ -36,7 +36,6 @@ void UILayout::setLayout(const std::string& filename)
 		layout->getElement()->getChildAtIdx(index)->setInheritsAlpha(false);
 		++index;
 	}
-
 }
 
 void UILayout::setEvent(const std::string& element, const std::string& event)

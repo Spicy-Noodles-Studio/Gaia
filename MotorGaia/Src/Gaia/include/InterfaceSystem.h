@@ -35,9 +35,12 @@ private:
 	std::map<std::string, CEGUI::Window*> buttons;
 	std::string firstButton;
 	std::string currentButton;
+	float scrollAmount;
 
 	void initControllerMenuInput();
 	void layoutButtonSearch(UIElement* parent);
+	void searchNextVisibleButton(std::string direction);
+	/*------------------------------*/
 
 	double deltaX, deltaY;
 #ifdef _DEBUG
@@ -85,6 +88,9 @@ public:
 	void initDefaultResources();
 
 	void clearControllerMenuInput();
+
+	/// Percentage of scrollbar that changes when moved by controller or keyboard
+	void setScrollbarControllerAmount(float percent);
 };
 
 #endif

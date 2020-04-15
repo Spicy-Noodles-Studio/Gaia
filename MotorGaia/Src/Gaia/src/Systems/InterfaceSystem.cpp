@@ -70,9 +70,11 @@ void InterfaceSystem::init(Window* window)
     CEGUI::OgreRenderer& ogreRenderer = CEGUI::OgreRenderer::bootstrapSystem(*window->getRenderWindow());
     renderer = &ogreRenderer;
 
+    // Controller UI System
     currentButton = "NO BUTTON";
     firstButton = "NO BUTTON";
     currentLayout = nullptr;
+    scrollAmount = 5;
 
 	setupResources();
 	createRoot();
@@ -276,6 +278,7 @@ CEGUI::Key::Scan InterfaceSystem::SDLKeyToCEGUIKey(int key)
     return CEGUI::Key::Unknown;
 }
 
+#pragma region UI_Controller_Input
 void InterfaceSystem::processControllerButtonDown(int index, int button)
 {
     if (currentLayout == nullptr) initControllerMenuInput();
@@ -291,12 +294,9 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowLeft);
         if (!buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
-                do {
-                    currentButton = buttons[currentButton]->getProperty("LeftButton").c_str();
-                } while (!buttons[currentButton]->isVisible());
-
+                searchNextVisibleButton("LeftButton");
                 if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
-                    moveScrollBar(buttons[currentButton], -5);
+                    moveScrollBar(buttons[currentButton], -scrollAmount);
                 }
                 else moveControllerToButton();
             }
@@ -306,11 +306,9 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowRight);
         if (!buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
-                do {
-                    currentButton = buttons[currentButton]->getProperty("RightButton").c_str();
-                } while (!buttons[currentButton]->isVisible());
+                searchNextVisibleButton("RightButton");
                 if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
-                    moveScrollBar(buttons[currentButton], 5);
+                    moveScrollBar(buttons[currentButton], scrollAmount);
                 }
                 else moveControllerToButton();
             }
@@ -320,11 +318,9 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowUp);
         if (!buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
-                do {
-                    currentButton = buttons[currentButton]->getProperty("UpButton").c_str();
-                } while (!buttons[currentButton]->isVisible());
+                searchNextVisibleButton("UpButton");
                 if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
-                    moveScrollBar(buttons[currentButton], -5);
+                    moveScrollBar(buttons[currentButton], -scrollAmount);
                 }
                 else moveControllerToButton();
             }
@@ -334,11 +330,9 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowDown);
         if (!buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
-                do {
-                    currentButton = buttons[currentButton]->getProperty("DownButton").c_str();
-                } while (!buttons[currentButton]->isVisible());
+                searchNextVisibleButton("DownButton");
                 if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
-                    moveScrollBar(buttons[currentButton], 5);
+                    moveScrollBar(buttons[currentButton], scrollAmount);
                 }
                 else moveControllerToButton();
             }
@@ -365,6 +359,67 @@ void InterfaceSystem::processControllerButtonUp(int index, int button)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(CEGUI::Key::ArrowDown);
 }
 
+void InterfaceSystem::processKeyDown(std::string keyName, int key)
+{
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(SDLKeyToCEGUIKey(key));
+
+    if (!currentLayout) initControllerMenuInput();
+
+    if (!buttons.empty() && buttons[currentButton]->isVisible() && !checkFirstControllerInput()) {
+        switch (key) {
+        case SDLK_UP:
+            searchNextVisibleButton("UpButton");
+            if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
+                moveScrollBar(buttons[currentButton], -scrollAmount);
+            }
+            else moveControllerToButton();
+            break;
+        case SDLK_DOWN:
+            searchNextVisibleButton("DownButton");
+            if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
+                moveScrollBar(buttons[currentButton], scrollAmount);
+            }
+            else moveControllerToButton();
+            break;
+        case SDLK_RIGHT:
+            searchNextVisibleButton("RightButton");
+            if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
+                moveScrollBar(buttons[currentButton], scrollAmount);
+            }
+            else moveControllerToButton();
+            break;
+        case SDLK_LEFT:
+            searchNextVisibleButton("LeftButton");
+            if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
+                moveScrollBar(buttons[currentButton], -scrollAmount);
+            }
+            else moveControllerToButton();
+            break;
+        case SDLK_RETURN:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
+            break;
+        }
+        std::cout << currentButton << std::endl;
+    }
+
+}
+
+void InterfaceSystem::processKeyUp(std::string keyName, int key)
+{
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(SDLKeyToCEGUIKey(key));
+    if (key == SDLK_RETURN) {
+        CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MouseButton::LeftButton);
+    }
+}
+
+void InterfaceSystem::processMouseMotion(int x, int y)
+{
+    if (!CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
+        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+    }
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(x, y);
+}
+
 void InterfaceSystem::moveScrollBar(CEGUI::Window* scrollBar, float amount)
 {
     std::string type = scrollBar->getType().c_str();
@@ -382,15 +437,22 @@ void InterfaceSystem::moveScrollBar(CEGUI::Window* scrollBar, float amount)
 
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
     if (type == "TaharezLook/HorizontalScrollbar") {
-        amountInPixels = (amount / 100) * scrollBar->getPixelSize().d_width;
+        amountInPixels = (amount / 100) * ( scrollBar->getPixelSize().d_width - 
+            ( scrollBar->getChildElement("__auto_incbtn__")->getPixelSize().d_width * 2) );
         CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(amountInPixels, 0);
     }
     else if (type == "TaharezLook/VerticalScrollbar") {
-        amountInPixels = (amount / 100) * scrollBar->getPixelSize().d_height;
+        amountInPixels = (amount / 100) * (scrollBar->getPixelSize().d_height - 
+            (scrollBar->getChildElement("__auto_incbtn__")->getPixelSize().d_height * 2));
         CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(0, amountInPixels);
     }
 
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MouseButton::LeftButton);
+}
+
+void InterfaceSystem::setScrollbarControllerAmount(float percent)
+{
+    scrollAmount = percent;
 }
 
 void InterfaceSystem::moveControllerToButton()
@@ -412,75 +474,6 @@ bool InterfaceSystem::checkFirstControllerInput()
         return true;
     }
     return false;
-}
-
-void InterfaceSystem::processMouseMotion(int x, int y)
-{
-    if (!CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
-        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
-    }
-    CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(x, y);
-}
-
-void InterfaceSystem::processKeyDown(std::string keyName, int key)
-{
-    CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(SDLKeyToCEGUIKey(key));
-
-    if (!currentLayout) initControllerMenuInput();
-
-    if (!buttons.empty() && buttons[currentButton]->isVisible() && !checkFirstControllerInput()) {
-        switch (key) {
-        case SDLK_UP:
-            do {
-                currentButton = buttons[currentButton]->getProperty("UpButton").c_str();
-            } while (!buttons[currentButton]->isVisible());
-            if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
-                moveScrollBar(buttons[currentButton], -5);
-            }
-            else moveControllerToButton();
-            break;
-        case SDLK_DOWN:
-            do {
-                currentButton = buttons[currentButton]->getProperty("DownButton").c_str();
-            } while (!buttons[currentButton]->isVisible());
-            if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
-                moveScrollBar(buttons[currentButton], 5);
-            }
-            else moveControllerToButton();
-            break;
-        case SDLK_RIGHT:
-            do {
-                currentButton = buttons[currentButton]->getProperty("RightButton").c_str();
-            } while (!buttons[currentButton]->isVisible());
-            if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
-                moveScrollBar(buttons[currentButton], 5);
-            }
-            else moveControllerToButton();
-            break;
-        case SDLK_LEFT:
-            do {
-                currentButton = buttons[currentButton]->getProperty("LeftButton").c_str();
-            } while (!buttons[currentButton]->isVisible());
-            if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
-                moveScrollBar(buttons[currentButton], -5);
-            }
-            else moveControllerToButton();
-            break;
-        case SDLK_RETURN:
-            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
-            break;
-        }
-        std::cout << currentButton << std::endl;
-    }
-    
-}
-
-void InterfaceSystem::processKeyUp(std::string keyName, int key)
-{
-    CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(SDLKeyToCEGUIKey(key));
-    if (key == SDLK_RETURN) {
-        CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MouseButton::LeftButton);
-    }
 }
 
 void InterfaceSystem::clearControllerMenuInput() {
@@ -522,6 +515,25 @@ void InterfaceSystem::layoutButtonSearch(UIElement* parent)
         if (parent->getChildAtIndex(i).getChildCount() > 0) layoutButtonSearch(&parent->getChildAtIndex(i));
     }
 }
+
+void InterfaceSystem::searchNextVisibleButton(std::string direction)
+{
+
+    if (buttons.size() > 1) {
+        int i = 0;
+        std::string nextButton = currentButton;
+        do {
+            nextButton = buttons[nextButton]->getProperty(direction).c_str();
+            i++;
+            if (buttons.find(nextButton) == buttons.end()) {
+                LOG("UI Input Error: Button in direction %s does not exist\n", direction);
+                return;
+            }
+        } while (!buttons[currentButton]->isVisible() && i < buttons.size());
+        currentButton = nextButton;
+    }
+}
+#pragma endregion UI_Controller_Input
 
 void InterfaceSystem::registerEvent(const std::string& eventName, UIEvent event)
 {

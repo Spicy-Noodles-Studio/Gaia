@@ -152,7 +152,8 @@ void InterfaceSystem::initDefaultResources()
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
     // load fonts
-    CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang", 16, true, "batang.ttf");
+    CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang7", 6.8, true, "batang.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
+    CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang8", 8, true, "batang.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
 
 
 #ifdef _DEBUG
@@ -423,7 +424,7 @@ void InterfaceSystem::processMouseMotion(int x, int y)
 void InterfaceSystem::moveScrollBar(CEGUI::Window* scrollBar, float amount)
 {
     std::string type = scrollBar->getType().c_str();
-
+   
     CEGUI::Vector2f pos = scrollBar->getChildElement("__auto_thumb__")->getPixelPosition();
 
     float x = pos.d_x;
@@ -434,6 +435,14 @@ void InterfaceSystem::moveScrollBar(CEGUI::Window* scrollBar, float amount)
         CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
 
     float amountInPixels;
+  //  scrollBar->setProperty("ScrollPosition",scrollBar->getProperty("ScrollPosition")+(amount));
+   if( scrollBar->getWindowRendererName() == "Core/Scrollbar") {
+    CEGUI::Scrollbar* x = static_cast<CEGUI::Scrollbar*>(scrollBar);
+    x->getScrollPosition();
+    x->setScrollPosition(x->getScrollPosition() + amount/100.0);
+     }
+    
+    /*
 
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
     if (type == "TaharezLook/HorizontalScrollbar") {
@@ -446,7 +455,7 @@ void InterfaceSystem::moveScrollBar(CEGUI::Window* scrollBar, float amount)
             (scrollBar->getChildElement("__auto_incbtn__")->getPixelSize().d_height * 2));
         CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(0, amountInPixels);
     }
-
+    */
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MouseButton::LeftButton);
 }
 

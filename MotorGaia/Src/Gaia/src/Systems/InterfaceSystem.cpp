@@ -448,9 +448,10 @@ void InterfaceSystem::setScrollbarControllerAmount(float percent)
 void InterfaceSystem::moveControllerToButton()
 {
     CEGUI::Vector2f pos = buttons[currentButton]->getPixelPosition();
+    CEGUI::Sizef area = buttons[currentButton]->getPixelSize();
 
-    float x = pos.d_x;
-    float y = pos.d_y;
+    float x = pos.d_x + (area.d_width / 2);
+    float y = pos.d_y + (area.d_height / 2);
 
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(x, y);
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
@@ -495,6 +496,10 @@ void InterfaceSystem::layoutButtonSearch(UIElement* parent)
         name = parent->getChildAtIndex(i).getElement()->getName().c_str();
         if (name != "__auto_hscrollbar__" && name != "__auto_vscrollbar__" && name.size() > 1 &&
             (type == "TaharezLook/Button" || type == "TaharezLook/HorizontalScrollbar" || type == "TaharezLook/Checkbox" || type == "TaharezLook/VerticalScrollbar")) {
+            
+            if (!parent->getChildAtIndex(i).getElement()->isPropertyPresent("UpButton")) // Para evitar errores si se usan los Tahareez antiguos
+                return;
+
             buttons.emplace(name, parent->getChildAtIndex(i).getElement());
             if (firstButton == "NO BUTTON") { 
                 firstButton = name; 

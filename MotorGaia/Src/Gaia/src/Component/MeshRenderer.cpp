@@ -3,6 +3,9 @@
 #include <OgreRoot.h>
 #include <OgreSceneManager.h>
 #include <OgreSkeletonInstance.h>
+#include <OgreSkeleton.h>
+#include <OgreBone.h>
+#include <OgreMesh.h>
 #include <OgreEntity.h>
 #include <sstream>
 
@@ -88,6 +91,26 @@ void MeshRenderer::attachEntityToBone(const std::string& owner, const std::strin
 		LOG("MESH RENDERER: One of the meshes specified does not exist in object %s", gameObject->getName().c_str());
 }
 
+void MeshRenderer::detachEntityFromBone(const std::string& owner, const std::string& mesh)
+{
+	auto ownerIt = entities.find(owner), meshIt = entities.find(mesh);
+	if (ownerIt != entities.end() && meshIt != entities.end()) {
+		Ogre::Entity* ownerEnt = (*ownerIt).second, * meshEnt = (*meshIt).second;
+		if (ownerEnt->hasSkeleton())
+			ownerEnt->detachObjectFromBone(meshEnt);
+		else
+			LOG("MESH RENDERER: The mesh %s does not have a skeleton", owner.c_str());
+	}
+	else
+		LOG("MESH RENDERER: The mesh specified does not exist in object %s", gameObject->getName().c_str());
+}
+
+void MeshRenderer::moveEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh)
+{
+	detachEntityFromBone(owner, mesh);
+	attachEntityToBone(owner, bone, mesh);
+}
+
 void MeshRenderer::setVisible(bool visible)
 {
 	gameObject->node->setVisible(visible);
@@ -96,6 +119,18 @@ void MeshRenderer::setVisible(bool visible)
 bool MeshRenderer::isVisible()
 {
 	return visible;
+}
+
+void MeshRenderer::printAllBones()
+{
+	printf("%s BONES:\n", meshName.c_str());
+	auto skeleton = getMesh(meshId)->getMesh()->getSkeleton();
+	auto numBones = skeleton->getNumBones();
+	for (int i = 0; i < numBones; i++)
+	{
+		printf("%s\n", skeleton->getBone(i)->getName().c_str());
+	}
+	printf("\n");
 }
 
 void MeshRenderer::handleData(ComponentData* data)

@@ -30,9 +30,14 @@ public:
 
 	void attachEntityToNode(const std::string& mesh);
 	void attachEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh);
+	void detachEntityFromBone(const std::string& owner, const std::string& mesh);
+	// Move an entity mesh from one bone to the bone 'bone' of owners' skeleton
+	void moveEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh);
 
 	void setVisible(bool visible);
 	bool isVisible();
+
+	void printAllBones();
 
 	virtual void handleData(ComponentData* data);
 };

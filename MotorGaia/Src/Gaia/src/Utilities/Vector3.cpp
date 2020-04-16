@@ -220,6 +220,11 @@ Vector3 Vector3::rotateAroundPivot(const Vector3& point, const Vector3& pivot, c
 	return (v + pivot);
 }
 
+std::string Vector3::toString() const
+{
+	return std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(z);
+}
+
 void Vector3::rotateAroundAxis(const Vector3& axis, double degrees)
 {
 	Vector3 result = *this;

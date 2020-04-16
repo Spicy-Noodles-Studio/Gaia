@@ -45,15 +45,29 @@ public:
 	GaiaData();
 	~GaiaData();
 
-	std::string getValue();
+	std::string getValue() const;
 
-	void load(const std::string& filename);
-	GaiaData find(const std::string& key);
+	bool load(const std::string& filename);
+	GaiaData find(const std::string& key) const;
 	GaiaData operator[](int index) const;
-	int size();
+	int size() const;
 
-	iterator begin();
-	iterator end();
+	void save(const std::string& filename) const;
+
+	void addElement(const std::string& element, const GaiaData& value);
+	void addElement(const std::string& element, const std::vector<GaiaData>& value);
+	
+	template<typename T>
+	void addElement(const std::string& element, const T& value);
+
+	iterator begin() const;
+	iterator end() const;
 
 };
 #endif
+
+template<typename T>
+inline void GaiaData::addElement(const std::string& element, const T& value)
+{
+	data[element] = value;
+}

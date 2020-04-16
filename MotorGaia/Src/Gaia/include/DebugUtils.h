@@ -8,7 +8,7 @@
 #ifdef _DEBUG
 
 #define LOG(message, ...)					printf((std::string(message) + std::string("\n")).c_str(), __VA_ARGS__)
-#define LOG_ERROR(sender, message, ...)		printf("%s: ", sender); LOG(message, __VA_ARGS__)
+#define LOG_ERROR(sender, message, ...)		printf((std::string("%s: ") + std::string(message) + std::string("\n")).c_str(), sender, __VA_ARGS__)
 
 #else 
 

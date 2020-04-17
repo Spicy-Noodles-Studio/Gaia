@@ -37,8 +37,6 @@ public:
 	std::string getCurrentAnimation();
 	std::vector<std::string> getAllAnimationsNames();
 	void printAllAnimationsNames();
-	void stopAnimation(const std::string& animation);
-	void stopAllAnimations();
 
 	virtual void handleData(ComponentData* data);
 

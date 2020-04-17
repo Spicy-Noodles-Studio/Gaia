@@ -231,9 +231,6 @@ void Scene::instantiate(GameObject* gameObject)
 	}
 
 	repeatedNames[gameObject->getName()] = 0;
-
-	gameObject->node->setVisible(false);
-	gameObject->setActive(false);
 	instantiateQueue.push_back(gameObject);
 }
 
@@ -243,13 +240,11 @@ void Scene::instantiatePendingGameObjects()
 
 	for (auto gameObject : instantiateQueue)
 	{
-		gameObject->setActive(true);
 		gameObject->myScene = this;
 		sceneObjects.push_back(gameObject);
 	}
 	instantiateQueue.clear();
 }
-
 
 void Scene::updateAllAnimations(float deltaTime)
 {

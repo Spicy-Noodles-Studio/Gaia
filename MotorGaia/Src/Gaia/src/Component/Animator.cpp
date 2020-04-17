@@ -42,10 +42,6 @@ Ogre::AnimationState* Animator::getAnimation(const std::string& animation)
 
 void Animator::playAnimation(const std::string& animation)
 {
-	Ogre::AnimationState* prev = getAnimation(currentAnimation);
-	prev->setTimePosition(0);
-	prev->setEnabled(false);
-
 	getAnimation(animation)->setEnabled(true);
 	currentAnimation = animation;
 }
@@ -100,6 +96,19 @@ void Animator::printAllAnimationsNames()
 	for (auto anim : animations->getAnimationStateIterator())
 		printf(" - %s\n", anim.first.c_str());
 	printf("\n");
+}
+
+void Animator::stopAnimation(const std::string& animation)
+{
+	Ogre::AnimationState* animState = getAnimation(currentAnimation);
+	animState->setTimePosition(0);
+	animState->setEnabled(false);
+}
+
+void Animator::stopAllAnimations()
+{
+	for (auto anim : animations->getAnimationStateIterator())
+		stopAnimation(anim.first);
 }
 
 void Animator::handleData(ComponentData* data)

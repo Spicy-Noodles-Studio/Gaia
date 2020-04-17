@@ -242,7 +242,7 @@ void Scene::instantiatePendingGameObjects()
 	if (!instantiateQueue.size()) return;
 
 	for (auto gameObject : instantiateQueue) {
-		gameObject->node->setVisible(true);
+		//gameObject->node->setVisible(true);
 		gameObject->setActive(true);
 		gameObject->myScene = this;
 		sceneObjects.push_back(gameObject);

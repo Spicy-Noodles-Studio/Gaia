@@ -114,6 +114,7 @@ void MeshRenderer::moveEntityToBone(const std::string& owner, const std::string&
 void MeshRenderer::setVisible(bool visible)
 {
 	gameObject->node->setVisible(visible);
+	this->visible = visible;
 }
 
 bool MeshRenderer::isVisible()
@@ -164,6 +165,14 @@ void MeshRenderer::handleData(ComponentData* data)
 			std::string id, name;
 			if (ss >> id >> name)
 				setMaterial(id, name);
+			else
+				LOG("MESH RENDERER: wrong value for property %s.\n", prop.first.c_str());
+		}
+		else if (prop.first == "visible")
+		{
+			bool visible;
+			if (ss >> visible)
+				setVisible(visible);
 			else
 				LOG("MESH RENDERER: wrong value for property %s.\n", prop.first.c_str());
 		}

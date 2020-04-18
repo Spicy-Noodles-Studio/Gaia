@@ -13,6 +13,7 @@
 #include "Scene.h"
 #include "ComponentData.h"
 #include "ComponentRegister.h"
+#include "Animator.h"
 
 REGISTER_FACTORY(MeshRenderer);
 
@@ -67,6 +68,10 @@ void MeshRenderer::changeMesh(const std::string& id, const std::string& mesh)
 	attachEntityToNode(id);
 	meshId = id;
 	meshName = mesh;
+
+	// Change animations if the mesh has animations
+	auto anim = gameObject->getComponent<Animator>();
+	if (anim != nullptr)	anim->setMesh(mesh);
 }
 
 void MeshRenderer::attachEntityToNode(const std::string& mesh)

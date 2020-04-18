@@ -28,12 +28,12 @@ public:
 
 	void move(int x, int y);
 	void resize(unsigned int width, unsigned int height);
+	void close();
 	bool isClosed();
 
 private:
 	void moved(unsigned int x, unsigned int y);
 	void resized(unsigned int width, unsigned int height);
-	void close();
 
 private:
 	Ogre::Root* root;

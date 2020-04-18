@@ -96,7 +96,7 @@ std::vector<std::string> Animator::getAllAnimationsNames()
 
 void Animator::printAllAnimationsNames()
 {
-	printf("%s MESH ANIMATIONS: \n");
+	printf("%s MESH ANIMATIONS: \n", currentMesh.c_str());
 	for (auto anim : animations->getAnimationStateIterator())
 		printf(" - %s\n", anim.first.c_str());
 	printf("\n");

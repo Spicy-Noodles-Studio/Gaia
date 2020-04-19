@@ -12,10 +12,9 @@
 
 REGISTER_FACTORY(Animator);
 
-Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject), endSequenceWithLoop(false), currentAnimation("Idle")
+Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject), endSequenceWithLoop(false)
 {
-	setMesh(gameObject->getName());
-	playAnimation(currentAnimation);
+
 }
 
 Animator::~Animator()
@@ -101,6 +100,28 @@ void Animator::printAllAnimationsNames()
 	for (auto anim : animations->getAnimationStateIterator())
 		printf(" - %s\n", anim.first.c_str());
 	printf("\n");
+}
+
+void Animator::handleData(ComponentData* data)
+{
+	for (auto prop : data->getProperties())
+	{
+		std::stringstream ss(prop.second);
+
+		if (prop.first == "anim")
+		{
+			std::string anim, mesh; 
+			if (ss >> anim >> mesh) {
+				setMesh(mesh);
+
+				Ogre::AnimationState* aux = getAnimation(anim);
+				aux->setEnabled(true);
+				currentAnimation = anim;
+			}
+			else
+				LOG("ANIMATOR: wrong value for property %s.\n", prop.first.c_str());
+		}
+	}
 }
 
 void Animator::setLoop(bool loop)

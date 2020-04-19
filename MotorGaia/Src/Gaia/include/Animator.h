@@ -38,6 +38,8 @@ public:
 	std::vector<std::string> getAllAnimationsNames();
 	void printAllAnimationsNames();
 
+	virtual void handleData(ComponentData* data);
+
 	void setLoop(bool loop);
 	void setTimePosition(float pos);
 	void setLength(float length);

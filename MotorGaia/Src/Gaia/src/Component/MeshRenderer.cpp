@@ -75,8 +75,8 @@ void MeshRenderer::changeMesh(const std::string& id, const std::string& mesh)
 	meshName = mesh;
 
 	// Change animations if the mesh has animations
-	//auto anim = gameObject->getComponent<Animator>();
-	//if (anim != nullptr)	anim->setMesh(id);
+	auto anim = gameObject->getComponent<Animator>();
+	if (anim != nullptr)	anim->setMesh(id);
 }
 
 void MeshRenderer::attachEntityToNode(const std::string& mesh)

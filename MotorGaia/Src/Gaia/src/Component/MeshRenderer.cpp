@@ -7,6 +7,11 @@
 #include <OgreBone.h>
 #include <OgreMesh.h>
 #include <OgreEntity.h>
+#include <OgreSubEntity.h>
+#include <OgreMaterial.h>
+#include <OgreTechnique.h>
+#include <OgrePass.h>
+
 #include <sstream>
 
 #include "GameObject.h"
@@ -137,6 +142,19 @@ void MeshRenderer::printAllBones()
 		printf("%s\n", skeleton->getBone(i)->getName().c_str());
 	}
 	printf("\n");
+}
+
+void MeshRenderer::setDiffuse(const Vector3& diffuse, float alpha)
+{
+	const Ogre::MaterialPtr mat = getMesh(meshId)->getSubEntity(0)->getMaterial();
+	mat->getTechnique(0)->getPass(0)->setDiffuse(diffuse.x, diffuse.y, diffuse.z, alpha);
+	setMaterial(meshId, mat->getName());
+}
+
+Vector3 MeshRenderer::getDiffuse()
+{
+	Ogre::ColourValue c = getMesh(meshId)->getSubEntity(0)->getMaterial()->getTechnique(0)->getPass(0)->getDiffuse();
+	return { c.r, c.g, c.b };
 }
 
 void MeshRenderer::handleData(ComponentData* data)

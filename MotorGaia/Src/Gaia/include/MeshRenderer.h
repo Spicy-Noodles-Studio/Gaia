@@ -4,6 +4,7 @@
 
 #include "GaiaComponent.h"
 #include <map>
+#include "Vector3.h"
 
 namespace Ogre {
 	class Entity;
@@ -38,6 +39,10 @@ public:
 	bool isVisible();
 
 	void printAllBones();
+
+	void setDiffuse(const Vector3& diffuse, float alpha);
+
+	Vector3 getDiffuse();
 
 	virtual void handleData(ComponentData* data);
 };

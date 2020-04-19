@@ -12,7 +12,7 @@
 
 REGISTER_FACTORY(Animator);
 
-Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject), endSequenceWithLoop(false)
+Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject), endSequenceWithLoop(false), currentAnimation("")
 {
 
 }
@@ -28,6 +28,16 @@ void Animator::setMesh(const std::string& mesh)
 
 	if (aux != nullptr)
 	{
+		if (currentAnimation != "") 
+		{
+			Ogre::AnimationState* prev = getAnimation(currentAnimation);
+			prev->setTimePosition(0);
+			prev->setEnabled(false);
+			currentAnimation = "";
+		} 
+		// clear previous sequence
+		std::queue<std::string>().swap(animSequence);
+
 		animations = aux->getMesh(mesh)->getAllAnimationStates();
 		if(animations != 0)
 			gameObject->getScene()->addAnimationSet(gameObject->getName(), animations);
@@ -42,9 +52,12 @@ Ogre::AnimationState* Animator::getAnimation(const std::string& animation)
 
 void Animator::playAnimation(const std::string& animation)
 {
-	Ogre::AnimationState* prev = getAnimation(currentAnimation);
-	prev->setTimePosition(0);
-	prev->setEnabled(false);
+	if (currentAnimation != "")
+	{
+		Ogre::AnimationState* prev = getAnimation(currentAnimation);
+		prev->setTimePosition(0);
+		prev->setEnabled(false);
+	}
 
 	getAnimation(animation)->setEnabled(true);
 	currentAnimation = animation;

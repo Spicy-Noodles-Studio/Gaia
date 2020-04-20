@@ -64,6 +64,12 @@ void MeshRenderer::setMaterial(const std::string& id, const std::string& materia
 		entities[id]->setMaterialName(material);
 }
 
+void MeshRenderer::setMaterial(const std::string& id, int subentity, const std::string& material)
+{
+	if (entities.find(id) != entities.end())
+		entities[id]->getSubEntity(subentity)->setMaterialName(material);
+}
+
 void MeshRenderer::changeMesh(const std::string& id, const std::string& mesh)
 {
 	// Dettach previously attached meshes
@@ -123,7 +129,7 @@ void MeshRenderer::moveEntityToBone(const std::string& owner, const std::string&
 
 void MeshRenderer::setVisible(bool visible)
 {
-	gameObject->node->setVisible(visible);
+	gameObject->node->setVisible(visible, false);
 	this->visible = visible;
 }
 
@@ -144,17 +150,33 @@ void MeshRenderer::printAllBones()
 	printf("\n");
 }
 
-void MeshRenderer::setDiffuse(const Vector3& diffuse, float alpha)
+void MeshRenderer::setDiffuse(int subentity, const Vector3& diffuse, float alpha)
 {
-	const Ogre::MaterialPtr mat = getMesh(meshId)->getSubEntity(0)->getMaterial();
-	mat->getTechnique(0)->getPass(0)->setDiffuse(diffuse.x, diffuse.y, diffuse.z, alpha);
-	setMaterial(meshId, mat->getName());
+	Ogre::MaterialPtr mat = getMesh(meshId)->getSubEntity(subentity)->getMaterial();
+	Ogre::MaterialPtr newMat = mat->clone(mat->getName() + gameObject->getName());
+	newMat->getTechnique(0)->getPass(0)->setDiffuse(diffuse.x, diffuse.y, diffuse.z, alpha);
+	setMaterial(meshId, subentity, newMat->getName());
 }
 
-Vector3 MeshRenderer::getDiffuse()
+Vector3 MeshRenderer::getDiffuse(int subentity)
 {
-	Ogre::ColourValue c = getMesh(meshId)->getSubEntity(0)->getMaterial()->getTechnique(0)->getPass(0)->getDiffuse();
+	Ogre::ColourValue c = getMesh(meshId)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getDiffuse();
 	return { c.r, c.g, c.b };
+}
+
+int MeshRenderer::getSubentitiesSize()
+{
+	return getMesh(meshId)->getSubEntities().size();
+}
+
+void MeshRenderer::setTexture(int subentity, const std::string& textureName)
+{
+	getMesh(meshId)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureName(textureName);
+}
+
+std::string MeshRenderer::getTexture(int subentity)
+{
+	return getMesh(meshId)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName();
 }
 
 void MeshRenderer::handleData(ComponentData* data)

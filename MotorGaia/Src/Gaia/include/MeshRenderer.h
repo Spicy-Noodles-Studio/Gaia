@@ -24,9 +24,11 @@ public:
 	Ogre::Entity* getMesh(std::string mesh);
 	std::string getMeshId() const;
 	std::string getMeshName() const;
-	
+
 	void setMesh(const std::string& id, const std::string& mesh);
+
 	void setMaterial(const std::string& id, const std::string& material);
+	void setMaterial(const std::string& id, int subentity, const std::string& material);
 	void changeMesh(const std::string& id, const std::string& mesh);
 
 	void attachEntityToNode(const std::string& mesh);
@@ -40,9 +42,13 @@ public:
 
 	void printAllBones();
 
-	void setDiffuse(const Vector3& diffuse, float alpha);
+	void setDiffuse(int subentity, const Vector3& diffuse, float alpha);
+	Vector3 getDiffuse(int subentity);
 
-	Vector3 getDiffuse();
+	int getSubentitiesSize();
+
+	void setTexture(int subentity, const std::string& textureName);
+	std::string getTexture(int subentity);
 
 	virtual void handleData(ComponentData* data);
 };

@@ -38,6 +38,7 @@ public:
 	void setClipDistances(double near, double far);
 
 	virtual void handleData(ComponentData* data);
+
 };
 
 #endif

@@ -26,6 +26,7 @@ public:
 	void windowResize(unsigned int width, unsigned int height);
 	void setFullscreen(bool fullscreen);
 	void ApplyBrightnessToVp(Ogre::Viewport* vp);
+	void closeWindow();
 };
 
 #endif

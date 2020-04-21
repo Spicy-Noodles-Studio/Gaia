@@ -59,3 +59,8 @@ void RenderSystem::ApplyBrightnessToVp(Ogre::Viewport* vp)
 	Ogre::CompositorManager::getSingleton().addCompositor(vp, "Luminance");
 	Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, "Luminance", true);
 }
+
+void RenderSystem::closeWindow()
+{
+	window->close();
+}

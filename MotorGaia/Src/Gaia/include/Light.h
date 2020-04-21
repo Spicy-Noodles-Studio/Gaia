@@ -34,7 +34,7 @@ public:
 	virtual void handleData(ComponentData* data);
 
 
-	Ogre::Light::LightTypes type;
+	LightType type;
 	Vector3 position;
 	Vector3 direction;
 	Vector3 colour;

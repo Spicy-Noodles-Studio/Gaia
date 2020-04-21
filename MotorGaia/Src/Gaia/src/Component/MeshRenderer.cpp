@@ -24,7 +24,7 @@ REGISTER_FACTORY(MeshRenderer);
 
 MeshRenderer::MeshRenderer(GameObject* gameObject) : GaiaComponent(gameObject), visible(true)
 {
-
+	 
 }
 
 MeshRenderer::~MeshRenderer()

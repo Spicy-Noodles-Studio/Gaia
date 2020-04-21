@@ -327,6 +327,9 @@
     <ClInclude Include="..\..\Src\Gaia\include\GaiaData.h">
       <Filter>Archivos de encabezado\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Macros.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Archivos de encabezado">

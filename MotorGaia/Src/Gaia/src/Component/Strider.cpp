@@ -34,25 +34,20 @@ void Strider::handleData(ComponentData *data)
 		}
 		else if (prop.first == "friction")
 		{
-			if (!(ss >> friction))
-				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+			setFloat(friction);
 		}
 		else if (prop.first == "trigger")
 		{
-			if (!(ss >> trigger))
-				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+			setBool(trigger);
 		}
 		else if (prop.first == "restitution") {
-			if (!(ss >> restitution))
-				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+			setFloat(restitution);
 		}
 		else if (prop.first == "damping") {
-			if (!(ss >> damping))
-				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+			setFloat(damping);
 		}
 		else if (prop.first == "angularDamping") {
-			if (!(ss >> angularDamping))
-				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+			setFloat(angularDamping);
 		}
 		else if (prop.first == "collisionGroup") {
 			auto it = (colPresets.find(prop.second));

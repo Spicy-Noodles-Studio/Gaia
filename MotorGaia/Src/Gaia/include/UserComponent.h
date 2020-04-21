@@ -5,6 +5,7 @@
 #include <vector>
 #include "Component.h"
 #include "Vector3.h"
+#include "Macros.h"
 
 #include "GameObjectData.h"
 

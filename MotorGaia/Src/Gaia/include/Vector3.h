@@ -51,7 +51,7 @@ public:
 
 	Vector3& set(double x, double y, double z);
 
-	void rotateAroundAxis(Vector3 axis, double degrees);
+	void rotateAroundAxis(const Vector3& axis, double degrees);
 	void lerp(const Vector3& v, double percentage);
 	void lerp(const Vector3& v, const Vector3& percentage);
 	Vector3 rotateAroundPivot(const Vector3& point, const Vector3& pivot, const Vector3& angles);

@@ -7,9 +7,10 @@
 #include "RenderSystem.h"
 #include "DebugDrawer.h"
 #include "InterfaceSystem.h"
+#include "Timer.h"
 
 
-SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), window(nullptr), countNodeIDs(0), debugDrawer(nullptr)
+SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), window(nullptr), countNodeIDs(0), debugDrawer(nullptr), timeScaleAccumulator(0.0f)
 {
 
 }
@@ -61,11 +62,16 @@ void SceneManager::preUpdate(float deltaTime)
 
 void SceneManager::update(float deltaTime)
 {
+	timeScaleAccumulator += Timer::GetInstance()->getTimeScale();
 	//All stuff about scene
 	currentScene->awake();
 	currentScene->start();
 	currentScene->preUpdate(deltaTime);
-	currentScene->update(deltaTime);
+	while (timeScaleAccumulator >= 1)
+	{
+		currentScene->update(deltaTime);
+		timeScaleAccumulator--;
+	}
 	currentScene->fixedUpdate(deltaTime);
 	currentScene->postUpdate(deltaTime);
 }
@@ -178,7 +184,7 @@ void SceneManager::processCameraChange()
 	window->removeAllViewports();
 	Viewport* v=window->addViewport(camera->getCamera());
 
-	RenderSystem::GetInstance()->applyBrightness(v);
+	RenderSystem::GetInstance()->ApplyBrightnessToVp(v);
 }
 
 void SceneManager::processDontDestroyObjects()

@@ -32,5 +32,12 @@ public:
 	bool isVisible();
 
 	virtual void handleData(ComponentData* data);
+
+
+	Ogre::Light::LightTypes type;
+	Vector3 position;
+	Vector3 direction;
+	Vector3 colour;
+
 };
 #endif

@@ -14,6 +14,10 @@ Light::Light(GameObject* gameObject) : GaiaComponent(gameObject)
 {
 	light = gameObject->getScene()->getSceneManager()->createLight(gameObject->node->getName() + " -L");
 	gameObject->node->attachObject(light);
+	gameObject->transform->setPosition(position);
+	setType(type);
+	setDirection(direction);
+	setColour(colour.x, colour.y, colour.z);
 }
 
 Light::~Light()

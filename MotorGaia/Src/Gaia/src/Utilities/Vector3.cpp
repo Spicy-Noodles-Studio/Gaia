@@ -4,6 +4,16 @@
 #include <btBulletDynamicsCommon.h>
 #include "MathUtils.h"
 
+const Vector3 Vector3::ZERO					= Vector3(0.0, 0.0, 0.0);
+const Vector3 Vector3::IDENTITY				= Vector3(1.0, 1.0, 1.0);
+const Vector3 Vector3::NEGATIVE_IDENTITY	= Vector3(-1.0, -1.0, -1.0);
+const Vector3 Vector3::RIGHT				= Vector3(1.0, 0.0, 0.0);
+const Vector3 Vector3::NEGATIVE_RIGHT		= Vector3(-1.0, 0.0, 0.0);
+const Vector3 Vector3::UP					= Vector3(0.0, 1.0, 0.0);
+const Vector3 Vector3::NEGATIVE_UP			= Vector3(0.0, -1.0, 0.0);
+const Vector3 Vector3::FORWARD				= Vector3(0.0, 0.0, 1.0);
+const Vector3 Vector3::NEGATIVE_FORWARD		= Vector3(0.0, 0.0, -1.0);
+
 Vector3::Vector3()
 {
 	x = 0;
@@ -175,8 +185,9 @@ void Vector3::normalize()
 	*this /= magnitude();
 }
 
-Vector3 Vector3::normalized()
+Vector3 Vector3::normalized() const
 {
+	if (*this == Vector3::ZERO) return *this;
 	Vector3 aux = *this / magnitude();
 	return aux;
 }
@@ -209,23 +220,21 @@ Vector3 Vector3::rotateAroundPivot(const Vector3& point, const Vector3& pivot, c
 	return (v + pivot);
 }
 
-void Vector3::rotateAroundAxis(const Vector3& axis, double angle)
+std::string Vector3::toString() const
 {
-	Vector3 result = *this;
-	double ang = angle * RAD_TO_DEG;
-	if (axis == Vector3(0, 0, 1)) {
-		result.x = x * cos(ang) - y * sin(ang);
-		result.y = x * sin(ang) + y * cos(ang);
-	}
-	else if (axis == Vector3(0, 1, 0)) {
-		result.x = x * cos(ang) + z * sin(ang);
-		result.z = -x * sin(ang) + z * cos(ang);
-	}
-	else if (axis == Vector3(1, 0, 0)) {
-		result.y = y * cos(ang) - z * sin(ang);
-		result.z = y * sin(ang) + z * cos(ang);
-	}
-	*this = result;
+	return std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(z);
+}
+
+void Vector3::rotateAroundAxis(Vector3 axis, double degrees)
+{
+	double theta = degrees * DEG_TO_RAD;
+
+	double cos_theta = cos(theta);
+	double sin_theta = sin(theta);
+
+	Vector3 rotated = (*this * cos_theta) + (axis.cross(*this) * sin_theta) + (axis * axis.dot(*this) * (1 - cos_theta));
+
+	*this = rotated;
 }
 
 // percentage has to be a value between 0 and 1
@@ -239,12 +248,12 @@ void Vector3::lerp(const Vector3& v, const Vector3& percentage)
 	*this = { x + (v.x - x) * percentage.x, y + (v.y - y) * percentage.y, z + (v.z - z) * percentage.z };
 }
 
-double Vector3::magnitudeSquared()
+double Vector3::magnitudeSquared() const
 {
 	return x * x + y * y + z * z;
 }
 
-double Vector3::magnitude()
+double Vector3::magnitude() const
 {
 	return sqrt(magnitudeSquared());
 }

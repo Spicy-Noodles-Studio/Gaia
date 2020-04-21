@@ -56,6 +56,7 @@ public:
     Scene* getScene() const;
 
     void setActive(bool active);
+	bool isActive() const;
 
 	void onCollisionEnter(GameObject* other);
 	void onTriggerEnter(GameObject* other);//An object enters a trigger
@@ -80,6 +81,7 @@ public:
 private: 
     std::string name;
     std::string tag;
+	bool active;
 
     GameObject* parent = nullptr;
     std::vector<GameObject*> children;

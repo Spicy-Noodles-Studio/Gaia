@@ -4,7 +4,10 @@
 #include "GameObject.h"
 #include "SceneData.h"
 #include "PhysicsSystem.h"
+#include "RenderSystem.h"
 #include "DebugDrawer.h"
+#include "InterfaceSystem.h"
+
 
 SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), window(nullptr), countNodeIDs(0), debugDrawer(nullptr)
 {
@@ -63,6 +66,7 @@ void SceneManager::update(float deltaTime)
 	currentScene->start();
 	currentScene->preUpdate(deltaTime);
 	currentScene->update(deltaTime);
+	currentScene->fixedUpdate(deltaTime);
 	currentScene->postUpdate(deltaTime);
 }
 
@@ -88,7 +92,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 	} while (data->getLoadState() != Loadable::LoadState::READY);
 
 	loadScene(data);
-
+	InterfaceSystem::GetInstance()->clearControllerMenuInput();
 	return data == nullptr ? false : true;
 }
 
@@ -172,7 +176,9 @@ void SceneManager::processCameraChange()
 		return;
 	}
 	window->removeAllViewports();
-	window->addViewport(camera->getCamera());
+	Viewport* v=window->addViewport(camera->getCamera());
+
+	RenderSystem::GetInstance()->applyBrightness(v);
 }
 
 void SceneManager::processDontDestroyObjects()
@@ -201,9 +207,8 @@ bool SceneManager::exist(const std::string& name)
 	return ResourcesManager::getSceneData(name) != nullptr;
 }
 
+
 Scene* SceneManager::getCurrentScene()
 {
 	return currentScene;
 }
-
-

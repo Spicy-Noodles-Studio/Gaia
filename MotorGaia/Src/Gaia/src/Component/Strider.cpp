@@ -12,7 +12,7 @@
 
 REGISTER_FACTORY(Strider);
 
-Strider::Strider(GameObject *gameObject) : RigidBody(gameObject), meshStrider(nullptr)
+Strider::Strider(GameObject *gameObject) : RigidBody(gameObject), meshStrider(nullptr), myGroup(DEFAULT), collidesWith(ALL)
 {
 }
 
@@ -54,6 +54,20 @@ void Strider::handleData(ComponentData *data)
 			if (!(ss >> angularDamping))
 				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
 		}
+		else if (prop.first == "collisionGroup") {
+			auto it = (colPresets.find(prop.second));
+			if (it != colPresets.end())
+				myGroup = (*it).second;
+			else
+				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+		}
+		else if (prop.first == "collidesWith") {
+			auto it = (colPresets.find(prop.second));
+			if (it != colPresets.end())
+				collidesWith = (*it).second;
+			else
+				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+		}
 		else
 			LOG("STRIDER: property %s does not exist\n", prop.first.c_str());
 	}
@@ -79,7 +93,7 @@ void Strider::stride(const std::string &mesh)
 			meshStrider = new MeshStrider(mPtr.getPointer());
 			motionState = new GaiaMotionState(gameObject->transform);
 
-			body = PhysicsSystem::GetInstance()->bodyFromStrider(meshStrider, motionState, gameObject->transform->getWorldScale());
+			body = PhysicsSystem::GetInstance()->bodyFromStrider(meshStrider, motionState, gameObject->transform->getWorldScale(), myGroup, collidesWith);
 			body->setUserPointer(this);
 		}
 		else

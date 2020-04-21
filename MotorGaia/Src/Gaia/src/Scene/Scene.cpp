@@ -6,7 +6,7 @@
 #include "DebugDrawer.h"
 #include "SceneManager.h"
 
-Scene::Scene(const std::string& sceneName, SceneManager* sceneManager) : name(sceneName), sceneManager(sceneManager), mainCamera(nullptr)
+Scene::Scene(const std::string& sceneName, SceneManager* sceneManager) : name(sceneName), sceneManager(sceneManager), mainCamera(nullptr), timeAccumulator(0.0f)
 {
 
 }
@@ -93,6 +93,21 @@ void Scene::postUpdate(float deltaTime)
 	for (UserComponent* c : userComponents) {
 		if (c->isActive() && !c->isSleeping() && c->hasStarted())
 			c->postUpdate(deltaTime);
+	}
+}
+
+void Scene::fixedUpdate(float deltaTime)
+{
+	timeAccumulator += deltaTime;
+	while (timeAccumulator >= 1.0f / 50.0f)
+	{
+		std::vector<UserComponent*> userComponents = this->userComponents;
+
+		for (UserComponent* c : userComponents) {
+			if (c->isActive() && !c->isSleeping() && c->hasStarted())
+				c->fixedUpdate(deltaTime);
+		}
+		timeAccumulator -= 1.0f / 50.0f;
 	}
 }
 
@@ -216,9 +231,6 @@ void Scene::instantiate(GameObject* gameObject)
 	}
 
 	repeatedNames[gameObject->getName()] = 0;
-
-	gameObject->node->setVisible(false);
-	gameObject->setActive(false);
 	instantiateQueue.push_back(gameObject);
 }
 
@@ -226,15 +238,13 @@ void Scene::instantiatePendingGameObjects()
 {
 	if (!instantiateQueue.size()) return;
 
-	for (auto gameObject : instantiateQueue) {
-		gameObject->node->setVisible(true);
-		gameObject->setActive(true);
+	for (auto gameObject : instantiateQueue)
+	{
 		gameObject->myScene = this;
 		sceneObjects.push_back(gameObject);
 	}
 	instantiateQueue.clear();
 }
-
 
 void Scene::updateAllAnimations(float deltaTime)
 {

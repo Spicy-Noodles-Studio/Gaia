@@ -17,6 +17,9 @@ class GAIA_API Animator : public GaiaComponent
 private:
 	Ogre::AnimationStateSet* animations;
 
+	std::string currentAnimation;
+	std::string currentMesh;
+
 public:
 	Animator(GameObject* gameObject);
 	~Animator();
@@ -25,7 +28,20 @@ public:
 
 	Ogre::AnimationState* getAnimation(const std::string& animation);
 
+	void playAnimation(const std::string& animation);
+	std::string getCurrentAnimation();
+	std::vector<std::string> getAllAnimationsNames();
+	void printAllAnimationsNames();
+
 	virtual void handleData(ComponentData* data);
+
+	void setLoop(bool loop);
+	void setTimePosition(float pos);
+	void setLength(float length);
+
+	bool getLoop();
+	float getTimePosition();
+	float getLength();
 };
 
 #endif

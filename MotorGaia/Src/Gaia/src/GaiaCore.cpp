@@ -64,7 +64,7 @@ void GaiaCore::init()
 	
 	// RenderSystem
 	renderSystem = RenderSystem::GetInstance();
-	renderSystem->init(root);
+	renderSystem->init(root,window);
 
 	// InputSystem
 	inputSystem = InputSystem::GetInstance();

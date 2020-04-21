@@ -86,7 +86,24 @@ void Window::removeAllViewports()
 
 void Window::setFullscreen(bool fullscreen)
 {
-	window->setFullscreen(fullscreen, window->getWidth(), window->getHeight());
+	if (fullscreen)
+	{
+		//SDL_WINDOW
+		SDL_SetWindowFullscreen(sdlWindow,SDL_WINDOW_FULLSCREEN );
+		//resize(width, height);
+	//	window->setFullscreen(fullscreen, this->width, this->height);
+	}
+	else
+	{
+		
+		SDL_SetWindowFullscreen(sdlWindow, !SDL_WINDOW_FULLSCREEN);
+		//	resize(width, height);
+		//resize(width, height);
+		//window->setFullscreen(fullscreen, width, height);
+		//SDL_UpdateWindowSurface(sdlWindow);
+		//window->windowMovedOrResized();
+	}
+
 	//mWindow->update();
 }
 
@@ -98,11 +115,14 @@ void Window::setFSAA(unsigned int fsaa)
 void Window::move(int x, int y)
 {
 	window->reposition(x, y);
+	moved(x, y);
 }
 
 void Window::resize(unsigned int width, unsigned int height)
 {
+	SDL_SetWindowSize(sdlWindow,width, height);
 	window->resize(width, height);
+	resized(width, height);
 }
 
 bool Window::isClosed()

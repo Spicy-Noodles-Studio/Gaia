@@ -30,25 +30,12 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-# Dependencies
-# Ogre
-**/[Dd]ependencies/[Oo]gre-1.12.5/[Bb]uild
-**/[Dd]ependencies/[Oo]gre-1.12.5/[Bb]uildx86
-# Bullet
-**/[Dd]ependencies/[Bb]ullet3-2.89/[Bb]uild
-**/[Dd]ependencies/[Bb]ullet3-2.89/[Bb]uildx86
-# Cegui
-**/[Dd]ependencies/[Cc]egui-0.8.7/[Bb]uild
-**/[Dd]ependencies/[Cc]egui-0.8.7/[Bb]uildx86
-**/[Dd]ependencies/[Cc]egui-0.8.7/[Dd]ependencies/[Bb]uild
-**/[Dd]ependencies/[Cc]egui-0.8.7/[Dd]ependencies/[Bb]uildx86
-# Json
-**/[Dd]ependencies/[Jj]son-3.7.3/[Bb]uild
-**/[Dd]ependencies/[Jj]son-3.7.3/[Bb]uildx86
+# Dependencies (BUILD and BUILDx86)
+**/[Dd]ependencies/**/[Bb]uild
+**/[Dd]ependencies/**/[Bb]uildx86
 
 #Archivos generados
 [Ii]nter/
-[Cc]make-3.16.4-win64-x64/
 
 
 # Visual Studio 2015/2017 cache/options directory

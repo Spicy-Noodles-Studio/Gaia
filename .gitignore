@@ -30,13 +30,20 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+# Dependencies
+# Ogre
+**/[Dd]ependencies/ogre-1.12.5/Build
+**/[Dd]ependencies/ogre-1.12.5/Buildx86
+# Bullet
+**/[Dd]ependencies/bullet3-2.89/Build
+**/[Dd]ependencies/bullet3-2.89/Buildx86
+# Cegui
+**/[Dd]ependencies/cegui-0.8.7/Build
+**/[Dd]ependencies/cegui-0.8.7/Buildx86
+
 #Archivos generados
 [Ii]nter/
-[Ff]mod-2.00.07/
-[Bb]uild/
-[Bb]uildx86/
 [Cc]make-3.16.4-win64-x64/
-[Cc]make-3.17.0-rc1-win64-x64/
 [Jj]son-3.7.3/
 [Cc]egui-0.8.7/
 

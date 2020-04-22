@@ -40,12 +40,13 @@ bld/
 # Cegui
 **/[Dd]ependencies/cegui-0.8.7/Build
 **/[Dd]ependencies/cegui-0.8.7/Buildx86
+**/[Dd]ependencies/cegui-0.8.7/dependencies/Build
+**/[Dd]ependencies/cegui-0.8.7/dependencies/Buildx86
 
 #Archivos generados
 [Ii]nter/
 [Cc]make-3.16.4-win64-x64/
 [Jj]son-3.7.3/
-[Cc]egui-0.8.7/
 
 
 # Visual Studio 2015/2017 cache/options directory

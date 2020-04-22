@@ -73,17 +73,7 @@ Ogre::Camera* Camera::getCamera()
 {
 	return camera;
 }
-//Vector2 worldToScreen(const Vector3& worldPoint, Camera* cam)
-//{
-//	// Pass point through camera projection matrices
-//	Vector4 screenPoint = cam->getProjectionMatrix() *
-//		cam->getViewMatrix() *
-//		worldPoint;
-//
-//	// Convert to relative screen space
-//	return Vector2(screenPoint.x * 0.5f / screenPoint.w + 0.5f,
-//		screenPoint.y * 0.5f / screenPoint.w + 0.5f);
-//}
+
 Vector3 Camera::worldToScreen(const Vector3& worldPoint)
 {
 	Ogre::Vector3 world;
@@ -91,15 +81,12 @@ Vector3 Camera::worldToScreen(const Vector3& worldPoint)
 	world.x = worldPoint.x;
 	world.y = worldPoint.y;
 	world.z = worldPoint.z;
-	Ogre::Vector3 screenPoint = camera->getProjectionMatrix() * camera->getViewMatrix() * world;//*world;
-
-	//camera->getViewport()
+	Ogre::Vector3 screenPoint = camera->getProjectionMatrix() * camera->getViewMatrix() * world;
 
 	Vector3 x;
 	x.x = (screenPoint.x * 0.5 + 0.5);
 	x.y = (-screenPoint.y * 0.5 + 0.5);
 	x.z = screenPoint.z * 0.5 + 0.5;
-
 
 	return x;
 }
@@ -111,15 +98,12 @@ Vector3 Camera::worldToScreenPixel(const Vector3& worldPoint)
 	world.x = worldPoint.x;
 	world.y = worldPoint.y;
 	world.z = worldPoint.z;
-	Ogre::Vector3 screenPoint = camera->getProjectionMatrix() * camera->getViewMatrix() * world;//*world;
-
-	//camera->getViewport()
+	Ogre::Vector3 screenPoint = camera->getProjectionMatrix() * camera->getViewMatrix() * world;
 
 	Vector3 x;
 	x.x = (screenPoint.x * 0.5 + 0.5) * camera->getViewport()->getActualWidth();
 	x.y = (-screenPoint.y * 0.5 + 0.5) * camera->getViewport()->getActualHeight();
 	x.z = screenPoint.z * 0.5 + 0.5;
-
 
 	return x;
 }

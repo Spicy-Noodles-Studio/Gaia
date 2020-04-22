@@ -10,6 +10,9 @@
 #include <CEGUI\CEGUI.h>
 #include "UIElement.h"
 #include <string>
+#include "Window.h"
+
+#include <map>
 
 namespace CEGUI {
 	class Window;
@@ -27,6 +30,18 @@ private:
 	CEGUI::OgreRenderer* renderer;
 	UIElement* root;
 
+	// For controller input
+	CEGUI::Window* currentLayout;
+	std::map<std::string, CEGUI::Window*> buttons;
+	std::string firstButton;
+	std::string currentButton;
+	float scrollAmount;
+
+	void initControllerMenuInput();
+	void layoutButtonSearch(UIElement* parent);
+	void searchNextVisibleButton(std::string direction);
+	/*------------------------------*/
+
 	double deltaX, deltaY;
 #ifdef _DEBUG
 	UIElement* fpsText;
@@ -41,6 +56,15 @@ private:
 
 	void processControllerButtonDown(int index, int button);
 	void processControllerButtonUp(int index, int button);
+	void moveScrollBar(CEGUI::Window* scrollBar, float amount);
+
+	void moveControllerToButton();
+	bool checkFirstControllerInput();
+
+	void processMouseMotion(int x, int y);
+
+	void processKeyPress(std::string keyName, int key);
+	void processKeyUp(std::string keyName, int key);
 
 public:
 	InterfaceSystem();
@@ -62,6 +86,11 @@ public:
 
 	UIElement* loadLayout(const std::string& filename);
 	void initDefaultResources();
+
+	void clearControllerMenuInput();
+
+	/// Percentage of scrollbar that changes when moved by controller or keyboard
+	void setScrollbarControllerAmount(float percent);
 };
 
 #endif

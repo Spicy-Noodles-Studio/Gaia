@@ -2,6 +2,8 @@
 #ifndef RIGID_BODY_H
 #define RIGID_BODY_H
 
+#include <map>
+
 #include "PhysicsUtils.h"
 #include "Vector3.h"
 #include "GaiaComponent.h"
@@ -14,13 +16,15 @@ class ComponentData;
 
 class GAIA_API RigidBody : public GaiaComponent
 {
+friend struct RaycastHit;
 protected:
 	btRigidBody* body = nullptr;
 	GaiaMotionState* motionState = nullptr;
-
+	std::map<std::string, Col_Filters> colPresets;
 	// Turns a Gaia Vector3 into a Bullet Physics Vector3
 	const btVector3 parseToBulletVector(const Vector3& v) const;
 	const Vector3 parseFromBulletVector(const btVector3& v) const;
+	void initPresets();
 
 public:
 	RigidBody(GameObject* gameObject);
@@ -62,12 +66,12 @@ public:
 	float getLinearDamping() const;
 	float getFriction() const;
 	float getRestitution() const;
-	const Vector3& getGravity() const;
-	const Vector3& getAngularVelocity() const;
-	const Vector3& getLinearVelocity() const;
-	const Vector3& getTotalForce() const;
-	const Vector3& getTotalTorque() const;
-	const Vector3& getOrientation() const;
+	Vector3 getGravity() const;
+	Vector3 getAngularVelocity() const;
+	Vector3 getLinearVelocity() const;
+	Vector3 getTotalForce() const;
+	Vector3 getTotalTorque() const;
+	Vector3 getOrientation() const;
 };
 
 #endif

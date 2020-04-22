@@ -2,7 +2,7 @@
 #include "DebugUtils.h"
 
 
-Timer::Timer() : deltaTime(0.0f)
+Timer::Timer() : deltaTime(0.0f), timeScale(1.0f)
 {
 
 }
@@ -15,6 +15,7 @@ Timer::~Timer()
 void Timer::init()
 {
 	deltaTime = 0.0f;
+	timeScale = 1.0f;
 	timeSinceLast = std::chrono::steady_clock::now();
 }
 
@@ -34,5 +35,15 @@ void Timer::update()
 
 float Timer::getDeltaTime() const
 {
-	return deltaTime;
+	return deltaTime * timeScale;
+}
+
+float Timer::getTimeScale() const
+{
+	return timeScale;
+}
+
+void Timer::setTimeScale(float scale)
+{
+	timeScale = scale;
 }

@@ -75,17 +75,18 @@ void Loadable::loadAsync()
 	}
 	LOG("File \"%s\" loading...", filename.c_str());
 	state = LoadState::LOADING;
-	loadThread = std::thread(&Loadable::load_aync_internal, std::ref(*this));
+	loadThread = std::thread(&Loadable::load_async_internal, std::ref(*this));
 }
 
-void Loadable::load_aync_internal()
+void Loadable::load_async_internal()
 {
 	if (!load_internal()) {
 		LOG_ERROR("LOADABLE", "Error while loading \"%s\"", filename.c_str());
 		state = LoadState::INVALID;
+		//loadThread.detach();
 		return;
 	}
 	state = LoadState::READY;
 	LOG("File \"%s\" loaded", filename.c_str());
-	loadThread.detach();
+	//loadThread.detach();
 }

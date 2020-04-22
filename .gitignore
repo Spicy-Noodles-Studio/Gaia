@@ -30,18 +30,12 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+# Dependencies (BUILD and BUILDx86)
+**/[Dd]ependencies/**/[Bb]uild
+**/[Dd]ependencies/**/[Bb]uildx86
+
 #Archivos generados
 [Ii]nter/
-[Bb]ullet3-2.89/
-[Oo]gre-1.12.5/
-[Ff]mod-2.00.07/
-[Bb]uild/
-[Bb]uildx86/
-[Cc]make-3.16.4-win64-x64/
-[Cc]make-3.17.0-rc1-win64-x64/
-[Jj]son-3.7.3/
-[Cc]egui-0.8.7/
-[Oo]IS-master/
 
 
 # Visual Studio 2015/2017 cache/options directory

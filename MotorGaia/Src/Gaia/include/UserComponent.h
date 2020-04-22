@@ -5,6 +5,7 @@
 #include <vector>
 #include "Component.h"
 #include "Vector3.h"
+#include "Macros.h"
 
 #include "GameObjectData.h"
 
@@ -21,6 +22,7 @@ public:
 	virtual void preUpdate(float deltaTime);
 	virtual void update(float deltaTime);
 	virtual void postUpdate(float deltaTime);
+	virtual void fixedUpdate(float deltaTime);
 
 	virtual void onCollisionEnter(GameObject* other);
 	virtual void onCollisionStay(GameObject* other);

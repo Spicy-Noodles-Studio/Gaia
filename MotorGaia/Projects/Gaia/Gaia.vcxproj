@@ -66,8 +66,10 @@
     <ClInclude Include="..\..\Src\Gaia\include\EventSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\GaiaData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaExports.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Macros.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
     <ClInclude Include="..\..\Src\Gaia\include\KeyboardEventListener.h" />
@@ -82,6 +84,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\GameObjectData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Quaternion.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\RaycastHit.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Reverb.h" />
     <ClInclude Include="..\..\Src\Gaia\include\OgreBulletUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\PhysicsSystem.h" />
@@ -137,11 +140,14 @@
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\CameraDebugControl.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaData.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaMotionState.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Loadable.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\MathUtils.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\MeshStrider.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Quaternion.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\DebugDrawer.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\RaycastHit.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Timer.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\UIElement.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Vector3.cpp" />

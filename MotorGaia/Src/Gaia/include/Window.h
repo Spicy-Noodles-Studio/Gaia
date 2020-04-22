@@ -5,6 +5,7 @@
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
+#include "GaiaExports.h"
 
 #include <SDL2/SDL.h>
 
@@ -28,11 +29,12 @@ public:
 	void move(int x, int y);
 	void resize(unsigned int width, unsigned int height);
 	bool isClosed();
+	void close();
 
 private:
 	void moved(unsigned int x, unsigned int y);
 	void resized(unsigned int width, unsigned int height);
-	void close();
+	
 
 private:
 	Ogre::Root* root;

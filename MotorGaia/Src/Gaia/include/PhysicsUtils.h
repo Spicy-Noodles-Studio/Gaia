@@ -17,8 +17,9 @@ enum RB_Shape
 enum Col_Filters
 {
 	NONE = -1,
-	DEFAULT = (1 << 0),
-	ALL = (1 << 15)
+	DEFAULT = (1 << 0),// 0000000000000001
+	IGNORE_RAYCAST = (1 << 1),// 0000000000000010
+	ALL = (1 << 16) -1 //Todos los bits hasta 15 -> 1111111111111111
 };
 
 

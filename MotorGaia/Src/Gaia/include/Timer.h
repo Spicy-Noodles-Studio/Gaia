@@ -10,6 +10,7 @@ class GAIA_API Timer : public Singleton<Timer>
 {
 private:
 	float deltaTime;
+	float timeScale;
 	std::chrono::steady_clock::time_point timeSinceLast;
 
 public:
@@ -27,6 +28,12 @@ public:
 
 	/* Get the deltaTime in seconds */
 	float getDeltaTime() const;
+
+	/* Get the timeScale factor */
+	float getTimeScale() const;
+
+	/* Set the time scale */
+	void setTimeScale(float scale);
 };
 
 #endif

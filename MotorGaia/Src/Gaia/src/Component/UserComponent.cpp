@@ -46,6 +46,11 @@ void UserComponent::postUpdate(float deltaTime)
 
 }
 
+void UserComponent::fixedUpdate(float deltaTime)
+{
+
+}
+
 
 void UserComponent::onCollisionEnter(GameObject* other)
 {

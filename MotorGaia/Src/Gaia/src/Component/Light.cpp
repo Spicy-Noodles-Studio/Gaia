@@ -56,16 +56,6 @@ void Light::setSpecularColour(float red, float green, float blue)
 	light->setSpecularColour(red, green, blue);
 }
 
-void Light::setPosition(const Vector3& pos)
-{
-	gameObject->node->setPosition(Ogre::Vector3(pos.x, pos.y, pos.z));
-}
-
-void Light::setDirection(const Vector3& dir)
-{
-	gameObject->node->setDirection(Ogre::Vector3(dir.x, dir.y, dir.z));
-}
-
 /*
 --Distancia,desde la camara, a la que las sombras dejan de renderizarse--
 */
@@ -101,8 +91,7 @@ float Light::getIntensity()
 
 void Light::handleData(ComponentData* data)
 {
-	float intensity = 0.0f; Vector3 colour = Vector3(1, 1, 1); bool visible = true; float shadowDistance = 10.0f; Vector3 dir = Vector3();
-	Vector3 pos = Vector3();
+	float intensity = 1.0f; Vector3 colour = Vector3(1, 1, 1); bool visible = true; float shadowDistance = 10.0f;
 
 	for (auto prop : data->getProperties()) {
 		std::stringstream ss(prop.second);
@@ -129,18 +118,10 @@ void Light::handleData(ComponentData* data)
 		else if (prop.first == "shadowDistance") {
 			setFloat(shadowDistance);
 		}
-		else if (prop.first == "direction") {
-			setVector3(dir);
-		}
-		else if (prop.first == "position") {
-			setVector3(pos);
-		}
 	}
 
 	setIntensity(intensity);
 	setColour(colour.x * intensity, colour.y * intensity, colour.z * intensity);
 	setVisible(visible);
 	setShadowsDistance(shadowDistance);
-	setDirection(dir);
-	setPosition(pos);
 }

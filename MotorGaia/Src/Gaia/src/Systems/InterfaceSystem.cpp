@@ -481,7 +481,6 @@ void InterfaceSystem::initControllerMenuInput()
     else return;
 
     layoutButtonSearch(&sceneLayout->getRoot());
-
 }
 
 void InterfaceSystem::layoutButtonSearch(UIElement* parent)

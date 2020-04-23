@@ -27,9 +27,6 @@ public:
 	void setColour(float red, float green, float blue);
 	void setSpecularColour(float red, float green, float blue);
 
-	void setPosition(const Vector3& pos);
-
-	void setDirection(const Vector3& dir);
 	void setShadowsDistance(double far);
 
 	void setVisible(bool invisible);

@@ -9,6 +9,8 @@ class Window;
 
 #include "Singleton.h"
 
+class Window;
+
 class GAIA_API RenderSystem : public Singleton<RenderSystem>
 {
 private:
@@ -18,14 +20,14 @@ public:
 	RenderSystem();
 	~RenderSystem();
 
-	void init(Ogre::Root* root,Window* window_);
+	void init(Ogre::Root* root, Window* window);
 	void render(float deltaTime);
 	void close();
 
 	void changeParamOfShader(const std::string& material, const std::string& paramName, float paramValue);
 	void windowResize(unsigned int width, unsigned int height);
 	void setFullscreen(bool fullscreen);
-	void ApplyBrightnessToVp(Ogre::Viewport* vp);
+	void applyBrightness(Ogre::Viewport* vp);
 	void closeWindow();
 };
 

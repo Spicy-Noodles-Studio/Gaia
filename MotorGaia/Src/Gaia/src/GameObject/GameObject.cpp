@@ -5,7 +5,7 @@
 #include "SceneManager.h"
 
 
-GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), myScene(scene)
+GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), active(true), myScene(scene)
 {
 	node = scene->getSceneManager()->getRootSceneNode()->createChildSceneNode(scene->sceneManager->getNextNodeID());
 }
@@ -169,9 +169,15 @@ void GameObject::onObjectExit(GameObject* other)
 
 void GameObject::setActive(bool active)
 {
-	for (auto comp : components) {
+	for (auto comp : components)
 		comp.second->setActive(active);
-	}
+
+	this->active = active;
+}
+
+bool GameObject::isActive() const
+{
+	return active;
 }
 
 bool GameObject::addComponent(const std::string& componentName, Component* component)

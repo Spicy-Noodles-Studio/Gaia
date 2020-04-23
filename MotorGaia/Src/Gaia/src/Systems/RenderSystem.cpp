@@ -17,10 +17,10 @@ RenderSystem::~RenderSystem()
 
 }
 
-void RenderSystem::init(Ogre::Root* root, Window* window_)
+void RenderSystem::init(Ogre::Root* root, Window* window)
 {
 	this->root = root;
-	window = window_;
+	this->window = window;
 }
 
 void RenderSystem::render(float deltaTime)
@@ -38,7 +38,7 @@ void RenderSystem::changeParamOfShader(const std::string& material, const std::s
 	Ogre::GpuProgramParametersSharedPtr x;
 	x = Ogre::MaterialManager::getSingleton().getByName(material)->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
 	x->getSharedParameters().at(0).getSharedParams()->setNamedConstant(paramName, paramValue);
-	//	std::cout<<"     "<<x->getConstantDefinition(paramName).isFloat()<<std::endl;
+	
 	Ogre::MaterialManager::getSingleton().getByName(material)->getTechnique(0)->getPass(0)->setFragmentProgramParameters(x);
 }
 
@@ -53,7 +53,7 @@ void RenderSystem::setFullscreen(bool fullscreen)
 	window->setFullscreen(fullscreen);
 }
 
-void RenderSystem::ApplyBrightnessToVp(Ogre::Viewport* vp)
+void RenderSystem::applyBrightness(Ogre::Viewport* vp)
 {
 
 	Ogre::CompositorManager::getSingleton().addCompositor(vp, "Luminance");

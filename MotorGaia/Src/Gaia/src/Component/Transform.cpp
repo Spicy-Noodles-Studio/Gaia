@@ -92,6 +92,11 @@ void Transform::setOrientation(const Ogre::Quaternion& rot)
 	gameObject->node->setOrientation(rot);
 }
 
+void Transform::setDirection(const Vector3& dir)
+{
+	gameObject->node->setDirection(Ogre::Vector3(dir.x, dir.y, dir.z));
+}
+
 void Transform::setWorldPosition(const Vector3& pos)
 {
 	Vector3 worldPos = pos;
@@ -233,6 +238,9 @@ void Transform::handleData(ComponentData* data)
 		}
 		else if (prop.first == "rotation") {
 			setRotation(x, y, z);
+		}
+		else if (prop.first == "direction") {
+			setDirection({ x, y, z });
 		}
 		else {
 			LOG("TRANSFORM: property %s does not exist\n", prop.first.c_str());

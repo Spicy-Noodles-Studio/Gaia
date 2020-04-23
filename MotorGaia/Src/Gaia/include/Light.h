@@ -15,6 +15,8 @@ class GAIA_API Light : public GaiaComponent
 private:
 	Ogre::Light* light;
 
+	float intensity;
+
 public:
 	Light(GameObject* gameObject);
 	~Light();
@@ -25,11 +27,13 @@ public:
 	void setColour(float red, float green, float blue);
 	void setSpecularColour(float red, float green, float blue);
 
-	void setDirection(const Vector3& dir);
 	void setShadowsDistance(double far);
 
 	void setVisible(bool invisible);
 	bool isVisible();
+
+	void setIntensity(float intensity);
+	float getIntensity();
 
 	virtual void handleData(ComponentData* data);
 };

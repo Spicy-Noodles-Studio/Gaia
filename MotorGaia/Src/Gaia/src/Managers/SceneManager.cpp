@@ -184,7 +184,7 @@ void SceneManager::processCameraChange()
 	window->removeAllViewports();
 	Viewport* v=window->addViewport(camera->getCamera());
 
-	RenderSystem::GetInstance()->ApplyBrightnessToVp(v);
+	RenderSystem::GetInstance()->applyBrightness(v);
 }
 
 void SceneManager::processDontDestroyObjects()

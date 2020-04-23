@@ -6,7 +6,8 @@
 #include <map>
 #include "Vector3.h"
 
-namespace Ogre {
+namespace Ogre 
+{
 	class Entity;
 }
 
@@ -15,8 +16,8 @@ class GAIA_API MeshRenderer : public GaiaComponent
 private:
 	std::map<std::string, Ogre::Entity*> entities;
 	bool visible;
-	// The id and name of the current mesh
-	std::string meshId, meshName;
+	std::string meshId, meshName;// The id and name of the current mesh
+
 public:
 	MeshRenderer(GameObject* gameObject);
 	~MeshRenderer();

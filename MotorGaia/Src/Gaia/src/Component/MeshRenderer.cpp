@@ -30,7 +30,8 @@ MeshRenderer::MeshRenderer(GameObject* gameObject) : GaiaComponent(gameObject), 
 
 MeshRenderer::~MeshRenderer()
 {
-	for (auto entity : entities) {
+	for (auto entity : entities) 
+	{
 		gameObject->node->detachObject(entity.second);
 		gameObject->getScene()->getSceneManager()->destroyEntity(entity.second);
 	}
@@ -78,6 +79,7 @@ void MeshRenderer::changeMesh(const std::string& id, const std::string& mesh)
 
 	setMesh(id, mesh);
 	attachEntityToNode(id);
+
 	meshId = id;
 	meshName = mesh;
 
@@ -97,7 +99,8 @@ void MeshRenderer::attachEntityToNode(const std::string& mesh)
 void MeshRenderer::attachEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh)
 {
 	auto ownerIt = entities.find(owner), meshIt = entities.find(mesh);
-	if (ownerIt != entities.end() && meshIt != entities.end()) {
+	if (ownerIt != entities.end() && meshIt != entities.end()) 
+	{
 		Ogre::Entity* ownerEnt = (*ownerIt).second, * meshEnt = (*meshIt).second;
 		if (ownerEnt->hasSkeleton() && ownerEnt->getSkeleton()->hasBone(bone))
 			ownerEnt->attachObjectToBone(bone, meshEnt);
@@ -111,7 +114,8 @@ void MeshRenderer::attachEntityToBone(const std::string& owner, const std::strin
 void MeshRenderer::detachEntityFromBone(const std::string& owner, const std::string& mesh)
 {
 	auto ownerIt = entities.find(owner), meshIt = entities.find(mesh);
-	if (ownerIt != entities.end() && meshIt != entities.end()) {
+	if (ownerIt != entities.end() && meshIt != entities.end()) 
+	{
 		Ogre::Entity* ownerEnt = (*ownerIt).second, * meshEnt = (*meshIt).second;
 		if (ownerEnt->hasSkeleton())
 			ownerEnt->detachObjectFromBone(meshEnt);
@@ -190,7 +194,8 @@ void MeshRenderer::handleData(ComponentData* data)
 		if (prop.first == "mesh")
 		{
 			char c;
-			while (ss >> meshId >> meshName) {
+			while (ss >> meshId >> meshName) 
+			{
 				setMesh(meshId, meshName);
 				attachEntityToNode(meshId);
 				if (ss) ss >> c;
@@ -201,7 +206,8 @@ void MeshRenderer::handleData(ComponentData* data)
 			//Al ser un attach to bone no modificamos meshId o meshName->no es una mesh principal
 			std::string id, name, bone, owner;
 			char c;
-			while (ss >> id >> name >> owner >> bone) {
+			while (ss >> id >> name >> owner >> bone) 
+			{
 				setMesh(id, name);
 				attachEntityToBone(owner, bone, id);
 				if (ss) ss >> c;
@@ -217,7 +223,6 @@ void MeshRenderer::handleData(ComponentData* data)
 		}
 		else if (prop.first == "visible")
 		{
-			bool visible;
 			if (ss >> visible)
 				setVisible(visible);
 			else

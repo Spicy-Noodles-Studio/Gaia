@@ -22,7 +22,8 @@ Scene::~Scene()
 		gameObject = nullptr;
 	}
 
-	for (GameObject* gameObject : instantiateQueue) {
+	for (GameObject* gameObject : instantiateQueue) 
+	{
 		delete gameObject;
 		gameObject = nullptr;
 	}
@@ -232,8 +233,6 @@ void Scene::instantiate(GameObject* gameObject)
 
 	repeatedNames[gameObject->getName()] = 0;
 
-	gameObject->node->setVisible(false);
-	gameObject->setActive(false);
 	instantiateQueue.push_back(gameObject);
 }
 
@@ -242,8 +241,6 @@ void Scene::instantiatePendingGameObjects()
 	if (!instantiateQueue.size()) return;
 
 	for (auto gameObject : instantiateQueue) {
-		//gameObject->node->setVisible(true);
-		gameObject->setActive(true);
 		gameObject->myScene = this;
 		sceneObjects.push_back(gameObject);
 	}

@@ -225,23 +225,16 @@ std::string Vector3::toString() const
 	return std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(z);
 }
 
-void Vector3::rotateAroundAxis(const Vector3& axis, double degrees)
+void Vector3::rotateAroundAxis(Vector3 axis, double degrees)
 {
-	Vector3 result = *this;
-	double ang = degrees * DEG_TO_RAD;
-	if (axis == Vector3(0, 0, 1)) {
-		result.x = x * cos(ang) - y * sin(ang);
-		result.y = x * sin(ang) + y * cos(ang);
-	}
-	else if (axis == Vector3(0, 1, 0)) {
-		result.x = x * cos(ang) + z * sin(ang);
-		result.z = -x * sin(ang) + z * cos(ang);
-	}
-	else if (axis == Vector3(1, 0, 0)) {
-		result.y = y * cos(ang) - z * sin(ang);
-		result.z = y * sin(ang) + z * cos(ang);
-	}
-	*this = result;
+	double theta = degrees * DEG_TO_RAD;
+
+	double cos_theta = cos(theta);
+	double sin_theta = sin(theta);
+
+	Vector3 rotated = (*this * cos_theta) + (axis.cross(*this) * sin_theta) + (axis * axis.dot(*this) * (1 - cos_theta));
+
+	*this = rotated;
 }
 
 // percentage has to be a value between 0 and 1

@@ -7,7 +7,6 @@
 #include <OgreCompositorInstance.h>
 
 #include "Window.h"
-
 RenderSystem::RenderSystem() : root(nullptr)
 {
 

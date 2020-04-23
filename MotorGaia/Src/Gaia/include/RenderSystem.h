@@ -5,6 +5,7 @@
 #include <OgreRoot.h>
 #include <OgreSceneManager.h>
 #include <OgreEntity.h>
+class Window;
 
 #include "Singleton.h"
 
@@ -15,7 +16,6 @@ class GAIA_API RenderSystem : public Singleton<RenderSystem>
 private:
 	Ogre::Root* root;
 	Window* window;
-
 public:
 	RenderSystem();
 	~RenderSystem();

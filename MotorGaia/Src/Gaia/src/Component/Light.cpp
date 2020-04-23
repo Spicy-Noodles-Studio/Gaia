@@ -48,7 +48,7 @@ void Light::setType(LightType type)
 
 void Light::setColour(float red, float green, float blue)
 {
-	light->setDiffuseColour(red, green, blue);
+	light->setDiffuseColour(red * intensity, green * intensity, blue * intensity);
 }
 
 void Light::setSpecularColour(float red, float green, float blue)
@@ -121,7 +121,7 @@ void Light::handleData(ComponentData* data)
 	}
 
 	setIntensity(intensity);
-	setColour(colour.x * intensity, colour.y * intensity, colour.z * intensity);
+	setColour(colour.x, colour.y, colour.z);
 	setVisible(visible);
 	setShadowsDistance(shadowDistance);
 }

@@ -7,7 +7,6 @@
 #include <OgreCompositorInstance.h>
 
 #include "Window.h"
-
 RenderSystem::RenderSystem() : root(nullptr)
 {
 
@@ -39,8 +38,10 @@ void RenderSystem::changeParamOfShader(const std::string& material, const std::s
 	Ogre::GpuProgramParametersSharedPtr x;
 	x = Ogre::MaterialManager::getSingleton().getByName(material)->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
 	x->getSharedParameters().at(0).getSharedParams()->setNamedConstant(paramName, paramValue);
+	
 	Ogre::MaterialManager::getSingleton().getByName(material)->getTechnique(0)->getPass(0)->setFragmentProgramParameters(x);
 }
+
 
 void RenderSystem::windowResize(unsigned int width, unsigned int height)
 {

@@ -31,6 +31,8 @@ public:
 	void setRotation(const Vector3& rot);
 	void setOrientation(const Ogre::Quaternion& rot);
 
+	void setDirection(const Vector3& dir);
+
 	void setWorldPosition(const Vector3& pos);
 	void setWorldScale(const Vector3& scale);
 	void setWorldRotation(const Vector3& rot);

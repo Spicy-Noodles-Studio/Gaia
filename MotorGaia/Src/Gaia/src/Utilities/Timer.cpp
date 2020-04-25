@@ -38,6 +38,11 @@ float Timer::getDeltaTime() const
 	return deltaTime * timeScale;
 }
 
+float Timer::getTimeScale() const
+{
+	return timeScale;
+}
+
 void Timer::setTimeScale(float scale)
 {
 	timeScale = scale;

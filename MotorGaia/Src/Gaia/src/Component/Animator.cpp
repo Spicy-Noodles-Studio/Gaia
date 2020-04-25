@@ -12,7 +12,7 @@
 
 REGISTER_FACTORY(Animator);
 
-Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject)
+Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject), endSequenceWithLoop(false), currentAnimation("")
 {
 
 }
@@ -28,6 +28,16 @@ void Animator::setMesh(const std::string& mesh)
 
 	if (aux != nullptr)
 	{
+		if (currentAnimation != "") 
+		{
+			Ogre::AnimationState* prev = getAnimation(currentAnimation);
+			prev->setTimePosition(0);
+			prev->setEnabled(false);
+			currentAnimation = "";
+		} 
+		// clear previous sequence
+		std::queue<std::string>().swap(animSequence);
+
 		animations = aux->getMesh(mesh)->getAllAnimationStates();
 		if(animations != 0)
 			gameObject->getScene()->addAnimationSet(gameObject->getName(), animations);
@@ -42,12 +52,44 @@ Ogre::AnimationState* Animator::getAnimation(const std::string& animation)
 
 void Animator::playAnimation(const std::string& animation)
 {
-	Ogre::AnimationState* prev = getAnimation(currentAnimation);
-	prev->setTimePosition(0);
-	prev->setEnabled(false);
+	if (currentAnimation != "")
+	{
+		Ogre::AnimationState* prev = getAnimation(currentAnimation);
+		prev->setTimePosition(0);
+		prev->setEnabled(false);
+	}
 
 	getAnimation(animation)->setEnabled(true);
 	currentAnimation = animation;
+}
+
+void Animator::playAnimationSequence(const std::vector<std::string>& sequence, bool endWithLoop)
+{
+	// clear previous sequence
+	std::queue<std::string>().swap(animSequence);
+
+	// play first animation
+	playAnimation(sequence[0]);
+	setLoop(false);
+
+	// add the rest to the queue
+	for (int i = 1; i < sequence.size(); i++)
+		animSequence.push(sequence[i]);
+
+	endSequenceWithLoop = endWithLoop;
+}
+
+void Animator::updateAnimationSequence()
+{
+	if (!animSequence.empty() && hasEnded())
+	{
+		playAnimation(animSequence.front()); animSequence.pop();
+
+		if (animSequence.empty() && endSequenceWithLoop)
+			setLoop(true);
+		else
+			setLoop(false);
+	}
 }
 
 std::string Animator::getCurrentAnimation()
@@ -67,9 +109,9 @@ std::vector<std::string> Animator::getAllAnimationsNames()
 
 void Animator::printAllAnimationsNames()
 {
-	printf("%s MESH ANIMATIONS: \n");
+	printf("%s MESH ANIMATIONS: \n", currentMesh.c_str());
 	for (auto anim : animations->getAnimationStateIterator())
-		printf(" - %s\n", anim.first);
+		printf(" - %s\n", anim.first.c_str());
 	printf("\n");
 }
 
@@ -126,4 +168,19 @@ float Animator::getTimePosition()
 float Animator::getLength()
 {
 	return float(getAnimation(currentAnimation)->getLength());
+}
+
+bool Animator::hasEnded()
+{
+	return getAnimation(currentAnimation)->hasEnded();
+}
+
+bool Animator::isPlayingSequence() const
+{
+	return !animSequence.empty();
+}
+
+std::queue<std::string>& Animator::getAnimationSequence()
+{
+	return animSequence;
 }

@@ -22,7 +22,8 @@ Scene::~Scene()
 		gameObject = nullptr;
 	}
 
-	for (GameObject* gameObject : instantiateQueue) {
+	for (GameObject* gameObject : instantiateQueue) 
+	{
 		delete gameObject;
 		gameObject = nullptr;
 	}
@@ -238,8 +239,7 @@ void Scene::instantiatePendingGameObjects()
 {
 	if (!instantiateQueue.size()) return;
 
-	for (auto gameObject : instantiateQueue)
-	{
+	for (auto gameObject : instantiateQueue) {
 		gameObject->myScene = this;
 		sceneObjects.push_back(gameObject);
 	}

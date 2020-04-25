@@ -5,6 +5,7 @@
 #include <string>
 #include "ComponentData.h"
 #include "DebugUtils.h"
+#include "Macros.h"
 
 class GameObject;
 

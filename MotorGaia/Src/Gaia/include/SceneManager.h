@@ -62,6 +62,8 @@ private:
 	int countNodeIDs;
 
 	DebugDrawer* debugDrawer;
+
+	float timeScaleAccumulator;
 };
 
 #endif

@@ -87,8 +87,9 @@ void InterfaceSystem::init(Window* window)
 
 
     // Callback definitions
-    onKeyDown([this](std::string keyName, int key) { processKeyDown(keyName, key); });
+    onKeyDown([this](std::string keyName, int key) { CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(SDLKeyToCEGUIKey(key)); });
     onKeyUp([this](std::string keyName, int key) { processKeyUp(keyName, key); });
+    onKeyPressed([this](std::string keyName, int key) { processKeyPress(keyName, key); });
 
     onTextInput([this](std::string text) { for (char c : text) CEGUI::System::getSingleton().getDefaultGUIContext().injectChar(c); });
     onMouseMotion([this](int x, int y) { processMouseMotion(x, y); });
@@ -152,9 +153,9 @@ void InterfaceSystem::initDefaultResources()
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
     // load fonts
+    CEGUI::FontManager::getSingleton().createFreeTypeFont("Sans", 8, true, "DejaVuSans.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
     CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang7", 6.8, true, "batang.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
     CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang8", 8, true, "batang.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
-
 
 #ifdef _DEBUG
     fpsText = new UIElement(root->getElement()->createChild("TaharezLook/StaticText", "FPSText"));
@@ -293,11 +294,7 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
 
     if (button == SDL_CONTROLLER_BUTTON_DPAD_LEFT) {
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowLeft);
-        if (!buttons.empty() && buttons[currentButton]->isVisible()) {
-            if (!checkFirstControllerInput()) {
-                searchNextVisibleButton("LeftButton");
                 if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
-                    moveScrollBar(buttons[currentButton], -scrollAmount);
                 }
                 else moveControllerToButton();
             }
@@ -305,7 +302,7 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
     }
     if (button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowRight);
-        if (!buttons.empty() && buttons[currentButton]->isVisible()) {
+        if (currentButton != "NO BUTTON" && !buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
                 searchNextVisibleButton("RightButton");
                 if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
@@ -317,7 +314,7 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
     }
     if (button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowUp);
-        if (!buttons.empty() && buttons[currentButton]->isVisible()) {
+        if (currentButton != "NO BUTTON" && !buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
                 searchNextVisibleButton("UpButton");
                 if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
@@ -329,7 +326,7 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
     }
     if (button == SDL_CONTROLLER_BUTTON_DPAD_DOWN) {
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowDown);
-        if (!buttons.empty() && buttons[currentButton]->isVisible()) {
+        if (currentButton != "NO BUTTON" && !buttons.empty() && buttons[currentButton]->isVisible()) {
             if (!checkFirstControllerInput()) {
                 searchNextVisibleButton("DownButton");
                 if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
@@ -339,7 +336,6 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
             }
         }
     }
-    std::cout << currentButton << std::endl;
 }
 
 void InterfaceSystem::processControllerButtonUp(int index, int button)
@@ -360,47 +356,45 @@ void InterfaceSystem::processControllerButtonUp(int index, int button)
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(CEGUI::Key::ArrowDown);
 }
 
-void InterfaceSystem::processKeyDown(std::string keyName, int key)
+void InterfaceSystem::processKeyPress(std::string keyName, int key)
 {
-    CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(SDLKeyToCEGUIKey(key));
 
     if (!currentLayout) initControllerMenuInput();
 
-    if (!buttons.empty() && buttons[currentButton]->isVisible() && !checkFirstControllerInput()) {
+    if (currentButton != "NO BUTTON" && !buttons.empty() && buttons[currentButton]->isVisible()) {
         switch (key) {
         case SDLK_UP:
             searchNextVisibleButton("UpButton");
             if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
                 moveScrollBar(buttons[currentButton], -scrollAmount);
             }
-            else moveControllerToButton();
+            else if(!checkFirstControllerInput()) moveControllerToButton();
             break;
         case SDLK_DOWN:
             searchNextVisibleButton("DownButton");
             if (buttons[currentButton]->getType() == "TaharezLook/VerticalScrollbar") {
                 moveScrollBar(buttons[currentButton], scrollAmount);
             }
-            else moveControllerToButton();
+            else if (!checkFirstControllerInput()) moveControllerToButton();
             break;
         case SDLK_RIGHT:
             searchNextVisibleButton("RightButton");
             if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
                 moveScrollBar(buttons[currentButton], scrollAmount);
             }
-            else moveControllerToButton();
+            else if (!checkFirstControllerInput()) moveControllerToButton();
             break;
         case SDLK_LEFT:
             searchNextVisibleButton("LeftButton");
             if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
                 moveScrollBar(buttons[currentButton], -scrollAmount);
             }
-            else moveControllerToButton();
+            else if (!checkFirstControllerInput()) moveControllerToButton();
             break;
         case SDLK_RETURN:
             CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
             break;
         }
-        std::cout << currentButton << std::endl;
     }
 
 }
@@ -483,7 +477,6 @@ void InterfaceSystem::initControllerMenuInput()
     else return;
 
     layoutButtonSearch(&sceneLayout->getRoot());
-
 }
 
 void InterfaceSystem::layoutButtonSearch(UIElement* parent)
@@ -521,7 +514,7 @@ void InterfaceSystem::searchNextVisibleButton(std::string direction)
             nextButton = buttons[nextButton]->getProperty(direction).c_str();
             i++;
             if (buttons.find(nextButton) == buttons.end()) {
-                LOG("UI Input Error: Button in direction %s does not exist\n", direction);
+                LOG("INTERFACE SYSTEM: Button in direction %s does not exist\n", direction);
                 return;
             }
         } while (!buttons[nextButton]->isVisible() && i < buttons.size());

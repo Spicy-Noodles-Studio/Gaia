@@ -56,52 +56,40 @@ void RigidBody::handleData(ComponentData* data)
 				LOG("RIGIDBODY: %s not valid rigidbody shape type\n", prop.second.c_str());
 		}
 		else if (prop.first == "mass") {
-			if (!(ss >> mass))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setFloat(mass);
 		}
 		else if (prop.first == "friction") {
-			if (!(ss >> friction))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setFloat(friction);
 		}
 		else if (prop.first == "restitution") {
-			if (!(ss >> restitution))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setFloat(restitution);
 		}
 		else if (prop.first == "damping") {
-			if (!(ss >> damping))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setFloat(damping);
 		}
 		else if (prop.first == "angularDamping") {
-			if (!(ss >> angularDamping))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setFloat(angularDamping);
 		}
 		else if (prop.first == "offset") {
-			if (!(ss >> off.x >> off.y >> off.z))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setVector3(off);
 		}
 		else if (prop.first == "scale") {
-			if (!(ss >> dim.x >> dim.y >> dim.z))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setVector3(dim);
 		}
 		else if (prop.first == "trigger") {
-			if (!(ss >> isTrigger))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setBool(isTrigger);
 		}
 		else if (prop.first == "kinematic") {
-			if (!(ss >> kinematic))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setBool(kinematic);
 		}
 		else if (prop.first == "gravity") {
-			if (!(ss >> gravity.x >> gravity.y >> gravity.z))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setVector3(gravity);
 		}
 		else if (prop.first == "movementConstraints") {
-			if (!(ss >> movConstraints.x >> movConstraints.y >> movConstraints.z))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setVector3(movConstraints);
 		}
 		else if (prop.first == "rotationConstraints") {
-			if (!(ss >> rotConstraints.x >> rotConstraints.y >> rotConstraints.z))
-				LOG("RIGIDBODY: wrong value for property %s.\n", prop.first.c_str());
+			setVector3(rotConstraints);
 		}
 		else if (prop.first == "collisionGroup") {
 			auto it = (colPresets.find(prop.second));

@@ -63,7 +63,7 @@ private:
 
 	void processMouseMotion(int x, int y);
 
-	void processKeyDown(std::string keyName, int key);
+	void processKeyPress(std::string keyName, int key);
 	void processKeyUp(std::string keyName, int key);
 
 public:

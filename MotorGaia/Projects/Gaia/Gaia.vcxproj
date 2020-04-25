@@ -69,6 +69,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\GaiaData.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaExports.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaMotionState.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Macros.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InputSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GameObject.h" />
     <ClInclude Include="..\..\Src\Gaia\include\KeyboardEventListener.h" />

@@ -10,7 +10,7 @@
 
 REGISTER_FACTORY(Light);
 
-Light::Light(GameObject* gameObject) : GaiaComponent(gameObject)
+Light::Light(GameObject* gameObject) : GaiaComponent(gameObject), intensity(1.0f)
 {
 	light = gameObject->getScene()->getSceneManager()->createLight(gameObject->node->getName() + " -L");
 	gameObject->node->attachObject(light);
@@ -48,17 +48,12 @@ void Light::setType(LightType type)
 
 void Light::setColour(float red, float green, float blue)
 {
-	light->setDiffuseColour(red, green, blue);
+	light->setDiffuseColour(red * intensity, green * intensity, blue * intensity);
 }
 
 void Light::setSpecularColour(float red, float green, float blue)
 {
 	light->setSpecularColour(red, green, blue);
-}
-
-void Light::setDirection(const Vector3& dir)
-{
-	gameObject->node->setDirection(Ogre::Vector3(dir.x, dir.y, dir.z));
 }
 
 /*
@@ -84,8 +79,20 @@ bool Light::isVisible()
 	return light->isVisible();
 }
 
+void Light::setIntensity(float intensity)
+{
+	this->intensity = intensity;
+}
+
+float Light::getIntensity()
+{
+	return intensity;
+}
+
 void Light::handleData(ComponentData* data)
 {
+	float intensity = 1.0f; Vector3 colour = Vector3(1, 1, 1); bool visible = true; float shadowDistance = 10.0f;
+
 	for (auto prop : data->getProperties()) {
 		std::stringstream ss(prop.second);
 
@@ -99,12 +106,22 @@ void Light::handleData(ComponentData* data)
 			else
 				LOG("LIGHT: %s not valid light type\n", prop.second.c_str());
 		}
+		else if (prop.first == "intensity") {
+			setFloat(intensity);
+		}
 		else if (prop.first == "colour") {
-			double x, y, z;
-			if (ss >> x >> y >> z)
-				setColour(x, y, z);
-			else
-				LOG("LIGHT: wrong value for property %s.\n", prop.first.c_str());
+			setVector3(colour)
+		}
+		else if (prop.first == "visible") {
+			setBool(visible)
+		}
+		else if (prop.first == "shadowDistance") {
+			setFloat(shadowDistance);
 		}
 	}
+
+	setIntensity(intensity);
+	setColour(colour.x, colour.y, colour.z);
+	setVisible(visible);
+	setShadowsDistance(shadowDistance);
 }

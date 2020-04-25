@@ -29,6 +29,9 @@ public:
 	/* Get the deltaTime in seconds */
 	float getDeltaTime() const;
 
+	/* Get the timeScale factor */
+	float getTimeScale() const;
+
 	/* Set the time scale */
 	void setTimeScale(float scale);
 };

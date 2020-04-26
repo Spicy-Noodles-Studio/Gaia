@@ -43,24 +43,10 @@ void RenderSystem::changeParamOfShader(const std::string& material, const std::s
 }
 
 
-void RenderSystem::windowResize(unsigned int width, unsigned int height)
-{
-	window->resize(width, height);
-}
-
-void RenderSystem::setFullscreen(bool fullscreen)
-{
-	window->setFullscreen(fullscreen);
-}
 
 void RenderSystem::applyBrightness(Ogre::Viewport* vp)
 {
 
 	Ogre::CompositorManager::getSingleton().addCompositor(vp, "Luminance");
 	Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, "Luminance", true);
-}
-
-void RenderSystem::closeWindow()
-{
-	window->close();
 }

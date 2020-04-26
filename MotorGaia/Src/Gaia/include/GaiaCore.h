@@ -19,7 +19,7 @@ class InputSystem;
 class PhysicsSystem;
 class InterfaceSystem;
 class SoundSystem;
-
+class WindowManager;
 class ComponentManager;
 class SceneManager;
 
@@ -60,6 +60,7 @@ private:
 	ResourcesManager resourcesManager;
 	ComponentManager* componentManager;
 	SceneManager* sceneManager;
+	WindowManager* windowManager;
 };
 
 #endif 

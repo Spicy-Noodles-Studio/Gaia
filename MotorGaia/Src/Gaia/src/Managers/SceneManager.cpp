@@ -7,10 +7,11 @@
 #include "RenderSystem.h"
 #include "DebugDrawer.h"
 #include "InterfaceSystem.h"
+#include "WindowManager.h"
 #include "Timer.h"
 
 
-SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), window(nullptr), countNodeIDs(0), debugDrawer(nullptr), timeScaleAccumulator(0.0f)
+SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), countNodeIDs(0), debugDrawer(nullptr), timeScaleAccumulator(0.0f)
 {
 
 }
@@ -20,10 +21,9 @@ SceneManager::~SceneManager()
 
 }
 
-void SceneManager::init(Ogre::Root* root, Window* window)
+void SceneManager::init(Ogre::Root* root)
 {
 	this->root = root;
-	this->window = window;
 	this->sceneManager = root->createSceneManager();
 
 	debugDrawer = new DebugDrawer(this->sceneManager);
@@ -178,11 +178,12 @@ void SceneManager::processCameraChange()
 	if (camera == nullptr)
 	{
 		LOG("SCENE MANAGER: changing to scene \"%s\" that has no main camera\n", currentScene->getName().c_str());
-		window->removeAllViewports();
+		WindowManager::GetInstance()->removeAllViewportsFromWindow();
+		
 		return;
 	}
-	window->removeAllViewports();
-	Viewport* v=window->addViewport(camera->getCamera());
+	WindowManager::GetInstance()->removeAllViewportsFromWindow();
+	Viewport* v= WindowManager::GetInstance()->addViewportToWindow(camera);
 
 	RenderSystem::GetInstance()->applyBrightness(v);
 }

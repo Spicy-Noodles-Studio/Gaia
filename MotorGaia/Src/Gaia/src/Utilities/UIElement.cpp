@@ -99,3 +99,26 @@ float UIElement::getScrollPositionScrollBar()
 	
 	
 }
+
+float UIElement::setScrollPositionScrollBar(float value)
+{
+	if (element->getWindowRendererName() == "Core/Scrollbar") {
+		CEGUI::Scrollbar* x = static_cast<CEGUI::Scrollbar*>(element);
+		x->setScrollPosition(value);
+		return 0;
+	}
+	else
+		return -1;
+}
+
+float UIElement::setCheckBoxState(bool value)
+{
+	if (element->getWindowRendererName() == "Core/ToggleButton") {
+		CEGUI::ToggleButton* x = static_cast<CEGUI::ToggleButton*>(element);
+	//	x->setPushedState(value);
+		x->setSelected(value);
+		return 0;
+	}
+	else
+		return -1;
+}

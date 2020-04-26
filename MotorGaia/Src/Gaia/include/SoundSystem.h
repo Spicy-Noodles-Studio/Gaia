@@ -38,6 +38,9 @@ private:
 	ChannelGroup* music;
 	ChannelGroup* soundEfects;
 
+	float generalVolume;
+	float soundVolume;
+	float musicVolume;
 	std::vector<EmitterData*> emitters;
 	ListenerData* listener = nullptr;
 
@@ -60,6 +63,10 @@ public:
 	void setSoundEffectsVolume(float volume);
 	void setGeneralVolume(float volume);
 	void setListenerAttributes(const Vector3& position, const Vector3& forward, const Vector3& up);
+
+	float getGeneralVolume();
+	float getMusicVolume();
+	float getSoundVolume();
 
 	void removeEmitter(EmitterData* emitter);
 	void removeListener();

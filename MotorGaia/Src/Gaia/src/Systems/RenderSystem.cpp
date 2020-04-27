@@ -60,6 +60,12 @@ void RenderSystem::applyBrightness(Ogre::Viewport* vp)
 	Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, "Luminance", true);
 }
 
+void RenderSystem::addFader(Ogre::Viewport* vp)
+{
+	Ogre::CompositorManager::getSingleton().addCompositor(vp, "Fader");
+	Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, "Fader", true);
+}
+
 void RenderSystem::closeWindow()
 {
 	window->close();

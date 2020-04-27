@@ -28,7 +28,6 @@ public:
 
 	void move(int x, int y);
 	void resize(unsigned int width, unsigned int height);
-	void close();
 	bool isClosed();
 	void close();
 

@@ -63,20 +63,6 @@ void Strider::handleData(ComponentData *data)
 			else
 				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
 		}
-		else if (prop.first == "collisionGroup") {
-			auto it = (colPresets.find(prop.second));
-			if (it != colPresets.end())
-				myGroup = (*it).second;
-			else
-				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
-		}
-		else if (prop.first == "collidesWith") {
-			auto it = (colPresets.find(prop.second));
-			if (it != colPresets.end())
-				collidesWith = (*it).second;
-			else
-				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
-		}
 		else
 			LOG("STRIDER: property %s does not exist\n", prop.first.c_str());
 	}

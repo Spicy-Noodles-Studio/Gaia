@@ -25,12 +25,8 @@ public:
 	void close();
 
 	void changeParamOfShader(const std::string& material, const std::string& paramName, float paramValue);
-	void windowResize(unsigned int width, unsigned int height);
-	void setFullscreen(bool fullscreen);
 	void applyBrightness(Ogre::Viewport* vp);
 	void addFader(Ogre::Viewport* vp);
-	void closeWindow();
-
 };
 
 #endif

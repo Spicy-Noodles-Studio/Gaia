@@ -38,7 +38,9 @@ public:
 	void setAlpha(float alpha);
 
 	float getScrollPositionScrollBar();
+	float setScrollPositionScrollBar(float value);
 
+	float setCheckBoxState(bool value);
 
 };
 

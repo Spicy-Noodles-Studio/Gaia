@@ -13,6 +13,7 @@
 
 #include "ComponentManager.h"
 #include "SceneManager.h"
+#include "WindowManager.h"
 
 
 #include "Transform.h"
@@ -33,7 +34,7 @@
 GaiaCore::GaiaCore() :	root(nullptr), window(nullptr), timer(nullptr), 
 						eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr), 
 						interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
-						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr)
+						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr),windowManager(nullptr)
 {
 
 }
@@ -54,8 +55,11 @@ void GaiaCore::init()
 	if (!(root->restoreConfig() || root->showConfigDialog(nullptr)))
 		return;
 
+	windowManager = new WindowManager();
+	windowManager->createWindow(root, "Test window - 2020 (c) Gaia ");
 	// Setup window
-	window = new Window(root, "Test window - 2020 (c) Gaia ");
+	window = windowManager->getWindow();
+	windowManager->initResolutions();
 
 	// Systems initialization
 	// EventSystem
@@ -95,7 +99,7 @@ void GaiaCore::init()
 
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
-	sceneManager->init(root, window);
+	sceneManager->init(root);
 
 	// Main Engine Timer
 	timer = Timer::GetInstance();
@@ -105,7 +109,7 @@ void GaiaCore::init()
 void GaiaCore::run()
 {
 	float deltaTime = timer->getDeltaTime();
-	while (!window->isClosed()) {
+	while (!windowManager->isWindowClosed()) {
 		// Update elapsed time
 		timer->update();
 		deltaTime = timer->getDeltaTime();
@@ -133,7 +137,8 @@ void GaiaCore::close()
 	componentManager->close();
 	// ResourcesManager termination
 	resourcesManager.close();
-
+	//WindowManager termination
+	windowManager->close();
 	//Systems termination
 	soundSystem->close();
 	physicsSystem->close();
@@ -146,9 +151,8 @@ void GaiaCore::close()
 		delete eventSystem;
 	eventSystem = nullptr;
 
-	if (window != nullptr)
-		delete window;
-	window = nullptr;
+	/*if (window != nullptr)
+		delete window;*/
 
 	if (root != nullptr)
 		delete root;

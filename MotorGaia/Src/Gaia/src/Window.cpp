@@ -88,23 +88,15 @@ void Window::setFullscreen(bool fullscreen)
 {
 	if (fullscreen)
 	{
-		//SDL_WINDOW
 		SDL_SetWindowFullscreen(sdlWindow,SDL_WINDOW_FULLSCREEN );
-		//resize(width, height);
-	//	window->setFullscreen(fullscreen, this->width, this->height);
+
 	}
 	else
 	{
 		
 		SDL_SetWindowFullscreen(sdlWindow, !SDL_WINDOW_FULLSCREEN);
-		//	resize(width, height);
-		//resize(width, height);
-		//window->setFullscreen(fullscreen, width, height);
-		//SDL_UpdateWindowSurface(sdlWindow);
-		//window->windowMovedOrResized();
 	}
 
-	//mWindow->update();
 }
 
 void Window::setFSAA(unsigned int fsaa)

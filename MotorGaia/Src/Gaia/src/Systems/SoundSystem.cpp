@@ -14,6 +14,9 @@ SoundSystem::~SoundSystem()
 
 void SoundSystem::init()
 {
+	generalVolume = 1;
+	musicVolume = 1;
+	soundVolume = 1;
 	FMOD_RESULT result = FMOD::System_Create(&system);
 	ERRCHECK(result);
 
@@ -109,6 +112,7 @@ Parametros en decimal para no romper timpanos
 void SoundSystem::setMusicVolume(float volume)
 {
 	music->setVolume(volume);
+	musicVolume = volume;
 }
 
 /*
@@ -117,6 +121,7 @@ Parametros en decimal para no romper timpanos
 void SoundSystem::setSoundEffectsVolume(float volume)
 {
 	soundEfects->setVolume(volume);
+	soundVolume = volume;
 }
 
 /*
@@ -128,6 +133,7 @@ void SoundSystem::setGeneralVolume(float volume)
 	FMOD_RESULT result = system->getMasterChannelGroup(&master);
 	ERRCHECK(result);
 	master->setVolume(volume);
+	generalVolume = volume;
 }
 
 void SoundSystem::setListenerAttributes(const Vector3& position, const Vector3& forward, const Vector3& up)
@@ -138,6 +144,21 @@ void SoundSystem::setListenerAttributes(const Vector3& position, const Vector3& 
 	forwardTmp = { float(forward.x) ,float(forward.y) ,float(forward.z) };
 	upTmp = { float(up.x) ,float(up.y) ,float(up.z) };
 	system->set3DListenerAttributes(0, &pos, &vel, &forwardTmp, &upTmp);
+}
+
+float SoundSystem::getGeneralVolume()
+{
+	return generalVolume;
+}
+
+float SoundSystem::getMusicVolume()
+{
+	return musicVolume;
+}
+
+float SoundSystem::getSoundVolume()
+{
+	return soundVolume;
 }
 
 

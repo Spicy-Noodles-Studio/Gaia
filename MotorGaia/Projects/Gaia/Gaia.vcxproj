@@ -108,6 +108,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\Vector3.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Window.h" />
     <ClInclude Include="..\..\Src\Gaia\include\WindowEventListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\Component\Animator.cpp" />
@@ -132,6 +133,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ComponentManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ResourcesManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\SceneManager.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Managers\WindowManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\EventSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\InterfaceSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\ShaderTechniqueResolver.cpp" />

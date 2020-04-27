@@ -294,6 +294,9 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
 
     if (button == SDL_CONTROLLER_BUTTON_DPAD_LEFT) {
         CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(CEGUI::Key::ArrowLeft);
+        if (currentButton != "NO BUTTON" && !buttons.empty() && buttons[currentButton]->isVisible()) {
+            if (!checkFirstControllerInput()) {
+                searchNextVisibleButton("LeftButton");
                 if (buttons[currentButton]->getType() == "TaharezLook/HorizontalScrollbar") {
                 }
                 else moveControllerToButton();

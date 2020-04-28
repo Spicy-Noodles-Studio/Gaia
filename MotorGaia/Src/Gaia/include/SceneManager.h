@@ -12,7 +12,6 @@
 #include "SceneData.h"
 
 #include <OgreRoot.h>
-#include "Window.h"
 #include "Camera.h"
 
 class DebugDrawer;
@@ -25,7 +24,7 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void init(Ogre::Root* root, Window* window);
+	void init(Ogre::Root* root);
 	void close();
 
 	// Before process currentScene
@@ -58,7 +57,7 @@ private:
 
 	Ogre::Root* root;
 	Ogre::SceneManager* sceneManager;
-	Window* window;
+
 	int countNodeIDs;
 
 	DebugDrawer* debugDrawer;

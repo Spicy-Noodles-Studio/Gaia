@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-Window::Window(Ogre::Root* root, std::string windowTitle) : root(root), closed(false)
+Window::Window(Ogre::Root* root, std::string windowTitle) : root(root), closed(false), isResizable(true)
 {
 	Ogre::RenderSystem* rs = root->getRenderSystem();//ByName("OpenGL Rendering Subsystem");
 	root->setRenderSystem(rs);
@@ -86,25 +86,18 @@ void Window::removeAllViewports()
 
 void Window::setFullscreen(bool fullscreen)
 {
+	SDL_SetWindowResizable(sdlWindow, SDL_bool(true));
 	if (fullscreen)
 	{
-		//SDL_WINDOW
 		SDL_SetWindowFullscreen(sdlWindow,SDL_WINDOW_FULLSCREEN );
-		//resize(width, height);
-	//	window->setFullscreen(fullscreen, this->width, this->height);
+
 	}
 	else
 	{
 		
 		SDL_SetWindowFullscreen(sdlWindow, !SDL_WINDOW_FULLSCREEN);
-		//	resize(width, height);
-		//resize(width, height);
-		//window->setFullscreen(fullscreen, width, height);
-		//SDL_UpdateWindowSurface(sdlWindow);
-		//window->windowMovedOrResized();
 	}
-
-	//mWindow->update();
+	SDL_SetWindowResizable(sdlWindow, SDL_bool(isResizable));
 }
 
 void Window::setFSAA(unsigned int fsaa)
@@ -120,9 +113,11 @@ void Window::move(int x, int y)
 
 void Window::resize(unsigned int width, unsigned int height)
 {
+	SDL_SetWindowResizable(sdlWindow,SDL_bool(true));
 	SDL_SetWindowSize(sdlWindow,width, height);
 	window->resize(width, height);
 	resized(width, height);
+	SDL_SetWindowResizable(sdlWindow, SDL_bool(isResizable));
 }
 
 bool Window::isClosed()
@@ -147,4 +142,17 @@ void Window::resized(unsigned int width, unsigned int height)
 void Window::close()
 {
 	closed = true;
+}
+
+void Window::setWindowMinArea(int width, int height)
+{
+	
+	SDL_SetWindowMinimumSize(sdlWindow, width, height);
+}
+
+void Window::setWindowResizable(bool resize)
+{
+	SDL_bool resizable = (SDL_bool)resize;
+	SDL_SetWindowResizable(sdlWindow, resizable);
+	isResizable = resize;
 }

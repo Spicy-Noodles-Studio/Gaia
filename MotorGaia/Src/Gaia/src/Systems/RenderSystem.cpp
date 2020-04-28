@@ -43,7 +43,6 @@ void RenderSystem::changeParamOfShader(const std::string& material, const std::s
 }
 
 
-
 void RenderSystem::applyBrightness(Ogre::Viewport* vp)
 {
 

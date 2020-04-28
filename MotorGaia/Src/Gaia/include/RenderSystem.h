@@ -26,7 +26,7 @@ public:
 
 	void changeParamOfShader(const std::string& material, const std::string& paramName, float paramValue);
 	void applyBrightness(Ogre::Viewport* vp);
-	
+
 };
 
 #endif

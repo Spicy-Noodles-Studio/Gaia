@@ -19,8 +19,9 @@ WindowManager::~WindowManager()
 
 void WindowManager::createWindow(Ogre::Root* root, std::string windowName)
 {
-	_root = root;
+	ogreRoot = root;
 	windows.push_back(new Window(root, "Test window - 2020 (c) Gaia "));
+	
 }
 
 void WindowManager::initResolutions()
@@ -29,9 +30,9 @@ void WindowManager::initResolutions()
 	brightness = 1;
 	actualResolutionId = 0;
 
-	Ogre::ConfigOptionMap mapa = _root->getRenderSystem()->getConfigOptions();
-	Ogre::ConfigOptionMap::iterator configIt = mapa.begin();
-	while (configIt != mapa.end())
+	Ogre::ConfigOptionMap map = ogreRoot->getRenderSystem()->getConfigOptions();
+	Ogre::ConfigOptionMap::iterator configIt = map.begin();
+	while (configIt != map.end())
 	{
 		if (configIt->first == "Video Mode")
 		{
@@ -39,8 +40,8 @@ void WindowManager::initResolutions()
 		}
 		configIt++;
 	}
-	std::vector<std::pair<int, int>> resolutions;
-	std::pair<int, int> pareja;
+	std::vector<std::pair<int, int>> resolutionsVector;
+	std::pair<int, int> resolutionPair;
 	for (std::string res : resolString)
 	{
 		int resX = 0;
@@ -67,11 +68,11 @@ void WindowManager::initResolutions()
 			}
 			it++;
 		}
-		pareja.first = resX/10;
-		pareja.second = resY/10;
-		resolutions.push_back(pareja);
+		resolutionPair.first = resX/10;
+		resolutionPair.second = resY/10;
+		resolutionsVector.push_back(resolutionPair);
 	}
-	_resolutions = resolutions;
+	resolutions = resolutionsVector;
 }
 
 void WindowManager::windowResize(unsigned int width, unsigned int height,int id)
@@ -111,7 +112,7 @@ Window* WindowManager::getWindow(int id)
 
 std::vector<std::pair<int, int>> WindowManager::getAvailableResolutionsForWindow()
 {
-	return _resolutions;
+	return resolutions;
 }
 
 std::vector<std::string> WindowManager::getAvailableResolutionsStrings()
@@ -154,6 +155,16 @@ void WindowManager::setBrightness(float value)
 float WindowManager::getBrightness()
 {
 	return brightness;
+}
+
+void WindowManager::setWindowMinArea(int width, int height, int id)
+{
+	windows.at(id)->setWindowMinArea(width, height);
+}
+
+void WindowManager::setWindowResizable(bool resize, int id)
+{
+	windows.at(id)->setWindowResizable(resize);
 }
 
 void WindowManager::setActualResolutionId(int id)

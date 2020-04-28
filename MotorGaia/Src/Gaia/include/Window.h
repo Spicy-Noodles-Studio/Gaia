@@ -31,6 +31,9 @@ public:
 	bool isClosed();
 	void close();
 
+	void setWindowMinArea(int width, int height);
+	void setWindowResizable(bool resize);
+
 private:
 	void moved(unsigned int x, unsigned int y);
 	void resized(unsigned int width, unsigned int height);
@@ -41,6 +44,8 @@ private:
 
 	SDL_Window* sdlWindow;
 	RenderWindow* window;
+
+	bool isResizable;
 
 	int xPosition;
 	int yPosition;

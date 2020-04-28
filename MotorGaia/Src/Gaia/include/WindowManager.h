@@ -42,15 +42,18 @@ public:
 	void setBrightness(float value);
 	float getBrightness();
 
+	void setWindowMinArea(int width ,int height,int id=0);
+	void setWindowResizable(bool resize, int id=0);
+
 	void setActualResolutionId(int id);
 	int getActualResolutionId();
 
 	void close();
 private:
-	std::vector<std::pair<int, int>> _resolutions;
+	std::vector<std::pair<int, int>> resolutions;
 	std::vector<Window*> windows;
 	std::vector<std::string> resolString;
-	Ogre::Root* _root;
+	Ogre::Root* ogreRoot;
 
 	std::pair<int, int> actualResolution;
 

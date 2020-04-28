@@ -60,7 +60,8 @@ void GaiaCore::init()
 	// Setup window
 	window = windowManager->getWindow();
 	windowManager->initResolutions();
-
+	windowManager->setWindowMinArea(windowManager->getAvailableResolutionsForWindow().at(0).first, windowManager->getAvailableResolutionsForWindow().at(0).second);
+//	windowManager->setWindowResizable(false);
 	// Systems initialization
 	// EventSystem
 	eventSystem = new EventSystem();

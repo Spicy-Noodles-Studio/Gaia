@@ -11,6 +11,7 @@
 #include "Timer.h"
 
 #include <chrono>
+#include <iostream>
 
 
 
@@ -86,8 +87,20 @@ void SceneManager::update(float deltaTime)
 	currentScene->fixedUpdate(deltaTime);
 	currentScene->postUpdate(deltaTime);
 
-	if (finishedLoading) {
-		loadingThread.get();
+	if (finishedLoading && loadingThread.valid()) {
+		try
+		{
+			loadingThread.get();
+
+		}
+		catch (const std::runtime_error & e)
+		{
+			std::cout << "SCENE MANAGER: Async load of scene threw runtime error: " << e.what() << std::endl;
+		}
+		catch (const std::exception & e)
+		{
+			std::cout << "SCENE MANAGER: Async load of scene threw exception: " << e.what() << std::endl;
+		}
 		stackScene = sceneToLoad;
 		sceneToLoad = nullptr;
 		finishedLoading = false;
@@ -110,7 +123,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 	if (async) {
 		stackScene = loadingScreen;
 		finishedLoading = false;
-		loadingThread = std::async(&SceneManager::changeSceneAsync, std::ref(*this), name);
+		loadingThread = std::async(std::launch::async, &SceneManager::changeSceneAsync, std::ref(*this), name);
 		return true;
 	}
 

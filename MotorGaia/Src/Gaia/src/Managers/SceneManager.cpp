@@ -10,6 +10,8 @@
 #include "WindowManager.h"
 #include "Timer.h"
 
+#include <chrono>
+
 
 
 SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), countNodeIDs(0), debugDrawer(nullptr), timeScaleAccumulator(0.0f)
@@ -85,7 +87,7 @@ void SceneManager::update(float deltaTime)
 	currentScene->postUpdate(deltaTime);
 
 	if (finishedLoading) {
-		loadingThread.join();
+		loadingThread.get();
 		stackScene = sceneToLoad;
 		sceneToLoad = nullptr;
 		finishedLoading = false;
@@ -108,7 +110,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 	if (async) {
 		stackScene = loadingScreen;
 		finishedLoading = false;
-		loadingThread = std::thread(&SceneManager::changeSceneAsync, std::ref(*this), name);
+		loadingThread = std::async(&SceneManager::changeSceneAsync, std::ref(*this), name);
 		return true;
 	}
 
@@ -168,6 +170,7 @@ bool SceneManager::preloadLoadingScreen()
 
 bool SceneManager::changeSceneAsync(const std::string& name)
 {
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 	// Check if scene exists
 	const SceneData* data = nullptr;
 	do {

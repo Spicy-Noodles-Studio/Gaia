@@ -7,7 +7,7 @@
 
 #include <string>
 #include <map>
-#include <thread>
+#include <future>
 
 #include "Scene.h"
 #include "SceneData.h"
@@ -65,7 +65,7 @@ private:
 	// For loading screens
 	Scene* loadingScreen;
 	Scene* sceneToLoad;
-	std::thread loadingThread;
+	std::future<bool> loadingThread;
 	bool finishedLoading;
 
 	Ogre::Root* root;

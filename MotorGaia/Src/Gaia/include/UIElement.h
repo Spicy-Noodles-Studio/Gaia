@@ -32,6 +32,8 @@ public:
 	void setVisible(bool visible);
 	bool isVisible();
 
+	void setAlwaysOnTop(bool top);
+
 	void flipHorizontal();
 
 	void setInheritsAlpha(bool inherits);

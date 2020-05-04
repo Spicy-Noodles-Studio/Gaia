@@ -87,25 +87,6 @@ void SceneManager::update(float deltaTime)
 	currentScene->fixedUpdate(deltaTime);
 	currentScene->postUpdate(deltaTime);
 
-	if (finishedLoading && loadingThread.valid()) {
-		try
-		{
-			loadingThread.get();
-
-		}
-		catch (const std::runtime_error & e)
-		{
-			std::cout << "SCENE MANAGER: Async load of scene threw runtime error: " << e.what() << std::endl;
-		}
-		catch (const std::exception & e)
-		{
-			std::cout << "SCENE MANAGER: Async load of scene threw exception: " << e.what() << std::endl;
-		}
-		stackScene = sceneToLoad;
-		sceneToLoad = nullptr;
-		finishedLoading = false;
-	}
-
 }
 
 void SceneManager::postUpdate(float deltaTime)
@@ -122,6 +103,8 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 	// Create Loading Scene if async set to "true"
 	if (async) {
 		stackScene = loadingScreen;
+		processSceneChange();
+		dontDestroyObjectsLoaded = false;
 		finishedLoading = false;
 		loadingThread = std::async(std::launch::async, &SceneManager::changeSceneAsync, std::ref(*this), name);
 		return true;
@@ -196,6 +179,7 @@ bool SceneManager::changeSceneAsync(const std::string& name)
 
 	loadSceneAsync(data);
 	InterfaceSystem::GetInstance()->clearControllerMenuInput();
+	if (data != nullptr)stackScene = sceneToLoad;
 	finishedLoading = true;
 	return data == nullptr ? false : true;
 }
@@ -257,8 +241,27 @@ void SceneManager::loadScene(const SceneData* data)
 
 void SceneManager::processSceneChange()
 {
+
 	if (stackScene == nullptr)
 		return;
+
+	if (finishedLoading && loadingThread.valid()) {
+		try
+		{
+			loadingThread.get();
+		}
+		catch (const std::runtime_error & e)
+		{
+			std::cout << "SCENE MANAGER: Async load of scene threw runtime error: " << e.what() << std::endl;
+		}
+		catch (const std::exception & e)
+		{
+			std::cout << "SCENE MANAGER: Async load of scene threw exception: " << e.what() << std::endl;
+		}
+		sceneToLoad = nullptr;
+		finishedLoading = false;
+		dontDestroyObjectsLoaded = false;
+	}
 
 	processDontDestroyObjects();
 
@@ -266,7 +269,7 @@ void SceneManager::processSceneChange()
 	currentScene = stackScene;
 	stackScene = nullptr;
 
-	if (oldScene != nullptr && oldScene != loadingScreen)
+	if (oldScene != nullptr)
 		delete oldScene;
 
 	processCameraChange();

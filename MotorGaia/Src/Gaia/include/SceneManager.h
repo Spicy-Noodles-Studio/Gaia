@@ -49,7 +49,6 @@ private:
 	bool changeSceneAsync(const std::string& name);
 	void loadSceneAsync(const SceneData* data);
 
-
 	void loadScene(const SceneData* data);
 
 	void processSceneChange();
@@ -66,6 +65,7 @@ private:
 	Scene* loadingScreen;
 	Scene* sceneToLoad;
 	std::future<bool> loadingThread;
+	bool dontDestroyObjectsLoaded;
 	bool finishedLoading;
 
 	Ogre::Root* root;

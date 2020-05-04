@@ -77,6 +77,14 @@ void UIElement::setAlwaysOnTop(bool top)
 	element->setAlwaysOnTop(true);
 }
 
+void UIElement::setEnabled(bool enable)
+{
+	if (!enable)
+		element->disable();
+	else
+		element->enable();
+}
+
 void UIElement::flipHorizontal()
 {
 	element->getGeometryBuffer().setPivot(CEGUI::Vector3f(element->getPixelSize().d_width / 2.0f, 0.0f, 0.0f));

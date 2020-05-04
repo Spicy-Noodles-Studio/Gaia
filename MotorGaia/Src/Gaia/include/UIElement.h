@@ -33,6 +33,7 @@ public:
 	bool isVisible();
 
 	void setAlwaysOnTop(bool top);
+	void setEnabled(bool enable);
 
 	void flipHorizontal();
 

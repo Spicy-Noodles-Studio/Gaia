@@ -156,6 +156,7 @@ void InterfaceSystem::initDefaultResources()
     CEGUI::FontManager::getSingleton().createFreeTypeFont("Sans", 8, true, "DejaVuSans.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
     CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang7", 6.8, true, "batang.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
     CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang8", 8, true, "batang.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
+    CEGUI::FontManager::getSingleton().createFreeTypeFont("Sans72", 72, true, "DejaVuSans.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
 
 #ifdef _DEBUG
     fpsText = new UIElement(root->getElement()->createChild("TaharezLook/StaticText", "FPSText"));

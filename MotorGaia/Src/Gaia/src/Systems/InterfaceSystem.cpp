@@ -474,15 +474,22 @@ void InterfaceSystem::clearControllerMenuInput() {
     buttons.clear();
 }
 
-void InterfaceSystem::initControllerMenuInput()
+void InterfaceSystem::initControllerMenuInput(UIElement* newRoot)
 {
     if (root->getChildCount() <= 0) return;
+    if (newRoot == nullptr) {
+        UILayout* sceneLayout = SceneManager::GetInstance()->getCurrentScene()->getMainCamera()->gameObject->getComponent<UILayout>();
+        if (sceneLayout) currentLayout = sceneLayout->getRoot().getElement();
+        else return;
 
-    UILayout* sceneLayout = SceneManager::GetInstance()->getCurrentScene()->getMainCamera()->gameObject->getComponent<UILayout>();
-    if (sceneLayout) currentLayout = sceneLayout->getRoot().getElement();
-    else return;
-
-    layoutButtonSearch(&sceneLayout->getRoot());
+        layoutButtonSearch(&sceneLayout->getRoot());
+    }
+    else
+    {
+        currentLayout = newRoot->getElement();
+        layoutButtonSearch(newRoot);
+    }
+   
 }
 
 void InterfaceSystem::layoutButtonSearch(UIElement* parent)

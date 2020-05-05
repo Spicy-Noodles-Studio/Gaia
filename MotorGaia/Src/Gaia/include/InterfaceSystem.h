@@ -37,7 +37,7 @@ private:
 	std::string currentButton;
 	float scrollAmount;
 
-	void initControllerMenuInput();
+	
 	void layoutButtonSearch(UIElement* parent);
 	void searchNextVisibleButton(std::string direction);
 	/*------------------------------*/
@@ -87,7 +87,9 @@ public:
 	UIElement* loadLayout(const std::string& filename);
 	void initDefaultResources();
 
+	void initControllerMenuInput(UIElement* newRoot=nullptr);
 	void clearControllerMenuInput();
+
 
 	/// Percentage of scrollbar that changes when moved by controller or keyboard
 	void setScrollbarControllerAmount(float percent);

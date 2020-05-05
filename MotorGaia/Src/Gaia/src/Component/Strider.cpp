@@ -66,7 +66,9 @@ void Strider::handleData(ComponentData *data)
 		else
 			LOG("STRIDER: property %s does not exist\n", prop.first.c_str());
 	}
-	body->setFriction(friction);
+	if (body == nullptr) return;
+
+	setFriction(friction);
 	setTrigger(trigger);
 	setDamping(damping);
 	setAngularDamping(angularDamping);

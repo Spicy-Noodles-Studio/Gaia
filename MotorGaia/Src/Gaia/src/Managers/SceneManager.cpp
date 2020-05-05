@@ -10,11 +10,6 @@
 #include "WindowManager.h"
 #include "Timer.h"
 
-#include <chrono>
-#include <iostream>
-
-
-
 SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), countNodeIDs(0), debugDrawer(nullptr), timeScaleAccumulator(0.0f)
 {
 
@@ -37,8 +32,7 @@ void SceneManager::init(Ogre::Root* root)
 	// Let it change runtime
 	processSceneChange();
 
-	preloadLoadingScreen();
-	finishedLoading = false;
+	sceneToLoad = "NO SCENE";
 }
 
 void SceneManager::close()
@@ -49,16 +43,10 @@ void SceneManager::close()
 		delete currentScene;
 	if (stackScene != nullptr)
 		delete stackScene;
-	if (loadingScreen != nullptr)
-		delete loadingScreen;
-	if (sceneToLoad != nullptr)
-		delete sceneToLoad;
 
 	debugDrawer = nullptr;
 	currentScene = nullptr;
 	stackScene = nullptr;
-	loadingScreen = nullptr;
-	sceneToLoad = nullptr;
 
 	destroy();
 }
@@ -102,12 +90,8 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 {
 	// Create Loading Scene if async set to "true"
 	if (async) {
-		stackScene = loadingScreen;
-		processSceneChange();
-		dontDestroyObjectsLoaded = false;
-		finishedLoading = false;
-		loadingThread = std::async(std::launch::async, &SceneManager::changeSceneAsync, std::ref(*this), name);
-		return true;
+		sceneToLoad = name;
+		return changeScene("loadingScene");
 	}
 
 	// Check if scene exists
@@ -134,67 +118,6 @@ Scene* SceneManager::createScene(const SceneData* data)
 		createGameObject(gData, myScene);
 	}
 	return myScene;
-}
-
-bool SceneManager::preloadLoadingScreen()
-{
-	// Check if scene exists
-	const SceneData* data = nullptr;
-	do {
-		data = ResourcesManager::getSceneData("loadingScene");
-		if (data == nullptr) {
-			LOG_ERROR("SCENE MANAGER", "scene with name loadingScene not found");
-			return false;
-		}
-	} while (data->getLoadState() != Loadable::LoadState::READY);
-
-	if (data == nullptr) {
-		LOG("SCENE MANAGER: given SceneData not valid. Loading default SceneData");
-		SceneData* emptyScene = SceneData::empty();
-		loadingScreen = createScene(emptyScene);
-		delete emptyScene;
-		return false;
-	}
-
-	// Creates the Scene by its data (assuming creation was succesfull)
-	loadingScreen = createScene(data);
-
-	LOG("SCENE MANAGER: loadingScreen is preloaded and ready to use");
-
-	return data == nullptr ? false : true;
-}
-
-bool SceneManager::changeSceneAsync(const std::string& name)
-{
-	std::this_thread::sleep_for(std::chrono::seconds(1));
-	// Check if scene exists
-	const SceneData* data = nullptr;
-	do {
-		data = ResourcesManager::getSceneData(name);
-		if (data == nullptr) {
-			LOG_ERROR("SCENE MANAGER", "scene with name %s not found", name.c_str());
-			return false;
-		}
-	} while (data->getLoadState() != Loadable::LoadState::READY);
-
-	loadSceneAsync(data);
-	InterfaceSystem::GetInstance()->clearControllerMenuInput();
-	if (data != nullptr)stackScene = sceneToLoad;
-	finishedLoading = true;
-	return data == nullptr ? false : true;
-}
-
-void SceneManager::loadSceneAsync(const SceneData* data)
-{
-	if (data == nullptr) {
-		LOG("SCENE MANAGER: given SceneData not valid. Loading default SceneData");
-		SceneData* emptyScene = SceneData::empty();
-		sceneToLoad = createScene(emptyScene);
-		delete emptyScene;
-		return;
-	}
-	// Creates the Scene by its data (assuming creation was succesfull)
-	sceneToLoad = createScene(data);
 }
 
 GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* scene, GameObject* parent)
@@ -241,27 +164,8 @@ void SceneManager::loadScene(const SceneData* data)
 
 void SceneManager::processSceneChange()
 {
-
 	if (stackScene == nullptr)
 		return;
-
-	if (finishedLoading && loadingThread.valid()) {
-		try
-		{
-			loadingThread.get();
-		}
-		catch (const std::runtime_error & e)
-		{
-			std::cout << "SCENE MANAGER: Async load of scene threw runtime error: " << e.what() << std::endl;
-		}
-		catch (const std::exception & e)
-		{
-			std::cout << "SCENE MANAGER: Async load of scene threw exception: " << e.what() << std::endl;
-		}
-		sceneToLoad = nullptr;
-		finishedLoading = false;
-		dontDestroyObjectsLoaded = false;
-	}
 
 	processDontDestroyObjects();
 
@@ -322,5 +226,10 @@ bool SceneManager::exist(const std::string& name)
 Scene* SceneManager::getCurrentScene()
 {
 	return currentScene;
+}
+
+std::string SceneManager::getSceneToLoad()
+{
+	return sceneToLoad;
 }
 

@@ -20,6 +20,11 @@ void UIElement::setText(const std::string& text)
 	element->setText(text);
 }
 
+void UIElement::setProperty(const std::string& prop, const std::string& value)
+{
+	element->setProperty(prop, value);
+}
+
 void UIElement::setPosition(float x, float y)
 {
 	element->setPosition(CEGUI::UVector2(CEGUI::UDim(x, 0), CEGUI::UDim(y, 0)));

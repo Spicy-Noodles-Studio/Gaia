@@ -7,7 +7,6 @@
 
 #include <string>
 #include <map>
-#include <future>
 
 #include "Scene.h"
 #include "SceneData.h"
@@ -40,14 +39,11 @@ public:
 
 	Scene* getCurrentScene();
 
+	std::string getSceneToLoad();
+
 private:
 	Scene* createScene(const SceneData* data);
 	GameObject* createGameObject(const GameObjectData* data, Scene* scene, GameObject* parent = nullptr);
-
-	// For loading screens
-	bool preloadLoadingScreen();
-	bool changeSceneAsync(const std::string& name);
-	void loadSceneAsync(const SceneData* data);
 
 	void loadScene(const SceneData* data);
 
@@ -62,11 +58,7 @@ private:
 	Scene* stackScene;
 
 	// For loading screens
-	Scene* loadingScreen;
-	Scene* sceneToLoad;
-	std::future<bool> loadingThread;
-	bool dontDestroyObjectsLoaded;
-	bool finishedLoading;
+	std::string sceneToLoad;
 
 	Ogre::Root* root;
 	Ogre::SceneManager* sceneManager;

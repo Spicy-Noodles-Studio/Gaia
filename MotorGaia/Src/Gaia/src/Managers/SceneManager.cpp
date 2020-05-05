@@ -91,7 +91,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 	// Create Loading Scene if async set to "true"
 	if (async) {
 		sceneToLoad = name;
-		return changeScene("loadingScene");
+		return changeScene("LoadingScreen");
 	}
 	if (name == sceneToLoad) sceneToLoad = "NO SCENE";
 	// Check if scene exists

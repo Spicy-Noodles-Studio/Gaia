@@ -10,7 +10,6 @@
 #include "WindowManager.h"
 #include "Timer.h"
 
-
 SceneManager::SceneManager() : currentScene(nullptr), stackScene(nullptr), root(nullptr), sceneManager(nullptr), countNodeIDs(0), debugDrawer(nullptr), timeScaleAccumulator(0.0f)
 {
 
@@ -29,10 +28,11 @@ void SceneManager::init(Ogre::Root* root)
 	debugDrawer = new DebugDrawer(this->sceneManager);
 	PhysicsSystem::GetInstance()->setDebugDrawer(debugDrawer);
 
-
 	loadScene(ResourcesManager::getSceneData(0));
 	// Let it change runtime
 	processSceneChange();
+
+	sceneToLoad = "NO SCENE";
 }
 
 void SceneManager::close()
@@ -74,6 +74,7 @@ void SceneManager::update(float deltaTime)
 	}
 	currentScene->fixedUpdate(deltaTime);
 	currentScene->postUpdate(deltaTime);
+
 }
 
 void SceneManager::postUpdate(float deltaTime)
@@ -87,6 +88,12 @@ void SceneManager::postUpdate(float deltaTime)
 
 bool SceneManager::changeScene(const std::string& name, bool async)
 {
+	// Create Loading Scene if async set to "true"
+	if (async) {
+		sceneToLoad = name;
+		return changeScene("loadingScene");
+	}
+	if (name == sceneToLoad) sceneToLoad = "NO SCENE";
 	// Check if scene exists
 	const SceneData* data = nullptr;
 	do {
@@ -99,6 +106,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 
 	loadScene(data);
 	InterfaceSystem::GetInstance()->clearControllerMenuInput();
+
 	return data == nullptr ? false : true;
 }
 
@@ -219,3 +227,9 @@ Scene* SceneManager::getCurrentScene()
 {
 	return currentScene;
 }
+
+std::string SceneManager::getSceneToLoad()
+{
+	return sceneToLoad;
+}
+

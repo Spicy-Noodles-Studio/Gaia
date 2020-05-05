@@ -18,6 +18,8 @@ public:
 
 	void setText(const std::string& text);
 
+	void setProperty(const std::string& prop, const std::string& value);
+
 	void setPosition(float x, float y);
 	void setPosition(int x, int y);
 

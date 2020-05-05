@@ -93,7 +93,7 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 		sceneToLoad = name;
 		return changeScene("loadingScene");
 	}
-
+	if (name == sceneToLoad) sceneToLoad = "NO SCENE";
 	// Check if scene exists
 	const SceneData* data = nullptr;
 	do {

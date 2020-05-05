@@ -18,6 +18,8 @@ public:
 
 	void setText(const std::string& text);
 
+	void setProperty(const std::string& prop, const std::string& value);
+
 	void setPosition(float x, float y);
 	void setPosition(int x, int y);
 
@@ -31,6 +33,9 @@ public:
 
 	void setVisible(bool visible);
 	bool isVisible();
+
+	void setAlwaysOnTop(bool top);
+	void setEnabled(bool enable);
 
 	void flipHorizontal();
 

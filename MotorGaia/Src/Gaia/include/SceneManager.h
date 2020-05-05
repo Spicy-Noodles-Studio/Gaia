@@ -39,6 +39,8 @@ public:
 
 	Scene* getCurrentScene();
 
+	std::string getSceneToLoad();
+
 private:
 	Scene* createScene(const SceneData* data);
 	GameObject* createGameObject(const GameObjectData* data, Scene* scene, GameObject* parent = nullptr);
@@ -54,6 +56,9 @@ private:
 private:
 	Scene* currentScene;
 	Scene* stackScene;
+
+	// For loading screens
+	std::string sceneToLoad;
 
 	Ogre::Root* root;
 	Ogre::SceneManager* sceneManager;

@@ -127,6 +127,8 @@ void InterfaceSystem::update(float deltaTime)
 
 #ifdef _DEBUG
     fpsText->setText("FPS: " + std::to_string((int)(1.0 / deltaTime)));
+    fpsText->setAlwaysOnTop(true);
+    fpsText->setEnabled(false);
 #endif
 }
 

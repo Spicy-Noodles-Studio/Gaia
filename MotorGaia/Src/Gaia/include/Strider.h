@@ -7,7 +7,7 @@
 
 class MeshStrider;
 
-class Strider : public RigidBody
+class GAIA_API Strider : public RigidBody
 {
 private:
 	MeshStrider* meshStrider;

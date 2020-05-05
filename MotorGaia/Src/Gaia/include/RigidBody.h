@@ -18,8 +18,8 @@ class GAIA_API RigidBody : public GaiaComponent
 {
 friend struct RaycastHit;
 protected:
-	btRigidBody* body = nullptr;
-	GaiaMotionState* motionState = nullptr;
+	btRigidBody* body;
+	GaiaMotionState* motionState;
 	std::map<std::string, Col_Filters> colPresets;
 	// Turns a Gaia Vector3 into a Bullet Physics Vector3
 	const btVector3 parseToBulletVector(const Vector3& v) const;

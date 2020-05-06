@@ -67,13 +67,8 @@ Sound* SoundSystem::createSound(const std::string& name, const SoundMode& mode)
 FMOD::Channel* SoundSystem::playSound(const std::string& name)
 {
 	Channel* channel;
-	Sound* sound = ResourcesManager::getSound(name);
-
-	// Wait till loaded
-	FMOD_OPENSTATE state;
-	do {
-		sound->getOpenState(&state, nullptr, nullptr, nullptr);
-	} while (state != FMOD_OPENSTATE_READY);
+	Sound* sound = getSound(name);
+	if (sound == nullptr) return nullptr;
 
 	FMOD_RESULT result = system->playSound(sound, soundEfects, false, &channel);
 	ERRCHECK(result);
@@ -83,14 +78,9 @@ FMOD::Channel* SoundSystem::playSound(const std::string& name)
 
 FMOD::Channel* SoundSystem::playMusic(const std::string& name)
 {
-	Channel* channel;
-	Sound* sound = ResourcesManager::getSound(name);
-
-	// Wait till loaded
-	FMOD_OPENSTATE state;
-	do {
-		sound->getOpenState(&state, nullptr, nullptr, nullptr);
-	} while (state != FMOD_OPENSTATE_READY);
+	Channel* channel;	
+	Sound* sound = getSound(name);
+	if (sound == nullptr) return nullptr;
 
 	FMOD_RESULT result = system->playSound(sound, music, false, &channel);
 	ERRCHECK(result);
@@ -242,7 +232,26 @@ FMOD::Reverb3D* SoundSystem::createReverb()
 void SoundSystem::ERRCHECK(FMOD_RESULT result)
 {
 	if (result != FMOD_RESULT::FMOD_OK)
-	{
-		LOG("%s\n", FMOD_ErrorString(result));
+		LOG("%s", FMOD_ErrorString(result));
+}
+
+Sound* SoundSystem::getSound(const std::string& name)
+{
+	Sound* sound = ResourcesManager::getSound(name);
+	if (sound == nullptr) return nullptr;
+
+	// Wait till loaded
+	FMOD_OPENSTATE state;
+	FMOD_RESULT result;
+	do {
+		 result = sound->getOpenState(&state, nullptr, nullptr, nullptr);
+	} while (state != FMOD_OPENSTATE_READY && state != FMOD_OPENSTATE_ERROR);
+
+	if (result != FMOD_OK) {
+		LOG("SOUND MANAGER: Error playing sound %s", name.c_str());
+		ERRCHECK(result);
+		return nullptr;
 	}
+
+	return sound;
 }

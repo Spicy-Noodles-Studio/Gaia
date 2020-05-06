@@ -27,13 +27,15 @@ void SoundEmitter::playSound(std::string soundName, bool reverb)
 		emitterData->channel->stop();
 
 	emitterData->channel = SoundSystem::GetInstance()->playSound(soundName);
-	emitterData->channel->setPitch(pitch);
-	emitterData->channel->setVolume(volume);
+	if (emitterData->channel) {
+		emitterData->channel->setPitch(pitch);
+		emitterData->channel->setVolume(volume);
 
-	if (!reverb)
-		emitterData->channel->setReverbProperties(0, 0);
+		if (!reverb)
+			emitterData->channel->setReverbProperties(0, 0);
 
-	emitterData->paused = false;
+		emitterData->paused = false;
+	}
 }
 
 void SoundEmitter::playMusic(std::string soundName, bool reverb)
@@ -42,13 +44,15 @@ void SoundEmitter::playMusic(std::string soundName, bool reverb)
 		emitterData->channel->stop();
 
 	emitterData->channel = SoundSystem::GetInstance()->playMusic(soundName);
-	emitterData->channel->setPitch(pitch);
-	emitterData->channel->setVolume(volume);
-	if (!reverb) {
-		emitterData->channel->setReverbProperties(0, 0);
-	}
+	if (emitterData->channel != nullptr) {
+		emitterData->channel->setPitch(pitch);
+		emitterData->channel->setVolume(volume);
+		if (!reverb) {
+			emitterData->channel->setReverbProperties(0, 0);
+		}
 
-	emitterData->paused = false;
+		emitterData->paused = false;
+	}
 }
 
 void SoundEmitter::pause()

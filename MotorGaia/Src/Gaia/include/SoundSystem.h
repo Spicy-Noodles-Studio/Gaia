@@ -45,6 +45,8 @@ private:
 	ListenerData* listener = nullptr;
 
 	void ERRCHECK(FMOD_RESULT result);
+
+	Sound* getSound(const std::string& name);
 public:
 	SoundSystem();
 	~SoundSystem();

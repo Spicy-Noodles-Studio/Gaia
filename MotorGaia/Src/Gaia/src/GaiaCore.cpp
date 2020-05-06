@@ -96,7 +96,7 @@ void GaiaCore::init()
 	componentManager->init();
 
 	//Init Default Resources
-	interfaceSystem->initDefaultResources();
+	interfaceSystem->initDefaultResources("./Assets/Files/interface.asset");
 
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();

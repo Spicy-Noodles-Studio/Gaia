@@ -37,6 +37,8 @@ private:
 	std::string currentButton;
 	float scrollAmount;
 
+	std::string ceguiResourceFile;
+
 	
 	void layoutButtonSearch(UIElement* parent);
 	void searchNextVisibleButton(std::string direction);
@@ -85,7 +87,7 @@ public:
 	UIElement* getRoot();
 
 	UIElement* loadLayout(const std::string& filename);
-	void initDefaultResources();
+	void initDefaultResources(const std::string& filename);
 
 	void initControllerMenuInput(UIElement* newRoot=nullptr);
 	void clearControllerMenuInput();

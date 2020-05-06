@@ -245,7 +245,7 @@ Sound* SoundSystem::getSound(const std::string& name)
 	FMOD_RESULT result;
 	do {
 		 result = sound->getOpenState(&state, nullptr, nullptr, nullptr);
-	} while (state != FMOD_OPENSTATE_READY && state != FMOD_OPENSTATE_ERROR);
+	} while (state == FMOD_OPENSTATE_LOADING);
 
 	if (result != FMOD_OK) {
 		LOG("SOUND MANAGER: Error playing sound %s", name.c_str());

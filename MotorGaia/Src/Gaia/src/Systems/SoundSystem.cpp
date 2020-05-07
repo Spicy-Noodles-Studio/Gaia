@@ -181,11 +181,15 @@ void SoundSystem::update(float deltaTime)
 	zero = { 0,0,0 };
 	for (int i = 0; i < emitters.size(); i++)
 	{
-		if (emitters[i]->channel && !emitters[i]->paused) 
-		{
-			posEmi =vecToFMOD(*emitters[i]->position);
-			emitters[i]->channel->set3DAttributes(&posEmi, &zero);
+		bool paused = true;
+		SoundSystem::EmitterData* data = emitters[i];
+		for (auto it = data->channels.begin(); it != data->channels.end(); it++) {
+			bool aux = (*it).second->paused; 
+			paused = paused && aux;
+			if(!aux)
+				(*it).second->channel->set3DAttributes(&posEmi, &zero);
 		}
+		if(!paused) posEmi = vecToFMOD(*data->position);
 	}
 
 	FMOD_RESULT result = system->update();
@@ -194,8 +198,7 @@ void SoundSystem::update(float deltaTime)
 
 SoundSystem::EmitterData* SoundSystem::createEmitter(const Vector3* pos)
 {
-	SoundSystem::EmitterData* data = new SoundSystem::EmitterData();
-	data->position = pos;
+	SoundSystem::EmitterData* data = new SoundSystem::EmitterData(pos);
 	emitters.push_back(data);
 	return data;
 }
@@ -254,4 +257,28 @@ Sound* SoundSystem::getSound(const std::string& name)
 	}
 
 	return sound;
+}
+
+SoundSystem::SoundChannel::SoundChannel() : channel(nullptr), paused(false)
+{
+}
+
+SoundSystem::SoundChannel::SoundChannel(Channel* channel) : channel(channel), paused(false)
+{
+}
+
+SoundSystem::EmitterData::EmitterData(const Vector3* position) : position(position), channels(std::map<std::string, SoundChannel*>())
+{
+}
+
+bool SoundSystem::EmitterData::isPaused()
+{
+	auto it = channels.begin();
+	bool paused = true;
+	while(paused && it != channels.end()) {
+		paused = (*it).second->paused;
+		it++;
+	}
+
+	return paused;
 }

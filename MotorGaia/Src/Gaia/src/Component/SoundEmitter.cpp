@@ -7,13 +7,31 @@
 
 REGISTER_FACTORY(SoundEmitter);
 
+void SoundEmitter::stop(const std::string& sound)
+{
+	auto it = emitterData->channels.find(sound);
+	if (it != emitterData->channels.end())
+		(*it).second->channel->stop();
+}
+
+void SoundEmitter::setUpChannel(SoundChannel* soundChannel, bool reverb)
+{
+	if (soundChannel != nullptr && soundChannel->channel != nullptr) {
+		soundChannel->channel->setPitch(pitch);
+		soundChannel->channel->setVolume(volume);
+
+		if (!reverb)
+			soundChannel->channel->setReverbProperties(0, 0);
+
+		soundChannel->paused = false;
+	}
+}
+
 SoundEmitter::SoundEmitter(GameObject* gameObject) : GaiaComponent(gameObject)
 {
 	emitterData = SoundSystem::GetInstance()->createEmitter(&gameObject->transform->getPosition());
-	emitterData->channel = nullptr;
 	pitch = 1.0f;
 	volume = 1.0f;
-	emitterData->paused = true;
 }
 
 SoundEmitter::~SoundEmitter()
@@ -21,74 +39,95 @@ SoundEmitter::~SoundEmitter()
 	SoundSystem::GetInstance()->removeEmitter(emitterData);
 }
 
-void SoundEmitter::playSound(std::string soundName, bool reverb)
+void SoundEmitter::playSound(const std::string& soundName, bool reverb)
 {
-	if (emitterData->channel)
-		emitterData->channel->stop();
-
-	emitterData->channel = SoundSystem::GetInstance()->playSound(soundName);
-	if (emitterData->channel) {
-		emitterData->channel->setPitch(pitch);
-		emitterData->channel->setVolume(volume);
-
-		if (!reverb)
-			emitterData->channel->setReverbProperties(0, 0);
-
-		emitterData->paused = false;
-	}
+	stop(soundName);
+	emitterData->channels[soundName] = new SoundChannel(SoundSystem::GetInstance()->playSound(soundName));
+	setUpChannel(emitterData->channels[soundName], reverb);
 }
 
-void SoundEmitter::playMusic(std::string soundName, bool reverb)
+void SoundEmitter::playMusic(const std::string& soundName, bool reverb)
 {
-	if (emitterData->channel)
-		emitterData->channel->stop();
-
-	emitterData->channel = SoundSystem::GetInstance()->playMusic(soundName);
-	if (emitterData->channel != nullptr) {
-		emitterData->channel->setPitch(pitch);
-		emitterData->channel->setVolume(volume);
-		if (!reverb) {
-			emitterData->channel->setReverbProperties(0, 0);
-		}
-
-		emitterData->paused = false;
-	}
+	stop(soundName);
+	emitterData->channels[soundName] = new SoundChannel(SoundSystem::GetInstance()->playMusic(soundName));
+	setUpChannel(emitterData->channels[soundName], reverb);
 }
 
-void SoundEmitter::pause()
+void SoundEmitter::pause(const std::string& sound)
 {
 	bool p;
-	if (emitterData->channel) {
-		emitterData->channel->getPaused(&p);
+	auto it = emitterData->channels.find(sound);
+	if (it != emitterData->channels.end()) {
+		SoundChannel* soundChannel = (*it).second;
+		soundChannel->channel->getPaused(&p);
 		if (!p) {
-			emitterData->channel->setPaused(true);
-			emitterData->paused = true;
+			soundChannel->channel->setPaused(true);
+			soundChannel->paused = true;
 		}
 	}
 }
 
-void SoundEmitter::resume()
+void SoundEmitter::resume(const std::string& sound)
 {
 	bool p;
-	if (emitterData->channel) {
-		emitterData->channel->getPaused(&p);
+	auto it = emitterData->channels.find(sound);
+	if (it != emitterData->channels.end()) {
+		SoundChannel* soundChannel = (*it).second;
+		soundChannel->channel->getPaused(&p);
 		if (p) {
-			emitterData->channel->setPaused(false);
-			emitterData->paused = false;
+			soundChannel->channel->setPaused(false);
+			soundChannel->paused = false;
 		}
 	}
+}
+
+void SoundEmitter::pauseAll()
+{
+	for (auto it = emitterData->channels.begin(); it != emitterData->channels.end(); it++)
+		pause((*it).first);
+}
+
+void SoundEmitter::resumeAll()
+{
+	for (auto it = emitterData->channels.begin(); it != emitterData->channels.end(); it++)
+		resume((*it).first);
 }
 
 void SoundEmitter::setVolume(float volume)
 {
 	this->volume = volume;
-	if (emitterData->channel) emitterData->channel->setVolume(volume);
+	for (auto it = emitterData->channels.begin(); it != emitterData->channels.end(); it++)
+		setVolume(volume, (*it).first);
+}
+
+void SoundEmitter::setVolume(float volume, const std::string& sound)
+{
+	auto it = emitterData->channels.find(sound);
+	if (it != emitterData->channels.end()) 
+		(*it).second->channel->setVolume(volume);
 }
 
 void SoundEmitter::setPitch(float pitch)
 {
 	this->pitch = pitch;
-	if (emitterData->channel) emitterData->channel->setPitch(pitch);
+	for (auto it = emitterData->channels.begin(); it != emitterData->channels.end(); it++)
+		setPitch(pitch, (*it).first);
+}
+
+void SoundEmitter::setPitch(float pitch, const std::string& sound)
+{
+	auto it = emitterData->channels.find(sound);
+	if (it != emitterData->channels.end())
+		(*it).second->channel->setPitch(pitch);
+}
+
+bool SoundEmitter::isPlaying(const std::string& soundName)
+{
+	bool playing;
+	auto it = emitterData->channels.find(soundName);
+	if (it != emitterData->channels.end())
+		(*it).second->channel->isPlaying(&playing);
+	return playing;
 }
 
 void SoundEmitter::handleData(ComponentData* data)

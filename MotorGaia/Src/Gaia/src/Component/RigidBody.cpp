@@ -338,6 +338,20 @@ const Vector3 RigidBody::parseFromBulletVector(const btVector3& v) const
 void RigidBody::initPresets()
 {
 	colPresets["IgnoreRaycast"] = IGNORE_RAYCAST;
+	colPresets["ColGroup1"] = COL_GROUP_1;
+	colPresets["ColGroup2"] = COL_GROUP_2;
+	colPresets["ColGroup3"] = COL_GROUP_3;
+	colPresets["ColGroup4"] = COL_GROUP_4;
+	colPresets["ColGroup5"] = COL_GROUP_5;
+	colPresets["ColGroup6"] = COL_GROUP_6;
+	colPresets["ColGroup7"] = COL_GROUP_7;
+	colPresets["ColGroup8"] = COL_GROUP_8;
+	colPresets["ColGroup9"] = COL_GROUP_9;
+	colPresets["ColGroup10"] = COL_GROUP_10;
+	colPresets["ColGroup11"] = COL_GROUP_11;
+	colPresets["ColGroup12"] = COL_GROUP_12;
+	colPresets["ColGroup13"] = COL_GROUP_13;
+	colPresets["ColGroup14"] = COL_GROUP_14;
 	colPresets["Default"] = DEFAULT;
 	colPresets["None"] = NONE;
 	colPresets["All"] = ALL;

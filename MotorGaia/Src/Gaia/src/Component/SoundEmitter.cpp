@@ -123,7 +123,7 @@ void SoundEmitter::setPitch(float pitch, const std::string& sound)
 
 bool SoundEmitter::isPlaying(const std::string& soundName)
 {
-	bool playing;
+	bool playing = false;
 	auto it = emitterData->channels.find(soundName);
 	if (it != emitterData->channels.end())
 		(*it).second->channel->isPlaying(&playing);

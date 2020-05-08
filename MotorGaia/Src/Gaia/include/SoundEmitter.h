@@ -16,7 +16,6 @@ private:
 	float pitch;
 	float volume;
 
-	void stop(const std::string& sound);
 	void setUpChannel(SoundChannel* channel, bool reverb);
 
 public:
@@ -25,8 +24,10 @@ public:
 
 	void playSound(const std::string& soundName, bool reverb = false);
 	void playMusic(const std::string& soundName, bool reverb = false);
+	void stop(const std::string& sound);
 	void pause(const std::string& sound);
 	void resume(const std::string& sound);
+	void stopAll();
 	void pauseAll();
 	void resumeAll();
 

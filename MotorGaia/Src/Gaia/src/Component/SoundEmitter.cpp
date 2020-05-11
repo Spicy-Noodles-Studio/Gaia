@@ -86,8 +86,8 @@ void SoundEmitter::resume(const std::string& sound)
 
 void SoundEmitter::stopAll()
 {
-	for (auto it = emitterData->channels.begin(); it != emitterData->channels.end(); it++)
-		stop((*it).first);
+	for (auto it = emitterData->channels.begin(); it != emitterData->channels.end();)
+		stop((*it++).first);
 }
 
 void SoundEmitter::pauseAll()

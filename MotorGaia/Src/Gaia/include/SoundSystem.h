@@ -24,7 +24,8 @@ public:
 	struct SoundChannel {
 		Channel* channel;
 		bool paused;
-
+		
+		~SoundChannel();
 		SoundChannel();
 		SoundChannel(Channel* channel);
 	};
@@ -33,6 +34,7 @@ public:
 		std::map<std::string, SoundChannel*> channels;
 		const Vector3* position;	
 
+		~EmitterData();
 		EmitterData(const Vector3* position);
 		bool isPaused();
 	};

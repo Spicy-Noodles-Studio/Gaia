@@ -10,8 +10,11 @@ REGISTER_FACTORY(SoundEmitter);
 void SoundEmitter::stop(const std::string& sound)
 {
 	auto it = emitterData->channels.find(sound);
-	if (it != emitterData->channels.end())
-		(*it).second->channel->stop();
+	if (it != emitterData->channels.end()) {
+		it->second->channel->stop();
+		delete it->second;
+		emitterData->channels.erase(it);
+	}
 }
 
 void SoundEmitter::setUpChannel(SoundChannel* soundChannel, bool reverb)

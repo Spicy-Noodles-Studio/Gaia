@@ -25,12 +25,12 @@ REGISTER_FACTORY(MeshRenderer);
 
 MeshRenderer::MeshRenderer(GameObject* gameObject) : GaiaComponent(gameObject), visible(true)
 {
-	 
+
 }
 
 MeshRenderer::~MeshRenderer()
 {
-	for (auto entity : entities) 
+	for (auto entity : entities)
 	{
 		gameObject->node->detachObject(entity.second);
 		gameObject->getScene()->getSceneManager()->destroyEntity(entity.second);
@@ -99,7 +99,7 @@ void MeshRenderer::attachEntityToNode(const std::string& mesh)
 void MeshRenderer::attachEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh)
 {
 	auto ownerIt = entities.find(owner), meshIt = entities.find(mesh);
-	if (ownerIt != entities.end() && meshIt != entities.end()) 
+	if (ownerIt != entities.end() && meshIt != entities.end())
 	{
 		Ogre::Entity* ownerEnt = (*ownerIt).second, * meshEnt = (*meshIt).second;
 		if (ownerEnt->hasSkeleton() && ownerEnt->getSkeleton()->hasBone(bone))
@@ -114,7 +114,7 @@ void MeshRenderer::attachEntityToBone(const std::string& owner, const std::strin
 void MeshRenderer::detachEntityFromBone(const std::string& owner, const std::string& mesh)
 {
 	auto ownerIt = entities.find(owner), meshIt = entities.find(mesh);
-	if (ownerIt != entities.end() && meshIt != entities.end()) 
+	if (ownerIt != entities.end() && meshIt != entities.end())
 	{
 		Ogre::Entity* ownerEnt = (*ownerIt).second, * meshEnt = (*meshIt).second;
 		if (ownerEnt->hasSkeleton())
@@ -157,22 +157,31 @@ void MeshRenderer::printAllBones()
 
 void MeshRenderer::setDiffuse(int subentity, const Vector3& diffuse, float alpha)
 {
-	Ogre::MaterialPtr mat = getMesh(meshId)->getSubEntity(subentity)->getMaterial();
+	setDiffuse(meshId, subentity, diffuse, alpha);
+}
+
+void MeshRenderer::setDiffuse(std::string entity, int subentity, const Vector3& diffuse, float alpha)
+{
+	Ogre::MaterialPtr mat = getMesh(entity)->getSubEntity(subentity)->getMaterial();
 	Ogre::MaterialPtr newMat = Ogre::MaterialManager::getSingleton().getByName(mat->getName() + gameObject->getName());
 	if (newMat == NULL)
 	{
 		newMat = mat->clone(mat->getName() + gameObject->getName());
 	}
 	newMat->getTechnique(0)->getPass(0)->setDiffuse(diffuse.x, diffuse.y, diffuse.z, alpha);
-	setMaterial(meshId, subentity, newMat->getName());
+	setMaterial(entity, subentity, newMat->getName());
 }
 
 Vector3 MeshRenderer::getDiffuse(int subentity)
 {
-	Ogre::ColourValue c = getMesh(meshId)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getDiffuse();
-	return { c.r, c.g, c.b };
+	return getDiffuse(meshId, subentity);
 }
 
+Vector3 MeshRenderer::getDiffuse(std::string entity, int subentity)
+{
+	Ogre::ColourValue c = getMesh(entity)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getDiffuse();
+	return { c.r, c.g, c.b };
+}
 
 void MeshRenderer::setEmissive(int subentity, const Vector3& emissive)
 {
@@ -213,7 +222,7 @@ void MeshRenderer::handleData(ComponentData* data)
 		if (prop.first == "mesh")
 		{
 			char c;
-			while (ss >> meshId >> meshName) 
+			while (ss >> meshId >> meshName)
 			{
 				setMesh(meshId, meshName);
 				attachEntityToNode(meshId);
@@ -225,7 +234,7 @@ void MeshRenderer::handleData(ComponentData* data)
 			//Al ser un attach to bone no modificamos meshId o meshName->no es una mesh principal
 			std::string id, name, bone, owner;
 			char c;
-			while (ss >> id >> name >> owner >> bone) 
+			while (ss >> id >> name >> owner >> bone)
 			{
 				setMesh(id, name);
 				attachEntityToBone(owner, bone, id);

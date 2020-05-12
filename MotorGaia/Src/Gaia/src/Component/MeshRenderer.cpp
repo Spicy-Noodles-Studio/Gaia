@@ -164,10 +164,7 @@ void MeshRenderer::setDiffuse(std::string entity, int subentity, const Vector3& 
 {
 	Ogre::MaterialPtr mat = getMesh(entity)->getSubEntity(subentity)->getMaterial();
 	Ogre::MaterialPtr newMat = Ogre::MaterialManager::getSingleton().getByName(mat->getName() + gameObject->getName());
-	if (newMat == NULL)
-	{
-		newMat = mat->clone(mat->getName() + gameObject->getName());
-	}
+	if (newMat == NULL) newMat = mat->clone(mat->getName() + gameObject->getName());
 	newMat->getTechnique(0)->getPass(0)->setDiffuse(diffuse.x, diffuse.y, diffuse.z, alpha);
 	setMaterial(entity, subentity, newMat->getName());
 }

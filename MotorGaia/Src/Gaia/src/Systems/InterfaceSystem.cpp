@@ -113,11 +113,7 @@ void InterfaceSystem::init(Window* window)
 
 void InterfaceSystem::render()
 {
-    /* Ogre does it for us */
-
-    //renderer->beginRendering();
-    //CEGUI::System::getSingleton().renderAllGUIContexts();
-    //renderer->endRendering();
+    // Ogre does it for us
 }
 
 void InterfaceSystem::update(float deltaTime)
@@ -144,21 +140,61 @@ UIElement* InterfaceSystem::loadLayout(const std::string& filename)
     }
 }
 
-void InterfaceSystem::initDefaultResources()
+void InterfaceSystem::initDefaultResources(const std::string& filepath)
 {
     /* Resources are loaded at this moment by OgreResourceProvider */
     /* Here we just initilialize default interface resources */
-    // load themes
-    CEGUI::SchemeManager::getSingleton().createFromFile("VanillaSkin.scheme");
-    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-    CEGUI::SchemeManager::getSingleton().createFromFile("Generic.scheme");
-    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+    std::fstream file(filepath);
+    std::string type, c, filename;
+    std::string name, size;
+    float fontSize;
 
-    // load fonts
-    CEGUI::FontManager::getSingleton().createFreeTypeFont("Sans", 8, true, "DejaVuSans.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
-    CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang7", 6.8, true, "batang.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
-    CEGUI::FontManager::getSingleton().createFreeTypeFont("Batang8", 8, true, "batang.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
-    CEGUI::FontManager::getSingleton().createFreeTypeFont("Sans72", 72, true, "DejaVuSans.ttf", "", CEGUI::AutoScaledMode::ASM_Both);
+    while (file >> type >> c >> filename)
+	{
+        if (c != "=")
+		{
+            LOG("RESOURCES MANAGER: invalid resources file format\nFailed at: %s %s %s\n", type.c_str(), c.c_str(), filename.c_str());
+            file.close();
+            return;
+        }
+
+        if (type == "Scheme")
+        {
+            CEGUI::SchemeManager::getSingleton().createFromFile(filename);
+        }
+
+        if (type == "MouseCursor")
+        {
+            CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage(filename);
+        }
+
+        if (type == "Font")
+        {
+            file >> name >> size;
+            if (size <= "0")
+            {
+                LOG("RESOURCES MANAGER: invalid resources file format\nFailed at: %s %s %s %s %s\n", type.c_str(), c.c_str(), filename.c_str(), name.c_str(), size.c_str());
+                file.close();
+                return;
+            }
+            fontSize = std::stof(size);
+
+            CEGUI::FontManager::getSingleton().createFreeTypeFont(name, fontSize, true, filename, "", CEGUI::AutoScaledMode::ASM_Both);
+        }
+
+        if (type == "Image")
+        {
+            file >> name;
+
+            CEGUI::ImageManager::getSingleton().addFromImageFile(name, filename);
+
+        }
+
+        // Reset variables
+        type = c = filename = name = size = "";
+    }
+
+    file.close();
 
 #ifdef _DEBUG
     fpsText = new UIElement(root->getElement()->createChild("TaharezLook/StaticText", "FPSText"));
@@ -166,6 +202,7 @@ void InterfaceSystem::initDefaultResources()
     fpsText->setSize(0.1f, 0.1f);
 #endif
 }
+
 
 CEGUI::Key::Scan InterfaceSystem::SDLKeyToCEGUIKey(int key)
 {
@@ -567,4 +604,3 @@ UIEvent InterfaceSystem::getEvent(const std::string& eventName)
 
     return events[eventName];
 }
-

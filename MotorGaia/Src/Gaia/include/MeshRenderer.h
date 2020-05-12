@@ -45,6 +45,8 @@ public:
 
 	void setDiffuse(int subentity, const Vector3& diffuse, float alpha);
 	Vector3 getDiffuse(int subentity);
+	void setEmissive(int subentity, const Vector3& emissive);
+	Vector3 getEmissive(int subentity);
 
 	int getSubentitiesSize();
 

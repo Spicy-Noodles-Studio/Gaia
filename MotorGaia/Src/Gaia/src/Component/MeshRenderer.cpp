@@ -159,7 +159,10 @@ void MeshRenderer::setDiffuse(int subentity, const Vector3& diffuse, float alpha
 {
 	Ogre::MaterialPtr mat = getMesh(meshId)->getSubEntity(subentity)->getMaterial();
 	Ogre::MaterialPtr newMat = Ogre::MaterialManager::getSingleton().getByName(mat->getName() + gameObject->getName());
-	if (newMat == NULL) newMat = mat->clone(mat->getName() + gameObject->getName());
+	if (newMat == NULL)
+	{
+		newMat = mat->clone(mat->getName() + gameObject->getName());
+	}
 	newMat->getTechnique(0)->getPass(0)->setDiffuse(diffuse.x, diffuse.y, diffuse.z, alpha);
 	setMaterial(meshId, subentity, newMat->getName());
 }
@@ -167,6 +170,22 @@ void MeshRenderer::setDiffuse(int subentity, const Vector3& diffuse, float alpha
 Vector3 MeshRenderer::getDiffuse(int subentity)
 {
 	Ogre::ColourValue c = getMesh(meshId)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getDiffuse();
+	return { c.r, c.g, c.b };
+}
+
+
+void MeshRenderer::setEmissive(int subentity, const Vector3& emissive)
+{
+	Ogre::MaterialPtr mat = getMesh(meshId)->getSubEntity(subentity)->getMaterial();
+	Ogre::MaterialPtr newMat = Ogre::MaterialManager::getSingleton().getByName(mat->getName() + gameObject->getName());
+	if (newMat == NULL) newMat = mat->clone(mat->getName() + gameObject->getName());
+	newMat->getTechnique(0)->getPass(0)->setEmissive(emissive.x, emissive.y, emissive.z);
+	setMaterial(meshId, subentity, newMat->getName());
+}
+
+Vector3 MeshRenderer::getEmissive(int subentity)
+{
+	Ogre::ColourValue c = getMesh(meshId)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getEmissive();
 	return { c.r, c.g, c.b };
 }
 

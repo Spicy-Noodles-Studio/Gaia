@@ -259,12 +259,25 @@ Sound* SoundSystem::getSound(const std::string& name)
 	return sound;
 }
 
+SoundSystem::SoundChannel::~SoundChannel()
+{
+	channel = nullptr;
+}
+
 SoundSystem::SoundChannel::SoundChannel() : channel(nullptr), paused(false)
 {
 }
 
 SoundSystem::SoundChannel::SoundChannel(Channel* channel) : channel(channel), paused(false)
 {
+}
+
+SoundSystem::EmitterData::~EmitterData()
+{
+	for (auto it = channels.begin(); it != channels.end(); it++)
+		delete it->second;
+	channels.clear();
+	position = nullptr;
 }
 
 SoundSystem::EmitterData::EmitterData(const Vector3* position) : position(position), channels(std::map<std::string, SoundChannel*>())

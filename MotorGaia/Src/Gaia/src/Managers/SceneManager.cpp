@@ -39,7 +39,7 @@ void SceneManager::close()
 {
 	if (debugDrawer != nullptr)
 		delete debugDrawer;
-	if (currentScene != nullptr)
+	if (currentScene != nullptr) 
 		delete currentScene;
 	if (stackScene != nullptr)
 		delete stackScene;

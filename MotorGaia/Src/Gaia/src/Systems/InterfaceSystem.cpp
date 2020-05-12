@@ -120,7 +120,7 @@ void InterfaceSystem::update(float deltaTime)
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectTimePulse(deltaTime);
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(deltaX, deltaY);
 
-	if (buttons[currentButton] != nullptr && !buttons[currentButton]->isVisible())
+	if (buttons.find(currentButton) != buttons.end() && !buttons[currentButton]->isVisible())
 		clearControllerMenuInput();
 
 #ifdef _DEBUG

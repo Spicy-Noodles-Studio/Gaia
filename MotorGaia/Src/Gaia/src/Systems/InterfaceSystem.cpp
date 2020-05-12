@@ -120,6 +120,9 @@ void InterfaceSystem::update(float deltaTime)
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectTimePulse(deltaTime);
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(deltaX, deltaY);
 
+	if (buttons[currentButton] != nullptr && !buttons[currentButton]->isVisible())
+		clearControllerMenuInput();
+
 #ifdef _DEBUG
 	fpsText->setText("FPS: " + std::to_string((int)(1.0 / deltaTime)));
 	fpsText->setAlwaysOnTop(true);

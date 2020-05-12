@@ -87,6 +87,11 @@ void Transform::setRotation(const Vector3& rot)
 	setRotation(rot.x, rot.y, rot.z);
 }
 
+void Transform::resetOrientation()
+{
+	gameObject->node->resetOrientation();
+}
+
 void Transform::setOrientation(const Ogre::Quaternion& rot)
 {
 	gameObject->node->setOrientation(rot);

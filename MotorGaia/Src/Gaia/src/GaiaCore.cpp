@@ -15,7 +15,6 @@
 #include "SceneManager.h"
 #include "WindowManager.h"
 
-
 #include "Transform.h"
 #include "Camera.h"
 #include "Light.h"
@@ -34,7 +33,7 @@
 GaiaCore::GaiaCore() :	root(nullptr), window(nullptr), timer(nullptr), 
 						eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr), 
 						interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
-						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr),windowManager(nullptr)
+						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr), windowManager(nullptr)
 {
 
 }
@@ -44,7 +43,7 @@ GaiaCore::~GaiaCore()
 	// Call close before GaiaCore destructor
 }
 
-void GaiaCore::init()
+void GaiaCore::init(std::string windowName)
 {
 #ifdef _DEBUG
 	root = new Ogre::Root("plugins_d.cfg", "window_d.cfg");
@@ -56,20 +55,27 @@ void GaiaCore::init()
 		return;
 
 	windowManager = new WindowManager();
-	windowManager->createWindow(root, "Test window - 2020 (c) Gaia ");
+	windowManager->createWindow(root, windowName);
+
 	// Setup window
 	window = windowManager->getWindow();
 	windowManager->initResolutions();
-	windowManager->setWindowMinArea(windowManager->getAvailableResolutionsForWindow().at(0).first, windowManager->getAvailableResolutionsForWindow().at(0).second);
-//	windowManager->setWindowResizable(false);
+
+	std::vector<std::pair<int, int>> resolutions = windowManager->getAvailableResolutionsForWindow();
+
+	windowManager->setWindowMinArea(resolutions[0].first, resolutions[0].second);
+	windowManager->windowResize(resolutions[resolutions.size() / 2].first, resolutions[resolutions.size() / 2].second);
+	windowManager->setActualResolutionId(resolutions.size() / 2);
+
 	// Systems initialization
+
 	// EventSystem
 	eventSystem = new EventSystem();
 	eventSystem->init();
-	
+
 	// RenderSystem
 	renderSystem = RenderSystem::GetInstance();
-	renderSystem->init(root,window);
+	renderSystem->init(root, window);
 
 	// InputSystem
 	inputSystem = InputSystem::GetInstance();
@@ -88,6 +94,7 @@ void GaiaCore::init()
 	soundSystem->init();
 
 	// Managers initialization
+
 	// ResourcesManager initialization
 	resourcesManager.init();
 
@@ -96,7 +103,7 @@ void GaiaCore::init()
 	componentManager->init();
 
 	//Init Default Resources
-	interfaceSystem->initDefaultResources();
+	interfaceSystem->initDefaultResources("./Assets/Files/interface.asset");
 
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
@@ -110,7 +117,8 @@ void GaiaCore::init()
 void GaiaCore::run()
 {
 	float deltaTime = timer->getDeltaTime();
-	while (!windowManager->isWindowClosed()) {
+	while (!windowManager->isWindowClosed())
+	{
 		// Update elapsed time
 		timer->update();
 		deltaTime = timer->getDeltaTime();
@@ -132,14 +140,19 @@ void GaiaCore::run()
 void GaiaCore::close()
 {
 	Timer::GetInstance()->close();
+
 	// SceneManager termination
 	sceneManager->close();
+
 	// ComponentManager termination
 	componentManager->close();
+
 	// ResourcesManager termination
 	resourcesManager.close();
+
 	//WindowManager termination
 	windowManager->close();
+
 	//Systems termination
 	soundSystem->close();
 	physicsSystem->close();
@@ -149,15 +162,16 @@ void GaiaCore::close()
 	eventSystem->close();
 
 	if (eventSystem != nullptr)
+	{
 		delete eventSystem;
-	eventSystem = nullptr;
-
-	/*if (window != nullptr)
-		delete window;*/
+		eventSystem = nullptr;
+	}
 
 	if (root != nullptr)
+	{
 		delete root;
-	root = nullptr;
+		root = nullptr;
+	}
 }
 
 void GaiaCore::render(float deltaTime)

@@ -5,7 +5,8 @@
 #include "ResourcesManager.h"
 #include "GaiaExports.h"
 
-namespace Ogre {
+namespace Ogre
+{
 	class Root;
 }
 
@@ -23,14 +24,13 @@ class WindowManager;
 class ComponentManager;
 class SceneManager;
 
-
 class GAIA_API GaiaCore
 {
 public:
 	GaiaCore();
 	~GaiaCore();
 
-	void init();
+	void init(std::string windowName);
 	void run();
 	void close();
 
@@ -45,7 +45,7 @@ private:
 	Ogre::Root* root;
 	Window* window;
 
-	//Timer (main engine timer)
+	//Timer
 	Timer* timer;
 
 	//Systems
@@ -63,4 +63,4 @@ private:
 	WindowManager* windowManager;
 };
 
-#endif 
+#endif

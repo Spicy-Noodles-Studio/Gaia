@@ -94,6 +94,11 @@ const std::string& GameObject::getName() const
 	return name;
 }
 
+void GameObject::setName(const std::string& name)
+{
+	this->name = name;
+}
+
 const std::string& GameObject::getTag() const
 {
 	return tag;

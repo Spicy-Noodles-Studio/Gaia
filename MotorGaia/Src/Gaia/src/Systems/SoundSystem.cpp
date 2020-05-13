@@ -67,13 +67,8 @@ Sound* SoundSystem::createSound(const std::string& name, const SoundMode& mode)
 FMOD::Channel* SoundSystem::playSound(const std::string& name)
 {
 	Channel* channel;
-	Sound* sound = ResourcesManager::getSound(name);
-
-	// Wait till loaded
-	FMOD_OPENSTATE state;
-	do {
-		sound->getOpenState(&state, nullptr, nullptr, nullptr);
-	} while (state != FMOD_OPENSTATE_READY);
+	Sound* sound = getSound(name);
+	if (sound == nullptr) return nullptr;
 
 	FMOD_RESULT result = system->playSound(sound, soundEfects, false, &channel);
 	ERRCHECK(result);
@@ -83,14 +78,9 @@ FMOD::Channel* SoundSystem::playSound(const std::string& name)
 
 FMOD::Channel* SoundSystem::playMusic(const std::string& name)
 {
-	Channel* channel;
-	Sound* sound = ResourcesManager::getSound(name);
-
-	// Wait till loaded
-	FMOD_OPENSTATE state;
-	do {
-		sound->getOpenState(&state, nullptr, nullptr, nullptr);
-	} while (state != FMOD_OPENSTATE_READY);
+	Channel* channel;	
+	Sound* sound = getSound(name);
+	if (sound == nullptr) return nullptr;
 
 	FMOD_RESULT result = system->playSound(sound, music, false, &channel);
 	ERRCHECK(result);
@@ -191,11 +181,15 @@ void SoundSystem::update(float deltaTime)
 	zero = { 0,0,0 };
 	for (int i = 0; i < emitters.size(); i++)
 	{
-		if (emitters[i]->channel && !emitters[i]->paused) 
-		{
-			posEmi =vecToFMOD(*emitters[i]->position);
-			emitters[i]->channel->set3DAttributes(&posEmi, &zero);
+		bool paused = true;
+		SoundSystem::EmitterData* data = emitters[i];
+		for (auto it = data->channels.begin(); it != data->channels.end(); it++) {
+			bool aux = (*it).second->paused; 
+			paused = paused && aux;
+			if(!aux)
+				(*it).second->channel->set3DAttributes(&posEmi, &zero);
 		}
+		if(!paused) posEmi = vecToFMOD(*data->position);
 	}
 
 	FMOD_RESULT result = system->update();
@@ -204,8 +198,7 @@ void SoundSystem::update(float deltaTime)
 
 SoundSystem::EmitterData* SoundSystem::createEmitter(const Vector3* pos)
 {
-	SoundSystem::EmitterData* data = new SoundSystem::EmitterData();
-	data->position = pos;
+	SoundSystem::EmitterData* data = new SoundSystem::EmitterData(pos);
 	emitters.push_back(data);
 	return data;
 }
@@ -242,7 +235,63 @@ FMOD::Reverb3D* SoundSystem::createReverb()
 void SoundSystem::ERRCHECK(FMOD_RESULT result)
 {
 	if (result != FMOD_RESULT::FMOD_OK)
-	{
-		LOG("%s\n", FMOD_ErrorString(result));
+		LOG("%s", FMOD_ErrorString(result));
+}
+
+Sound* SoundSystem::getSound(const std::string& name)
+{
+	Sound* sound = ResourcesManager::getSound(name);
+	if (sound == nullptr) return nullptr;
+
+	// Wait till loaded
+	FMOD_OPENSTATE state;
+	FMOD_RESULT result;
+	do {
+		 result = sound->getOpenState(&state, nullptr, nullptr, nullptr);
+	} while (state == FMOD_OPENSTATE_LOADING);
+
+	if (result != FMOD_OK) {
+		LOG("SOUND MANAGER: Error playing sound %s", name.c_str());
+		ERRCHECK(result);
+		return nullptr;
 	}
+
+	return sound;
+}
+
+SoundSystem::SoundChannel::~SoundChannel()
+{
+	channel = nullptr;
+}
+
+SoundSystem::SoundChannel::SoundChannel() : channel(nullptr), paused(false)
+{
+}
+
+SoundSystem::SoundChannel::SoundChannel(Channel* channel) : channel(channel), paused(false)
+{
+}
+
+SoundSystem::EmitterData::~EmitterData()
+{
+	for (auto it = channels.begin(); it != channels.end(); it++)
+		delete it->second;
+	channels.clear();
+	position = nullptr;
+}
+
+SoundSystem::EmitterData::EmitterData(const Vector3* position) : position(position), channels(std::map<std::string, SoundChannel*>())
+{
+}
+
+bool SoundSystem::EmitterData::isPaused()
+{
+	auto it = channels.begin();
+	bool paused = true;
+	while(paused && it != channels.end()) {
+		paused = (*it).second->paused;
+		it++;
+	}
+
+	return paused;
 }

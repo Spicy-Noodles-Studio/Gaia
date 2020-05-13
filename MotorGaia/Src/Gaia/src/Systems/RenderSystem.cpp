@@ -25,7 +25,7 @@ void RenderSystem::init(Ogre::Root* root, Window* window)
 
 void RenderSystem::render(float deltaTime)
 {
-	root->renderOneFrame();
+	root->renderOneFrame(deltaTime);
 }
 
 void RenderSystem::close()

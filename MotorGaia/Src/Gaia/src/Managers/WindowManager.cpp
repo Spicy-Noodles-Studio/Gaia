@@ -1,27 +1,28 @@
 #include "WindowManager.h"
-#include"Window.h"
+#include "Window.h"
+#include "Camera.h"
+
 #include <OgreRoot.h>
 #include <OgreConfig.h>
 #include <OgreConfigFile.h>
 #include <OgreConfigDialog.h>
 #include <OgreConfigOptionMap.h>
 #include <SDL2/SDL_syswm.h>
-#include "Camera.h"
+
 WindowManager::WindowManager()
 {
+
 }
 
 WindowManager::~WindowManager()
 {
+
 }
-
-
 
 void WindowManager::createWindow(Ogre::Root* root, std::string windowName)
 {
 	ogreRoot = root;
-	windows.push_back(new Window(root, "Test window - 2020 (c) Gaia "));
-	
+	windows.push_back(new Window(root, windowName));
 }
 
 void WindowManager::initResolutions()
@@ -32,57 +33,64 @@ void WindowManager::initResolutions()
 
 	Ogre::ConfigOptionMap map = ogreRoot->getRenderSystem()->getConfigOptions();
 	Ogre::ConfigOptionMap::iterator configIt = map.begin();
+
 	while (configIt != map.end())
 	{
 		if (configIt->first == "Video Mode")
-		{
-			resolString = configIt->second.possibleValues;
-		}
+			resolutionNames = configIt->second.possibleValues;
+
 		configIt++;
 	}
+
 	std::vector<std::pair<int, int>> resolutionsVector;
 	std::pair<int, int> resolutionPair;
-	for (std::string res : resolString)
+
+	for (std::string res : resolutionNames)
 	{
 		int resX = 0;
 		int resY = 0;
 		int it = 0;
 		bool notANumber = false;
+
 		while (it < res.length() && !notANumber)
 		{
-			if (res.at(it) != 'x' && res.at(it) != 'X' && res.at(it) != ' ') {
-				resX += (int)res.at(it)-'0';
+			if (res.at(it) != 'x' && res.at(it) != 'X' && res.at(it) != ' ')
+			{
+				resX += (int)res.at(it) - '0';
 				resX = resX * 10;
-			
 			}
-			else if(res.at(it) == 'x'|| res.at(it) == 'X')
+			else if (res.at(it) == 'x' || res.at(it) == 'X')
 				notANumber = true;
+
 			it++;
 		}
+
 		notANumber = false;
 		while (it < res.length())
 		{
-			if (res.at(it) != 'x' && res.at(it) != 'X' && res.at(it) != ' ') {
-				resY += (int)res.at(it)-'0';
+			if (res.at(it) != 'x' && res.at(it) != 'X' && res.at(it) != ' ')
+			{
+				resY += (int)res.at(it) - '0';
 				resY = resY * 10;
 			}
 			it++;
 		}
-		resolutionPair.first = resX/10;
-		resolutionPair.second = resY/10;
+
+		resolutionPair.first = resX / 10;
+		resolutionPair.second = resY / 10;
 		resolutionsVector.push_back(resolutionPair);
 	}
 	resolutions = resolutionsVector;
 }
 
-void WindowManager::windowResize(unsigned int width, unsigned int height,int id)
+void WindowManager::windowResize(unsigned int width, unsigned int height, int id)
 {
 	windows.at(id)->resize(width, height);
 	actualResolution.first = width;
 	actualResolution.second = height;
 }
 
-void WindowManager::setFullscreen(bool fullscreen,int id)
+void WindowManager::setFullscreen(bool fullscreen, int id)
 {
 	windows.at(id)->setFullscreen(fullscreen);
 	isFullScreen = fullscreen;
@@ -117,15 +125,13 @@ std::vector<std::pair<int, int>> WindowManager::getAvailableResolutionsForWindow
 
 std::vector<std::string> WindowManager::getAvailableResolutionsStrings()
 {
-	return resolString;
+	return resolutionNames;
 }
 
 void WindowManager::closeWindow(int id)
 {
 	windows.at(id)->close();
 }
-
-
 
 void WindowManager::removeAllViewportsFromWindow(int id)
 {
@@ -179,7 +185,7 @@ int WindowManager::getActualResolutionId()
 
 void WindowManager::close()
 {
-	for(Window* var: windows)
+	for (Window* var : windows)
 	{
 		if (var != nullptr)
 		{
@@ -191,4 +197,3 @@ void WindowManager::close()
 
 	destroy();
 }
-

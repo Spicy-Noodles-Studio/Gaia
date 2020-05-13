@@ -7,19 +7,21 @@
 #include "KeyboardEventListener.h"
 #include "WindowEventListener.h"
 #include "ControllerEventListener.h"
-#include <CEGUI\CEGUI.h>
 #include "UIElement.h"
-#include <string>
 #include "Window.h"
 
+#include <CEGUI\CEGUI.h>
+#include <string>
 #include <map>
 
-namespace CEGUI {
+namespace CEGUI
+{
 	class Window;
 	class OgreRenderer;
 	class String;
 	class EventArgs;
 }
+
 class Window;
 
 typedef std::pair<std::string, std::function<bool()>> UIEvent;
@@ -37,7 +39,8 @@ private:
 	std::string currentButton;
 	float scrollAmount;
 
-	void initControllerMenuInput();
+	std::string ceguiResourceFile;
+
 	void layoutButtonSearch(UIElement* parent);
 	void searchNextVisibleButton(std::string direction);
 	/*------------------------------*/
@@ -45,7 +48,7 @@ private:
 	double deltaX, deltaY;
 #ifdef _DEBUG
 	UIElement* fpsText;
-#endif // _DEBUG
+#endif
 
 	static std::map<std::string, UIEvent> events;
 
@@ -85,8 +88,9 @@ public:
 	UIElement* getRoot();
 
 	UIElement* loadLayout(const std::string& filename);
-	void initDefaultResources();
+	void initDefaultResources(const std::string& filename);
 
+	void initControllerMenuInput(UIElement* newRoot = nullptr);
 	void clearControllerMenuInput();
 
 	/// Percentage of scrollbar that changes when moved by controller or keyboard

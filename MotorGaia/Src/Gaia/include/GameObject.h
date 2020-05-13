@@ -52,6 +52,7 @@ public:
     void removeChild(GameObject* child);
     
     const std::string& getName() const;
+    void setName(const std::string& name);
     const std::string& getTag() const;
     Scene* getScene() const;
 

@@ -28,6 +28,14 @@ Scene::~Scene()
 		gameObject = nullptr;
 	}
 
+	for (GameObject* gameObject : dontDestroyObjects)
+	{
+		if (gameObject->myScene == this) {
+			delete gameObject;
+			gameObject = nullptr;
+		}
+	}
+
 	sceneObjects.clear();
 	destroyQueue.clear();
 	dontDestroyObjects.clear();

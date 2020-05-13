@@ -20,12 +20,23 @@ typedef FMOD::ChannelGroup ChannelGroup;
 
 class GAIA_API SoundSystem : public Singleton<SoundSystem>
 {
-public:
+public:	
+	struct SoundChannel {
+		Channel* channel;
+		bool paused;
+		
+		~SoundChannel();
+		SoundChannel();
+		SoundChannel(Channel* channel);
+	};
 	struct EmitterData
 	{
-		Channel* channel;
-		const Vector3* position;
-		bool paused;
+		std::map<std::string, SoundChannel*> channels;
+		const Vector3* position;	
+
+		~EmitterData();
+		EmitterData(const Vector3* position);
+		bool isPaused();
 	};
 	struct ListenerData
 	{
@@ -45,6 +56,8 @@ private:
 	ListenerData* listener = nullptr;
 
 	void ERRCHECK(FMOD_RESULT result);
+
+	Sound* getSound(const std::string& name);
 public:
 	SoundSystem();
 	~SoundSystem();

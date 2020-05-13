@@ -29,6 +29,8 @@ public:
 	void setPosition(const Vector3& pos);
 	void setScale(const Vector3& scale);
 	void setRotation(const Vector3& rot);
+
+	void resetOrientation();
 	void setOrientation(const Ogre::Quaternion& rot);
 
 	void setDirection(const Vector3& dir);

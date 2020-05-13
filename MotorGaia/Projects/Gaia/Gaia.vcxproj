@@ -60,6 +60,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\ComponentManager.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ComponentRegister.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ControllerEventListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\Cursor.h" />
     <ClInclude Include="..\..\Src\Gaia\include\DebugDrawer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\DebugUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\EventListener.h" />
@@ -113,6 +114,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Src\Gaia\src\Component\Animator.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Camera.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Cursor.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\Light.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\MeshRenderer.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Component\ParticleEmitter.cpp" />

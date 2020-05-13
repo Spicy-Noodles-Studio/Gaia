@@ -30,10 +30,10 @@
 
 #define FORCE_LINK_THAT(x) { extern int force_link_##x; force_link_##x = 1; }
 
-GaiaCore::GaiaCore() : root(nullptr), window(nullptr), timer(nullptr),
-eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr),
-interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
-resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr), windowManager(nullptr)
+GaiaCore::GaiaCore() :	root(nullptr), window(nullptr), timer(nullptr), 
+						eventSystem(nullptr), renderSystem(nullptr), inputSystem(nullptr), 
+						interfaceSystem(nullptr), physicsSystem(nullptr), soundSystem(nullptr),
+						resourcesManager("resources.asset"), sceneManager(nullptr), componentManager(nullptr), windowManager(nullptr)
 {
 
 }

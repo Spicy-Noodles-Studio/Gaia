@@ -2,6 +2,9 @@
 #include <SDL2\SDL.h>
 #include "WindowManager.h"
 #include "Window.h"
+#include "ComponentRegister.h"
+
+REGISTER_FACTORY(Cursor);
 
 Cursor::Cursor(GameObject* gameObject) : GaiaComponent(gameObject), visibleOnWindow(true)
 {

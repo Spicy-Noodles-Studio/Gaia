@@ -9,7 +9,7 @@
 #include <OgreConfigOptionMap.h>
 #include <SDL2/SDL_syswm.h>
 
-WindowManager::WindowManager()
+WindowManager::WindowManager() : actualResolutionId(0), brightness(0.0f), isFullScreen(false), ogreRoot(nullptr)
 {
 
 }

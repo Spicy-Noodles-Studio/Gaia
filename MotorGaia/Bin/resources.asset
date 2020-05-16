@@ -1,5 +1,6 @@
 Blueprints = ./Assets/Files/blueprints.asset
 Scenes = ./Assets/Files/scenes.asset
 Sounds = ./Assets/Files/sounds.asset
+Interface = ./Assets/Files/interface.asset
 
 Ogre = ./resources.cfg

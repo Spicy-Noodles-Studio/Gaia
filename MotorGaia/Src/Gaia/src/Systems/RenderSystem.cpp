@@ -45,7 +45,6 @@ void RenderSystem::changeParamOfShader(const std::string& material, const std::s
 
 void RenderSystem::applyBrightness(Ogre::Viewport* vp)
 {
-
-	Ogre::CompositorManager::getSingleton().addCompositor(vp, "Luminance");
-	Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, "Luminance", true);
+	Ogre::CompositorManager::getSingleton().addCompositor(vp, "Brightness");
+	Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, "Brightness", true);
 }

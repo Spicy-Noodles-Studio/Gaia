@@ -1,0 +1,11 @@
+Scheme = VanillaSkin.scheme
+Scheme = TaharezLook.scheme
+Scheme = Generic.scheme
+
+MouseCursor = TaharezLook/MouseArrow
+
+Font = DejaVuSans.ttf Sans 8
+Font = DejaVuSans.ttf Sans32 32
+Font = DejaVuSans.ttf Sans72 72
+Font = batang.ttf Batang7 7
+Font = batang.ttf Batang8 8

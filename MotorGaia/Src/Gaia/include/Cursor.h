@@ -23,11 +23,23 @@ public:
 	/* Set system cursor visibility */
 	void setVisibleOnWindow(bool visible);
 
-private:
-public:
+	/* Set sprite for the cursor */
+	void setSprite(const std::string& name);
+
+	/* Set sprite cursor visibility */
+	void setSpriteVisible(bool visible);
+
+	/* Returns whether or not system cursor is visible */
+	bool isVisibleOnWindow() const;
+
+	/* Returns whether or not sprite cursor is visible */
+	bool isSpriteVisible() const;
+
 private:
 	Window* window;
 	bool visibleOnWindow;
+	std::string sprite;
+	static Cursor* cursor;
 };
 
 #endif

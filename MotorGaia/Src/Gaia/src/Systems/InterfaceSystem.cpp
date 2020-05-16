@@ -455,9 +455,9 @@ void InterfaceSystem::processKeyUp(std::string keyName, int key)
 
 void InterfaceSystem::processMouseMotion(int x, int y)
 {
-	if (!CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
+	/*if (!CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
 		CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
-	}
+	}*/
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(x, y);
 }
 
@@ -470,8 +470,8 @@ void InterfaceSystem::moveScrollBar(CEGUI::Window* scrollBar, float amount)
 	float y = pos.d_y;
 
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(x, y);
-	if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible())
-		CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+	/*if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible())
+		CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();*/
 
 	if (scrollBar->getWindowRendererName() == "Core/Scrollbar") {
 		CEGUI::Scrollbar* x = static_cast<CEGUI::Scrollbar*>(scrollBar);
@@ -494,7 +494,7 @@ void InterfaceSystem::moveControllerToButton()
 	float y = pos.d_y + (area.d_height / 2);
 
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(x, y);
-	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+	//CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
 }
 
 bool InterfaceSystem::checkFirstControllerInput()

@@ -31,7 +31,7 @@ public:
 
 	Ogre::AnimationState* getAnimation(const std::string& animation);
 
-	void playAnimation(const std::string& animation);
+	void playAnimation(const std::string& animation, bool begin = false);
 	void playAnimationSequence(const std::vector<std::string>& sequence, bool endWithLoop = false);
 	void updateAnimationSequence();
 	std::string getCurrentAnimation();

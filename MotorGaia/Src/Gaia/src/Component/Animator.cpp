@@ -50,8 +50,10 @@ Ogre::AnimationState* Animator::getAnimation(const std::string& animation)
 	return animations->getAnimationState(animation);
 }
 
-void Animator::playAnimation(const std::string& animation)
+void Animator::playAnimation(const std::string& animation, bool begin)
 {
+	if (currentAnimation == animation && !begin) return;
+
 	if (currentAnimation != "")
 	{
 		Ogre::AnimationState* prev = getAnimation(currentAnimation);

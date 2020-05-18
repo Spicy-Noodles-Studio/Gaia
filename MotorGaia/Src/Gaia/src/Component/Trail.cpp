@@ -5,16 +5,18 @@
 #include <OgreSceneManager.h>
 #include <OgreTagPoint.h>
 #include <OgreBillboardSet.h>
+#include <OgreEntity.h>
 
 #include "GameObject.h"
 #include "Scene.h"
 #include "ComponentRegister.h"
+#include "MeshRenderer.h"
 
 REGISTER_FACTORY(Trail);
 
-Trail::Trail(GameObject* gameObject) : GaiaComponent(gameObject), trail(nullptr)
+Trail::Trail(GameObject* gameObject) : GaiaComponent(gameObject), bbs(nullptr), trail(nullptr), offset(0, 0, 0)
 {
-	
+
 }
 
 Trail::~Trail()
@@ -22,42 +24,49 @@ Trail::~Trail()
 	if (trail != nullptr) {
 		gameObject->getScene()->getSceneManager()->getRootSceneNode()->detachObject(trail);
 		gameObject->getScene()->getSceneManager()->destroyRibbonTrail(trail);
-		gameObject->getScene()->getSceneManager()->destroyBillboardSet(bbs);
 		trail = nullptr;
+	}
+	if (bbs != nullptr) {
+		gameObject->getScene()->getSceneManager()->destroyBillboardSet(bbs);
 		bbs = nullptr;
 	}
 }
 
-void Trail::newTrail()
+void Trail::newTrail(const std::string& bone, MeshRenderer* mesh)
 {
 	if (trail != nullptr) {
 		gameObject->getScene()->getSceneManager()->getRootSceneNode()->detachObject(trail);
 		gameObject->getScene()->getSceneManager()->destroyRibbonTrail(trail);
-		gameObject->getScene()->getSceneManager()->destroyBillboardSet(bbs);
 		trail = nullptr;
+	}
+	if (bbs != nullptr) {
+		gameObject->getScene()->getSceneManager()->destroyBillboardSet(bbs);
 		bbs = nullptr;
 	}
 
-	// Create billboard
+	// Create billboard set
 	bbs = gameObject->getScene()->getSceneManager()->createBillboardSet(gameObject->getName() + "BB");
 	bbs->setDefaultDimensions(0.25, 0.25);
 	bbs->setMaterialName("Billboard");
 	bbs->createBillboard(0, 0, 0, Ogre::ColourValue::Black);
 
-	//Ogre::TagPoint* tp = gameObject->node->attachObjectToBone("joint5", bbs);
-	
 	// Create trail
 	trail = gameObject->getScene()->getSceneManager()->createRibbonTrail(gameObject->getName() + "Trail");
 	trail->setMaterialName("Trail");
 
-	trail->setTrailLength(20);
-	trail->setMaxChainElements(40);
-	trail->setInitialColour(0, 1.0, 0.0, 0.0);
-	trail->setColourChange(0, 0.5, 0.5, 0.5, 0.5);
-	trail->setInitialWidth(0, 0.5);
-	trail->setWidthChange(0, 0.1);
-	// Node trail
-	trail->addNode(gameObject->node);
+	if (bone == "") // Node trail
+	{
+		trail->addNode(gameObject->node);
+	}
+	else // Bone trail
+	{
+		if (mesh != nullptr)
+		{
+			Ogre::TagPoint* tp = mesh->getMesh(mesh->getMeshId())->attachObjectToBone(bone, bbs, Ogre::Quaternion::IDENTITY,
+				(const Ogre::Vector3&) offset);
+			trail->addNode(tp);
+		}
+	}
 
 	gameObject->getScene()->getSceneManager()->getRootSceneNode()->attachObject(trail);
 }
@@ -86,12 +95,22 @@ void Trail::handleData(ComponentData* data)
 
 	for (auto prop : data->getProperties()) {
 		std::stringstream ss(prop.second);
-		
-		if (prop.first == "trail") {
-			
+
+		if (prop.first == "offset") {
+			setVector3(offset);
+		}
+		else if (prop.first == "trail") {
+
 			std::string type;
 			if (ss >> type) {
-				newTrail();
+				if (type == "node")
+					newTrail("");
+				else if (type == "bone")
+				{
+					std::string bone;
+					ss >> bone;
+					newTrail(bone);
+				}
 			}
 			else {
 				LOG("TRAIL: invalid data format. Property \"trail\"\n");
@@ -137,10 +156,54 @@ void Trail::handleData(ComponentData* data)
 		}
 	}
 
+	if (trail != nullptr)
+	{
+		setLength(length);
+		setMax(max);
+		setColour(colour, colourAlpha);
+		setColourChange(colourChange, colourChangeAlpha);
+		setWidth(width);
+		setWidthChange(widthChange);
+	}
+}
+
+void Trail::setOffset(const Vector3& offset)
+{
+	this->offset = offset;
+}
+
+void Trail::setLength(float length)
+{
+	if (trail == nullptr) return;
 	trail->setTrailLength(length);
+}
+
+void Trail::setMax(float max)
+{
+	if (trail == nullptr) return;
 	trail->setMaxChainElements(max);
+}
+
+void Trail::setColour(const Vector3& colour, float colourAlpha)
+{
+	if (trail == nullptr) return;
 	trail->setInitialColour(0, colour.x, colour.y, colour.z, colourAlpha);
+}
+
+void Trail::setColourChange(const Vector3& colourChange, float colourChangeAlpha)
+{
+	if (trail == nullptr) return;
 	trail->setColourChange(0, colourChange.x, colourChange.y, colourChange.z, colourChangeAlpha);
+}
+
+void Trail::setWidth(float width)
+{
+	if (trail == nullptr) return;
 	trail->setInitialWidth(0, width);
+}
+
+void Trail::setWidthChange(float widthChange)
+{
+	if (trail == nullptr) return;
 	trail->setWidthChange(0, widthChange);
 }

@@ -11,6 +11,7 @@
 #include "Scene.h"
 #include "ComponentRegister.h"
 #include "MeshRenderer.h"
+#include "GaiaData.h"
 
 REGISTER_FACTORY(Trail);
 
@@ -32,7 +33,134 @@ Trail::~Trail()
 	}
 }
 
-void Trail::newTrail(const std::string& bone, MeshRenderer* mesh)
+void Trail::configureTrail(const std::string& trailFilename)
+{
+	GaiaData trailData;
+	trailData.load(trailFilename);
+
+	GaiaData trailParamsData = trailData.find("TrailParameters");
+	for (int i = 0; i < trailParamsData.size(); i++)
+	{
+		std::stringstream ss(trailParamsData[i][0].getValue());
+		std::string paramName;
+		double x, y, z, a;
+		float value;
+		std::string s;
+		if (!(ss >> paramName))
+		{
+			LOG_ERROR("TRAIL MANAGER", "invalid trail parameter name \"%s\"", trailParamsData[i][0].getValue().c_str());
+			continue;
+		}
+
+		if (paramName == "offset")
+		{
+			ss = std::stringstream(trailParamsData[i][1].getValue());
+			if (!(ss >> x >> y >> z))
+			{
+				LOG_ERROR("TRAIL MANAGER", "invalid offset value \"%s\"", trailParamsData[i][1].getValue().c_str());
+				continue;
+			}
+			setOffset(Vector3(x, y, z));
+		}
+		else if (paramName == "trail")
+		{
+			ss = std::stringstream(trailParamsData[i][1].getValue());
+			if (!(ss >> s))
+			{
+				LOG_ERROR("TRAIL MANAGER", "invalid trail value \"%s\"", trailParamsData[i][1].getValue().c_str());
+				continue;
+			}
+
+			if (s == "node")
+				newTrail();
+			else if (s == "bone")
+			{
+				if (!(ss >> s))
+				{
+					LOG_ERROR("TRAIL MANAGER", "invalid bone value \"%s\"", trailParamsData[i][1].getValue().c_str());
+					continue;
+				}
+				newTrail(s);
+			}
+		}
+		else if (paramName == "length")
+		{
+			ss = std::stringstream(trailParamsData[i][1].getValue());
+			if (!(ss >> value))
+			{
+				LOG_ERROR("TRAIL MANAGER", "invalid length value \"%s\"", trailParamsData[i][1].getValue().c_str());
+				continue;
+			}
+			setLength(value);
+		}
+		else if (paramName == "max")
+		{
+			ss = std::stringstream(trailParamsData[i][1].getValue());
+			if (!(ss >> value))
+			{
+				LOG_ERROR("TRAIL MANAGER", "invalid max value \"%s\"", trailParamsData[i][1].getValue().c_str());
+				continue;
+			}
+			setMax(value);
+		}
+		else if (paramName == "colour")
+		{
+			ss = std::stringstream(trailParamsData[i][1].getValue());
+			if (!(ss >> x >> y >> z >> a))
+			{
+				LOG_ERROR("TRAIL MANAGER", "invalid colour value \"%s\"", trailParamsData[i][1].getValue().c_str());
+				continue;
+			}
+			setColour(Vector3(x, y, z), a);
+		}
+		else if (paramName == "colourChange")
+		{
+			ss = std::stringstream(trailParamsData[i][1].getValue());
+			if (!(ss >> x >> y >> z >> a))
+			{
+				LOG_ERROR("TRAIL MANAGER", "invalid colourChange value \"%s\"", trailParamsData[i][1].getValue().c_str());
+				continue;
+			}
+			setColourChange(Vector3(x, y, z), a);
+		}
+		else if (paramName == "width")
+		{
+			ss = std::stringstream(trailParamsData[i][1].getValue());
+			if (!(ss >> value))
+			{
+				LOG_ERROR("TRAIL MANAGER", "invalid width value \"%s\"", trailParamsData[i][1].getValue().c_str());
+				continue;
+			}
+			setWidth(value);
+		}
+		else if (paramName == "widthChange")
+		{
+			ss = std::stringstream(trailParamsData[i][1].getValue());
+			if (!(ss >> value))
+			{
+				LOG_ERROR("TRAIL MANAGER", "invalid widthChange value \"%s\"", trailParamsData[i][1].getValue().c_str());
+				continue;
+			}
+			setWidthChange(value);
+		}
+		else if (paramName == "start")
+		{
+			ss = std::stringstream(trailParamsData[i][1].getValue());
+			if (!(ss >> s))
+			{
+				LOG_ERROR("TRAIL MANAGER", "invalid start value \"%s\"", trailParamsData[i][1].getValue().c_str());
+				continue;
+			}
+
+			if (s == "true")
+				start();
+			else if (s == "false")
+				stop();
+		}
+	}
+}
+
+void Trail::newTrail(const std::string& bone)
 {
 	if (trail != nullptr) {
 		gameObject->getScene()->getSceneManager()->getRootSceneNode()->detachObject(trail);
@@ -63,9 +191,11 @@ void Trail::newTrail(const std::string& bone, MeshRenderer* mesh)
 		if (mesh != nullptr)
 		{
 			Ogre::TagPoint* tp = mesh->getMesh(mesh->getMeshId())->attachObjectToBone(bone, bbs, Ogre::Quaternion::IDENTITY,
-				(const Ogre::Vector3&) offset);
+				Ogre::Vector3(offset.x, offset.y, offset.z));
 			trail->addNode(tp);
 		}
+		else
+			LOG("TRAIL: mesh is nullptr\n");
 	}
 
 	gameObject->getScene()->getSceneManager()->getRootSceneNode()->attachObject(trail);
@@ -74,7 +204,11 @@ void Trail::newTrail(const std::string& bone, MeshRenderer* mesh)
 void Trail::start()
 {
 	if (trail != nullptr)
+	{
+		/*trail->(length);
+		LOG("LENGTH: %d\n", length);*/
 		trail->setVisible(true); // esto se puede mejorar!
+	}
 	else
 		LOG("TRAIL: trying to start a NULL trail\n");
 }
@@ -82,7 +216,18 @@ void Trail::start()
 void Trail::stop()
 {
 	if (trail != nullptr)
+	{
+		//trail->setTrailLength(0);
 		trail->setVisible(false); // esto se puede mejorar!
+	}
+	else
+		LOG("TRAIL: trying to stop a NULL trail\n");
+}
+
+bool Trail::started()
+{
+	if (trail != nullptr)
+		return /*trail->getTrailLength();*/trail->isVisible(); // esto se puede mejorar!
 	else
 		LOG("TRAIL: trying to stop a NULL trail\n");
 }
@@ -167,6 +312,11 @@ void Trail::handleData(ComponentData* data)
 	}
 }
 
+void Trail::setMeshRenderer(MeshRenderer* mesh)
+{
+	this->mesh = mesh;
+}
+
 void Trail::setOffset(const Vector3& offset)
 {
 	this->offset = offset;
@@ -175,6 +325,7 @@ void Trail::setOffset(const Vector3& offset)
 void Trail::setLength(float length)
 {
 	if (trail == nullptr) return;
+	this->length = length;
 	trail->setTrailLength(length);
 }
 

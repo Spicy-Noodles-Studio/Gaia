@@ -20,15 +20,22 @@ private:
 
 	Vector3 offset;
 
+	MeshRenderer* mesh;
+	float length;
 public:
 	Trail(GameObject* gameObject);
 	~Trail();
 
-	void newTrail(const std::string& bone, MeshRenderer* mesh = nullptr);
+	void configureTrail(const std::string& trailFilename);
+	void newTrail(const std::string& bone = "");
+
 	void start();
 	void stop();
+	bool started();
 
 	virtual void handleData(ComponentData* data);
+
+	void setMeshRenderer(MeshRenderer* mesh);
 
 	void setOffset(const Vector3& offset);
 	void setLength(float length);

@@ -7,19 +7,13 @@
 
 REGISTER_FACTORY(Cursor);
 
-Cursor* Cursor::cursor = nullptr;
-
 Cursor::Cursor(GameObject* gameObject) : GaiaComponent(gameObject), visibleOnWindow(true), sprite("")
 {
-	if (cursor == nullptr) {
-		window = WindowManager::GetInstance()->getWindow(0);
-	}
-	else {
-		window = cursor->window;
-		visibleOnWindow = cursor->visibleOnWindow;
-		sprite = cursor->sprite;
-	}
-	cursor = this;
+	window = WindowManager::GetInstance()->getWindow(0);
+	auto& context = CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor();
+	sprite = context.getDefaultImage()->getName().c_str();
+	setVisibleOnWindow(true);
+	setSpriteVisible(true);
 }
 
 Cursor::~Cursor()

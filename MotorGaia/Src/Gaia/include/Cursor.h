@@ -39,7 +39,6 @@ private:
 	Window* window;
 	bool visibleOnWindow;
 	std::string sprite;
-	static Cursor* cursor;
 };
 
 #endif

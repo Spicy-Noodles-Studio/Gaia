@@ -119,6 +119,10 @@ private:
     int getControllerFromEvent(int index);
     int getControllerRemovedIndex(int index);
 
+    bool mouseUsed;
+    bool keyboardUsed;
+    bool controllerUsed;
+
 public:
     InputSystem();
     ~InputSystem();
@@ -127,6 +131,7 @@ public:
     void close();
     void preUpdate();
     void update();
+    void postUpdate();
 
     void toggleFlags() { flags = !flags; }
 
@@ -144,6 +149,10 @@ public:
     int getMouseWheel() { return MOUSE_WHEEL; }
     std::pair<int, int> getMousePosition() { return std::pair<int, int>(MOUSE_POSITION_X, MOUSE_POSITION_Y); };
 
+    //Events occurred
+    bool isMouseUsed() const;
+    bool isKeyboardUsed() const;
+    bool isControllerUsed() const;
 
     // Controller returns
     bool isButtonPressed(int controllerIndex, std::string button);

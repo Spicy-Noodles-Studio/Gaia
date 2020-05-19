@@ -223,6 +223,8 @@ void GaiaCore::postUpdate(float deltaTime)
 	sceneManager->postUpdate(deltaTime);
 
 	// Systems 
+	inputSystem->postUpdate();
+
 	physicsSystem->postUpdate();
 }
 

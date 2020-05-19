@@ -32,6 +32,8 @@ void InterfaceSystem::close()
 	delete root;
 #ifdef _DEBUG
 	delete fpsText;
+#else
+	delete CEGUI::Logger::getSingletonPtr();
 #endif
 	destroy();
 }
@@ -65,6 +67,10 @@ void InterfaceSystem::createRoot()
 
 void InterfaceSystem::init(Window* window)
 {
+#ifndef _DEBUG
+	NoLogger* nl = new NoLogger();
+#endif 
+
 	// init
 	CEGUI::OgreRenderer& ogreRenderer = CEGUI::OgreRenderer::bootstrapSystem(*window->getRenderWindow());
 	renderer = &ogreRenderer;
@@ -79,11 +85,9 @@ void InterfaceSystem::init(Window* window)
 	createRoot();
 
 	// event types
-
 	eventTypes["ButtonClicked"] = CEGUI::PushButton::EventClicked;
 	eventTypes["ToggleClicked"] = CEGUI::ToggleButton::EventSelectStateChanged;
 	eventTypes["ScrollChange"] = CEGUI::Scrollbar::EventScrollPositionChanged;
-
 
 	// Callback definitions
 	onKeyDown([this](std::string keyName, int key) { CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(SDLKeyToCEGUIKey(key)); });
@@ -146,7 +150,7 @@ void InterfaceSystem::initDefaultResources(const std::string& filepath)
 {
 	/* Resources are loaded at this moment by OgreResourceProvider */
 	/* Here we just initilialize default interface resources */
-	std::fstream file(filepath);
+	std::ifstream file(filepath);
 	std::string type, c, filename;
 	std::string name, size;
 	float fontSize;

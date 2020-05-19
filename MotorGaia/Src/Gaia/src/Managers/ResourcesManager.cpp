@@ -35,7 +35,7 @@ void ResourcesManager::init()
 	// Pair: (Types, Filepath)
 	std::vector<std::pair<std::string, std::string>> filePaths;
 	// Reads all file paths
-	std::fstream file(resourcesPath);
+	std::ifstream file(resourcesPath);
 	if (!file.is_open()) {
 		LOG("RESOURCES MANAGER: Resources filepath not valid: %s\n", resourcesPath.c_str());
 		return;
@@ -334,7 +334,7 @@ void ResourcesManager::locateResourceType(const std::string& resourceType, const
 
 void ResourcesManager::locateScenes(const std::string& filename)
 {
-	std::fstream file(filename);
+	std::ifstream file(filename);
 	if (!file.is_open()) {
 		LOG("RESOURCES MANAGER: ScenesAssets path %s not found.\n", filename.c_str());
 		return;
@@ -361,7 +361,7 @@ void ResourcesManager::locateScenes(const std::string& filename)
 
 void ResourcesManager::locateBlueprints(const std::string& filename)
 {
-	std::fstream file(filename);
+	std::ifstream file(filename);
 	if (!file.is_open()) {
 		LOG("RESOURCES MANAGER: BlueprintsAssets path %s not found.\n", filename.c_str());
 		return;
@@ -386,7 +386,7 @@ void ResourcesManager::locateBlueprints(const std::string& filename)
 
 void ResourcesManager::locateSounds(const std::string& filename)
 {
-	std::fstream stream;
+	std::ifstream stream;
 	stream.open(filename);
 	if (!stream.is_open()) {
 		LOG("RESOURCES MANAGER: SoundsAssets path %s not found.\n", filename.c_str());

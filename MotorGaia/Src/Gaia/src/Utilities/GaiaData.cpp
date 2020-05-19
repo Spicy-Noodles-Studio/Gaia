@@ -21,7 +21,7 @@ void GaiaData::create(nlohmann::json data)
 
 bool GaiaData::load(const std::string& filename)
 {
-	std::fstream fs;
+	std::ifstream fs;
 	fs.open(filename);
 	if (!fs.is_open()) {
 		LOG_ERROR("GAIA DATA", "Filename \"%s\" not found", filename.c_str());

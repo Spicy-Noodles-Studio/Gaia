@@ -169,6 +169,16 @@ void MeshRenderer::setDiffuse(std::string entity, int subentity, const Vector3& 
 	setMaterial(entity, subentity, newMat->getName());
 }
 
+void MeshRenderer::setFpParam(int subentity, const std::string& param, float value)
+{
+	Ogre::MaterialPtr mat = getMesh(meshId)->getSubEntity(subentity)->getMaterial();
+	Ogre::MaterialPtr newMat = Ogre::MaterialManager::getSingleton().getByName(mat->getName() + gameObject->getName());
+	if (newMat == NULL) newMat = mat->clone(mat->getName() + gameObject->getName());
+	Ogre::GpuProgramParametersSharedPtr params = newMat->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
+	params->setNamedConstant(param, value);
+	setMaterial(meshId, subentity, newMat->getName());
+}
+
 Vector3 MeshRenderer::getDiffuse(int subentity)
 {
 	return getDiffuse(meshId, subentity);

@@ -49,7 +49,7 @@ void GaiaCore::init(std::string windowName)
 #ifdef _DEBUG
 	root = new Ogre::Root("plugins_d.cfg", "window_d.cfg");
 #else
-	root = new Ogre::Root("plugins.cfg", "window.cfg");
+	root = new Ogre::Root("plugins.cfg", "window.cfg", "");
 #endif
 
 	if (!(root->restoreConfig() || root->showConfigDialog(nullptr)))

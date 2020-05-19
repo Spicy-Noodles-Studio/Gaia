@@ -160,6 +160,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\Component\Cursor.cpp">
       <Filter>Archivos de código fuente\Component</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Component\Trail.cpp">
+      <Filter>Archivos de código fuente\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
@@ -340,6 +343,9 @@
       <Filter>Archivos de encabezado\Managers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Src\Gaia\include\Cursor.h">
+      <Filter>Archivos de encabezado\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\Trail.h">
       <Filter>Archivos de encabezado\Component</Filter>
     </ClInclude>
   </ItemGroup>

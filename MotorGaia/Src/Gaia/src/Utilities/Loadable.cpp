@@ -22,7 +22,7 @@ Loadable::LoadState Loadable::getLoadState() const
 
 void Loadable::locate(std::string filename)
 {
-	std::fstream fs;
+	std::ifstream fs;
 	fs.open(filename);
 	if (!fs.is_open()) {
 		LOG_ERROR("LOADABLE","Filename \"%s\" not found", filename.c_str());

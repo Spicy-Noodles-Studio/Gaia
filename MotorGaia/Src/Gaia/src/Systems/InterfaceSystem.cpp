@@ -152,7 +152,7 @@ void InterfaceSystem::initDefaultResources(const std::string& filepath)
 {
 	/* Resources are loaded at this moment by OgreResourceProvider */
 	/* Here we just initilialize default interface resources */
-	std::fstream file(filepath);
+	std::ifstream file(filepath);
 	std::string type, c, filename;
 	std::string name, size;
 	float fontSize;

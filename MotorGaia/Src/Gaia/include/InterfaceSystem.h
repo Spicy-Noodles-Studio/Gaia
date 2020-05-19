@@ -26,6 +26,13 @@ class Window;
 
 typedef std::pair<std::string, std::function<bool()>> UIEvent;
 
+
+class NoLogger : public CEGUI::Logger
+{
+	void logEvent(const CEGUI::String&, CEGUI::LoggingLevel);
+	void setLogFilename(const CEGUI::String&, bool);
+};
+
 class GAIA_API InterfaceSystem : public Singleton<InterfaceSystem>, public MouseEventListener, public KeyboardEventListener, public WindowEventListener, public ControllerEventListener
 {
 private:

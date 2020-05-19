@@ -32,6 +32,8 @@ void InterfaceSystem::close()
 	delete root;
 #ifdef _DEBUG
 	delete fpsText;
+#else
+	delete CEGUI::Logger::getSingletonPtr();
 #endif
 	destroy();
 }
@@ -65,6 +67,10 @@ void InterfaceSystem::createRoot()
 
 void InterfaceSystem::init(Window* window)
 {
+#ifndef _DEBUG
+	NoLogger* nl = new NoLogger();
+#endif 
+
 	// init
 	CEGUI::OgreRenderer& ogreRenderer = CEGUI::OgreRenderer::bootstrapSystem(*window->getRenderWindow());
 	renderer = &ogreRenderer;
@@ -609,4 +615,12 @@ UIEvent InterfaceSystem::getEvent(const std::string& eventName)
 	}
 
 	return events[eventName];
+}
+
+void NoLogger::logEvent(const CEGUI::String&, CEGUI::LoggingLevel)
+{
+}
+
+void NoLogger::setLogFilename(const CEGUI::String&, bool)
+{
 }

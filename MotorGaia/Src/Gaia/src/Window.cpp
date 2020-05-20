@@ -79,6 +79,11 @@ RenderWindow* Window::getRenderWindow()
 	return window;
 }
 
+SDL_Window* Window::getSDLWindow() const
+{
+	return sdlWindow;
+}
+
 void Window::removeAllViewports()
 {
 	window->removeAllViewports();

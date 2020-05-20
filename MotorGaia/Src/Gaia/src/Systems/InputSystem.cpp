@@ -5,7 +5,8 @@
 #include <CEGUI/System.h>
 
 
-InputSystem::InputSystem() : MOUSE_POSITION_X(0), MOUSE_POSITION_Y(0), MOUSE_WHEEL(0), keyboardState(nullptr)
+InputSystem::InputSystem() : MOUSE_POSITION_X(0), MOUSE_POSITION_Y(0), MOUSE_WHEEL(0), keyboardState(nullptr),
+							 mouseUsed(false), keyboardUsed(false), controllerUsed(false)
 {
 
 }
@@ -104,6 +105,13 @@ void InputSystem::update()
 			// TODO: This controller is not plugged in.
 		}
 	}
+}
+
+void InputSystem::postUpdate()
+{
+	mouseUsed = false;
+	keyboardUsed = false;
+	controllerUsed = false;
 }
 
 void InputSystem::setDeadZone(int controller, int zone)
@@ -370,6 +378,7 @@ void InputSystem::processKeyDown(std::string keyName, int key)
 		keyHold.emplace(keyName);
 		if (flags) LOG("Key down: %s", keyName.c_str());
 	}
+	keyboardUsed = true;
 }
 
 void InputSystem::processKeyUp(std::string keyName, int key)
@@ -378,6 +387,7 @@ void InputSystem::processKeyUp(std::string keyName, int key)
 	keyRelease.emplace(keyName);
 	keyHold.erase(keyName);
 	if (flags) LOG("Key up: %s", keyName.c_str());
+	keyboardUsed = true;
 }
 
 void InputSystem::processMouseMotion(int x, int y)
@@ -385,6 +395,7 @@ void InputSystem::processMouseMotion(int x, int y)
 	// SDL_GetMouseState(&MOUSE_POSITION_X, &MOUSE_POSITION_Y);
 	MOUSE_POSITION_X = x;
 	MOUSE_POSITION_Y = y;
+	mouseUsed = true;
 }
 
 void InputSystem::processMouseLeftButtonDown()
@@ -392,6 +403,7 @@ void InputSystem::processMouseLeftButtonDown()
 	MOUSE_BUTTON_LEFT.hold = true;
 	MOUSE_BUTTON_LEFT.pressed = true;
 	if (flags) LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
+	mouseUsed = true;
 }
 
 void InputSystem::processMouseRightButtonDown()
@@ -399,6 +411,7 @@ void InputSystem::processMouseRightButtonDown()
 	MOUSE_BUTTON_RIGHT.hold = true;
 	MOUSE_BUTTON_RIGHT.pressed = true;
 	if (flags) LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
+	mouseUsed = true;
 }
 
 void InputSystem::processMouseMiddleButtonDown()
@@ -406,24 +419,28 @@ void InputSystem::processMouseMiddleButtonDown()
 	MOUSE_BUTTON_MIDDLE.hold = true;
 	MOUSE_BUTTON_MIDDLE.pressed = true;
 	if (flags) LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
+	mouseUsed = true;
 }
 
 void InputSystem::processMouseLeftButtonUp()
 {
 	MOUSE_BUTTON_LEFT.hold = false;
 	MOUSE_BUTTON_LEFT.released = true;
+	mouseUsed = true;
 }
 
 void InputSystem::processMouseRightButtonUp()
 {
 	MOUSE_BUTTON_RIGHT.hold = false;
 	MOUSE_BUTTON_RIGHT.released = true;
+	mouseUsed = true;
 }
 
 void InputSystem::processMouseMiddleButtonUp()
 {
 	MOUSE_BUTTON_MIDDLE.hold = false;
 	MOUSE_BUTTON_MIDDLE.released = true;
+	mouseUsed = true;
 }
 
 void InputSystem::processMouseWheelScrollY(int value)
@@ -436,6 +453,7 @@ void InputSystem::processMouseWheelScrollY(int value)
 		MOUSE_WHEEL = -1;
 		if (flags) LOG("Mouse wheel down");
 	}
+	mouseUsed = true;
 }
 
 void InputSystem::processControllerButtonDown(int index, int button)
@@ -446,6 +464,7 @@ void InputSystem::processControllerButtonDown(int index, int button)
 	if (controllers[controllerIndex].isConnected) controllerInputDown(controllerIndex);
 
 	if (flags) LOG("Controller: %i Button Down", controllerIndex);
+	controllerUsed = true;
 }
 
 void InputSystem::processControllerButtonUp(int index, int button)
@@ -456,6 +475,7 @@ void InputSystem::processControllerButtonUp(int index, int button)
 	if (controllers[controllerIndex].isConnected) controllerInputUp(controllerIndex);
 
 	if (flags) LOG("Controller: %i Button Up", controllerIndex);
+	controllerUsed = true;
 }
 
 void InputSystem::processControllerDeviceAdded(int index)
@@ -506,12 +526,28 @@ void InputSystem::processControllerDeviceRemoved(int index)
 	if (flags) LOG("Controller: %i removed", controllerIndex);
 }
 
+bool InputSystem::isMouseUsed() const
+{
+	return mouseUsed;
+}
+
+bool InputSystem::isKeyboardUsed() const
+{
+	return keyboardUsed;
+}
+
+bool InputSystem::isControllerUsed() const
+{
+	return controllerUsed;
+}
+
 bool InputSystem::isButtonPressed(int controllerIndex, std::string button)
 {
 	if (!controllers[controllerIndex].isConnected) return false;
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 
+	controllerUsed = true;
 	if (button == "UP") {
 		return controllers[controllerIndex].Up;
 	}
@@ -549,7 +585,10 @@ bool InputSystem::isButtonPressed(int controllerIndex, std::string button)
 		return controllers[controllerIndex].XButton;
 	}
 	// TODO
-	else return false;
+	else {
+		controllerUsed = false;
+		return false; 
+	}
 }
 
 bool InputSystem::getButtonPress(int controllerIndex, std::string button)
@@ -558,6 +597,7 @@ bool InputSystem::getButtonPress(int controllerIndex, std::string button)
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 	const bool is_in = controllers[controllerIndex].buttonPress.find(button) != controllers[controllerIndex].buttonPress.end();
+	controllerUsed = is_in;
 	return is_in;
 }
 
@@ -567,6 +607,7 @@ bool InputSystem::getButtonRelease(int controllerIndex, std::string button)
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 	const bool is_in = controllers[controllerIndex].buttonRelease.find(button) != controllers[controllerIndex].buttonRelease.end();
+	controllerUsed = is_in;
 	return is_in;
 }
 

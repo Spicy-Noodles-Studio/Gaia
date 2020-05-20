@@ -12,6 +12,21 @@
             "ObjectName": "Suelo",
             "Tag": "suelo",
             "BlueprintPath": "Suelo"
+        },
+        {
+            "ObjectType": "GAMEOBJECT",
+            "ObjectName": "Cursor",
+            "Tag": "cursor",
+            "Components" : [
+                {
+                    "ComponentName" : "Cursor",
+                    "ComponentProperties" : [
+                        ["spriteVisible", "0"],
+                        ["sprite", "TaharezLook/MouseArrow"],
+                        ["visible", "0"]
+                    ]
+                }
+            ]
         }
     ]
 }

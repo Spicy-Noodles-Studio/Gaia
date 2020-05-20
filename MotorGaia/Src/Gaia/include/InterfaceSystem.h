@@ -41,6 +41,9 @@ private:
 
 	std::string ceguiResourceFile;
 
+	bool controllerNavigation;
+	bool keyboardNavigation;
+
 	void layoutButtonSearch(UIElement* parent);
 	void searchNextVisibleButton(std::string direction);
 	/*------------------------------*/
@@ -95,6 +98,13 @@ public:
 
 	/// Percentage of scrollbar that changes when moved by controller or keyboard
 	void setScrollbarControllerAmount(float percent);
+
+	void setControllerNavigation(bool enable);
+	void setKeyboardNavigation(bool enable);
+
+	bool isControllerNavigationEnabled() const;
+	bool isKeyboardNavigationEnabled() const;
+
 };
 
 #endif

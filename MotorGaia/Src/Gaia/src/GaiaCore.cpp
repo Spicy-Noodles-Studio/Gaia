@@ -27,6 +27,7 @@
 #include "Reverb.h"
 #include "ParticleEmitter.h"
 #include "Strider.h"
+#include "Cursor.h"
 
 #define FORCE_LINK_THAT(x) { extern int force_link_##x; force_link_##x = 1; }
 
@@ -48,7 +49,7 @@ void GaiaCore::init(std::string windowName)
 #ifdef _DEBUG
 	root = new Ogre::Root("plugins_d.cfg", "window_d.cfg");
 #else
-	root = new Ogre::Root("plugins.cfg", "window.cfg");
+	root = new Ogre::Root("plugins.cfg", "window.cfg", "");
 #endif
 
 	if (!(root->restoreConfig() || root->showConfigDialog(nullptr)))
@@ -222,6 +223,8 @@ void GaiaCore::postUpdate(float deltaTime)
 	sceneManager->postUpdate(deltaTime);
 
 	// Systems 
+	inputSystem->postUpdate();
+
 	physicsSystem->postUpdate();
 }
 
@@ -241,5 +244,6 @@ void GaiaCore::initLib()
 	FORCE_LINK_THAT(Strider);
 	FORCE_LINK_THAT(Transform);
 	FORCE_LINK_THAT(UILayout);
+	FORCE_LINK_THAT(Cursor);
 #endif
 }

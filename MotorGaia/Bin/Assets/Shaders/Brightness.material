@@ -1,0 +1,40 @@
+
+
+vertex_program BrightnessVS glsl
+{
+    source BrightnessVS.glsl
+    default_params {        
+        param_named_auto modelViewProjMat worldviewproj_matrix
+    }
+}
+fragment_program BrightnessPS glsl
+{
+    source BrightnessPS.glsl
+    default_params {
+        param_named RTT0 int 0
+       
+    }
+    shared_params gamma {
+        shared_param_named bright float 1.0
+    }
+}
+
+material Brightness {
+    technique {
+        pass {
+            depth_check off // desactivar el depth‐buffer
+            depth_write off
+
+            vertex_program_ref BrightnessVS {
+
+            }
+            fragment_program_ref BrightnessPS {
+                shared_params_ref gamma
+            }
+
+            texture_unit RTT0 {
+                filtering none
+            }
+        }
+    } 
+}

@@ -11,9 +11,15 @@
 #include "UILayout.h"
 #include <iostream>
 
+#ifndef _DEBUG
+#include "NoLogger.h"
+#endif // !_DEBUG
+
+
 std::map<std::string, UIEvent> InterfaceSystem::events;
 
-InterfaceSystem::InterfaceSystem() : renderer(nullptr), root(nullptr), deltaX(0), deltaY(0)
+InterfaceSystem::InterfaceSystem() : renderer(nullptr), root(nullptr), deltaX(0), deltaY(0), currentLayout(nullptr), scrollAmount(1.0),
+									 controllerNavigation(true), keyboardNavigation(true)
 #ifdef _DEBUG
 , fpsText(nullptr)
 #endif // _DEBUG
@@ -32,6 +38,8 @@ void InterfaceSystem::close()
 	delete root;
 #ifdef _DEBUG
 	delete fpsText;
+#else
+	delete CEGUI::Logger::getSingletonPtr();
 #endif
 	destroy();
 }
@@ -65,6 +73,10 @@ void InterfaceSystem::createRoot()
 
 void InterfaceSystem::init(Window* window)
 {
+#ifndef _DEBUG
+	NoLogger* nl = new NoLogger();
+#endif 
+
 	// init
 	CEGUI::OgreRenderer& ogreRenderer = CEGUI::OgreRenderer::bootstrapSystem(*window->getRenderWindow());
 	renderer = &ogreRenderer;
@@ -79,11 +91,9 @@ void InterfaceSystem::init(Window* window)
 	createRoot();
 
 	// event types
-
 	eventTypes["ButtonClicked"] = CEGUI::PushButton::EventClicked;
 	eventTypes["ToggleClicked"] = CEGUI::ToggleButton::EventSelectStateChanged;
 	eventTypes["ScrollChange"] = CEGUI::Scrollbar::EventScrollPositionChanged;
-
 
 	// Callback definitions
 	onKeyDown([this](std::string keyName, int key) { CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(SDLKeyToCEGUIKey(key)); });
@@ -146,7 +156,7 @@ void InterfaceSystem::initDefaultResources(const std::string& filepath)
 {
 	/* Resources are loaded at this moment by OgreResourceProvider */
 	/* Here we just initilialize default interface resources */
-	std::fstream file(filepath);
+	std::ifstream file(filepath);
 	std::string type, c, filename;
 	std::string name, size;
 	float fontSize;
@@ -325,6 +335,8 @@ CEGUI::Key::Scan InterfaceSystem::SDLKeyToCEGUIKey(int key)
 #pragma region UI_Controller_Input
 void InterfaceSystem::processControllerButtonDown(int index, int button)
 {
+	if (!controllerNavigation) return;
+
 	if (currentLayout == nullptr)
 		initControllerMenuInput();
 
@@ -386,6 +398,7 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
 
 void InterfaceSystem::processControllerButtonUp(int index, int button)
 {
+	if (!controllerNavigation) return;
 	if (index != 0) return;
 
 	if (button == SDL_CONTROLLER_BUTTON_A)
@@ -404,6 +417,7 @@ void InterfaceSystem::processControllerButtonUp(int index, int button)
 
 void InterfaceSystem::processKeyPress(std::string keyName, int key)
 {
+	if (!keyboardNavigation) return;
 
 	if (!currentLayout) initControllerMenuInput();
 
@@ -442,11 +456,12 @@ void InterfaceSystem::processKeyPress(std::string keyName, int key)
 			break;
 		}
 	}
-
 }
 
 void InterfaceSystem::processKeyUp(std::string keyName, int key)
 {
+	if (!keyboardNavigation) return;
+
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(SDLKeyToCEGUIKey(key));
 	if (key == SDLK_RETURN) {
 		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MouseButton::LeftButton);
@@ -455,9 +470,9 @@ void InterfaceSystem::processKeyUp(std::string keyName, int key)
 
 void InterfaceSystem::processMouseMotion(int x, int y)
 {
-	if (!CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
+	/*if (!CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
 		CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
-	}
+	}*/
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(x, y);
 }
 
@@ -470,8 +485,8 @@ void InterfaceSystem::moveScrollBar(CEGUI::Window* scrollBar, float amount)
 	float y = pos.d_y;
 
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(x, y);
-	if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible())
-		CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+	/*if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible())
+		CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();*/
 
 	if (scrollBar->getWindowRendererName() == "Core/Scrollbar") {
 		CEGUI::Scrollbar* x = static_cast<CEGUI::Scrollbar*>(scrollBar);
@@ -494,7 +509,7 @@ void InterfaceSystem::moveControllerToButton()
 	float y = pos.d_y + (area.d_height / 2);
 
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(x, y);
-	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+	//CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
 }
 
 bool InterfaceSystem::checkFirstControllerInput()
@@ -529,7 +544,6 @@ void InterfaceSystem::initControllerMenuInput(UIElement* newRoot)
 		currentLayout = newRoot->getElement();
 		layoutButtonSearch(newRoot);
 	}
-
 }
 
 void InterfaceSystem::layoutButtonSearch(UIElement* parent)
@@ -609,4 +623,24 @@ UIEvent InterfaceSystem::getEvent(const std::string& eventName)
 	}
 
 	return events[eventName];
+}
+
+void InterfaceSystem::setControllerNavigation(bool enable)
+{
+	controllerNavigation = enable;
+}
+
+void InterfaceSystem::setKeyboardNavigation(bool enable)
+{
+	keyboardNavigation = enable;
+}
+
+bool InterfaceSystem::isControllerNavigationEnabled() const
+{
+	return controllerNavigation;
+}
+
+bool InterfaceSystem::isKeyboardNavigationEnabled() const
+{
+	return keyboardNavigation;
 }

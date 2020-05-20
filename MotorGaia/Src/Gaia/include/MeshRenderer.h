@@ -50,6 +50,8 @@ public:
 	void setDiffuse(int subentity, const Vector3& diffuse, float alpha);
 	void setDiffuse(std::string entity, int subentity, const Vector3& diffuse, float alpha);
 
+	void setFpParam(int subentity, const std::string& param, float value);
+
 	Vector3 getDiffuse(int subentity);
 	Vector3 getDiffuse(std::string entity, int subentity);
 

@@ -20,6 +20,7 @@ public:
 
 	Viewport* addViewport(Ogre::Camera* cam);
 	RenderWindow* getRenderWindow();
+	SDL_Window* getSDLWindow() const;
 
 	void removeAllViewports();
 

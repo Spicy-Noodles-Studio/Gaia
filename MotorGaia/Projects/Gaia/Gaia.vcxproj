@@ -78,6 +78,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\MathUtils.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MeshStrider.h" />
     <ClInclude Include="..\..\Src\Gaia\include\MouseEventListener.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\NoLogger.h" />
     <ClInclude Include="..\..\Src\Gaia\include\ParticleEmitter.h" />
     <ClInclude Include="..\..\Src\Gaia\include\InterfaceSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\Light.h" />
@@ -138,6 +139,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Managers\ResourcesManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\SceneManager.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Managers\WindowManager.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\NoLogger.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\EventSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\InterfaceSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\ShaderTechniqueResolver.cpp" />

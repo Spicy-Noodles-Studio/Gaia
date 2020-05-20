@@ -11,6 +11,11 @@
 #include "UILayout.h"
 #include <iostream>
 
+#ifndef _DEBUG
+#include "NoLogger.h"
+#endif // !_DEBUG
+
+
 std::map<std::string, UIEvent> InterfaceSystem::events;
 
 InterfaceSystem::InterfaceSystem() : renderer(nullptr), root(nullptr), deltaX(0), deltaY(0), currentLayout(nullptr), scrollAmount(1.0),
@@ -451,7 +456,6 @@ void InterfaceSystem::processKeyPress(std::string keyName, int key)
 			break;
 		}
 	}
-
 }
 
 void InterfaceSystem::processKeyUp(std::string keyName, int key)
@@ -540,7 +544,6 @@ void InterfaceSystem::initControllerMenuInput(UIElement* newRoot)
 		currentLayout = newRoot->getElement();
 		layoutButtonSearch(newRoot);
 	}
-
 }
 
 void InterfaceSystem::layoutButtonSearch(UIElement* parent)
@@ -640,13 +643,4 @@ bool InterfaceSystem::isControllerNavigationEnabled() const
 bool InterfaceSystem::isKeyboardNavigationEnabled() const
 {
 	return keyboardNavigation;
-}
-
-
-void NoLogger::logEvent(const CEGUI::String&, CEGUI::LoggingLevel)
-{
-}
-
-void NoLogger::setLogFilename(const CEGUI::String&, bool)
-{
 }

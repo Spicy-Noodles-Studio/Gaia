@@ -13,7 +13,8 @@
 
 std::map<std::string, UIEvent> InterfaceSystem::events;
 
-InterfaceSystem::InterfaceSystem() : renderer(nullptr), root(nullptr), deltaX(0), deltaY(0)
+InterfaceSystem::InterfaceSystem() : renderer(nullptr), root(nullptr), deltaX(0), deltaY(0), currentLayout(nullptr), scrollAmount(1.0),
+									 controllerNavigation(true), keyboardNavigation(true)
 #ifdef _DEBUG
 , fpsText(nullptr)
 #endif // _DEBUG
@@ -329,6 +330,8 @@ CEGUI::Key::Scan InterfaceSystem::SDLKeyToCEGUIKey(int key)
 #pragma region UI_Controller_Input
 void InterfaceSystem::processControllerButtonDown(int index, int button)
 {
+	if (!controllerNavigation) return;
+
 	if (currentLayout == nullptr)
 		initControllerMenuInput();
 
@@ -390,6 +393,7 @@ void InterfaceSystem::processControllerButtonDown(int index, int button)
 
 void InterfaceSystem::processControllerButtonUp(int index, int button)
 {
+	if (!controllerNavigation) return;
 	if (index != 0) return;
 
 	if (button == SDL_CONTROLLER_BUTTON_A)
@@ -408,6 +412,7 @@ void InterfaceSystem::processControllerButtonUp(int index, int button)
 
 void InterfaceSystem::processKeyPress(std::string keyName, int key)
 {
+	if (!keyboardNavigation) return;
 
 	if (!currentLayout) initControllerMenuInput();
 
@@ -451,6 +456,8 @@ void InterfaceSystem::processKeyPress(std::string keyName, int key)
 
 void InterfaceSystem::processKeyUp(std::string keyName, int key)
 {
+	if (!keyboardNavigation) return;
+
 	CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(SDLKeyToCEGUIKey(key));
 	if (key == SDLK_RETURN) {
 		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MouseButton::LeftButton);
@@ -613,4 +620,33 @@ UIEvent InterfaceSystem::getEvent(const std::string& eventName)
 	}
 
 	return events[eventName];
+}
+
+void InterfaceSystem::setControllerNavigation(bool enable)
+{
+	controllerNavigation = enable;
+}
+
+void InterfaceSystem::setKeyboardNavigation(bool enable)
+{
+	keyboardNavigation = enable;
+}
+
+bool InterfaceSystem::isControllerNavigationEnabled() const
+{
+	return controllerNavigation;
+}
+
+bool InterfaceSystem::isKeyboardNavigationEnabled() const
+{
+	return keyboardNavigation;
+}
+
+
+void NoLogger::logEvent(const CEGUI::String&, CEGUI::LoggingLevel)
+{
+}
+
+void NoLogger::setLogFilename(const CEGUI::String&, bool)
+{
 }

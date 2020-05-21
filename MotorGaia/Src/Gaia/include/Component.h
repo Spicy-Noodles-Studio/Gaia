@@ -6,6 +6,7 @@
 #include "ComponentData.h"
 #include "DebugUtils.h"
 #include "Macros.h"
+#include "ErrorManagement.h"
 
 class GameObject;
 

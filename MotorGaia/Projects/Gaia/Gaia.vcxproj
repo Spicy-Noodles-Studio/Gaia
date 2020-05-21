@@ -63,6 +63,7 @@
     <ClInclude Include="..\..\Src\Gaia\include\Cursor.h" />
     <ClInclude Include="..\..\Src\Gaia\include\DebugDrawer.h" />
     <ClInclude Include="..\..\Src\Gaia\include\DebugUtils.h" />
+    <ClInclude Include="..\..\Src\Gaia\include\ErrorManagement.h" />
     <ClInclude Include="..\..\Src\Gaia\include\EventListener.h" />
     <ClInclude Include="..\..\Src\Gaia\include\EventSystem.h" />
     <ClInclude Include="..\..\Src\Gaia\include\GaiaComponent.h" />

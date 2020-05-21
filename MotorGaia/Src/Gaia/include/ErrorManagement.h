@@ -3,6 +3,8 @@
 #ifndef ERROR_MANAGEMENT_H
 #define ERROR_MANAGEMENT_H
 
+#include "DebugUtils.h"
+
 //Llamar cuando demos valor a una referencia 
 #define checkNull(element)\
 if(element == nullptr)\

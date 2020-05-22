@@ -107,7 +107,6 @@ void MeshRenderer::changeMesh(const std::string& id, const std::string& mesh)
 
 	// Change animations if the mesh has animations
 	Animator* animator = gameObject->getComponent<Animator>();
-	checkNullAndBreak(animator);
 	if (animator != nullptr)	animator->setMesh(id);
 }
 

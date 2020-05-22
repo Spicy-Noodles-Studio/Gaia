@@ -59,10 +59,10 @@ void UILayout::setLayout(const std::string& filename)
 
 UIElement UILayout::getUIElement(const std::string& name)
 {
-	checkNullAndBreak(layout, nullptr);
+	checkNullAndBreak(layout, UIElement());
 
 	CEGUI::Window* element = layout->getElement();
-	checkNullAndBreak(element, nullptr);
+	checkNullAndBreak(element, UIElement());
 
 	CEGUI::Window* child = nullptr;
 	try {
@@ -70,7 +70,7 @@ UIElement UILayout::getUIElement(const std::string& name)
 	}
 	catch (std::exception exception){
 		LOG_ERROR("UILAYOUT", "Error trying to get a child");
-		return nullptr;
+		return  UIElement();
 	}
 
 	return UIElement(child);
@@ -78,8 +78,8 @@ UIElement UILayout::getUIElement(const std::string& name)
 
 UIElement UILayout::getRoot()
 {
-	checkNullAndBreak(layout, nullptr);
-	checkNullAndBreak(layout->getElement(), nullptr);
+	checkNullAndBreak(layout, UIElement());
+	checkNullAndBreak(layout->getElement(), UIElement());
 
 	return *layout;
 }

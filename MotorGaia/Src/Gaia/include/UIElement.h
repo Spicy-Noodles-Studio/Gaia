@@ -4,6 +4,7 @@
 
 #include "GaiaExports.h"
 #include "CEGUI/CEGUI.h"
+#include "ErrorManagement.h"
 
 class GAIA_API UIElement
 {
@@ -11,6 +12,7 @@ private:
 	CEGUI::Window* element;
 
 public:
+	UIElement();
 	UIElement(CEGUI::Window* element);
 	~UIElement();
 

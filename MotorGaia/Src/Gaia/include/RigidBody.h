@@ -28,10 +28,9 @@ protected:
 
 public:
 	RigidBody(GameObject* gameObject);
-	~RigidBody();
+	virtual ~RigidBody();
 
 	void setRigidBody(float mass, RB_Shape shape, const Vector3& offset = { 0.0f, 0.0f, 0.0f }, const Vector3& dim = { 1,1,1 }, uint16_t myGroup = DEFAULT, uint16_t collidesWith = ALL);
-	void handleData(ComponentData* data);
 
 	void addForce(const Vector3 &force, Vector3 relPos = { 0.0f, 0.0f, 0.0f });
 	void addImpulse(const Vector3 &impulse, ImpulseMode mode = IMPULSE, Vector3 relPos = { 0.0f, 0.0f, 0.0f });
@@ -72,6 +71,9 @@ public:
 	Vector3 getTotalForce() const;
 	Vector3 getTotalTorque() const;
 	Vector3 getOrientation() const;
+
+protected:
+	void handleData(ComponentData* data);
 };
 
 #endif

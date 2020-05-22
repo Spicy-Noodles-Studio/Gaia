@@ -7,11 +7,20 @@
 
 REGISTER_FACTORY(Cursor);
 
-Cursor::Cursor(GameObject* gameObject) : GaiaComponent(gameObject), visibleOnWindow(true), sprite("")
+Cursor::Cursor(GameObject* gameObject) : GaiaComponent(gameObject), window(nullptr), visibleOnWindow(true), sprite("")
 {
-	window = WindowManager::GetInstance()->getWindow(0);
+	WindowManager* windowManager = WindowManager::GetInstance();
+	checkNullAndBreak(windowManager);
+
+	window = windowManager->getWindow(0);
+	checkNull(window);
+
 	auto& context = CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor();
-	sprite = context.getDefaultImage()->getName().c_str();
+	const CEGUI::Image* defaultImage = context.getDefaultImage();
+
+	checkNullAndBreak(defaultImage);
+	sprite = defaultImage->getName().c_str();
+
 	setVisibleOnWindow(true);
 	setSpriteVisible(true);
 }
@@ -23,6 +32,8 @@ Cursor::~Cursor()
 
 void Cursor::handleData(ComponentData* data)
 {
+	checkNullAndBreak(data);
+
 	for (auto prop : data->getProperties()) {
 		if (prop.first == "visible") {
 			std::stringstream ss(prop.second);
@@ -56,19 +67,34 @@ void Cursor::handleData(ComponentData* data)
 
 void Cursor::getPosition(int* x, int* y)
 {
-	SDL_GetMouseState(x, y);
+	try {
+		SDL_GetMouseState(x, y);
+	}
+	catch (std::exception exception) {
+		LOG_ERROR("CURSOR", "Something went wrong when trying to get position");
+	}
 }
 
 void Cursor::setPosition(int x, int y)
 {
-	SDL_WarpMouseInWindow(window->getSDLWindow(), x, y);
+	checkNullAndBreak(window);
+	try {
+		SDL_WarpMouseInWindow(window->getSDLWindow(), x, y);
+	}
+	catch (std::exception exception) {
+		LOG_ERROR("CURSOR", "Something went wrong when trying to set position");
+	}
 }
 
 void Cursor::setVisibleOnWindow(bool visible)
 {
-	visibleOnWindow = visible;
-	if(SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE) < 0)
-		LOG_ERROR("CURSOR","Error trying to change cursor visibility");
+	try {
+		SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
+		visibleOnWindow = visible;
+	}
+	catch (std::exception exception) {
+		LOG_ERROR("CURSOR", "Error trying to change cursor visibility");
+	}
 }
 
 void Cursor::setSprite(const std::string& name)
@@ -106,7 +132,8 @@ bool Cursor::isVisibleOnWindow() const
 bool Cursor::isSpriteVisible() const
 {
 	try {
-		return CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible();
+		bool visible = CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible();
+		return visible;
 	}
 	catch (std::exception exception) {
 		LOG_ERROR("CURSOR", "Error while getting sprite visibility");

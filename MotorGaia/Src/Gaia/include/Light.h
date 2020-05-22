@@ -4,7 +4,6 @@
 
 #include "GaiaComponent.h"
 #include "Vector3.h"
-#include "ComponentRegister.h"
 
 namespace Ogre {
 	class Light;
@@ -12,16 +11,16 @@ namespace Ogre {
 
 class GAIA_API Light : public GaiaComponent
 {
+public:
+	enum LightType { Directional, Point, Spotlight };
+
 private:
 	Ogre::Light* light;
-
 	float intensity;
 
 public:
 	Light(GameObject* gameObject);
-	~Light();
-
-	enum LightType { Directional, Point, Spotlight };
+	virtual ~Light();
 
 	void setType(LightType type);
 	void setColour(float red, float green, float blue);
@@ -30,11 +29,12 @@ public:
 	void setShadowsDistance(double far);
 
 	void setVisible(bool invisible);
-	bool isVisible();
+	bool isVisible() const;
 
 	void setIntensity(float intensity);
-	float getIntensity();
+	float getIntensity() const;
 
+protected:
 	virtual void handleData(ComponentData* data);
 };
 #endif

@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef STRIDER_H
 #define STRIDER_H
 
@@ -15,9 +14,11 @@ private:
 
 public:
 	Strider(GameObject* gameObject);
-	~Strider();
+	virtual ~Strider();
 
-	virtual void handleData(ComponentData* data);
 	void stride(const std::string& mesh);
+
+protected:
+	virtual void handleData(ComponentData* data);
 };
 #endif

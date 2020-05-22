@@ -2,10 +2,10 @@
 
 #include <sstream>
 
-#include "MeshStrider.h"
-#include "MeshRenderer.h"
 #include "PhysicsSystem.h"
 #include "GameObject.h"
+#include "MeshRenderer.h"
+#include "MeshStrider.h"
 #include "OgreEntity.h"
 #include "GaiaMotionState.h"
 #include "ComponentRegister.h"
@@ -14,15 +14,19 @@ REGISTER_FACTORY(Strider);
 
 Strider::Strider(GameObject *gameObject) : RigidBody(gameObject), meshStrider(nullptr), myGroup(DEFAULT), collidesWith(ALL)
 {
+
 }
 
 Strider::~Strider()
 {
-	delete meshStrider;
+	if(meshStrider != nullptr)
+		delete meshStrider;
 }
 
 void Strider::handleData(ComponentData *data)
 {
+	checkNullAndBreak(data);
+
 	float friction = 0.0f,restitution = 0.0, damping = 0.0f, angularDamping = 0.0f;
 	bool trigger = false;
 	for (auto prop : data->getProperties())
@@ -54,17 +58,17 @@ void Strider::handleData(ComponentData *data)
 			if (it != colPresets.end())
 				myGroup = (*it).second;
 			else
-				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+				LOG_ERROR("STRIDER", "Wrong value for property %s", prop.first.c_str());
 		}
 		else if (prop.first == "collidesWith") {
 			auto it = (colPresets.find(prop.second));
 			if (it != colPresets.end())
 				collidesWith = (*it).second;
 			else
-				LOG("STRIDER: wrong value for property %s.\n", prop.first.c_str());
+				LOG_ERROR("STRIDER", "Wrong value for property %s", prop.first.c_str());
 		}
 		else
-			LOG("STRIDER: property %s does not exist\n", prop.first.c_str());
+			LOG_ERROR("STRIDER", "Property %s does not exist", prop.first.c_str());
 	}
 	if (body == nullptr) return;
 

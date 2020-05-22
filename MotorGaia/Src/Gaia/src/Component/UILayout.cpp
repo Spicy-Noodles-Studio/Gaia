@@ -1,52 +1,122 @@
 #include "UILayout.h"
 
 #include <CEGUI/CEGUI.h>
-
+#include "InterfaceSystem.h"
 #include "GameObject.h"
 #include "ComponentData.h"
-#include "InterfaceSystem.h"
+
 #include "ComponentRegister.h"
 
 REGISTER_FACTORY(UILayout);
 
-UILayout::UILayout(GameObject* gameObject) : GaiaComponent(gameObject), layout(nullptr)
+UILayout::UILayout(GameObject* gameObject) : GaiaComponent(gameObject), interfaceSystem(nullptr), layout(nullptr)
 {
-
+	interfaceSystem = InterfaceSystem::GetInstance();
 }
 
 UILayout::~UILayout()
 {
-	if (layout != nullptr)
-		InterfaceSystem::GetInstance()->getRoot()->getElement()->destroyChild(layout->getElement());
-	delete layout;
+	if (layout != nullptr) {
+		checkNullAndBreak(interfaceSystem);
+		UIElement* root = interfaceSystem->getRoot();
+		checkNullAndBreak(root);
+		CEGUI::Window* element = root->getElement();
+		checkNullAndBreak(element);
+		checkNullAndBreak(layout->getElement());
+
+		element->destroyChild(layout->getElement());
+		delete layout;
+	}
 }
 
 void UILayout::setLayout(const std::string& filename)
 {
-	layout = InterfaceSystem::GetInstance()->loadLayout(filename);
-	if (layout == nullptr)
-		return;
-	InterfaceSystem::GetInstance()->getRoot()->getElement()->addChild(layout->getElement());
+	checkNullAndBreak(interfaceSystem);
+	layout = interfaceSystem->loadLayout(filename);
+	checkNullAndBreak(layout);
 
-	layout->getElement()->setAlpha(0.0f);
+	UIElement* root = interfaceSystem->getRoot();
+	checkNullAndBreak(root);
+
+	CEGUI::Window* element = root->getElement();
+	checkNullAndBreak(element);
+
+	CEGUI::Window* layoutElement = layout->getElement();
+	checkNullAndBreak(layoutElement);
+
+	element->addChild(layoutElement);
+	layoutElement->setAlpha(0.0f);
 
 	size_t index = 0;
-	while (index < layout->getElement()->getChildCount())
+	while (index < layoutElement->getChildCount())
 	{
-		layout->getElement()->getChildAtIdx(index)->setInheritsAlpha(false);
+		CEGUI::Window* child = layoutElement->getChildAtIdx(index);
+		if(child != nullptr)
+			child->setInheritsAlpha(false);
 		++index;
 	}
 }
 
+UIElement UILayout::getUIElement(const std::string& name)
+{
+	checkNullAndBreak(layout, nullptr);
+
+	CEGUI::Window* element = layout->getElement();
+	checkNullAndBreak(element, nullptr);
+
+	CEGUI::Window* child = nullptr;
+	try {
+		child = element->getChild(name);
+	}
+	catch (std::exception exception){
+		LOG_ERROR("UILAYOUT", "Error trying to get a child");
+		return nullptr;
+	}
+
+	return UIElement(child);
+}
+
+UIElement UILayout::getRoot()
+{
+	checkNullAndBreak(layout, nullptr);
+	checkNullAndBreak(layout->getElement(), nullptr);
+
+	return *layout;
+}
+
+void UILayout::setVisible(bool visible)
+{
+	checkNullAndBreak(layout);
+
+	CEGUI::Window* element = layout->getElement();
+	checkNullAndBreak(element);
+
+	element->setVisible(visible);
+}
+
 void UILayout::setEvent(const std::string& element, const std::string& event)
 {
-	layout->getElement()->getChildRecursive(element)->
-		subscribeEvent(InterfaceSystem::GetInstance()->getEventType(InterfaceSystem::GetInstance()->getEvent(event).first),
-			InterfaceSystem::GetInstance()->getEvent(event).second);
+	checkNullAndBreak(interfaceSystem);
+
+	checkNullAndBreak(layout);
+	CEGUI::Window* layoutElement = layout->getElement();
+	checkNullAndBreak(layoutElement);
+
+	CEGUI::Window* child = layoutElement->getChildRecursive(element);
+	checkNullAndBreak(child);
+
+	UIEvent uiEvent = interfaceSystem->getEvent(event);
+	CEGUI::String eventType = interfaceSystem->getEventType(uiEvent.first);
+
+	CEGUI::Event::Connection connection = child->subscribeEvent(eventType, uiEvent.second);
+	if (!connection.isValid())
+		LOG_ERROR("UILAYOUT", "Event set is not valid");
 }
 
 void UILayout::handleData(ComponentData* data)
 {
+	checkNullAndBreak(data);
+
 	for (auto prop : data->getProperties())
 	{
 		std::stringstream ss(prop.second);
@@ -66,25 +136,6 @@ void UILayout::handleData(ComponentData* data)
 			}
 		}
 		else
-			LOG("UILAYOUT: invalid property name \"%s\"", prop.first.c_str());
+			LOG_ERROR("UILAYOUT", "Invalid property name \"%s\"", prop.first.c_str());
 	}
-}
-
-UIElement UILayout::getUIElement(const std::string& name)
-{
-	if (layout == nullptr)
-		return nullptr;
-	return UIElement(layout->getElement()->getChild(name));
-}
-
-UIElement UILayout::getRoot()
-{
-	return *layout;
-}
-
-void UILayout::setVisible(bool visible)
-{
-	if (layout == nullptr)
-		return;
-	layout->getElement()->setVisible(visible);
 }

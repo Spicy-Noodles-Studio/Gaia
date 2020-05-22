@@ -20,24 +20,24 @@ private:
 
 public:
 	Transform(GameObject* gameObject);
-	~Transform();
+	virtual ~Transform();
 
 	void setPosition(double x, double y, double z);
 	void setScale(double x, double y, double z);
 	void setRotation(double x, double y, double z);
 
-	void setPosition(const Vector3& pos);
+	void setPosition(const Vector3& position);
 	void setScale(const Vector3& scale);
-	void setRotation(const Vector3& rot);
+	void setRotation(const Vector3& rotation);
 
 	void resetOrientation();
-	void setOrientation(const Ogre::Quaternion& rot);
+	void setOrientation(const Quaternion& orientation);
 
-	void setDirection(const Vector3& dir);
+	void setDirection(const Vector3& direction);
 
-	void setWorldPosition(const Vector3& pos);
+	void setWorldPosition(const Vector3& position);
 	void setWorldScale(const Vector3& scale);
-	void setWorldRotation(const Vector3& rot);
+	void setWorldRotation(const Vector3& rotation);
 
 	Vector3 getPosition() const;
 	Vector3 getScale() const;
@@ -52,9 +52,10 @@ public:
 	Vector3 getUpVector() const;
 	Vector3 getLeftVector() const;
 
-	void translate(const Vector3& pos);
-	void rotate(const Vector3& rot);
+	void translate(const Vector3& position);
+	void rotate(const Vector3& rotation);
 
+protected:
 	virtual void handleData(ComponentData* data);
 };
 

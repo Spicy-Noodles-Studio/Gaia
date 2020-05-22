@@ -28,6 +28,7 @@ Transform::Transform(GameObject* gameObject) : GaiaComponent(gameObject)
 
 	quaternion = Quaternion::AnglesToQuaternion(0.0, 0.0, 0.0);
 
+	checkNullAndBreak(gameObject);
 	gameObject->transform = this;
 }
 
@@ -42,6 +43,8 @@ void Transform::setPosition(double x, double y, double z)
 	position.y = y;
 	position.z = z;
 
+	checkNullAndBreak(gameObject);
+
 	if (gameObject->node != nullptr)
 		gameObject->node->setPosition(x, y, z);
 }
@@ -51,6 +54,8 @@ void Transform::setScale(double x, double y, double z)
 	scale.x = x;
 	scale.y = y;
 	scale.z = z;
+
+	checkNullAndBreak(gameObject);
 
 	if (gameObject->node != nullptr)
 		gameObject->node->setScale(x, y, z);
@@ -62,6 +67,8 @@ void Transform::setRotation(double x, double y, double z)
 	rotation.y = y;
 	rotation.z = z;
 
+	checkNullAndBreak(gameObject);
+
 	if (gameObject->node != nullptr)
 	{
 		Ogre::Matrix3 mx;
@@ -72,9 +79,9 @@ void Transform::setRotation(double x, double y, double z)
 	quaternion = Quaternion::AnglesToQuaternion(z, y, x);
 }
 
-void Transform::setPosition(const Vector3& pos)
+void Transform::setPosition(const Vector3& position)
 {
-	setPosition(pos.x, pos.y, pos.z);
+	setPosition(position.x, position.y, position.z);
 }
 
 void Transform::setScale(const Vector3& scale)
@@ -82,32 +89,43 @@ void Transform::setScale(const Vector3& scale)
 	setScale(scale.x, scale.y, scale.z);
 }
 
-void Transform::setRotation(const Vector3& rot)
+void Transform::setRotation(const Vector3& rotation)
 {
-	setRotation(rot.x, rot.y, rot.z);
+	setRotation(rotation.x, rotation.y, rotation.z);
 }
 
 void Transform::resetOrientation()
 {
-	gameObject->node->resetOrientation();
+	checkNullAndBreak(gameObject);
+
+	if (gameObject->node != nullptr)
+		gameObject->node->resetOrientation();
 }
 
-void Transform::setOrientation(const Ogre::Quaternion& rot)
+void Transform::setOrientation(const Quaternion& orientation)
 {
-	gameObject->node->setOrientation(rot);
+	checkNullAndBreak(gameObject);
+
+	if (gameObject->node != nullptr)
+		gameObject->node->setOrientation(Ogre::Quaternion(orientation.w, orientation.x, orientation.y, orientation.z));
 }
 
-void Transform::setDirection(const Vector3& dir)
+void Transform::setDirection(const Vector3& direction)
 {
-	gameObject->node->setDirection(Ogre::Vector3(dir.x, dir.y, dir.z));
+	checkNullAndBreak(gameObject);
+
+	if (gameObject->node != nullptr)
+		gameObject->node->setDirection(Ogre::Vector3(direction.x, direction.y, direction.z));
 }
 
-void Transform::setWorldPosition(const Vector3& pos)
+void Transform::setWorldPosition(const Vector3& position)
 {
-	Vector3 worldPos = pos;
+	checkNullAndBreak(gameObject);
+
+	Vector3 worldPos = position;
 	GameObject* parent = gameObject->getParent();
-	if (parent != nullptr) {
-		auto aux = parent->node->convertWorldToLocalPosition(Ogre::Vector3(pos.x, pos.y, pos.z));
+	if (parent != nullptr && parent->node != nullptr) {
+		auto aux = parent->node->convertWorldToLocalPosition(Ogre::Vector3(position.x, position.y, position.z));
 		worldPos = { aux.x, aux.y,aux.z };
 	}
 	setPosition(worldPos);
@@ -115,20 +133,24 @@ void Transform::setWorldPosition(const Vector3& pos)
 
 void Transform::setWorldScale(const Vector3& scale)
 {
+	checkNullAndBreak(gameObject);
+
 	Vector3 worldScale = scale;
 	GameObject* parent = gameObject->getParent();
-	if (parent != nullptr)
+	if (parent != nullptr && parent->transform != nullptr)
 		worldScale /= parent->transform->getWorldScale();
 	setScale(worldScale);
 }
 
-void Transform::setWorldRotation(const Vector3& rot)
+void Transform::setWorldRotation(const Vector3& rotation)
 {
-	Vector3 localRotation = rot;
+	checkNullAndBreak(gameObject);
+
+	Vector3 localRotation = rotation;
 	GameObject* parent = gameObject->getParent();
-	if (parent != nullptr) {
+	if (parent != nullptr && parent->node != nullptr) {
 		Ogre::Matrix3 mx;
-		mx.FromEulerAnglesZYX(Ogre::Radian(Ogre::Degree(rot.z)), Ogre::Radian(Ogre::Degree(rot.y)), Ogre::Radian(Ogre::Degree(rot.x)));
+		mx.FromEulerAnglesZYX(Ogre::Radian(Ogre::Degree(rotation.z)), Ogre::Radian(Ogre::Degree(rotation.y)), Ogre::Radian(Ogre::Degree(rotation.x)));
 		Ogre::Quaternion aux = parent->node->convertWorldToLocalOrientation(Ogre::Quaternion(mx));
 
 		aux.ToRotationMatrix(mx);
@@ -143,9 +165,11 @@ void Transform::setWorldRotation(const Vector3& rot)
 
 Vector3 Transform::getWorldPosition() const
 {
+	checkNullAndBreak(gameObject, Vector3::ZERO);
+
 	Vector3 worldPos = position;
 	GameObject* parent = gameObject->getParent();
-	if (parent != nullptr) {
+	if (parent != nullptr && parent->node != nullptr) {
 		auto aux = parent->node->convertLocalToWorldPosition(gameObject->node->getPosition());
 		worldPos = { aux.x, aux.y,aux.z };
 	}
@@ -154,9 +178,11 @@ Vector3 Transform::getWorldPosition() const
 
 Vector3 Transform::getWorldScale() const
 {
+	checkNullAndBreak(gameObject, Vector3::ZERO);
+
 	Vector3 worldScale = scale;
 	GameObject* parent = gameObject->getParent();
-	if (parent != nullptr) {
+	if (parent != nullptr && parent->transform != nullptr) {
 		worldScale *= parent->transform->getWorldScale();
 	}
 	return worldScale;
@@ -164,10 +190,12 @@ Vector3 Transform::getWorldScale() const
 
 Vector3 Transform::getWorldRotation() const
 {
+	checkNullAndBreak(gameObject, Vector3::ZERO);
+
 	Vector3 worldRotation = rotation;
 	GameObject* parent = gameObject->getParent();
-	if (parent != nullptr) {
-		Ogre::Quaternion aux =parent->node->convertLocalToWorldOrientation(gameObject->node->getOrientation()); aux.normalise();
+	if (parent != nullptr && parent->node != nullptr) {
+		Ogre::Quaternion aux = parent->node->convertLocalToWorldOrientation(gameObject->node->getOrientation()); aux.normalise();
 		Ogre::Matrix3 mx; aux.ToRotationMatrix(mx);
 		Ogre::Radian x, y, z; mx.ToEulerAnglesZYX(z, y, x);
 
@@ -213,25 +241,27 @@ Vector3 Transform::getLeftVector() const
 	return GetLeftVector(quaternion);
 }
 
-void Transform::translate(const Vector3& pos)
+void Transform::translate(const Vector3& position)
 {
-	position += pos;
-	setPosition(position);
+	this->position += position;
+	setPosition(this->position);
 }
 
-void Transform::rotate(const Vector3& rot)
+void Transform::rotate(const Vector3& rotation)
 {
-	rotation += rot;
-	setRotation(rotation);
+	this->rotation += rotation;
+	setRotation(this->rotation);
 }
 
 void Transform::handleData(ComponentData* data)
 {
+	checkNullAndBreak(data);
+
 	for (auto prop : data->getProperties()) {
 		std::stringstream ss(prop.second);
 		double x, y, z; 
 		if (!(ss >> x >> y >> z)) {
-			LOG_ERROR("TRANFORM", "invalid value \"%s\"", prop.second.c_str());
+			LOG_ERROR("TRANFORM", "Invalid value \"%s\"", prop.second.c_str());
 			continue;
 		}
 
@@ -248,7 +278,7 @@ void Transform::handleData(ComponentData* data)
 			setDirection({ x, y, z });
 		}
 		else {
-			LOG("TRANSFORM: property %s does not exist\n", prop.first.c_str());
+			LOG_ERROR("TRANSFORM", "Property %s does not exist", prop.first.c_str());
 		}
 	}
 }

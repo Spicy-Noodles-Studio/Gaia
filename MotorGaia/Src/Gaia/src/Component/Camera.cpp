@@ -12,10 +12,16 @@
 
 REGISTER_FACTORY(Camera);
 
-Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera(false)
+Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), camera(nullptr), isMainCamera(false)
 {
-	camera = gameObject->getScene()->getSceneManager()->createCamera(gameObject->node->getName() + "Cam");
-
+	checkNullAndBreak(gameObject);
+	Scene* scene = gameObject->getScene();
+	checkNullAndBreak(scene);
+	Ogre::SceneManager* sceneManager = scene->getSceneManager();
+	checkNullAndBreak(sceneManager);
+	checkNullAndBreak(gameObject->node);
+	camera = sceneManager->createCamera(gameObject->node->getName() + "Cam");
+	checkNullAndBreak(camera);
 	camera->setAutoAspectRatio(true);
 	gameObject->node->attachObject(camera);
 
@@ -24,23 +30,32 @@ Camera::Camera(GameObject* gameObject) : GaiaComponent(gameObject), isMainCamera
 
 Camera::~Camera()
 {
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
+	checkNullAndBreak(camera);
 	gameObject->node->detachObject(camera);
-	gameObject->getScene()->getSceneManager()->destroyCamera(camera);
+	Scene* scene = gameObject->getScene();
+	checkNullAndBreak(scene);
+	Ogre::SceneManager* sceneManager = scene->getSceneManager();
+	checkNullAndBreak(sceneManager);
+	sceneManager->destroyCamera(camera);
 	camera = nullptr;
 }
 
-void Camera::lookAt(const Vector3& pos, SpaceReference space)
+void Camera::lookAt(const Vector3& position, SpaceReference space)
 {
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
 	switch (space)
 	{
-	case LocalSpace:
-		gameObject->node->lookAt(Ogre::Vector3(pos.x, pos.y, pos.z), Ogre::Node::TS_LOCAL);
+	case SpaceReference::LocalSpace:
+		gameObject->node->lookAt(Ogre::Vector3(position.x, position.y, position.z), Ogre::Node::TS_LOCAL);
 		break;
-	case WorldSpace:
-		gameObject->node->lookAt(Ogre::Vector3(pos.x, pos.y, pos.z), Ogre::Node::TS_WORLD);
+	case SpaceReference::WorldSpace:
+		gameObject->node->lookAt(Ogre::Vector3(position.x, position.y, position.z), Ogre::Node::TS_WORLD);
 		break;
-	case ParentSpace:
-		gameObject->node->lookAt(Ogre::Vector3(pos.x, pos.y, pos.z), Ogre::Node::TS_PARENT);
+	case SpaceReference::ParentSpace:
+		gameObject->node->lookAt(Ogre::Vector3(position.x, position.y, position.z), Ogre::Node::TS_PARENT);
 		break;
 	default:
 		break;
@@ -49,93 +64,112 @@ void Camera::lookAt(const Vector3& pos, SpaceReference space)
 
 Vector3 Camera::getDirection() const
 {
-	auto dir = gameObject->node->getOrientation().zAxis() * -1;
-	return Vector3(dir.x, dir.y, dir.z);
+	checkNullAndBreak(gameObject, Vector3::ZERO);
+	checkNullAndBreak(gameObject->node, Vector3::ZERO);
+	auto direction = gameObject->node->getOrientation().zAxis() * -1;
+	return Vector3(direction.x, direction.y, direction.z);
 }
 
-void Camera::setDirection(const Vector3& dir)
+void Camera::setDirection(const Vector3& direction)
 {
-	gameObject->node->setDirection(Ogre::Vector3(dir.x, dir.y, dir.z));
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
+	gameObject->node->setDirection(Ogre::Vector3(direction.x, direction.y, direction.z));
 }
 
 Quaternion Camera::getOrientation() const
 {
-	auto dir = gameObject->node->getOrientation();
-	return Quaternion(dir.x, dir.y, dir.z, dir.w);
+	checkNullAndBreak(gameObject, Quaternion());
+	checkNullAndBreak(gameObject->node, Quaternion());
+	auto orientation = gameObject->node->getOrientation();
+	return Quaternion(orientation.x, orientation.y, orientation.z, orientation.w);
 }
 
-void Camera::setOrientation(const Quaternion& q)
+void Camera::setOrientation(const Quaternion& orientation)
 {
-	gameObject->node->setOrientation(q.w, q.x, q.y, q.z);
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
+	gameObject->node->setOrientation(orientation.w, orientation.x, orientation.y, orientation.z);
 }
 
-Ogre::Camera* Camera::getCamera()
+Ogre::Camera* Camera::getCamera() const
 {
+	checkNullAndBreak(camera, nullptr);
 	return camera;
 }
 
 Vector3 Camera::worldToScreen(const Vector3& worldPoint)
 {
 	Ogre::Vector3 world;
-
 	world.x = worldPoint.x;
 	world.y = worldPoint.y;
 	world.z = worldPoint.z;
+
+	checkNullAndBreak(camera, Vector3::ZERO);
 	Ogre::Vector3 screenPoint = camera->getProjectionMatrix() * camera->getViewMatrix() * world;
 
-	Vector3 x;
-	x.x = (screenPoint.x * 0.5 + 0.5);
-	x.y = (-screenPoint.y * 0.5 + 0.5);
-	x.z = screenPoint.z * 0.5 + 0.5;
+	Vector3 result;
+	result.x = (screenPoint.x * 0.5 + 0.5);
+	result.y = (-screenPoint.y * 0.5 + 0.5);
+	result.z = screenPoint.z * 0.5 + 0.5;
 
-	return x;
+	return result;
 }
 
 Vector3 Camera::worldToScreenPixel(const Vector3& worldPoint)
 {
 	Ogre::Vector3 world;
-
 	world.x = worldPoint.x;
 	world.y = worldPoint.y;
 	world.z = worldPoint.z;
+
+	checkNullAndBreak(camera, Vector3::ZERO);
 	Ogre::Vector3 screenPoint = camera->getProjectionMatrix() * camera->getViewMatrix() * world;
 
-	Vector3 x;
-	x.x = (screenPoint.x * 0.5 + 0.5) * camera->getViewport()->getActualWidth();
-	x.y = (-screenPoint.y * 0.5 + 0.5) * camera->getViewport()->getActualHeight();
-	x.z = screenPoint.z * 0.5 + 0.5;
+	Ogre::Viewport* viewport = camera->getViewport();
+	checkNullAndBreak(viewport, Vector3::ZERO);
+	Vector3 result;
+	result.x = (screenPoint.x * 0.5 + 0.5) * viewport->getActualWidth();
+	result.y = (-screenPoint.y * 0.5 + 0.5) * viewport->getActualHeight();
+	result.z = screenPoint.z * 0.5 + 0.5;
 
-	return x;
+	return result;
 }
 
 void Camera::setClipDistances(double near, double far)
 {
+	checkNullAndBreak(camera);
 	camera->setNearClipDistance(near);
 	camera->setFarClipDistance(far);
 }
 
 void Camera::handleData(ComponentData* data)
 {
+	checkNullAndBreak(data);
+
 	for (auto prop : data->getProperties()) {
 		if (prop.first == "main") {
 			if (prop.second == "true") {
-				if (gameObject->getScene()->getMainCamera() == nullptr) {
+				checkNullAndBreak(gameObject);
+				Scene* scene = gameObject->getScene();
+				checkNullAndBreak(scene);
+				if (scene->getMainCamera() == nullptr) {
 					isMainCamera = true;
-					gameObject->getScene()->setMainCamera(this);
+					scene->setMainCamera(this);
 				}
 				else {
-					LOG("CAMERA: there's already a main Camera\n");
+					LOG_ERROR("CAMERA", "There's already a main Camera");
 				}
 			}
 			else if (prop.second == "false") {
 				isMainCamera = false;
 			}
 			else {
-				LOG("CAMERA: %s value not valid for \"main\" property\n", prop.second.c_str());
+				LOG_ERROR("CAMERA", "%s value not valid for \"main\" property", prop.second.c_str());
 			}
 		}
 		else {
-			LOG("CAMERA: %s is not a valid property name\n", prop.first.c_str());
+			LOG_ERROR("CAMERA", "%s is not a valid property name", prop.first.c_str());
 		}
 	}
 }

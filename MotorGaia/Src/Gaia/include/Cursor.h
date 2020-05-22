@@ -12,8 +12,6 @@ public:
 	Cursor(GameObject* gameObject);
 	virtual ~Cursor();
 
-	virtual void handleData(ComponentData* data);
-
 	/* Get position relative to window */
 	void getPosition(int* x, int* y);
 
@@ -34,6 +32,9 @@ public:
 
 	/* Returns whether or not sprite cursor is visible */
 	bool isSpriteVisible() const;
+
+protected:
+	virtual void handleData(ComponentData* data);
 
 private:
 	Window* window;

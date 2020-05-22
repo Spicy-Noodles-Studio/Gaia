@@ -10,16 +10,34 @@
 
 REGISTER_FACTORY(Light);
 
-Light::Light(GameObject* gameObject) : GaiaComponent(gameObject), intensity(1.0f)
+Light::Light(GameObject* gameObject) : GaiaComponent(gameObject), light(nullptr), intensity(1.0f)
 {
-	light = gameObject->getScene()->getSceneManager()->createLight(gameObject->node->getName() + " -L");
+	checkNullAndBreak(gameObject);
+	Scene* scene = gameObject->getScene();
+	checkNullAndBreak(scene);
+	Ogre::SceneManager* sceneManager = scene->getSceneManager();
+	checkNullAndBreak(sceneManager);
+	checkNullAndBreak(gameObject->node);
+	light = sceneManager->createLight(gameObject->node->getName() + " -L");
+	checkNullAndBreak(light);
 	gameObject->node->attachObject(light);
 }
 
 Light::~Light()
 {
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
+	checkNullAndBreak(light);
+
 	gameObject->node->detachObject(light);
-	gameObject->getScene()->getSceneManager()->destroyLight(light);
+
+	Scene* scene = gameObject->getScene();
+	checkNullAndBreak(scene);
+
+	Ogre::SceneManager* sceneManager = scene->getSceneManager();
+	checkNullAndBreak(sceneManager);
+
+	sceneManager->destroyLight(light);
 	light = nullptr;
 }
 
@@ -30,15 +48,17 @@ Light::~Light()
 */
 void Light::setType(LightType type)
 {
+	checkNullAndBreak(light);
+
 	switch (type)
 	{
-	case Directional:
+	case LightType::Directional:
 		light->setType(Ogre::Light::LT_DIRECTIONAL);
 		break;
-	case Point:
+	case LightType::Point:
 		light->setType(Ogre::Light::LT_POINT);
 		break;
-	case Spotlight:
+	case LightType::Spotlight:
 		light->setType(Ogre::Light::LT_SPOTLIGHT);
 		break;
 	default:
@@ -48,11 +68,15 @@ void Light::setType(LightType type)
 
 void Light::setColour(float red, float green, float blue)
 {
+	checkNullAndBreak(light);
+
 	light->setDiffuseColour(red * intensity, green * intensity, blue * intensity);
 }
 
 void Light::setSpecularColour(float red, float green, float blue)
 {
+	checkNullAndBreak(light);
+
 	light->setSpecularColour(red, green, blue);
 }
 
@@ -61,6 +85,8 @@ void Light::setSpecularColour(float red, float green, float blue)
 */
 void Light::setShadowsDistance(double far)
 {
+	checkNullAndBreak(light);
+
 	light->setShadowFarDistance(far);
 }
 
@@ -69,13 +95,17 @@ void Light::setShadowsDistance(double far)
 */
 void Light::setVisible(bool visible)
 {
+	checkNullAndBreak(light);
+
 	light->setVisible(visible);
 }
 /*
 --Al ser luces, el no ser visible significa que no afectan a los objetos en la escena--
 */
-bool Light::isVisible()
+bool Light::isVisible() const
 {
+	checkNullAndBreak(light, false);
+
 	return light->isVisible();
 }
 
@@ -84,13 +114,15 @@ void Light::setIntensity(float intensity)
 	this->intensity = intensity;
 }
 
-float Light::getIntensity()
+float Light::getIntensity() const
 {
 	return intensity;
 }
 
 void Light::handleData(ComponentData* data)
 {
+	checkNullAndBreak(data);
+
 	float intensity = 1.0f; Vector3 colour = Vector3(1, 1, 1); bool visible = true; float shadowDistance = 10.0f;
 
 	for (auto prop : data->getProperties()) {
@@ -98,11 +130,11 @@ void Light::handleData(ComponentData* data)
 
 		if (prop.first == "type") {
 			if (prop.second == "Point")
-				setType(Point);
+				setType(LightType::Point);
 			else if (prop.second == "Spotlight")
-				setType(Spotlight);
+				setType(LightType::Spotlight);
 			else if (prop.second == "Directional")
-				setType(Directional);
+				setType(LightType::Directional);
 			else
 				LOG("LIGHT: %s not valid light type\n", prop.second.c_str());
 		}

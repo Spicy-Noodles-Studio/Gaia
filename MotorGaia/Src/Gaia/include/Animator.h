@@ -1,12 +1,8 @@
 #pragma once
 #ifndef ANIMATOR_H
 #define ANIMATOR_H
-
-#include <map>
-#include <queue>
-#include <OgreAnimationState.h>
-
 #include "GaiaComponent.h"
+#include <queue>
 
 namespace Ogre {
 	class AnimationStateSet;
@@ -21,35 +17,36 @@ private:
 	std::string currentAnimation;
 	std::string currentMesh;
 
-	std::queue<std::string> animSequence;
+	std::queue<std::string> animationSequence;
 	bool endSequenceWithLoop;
 public:
 	Animator(GameObject* gameObject);
-	~Animator();
+	virtual ~Animator();
 
 	void setMesh(const std::string& mesh);
-
-	Ogre::AnimationState* getAnimation(const std::string& animation);
-
 	void playAnimation(const std::string& animation, bool begin = false);
 	void playAnimationSequence(const std::vector<std::string>& sequence, bool endWithLoop = false);
 	void updateAnimationSequence();
-	std::string getCurrentAnimation();
-	std::vector<std::string> getAllAnimationsNames();
-	void printAllAnimationsNames();
-
-	virtual void handleData(ComponentData* data);
+	const std::string& getCurrentAnimation() const;
+	std::vector<std::string> getAllAnimationsNames() const;
+	void printAllAnimationsNames() const;
 
 	void setLoop(bool loop);
 	void setTimePosition(float pos);
 	void setLength(float length);
 
-	bool getLoop();
-	float getTimePosition();
-	float getLength();
-	bool hasEnded();
+	bool getLoop() const;
+	float getTimePosition() const;
+	float getLength() const;
+	bool hasEnded() const;
 	bool isPlayingSequence() const;
-	std::queue<std::string>& getAnimationSequence();
+	const std::queue<std::string>& getAnimationSequence() const;
+
+protected:
+	virtual void handleData(ComponentData* data);
+
+private:
+	Ogre::AnimationState* getAnimation(const std::string& animation) const;
 };
 
 #endif

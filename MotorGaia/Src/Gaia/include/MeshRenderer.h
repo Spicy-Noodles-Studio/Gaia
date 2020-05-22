@@ -14,6 +14,9 @@ namespace Ogre
 
 class GAIA_API MeshRenderer : public GaiaComponent
 {
+	friend class Animator;
+	friend class Strider;
+	friend class Trail;
 private:
 	std::map<std::string, Ogre::Entity*> entities;
 	bool visible;
@@ -21,12 +24,10 @@ private:
 
 public:
 	MeshRenderer(GameObject* gameObject);
-	~MeshRenderer();
+	virtual ~MeshRenderer();
 
-	Ogre::Entity* getMesh(std::string mesh);
-
-	std::string getMeshId() const;
-	std::string getMeshName() const;
+	const std::string& getMeshId() const;
+	const std::string& getMeshName() const;
 
 	void setMesh(const std::string& id, const std::string& mesh);
 
@@ -43,27 +44,31 @@ public:
 	void moveEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh);
 
 	void setVisible(bool visible);
-	bool isVisible();
+	bool isVisible() const;
 
-	void printAllBones();
+	void printAllBones() const;
 
 	void setDiffuse(int subentity, const Vector3& diffuse, float alpha);
-	void setDiffuse(std::string entity, int subentity, const Vector3& diffuse, float alpha);
+	void setDiffuse(const std::string& entity, int subentity, const Vector3& diffuse, float alpha);
 
 	void setFpParam(int subentity, const std::string& param, float value);
 
-	Vector3 getDiffuse(int subentity);
-	Vector3 getDiffuse(std::string entity, int subentity);
+	Vector3 getDiffuse(int subentity) const;
+	Vector3 getDiffuse(std::string entity, int subentity) const;
 
 	void setEmissive(int subentity, const Vector3& emissive);
-	Vector3 getEmissive(int subentity);
+	Vector3 getEmissive(int subentity) const;
 
-	int getSubentitiesSize();
+	int getSubentitiesSize() const;
 
 	void setTexture(int subentity, const std::string& textureName);
-	std::string getTexture(int subentity);
+	const std::string& getTexture(int subentity) const;
 
+protected:
 	virtual void handleData(ComponentData* data);
+
+private:
+	Ogre::Entity* getMesh(const std::string& mesh) const;
 };
 
 #endif

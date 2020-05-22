@@ -165,6 +165,7 @@ void SoundSystem::removeEmitter(EmitterData* emitter)
 void SoundSystem::removeListener()
 {
 	delete listener;
+	listener = nullptr;
 }
 
 void SoundSystem::update(float deltaTime)

@@ -1,171 +1,177 @@
 #include "Reverb.h"
 
 #include <sstream>
-
-#include "GameObject.h"
 #include "SoundSystem.h"
+#include "GameObject.h"
+
 #include "ComponentRegister.h"
 
 REGISTER_FACTORY(Reverb);
 
-Reverb::Reverb(GameObject* gameObject) : GaiaComponent(gameObject)
+Reverb::Reverb(GameObject* gameObject) : GaiaComponent(gameObject), reverbActive(true), minDistance(0.0f), maxDistance(0.0f), reverbProperties(FMOD_PRESET_OFF),
+										 position(), reverb(nullptr), presets()
 {
-	active = true;
+	reverbActive = true;
 	minDistance = 0.0f;
 	maxDistance = 10000.0f;
 
 	reverbProperties = FMOD_PRESET_OFF;
 
-	reverb = SoundSystem::GetInstance()->createReverb();
+	SoundSystem* soundSystem = SoundSystem::GetInstance();
+	checkNullAndBreak(soundSystem);
 
-	pos = SoundSystem::GetInstance()->vecToFMOD(gameObject->transform->getPosition());
-	reverb->set3DAttributes(&pos, minDistance, maxDistance);
-	reverb->setActive(active);
+	reverb = soundSystem->createReverb();
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->transform);
+	position = soundSystem->vecToFMOD(gameObject->transform->getPosition());
+
+	checkNullAndBreak(reverb);
+	reverb->set3DAttributes(&position, minDistance, maxDistance);
+	reverb->setActive(reverbActive);
 	reverb->setProperties(&reverbProperties);
 
 	initPresets();
-
 }
 
 Reverb::~Reverb()
 {
+	checkNullAndBreak(reverb);
 	reverb->release();
 }
-
-
 
 void Reverb::setReverbMaxDistance(float distance)
 {
 	maxDistance = distance;
-	reverb->set3DAttributes(&pos, minDistance, maxDistance);
+	checkNullAndBreak(reverb);
+	reverb->set3DAttributes(&position, minDistance, maxDistance);
 }
 
 void Reverb::setReverbMinDistance(float distance)
 {
 	minDistance = distance;
-	reverb->set3DAttributes(&pos, minDistance, maxDistance);
+	checkNullAndBreak(reverb);
+	reverb->set3DAttributes(&position, minDistance, maxDistance);
 }
 
-void Reverb::setReverbActive(bool _active)
+void Reverb::setReverbActive(bool active)
 {
-	active = _active;
-	reverb->setActive(active);
+	reverbActive = active;
+	checkNullAndBreak(reverb);
+	reverb->setActive(reverbActive);
 }
 
 void Reverb::handleData(ComponentData* data)
 {
+	checkNullAndBreak(data);
+
 	for (auto prop : data->getProperties()) {
 		std::stringstream ss(prop.second);
 
 		if (prop.first == "preset") {
-
 			if (presets.find(prop.second) != presets.end())
-			{
 				reverbProperties = presets[prop.second];
-			}
-
-			else LOG("REVERB: error loading preset %s\n", prop.second.c_str());
+			else 
+				LOG_ERROR("REVERB", "Error loading preset %s", prop.second.c_str());
 		}
 		else if (prop.first == "maxDistance") {
 			float maxDistance;
 			if (ss >> maxDistance)
 				setReverbMaxDistance(maxDistance);
 			else
-				LOG("REVERB: wrong value for property %s.\n", prop.first.c_str());
+				LOG_ERROR("REVERB", "Wrong value for property %s", prop.first.c_str());
 		}
 		else if (prop.first == "minDistance") {
 			float minDistance;
 			if (ss >> minDistance)
 				setReverbMinDistance(minDistance);
 			else
-				LOG("REVERB: wrong value for property %s.\n", prop.first.c_str());
+				LOG_ERROR("REVERB", "Wrong value for property %s", prop.first.c_str());
 		}
 		else
-		{
-			LOG("REVERB: Invalid property name \"%s\"", prop.first.c_str());
-		}
+			LOG_ERROR("REVERB", "Invalid property name \"%s\"", prop.first.c_str());
 	}
 }
 
 void Reverb::setReverbPreset(PRESET type)
 {
 	switch (type) {
-	case OFF:
+	case PRESET::OFF:
 		reverbProperties = FMOD_PRESET_OFF;
 		break;
-	case GENERIC:
+	case PRESET::GENERIC:
 		reverbProperties = FMOD_PRESET_GENERIC;
 		break;
-	case PADDEDCELL:
+	case PRESET::PADDEDCELL:
 		reverbProperties = FMOD_PRESET_PADDEDCELL;
 		break;
-	case ROOM:
+	case PRESET::ROOM:
 		reverbProperties = FMOD_PRESET_ROOM;
 		break;
-	case BATHROOM:
+	case PRESET::BATHROOM:
 		reverbProperties = FMOD_PRESET_BATHROOM;
 		break;
-	case LIVINGROOM:
+	case PRESET::LIVINGROOM:
 		reverbProperties = FMOD_PRESET_LIVINGROOM;
 		break;
-	case STONEROOM:
+	case PRESET::STONEROOM:
 		reverbProperties = FMOD_PRESET_STONEROOM;
 		break;
-	case AUDITORIUM:
+	case PRESET::AUDITORIUM:
 		reverbProperties = FMOD_PRESET_AUDITORIUM;
 		break;
-	case CONCERTHALL:
+	case PRESET::CONCERTHALL:
 		reverbProperties = FMOD_PRESET_CONCERTHALL;
 		break;
-	case CAVE:
+	case PRESET::CAVE:
 		reverbProperties = FMOD_PRESET_CAVE;
 		break;
-	case ARENA:
+	case PRESET::ARENA:
 		reverbProperties = FMOD_PRESET_ARENA;
 		break;
-	case HANGAR:
+	case PRESET::HANGAR:
 		reverbProperties = FMOD_PRESET_HANGAR;
 		break;
-	case CARPETTEDHALLWAY:
+	case PRESET::CARPETTEDHALLWAY:
 		reverbProperties = FMOD_PRESET_CARPETTEDHALLWAY;
 		break;
-	case HALLWAY:
+	case PRESET::HALLWAY:
 		reverbProperties = FMOD_PRESET_HALLWAY;
 		break;
-	case STONECORRIDOR:
+	case PRESET::STONECORRIDOR:
 		reverbProperties = FMOD_PRESET_STONECORRIDOR;
 		break;
-	case ALLEY:
+	case PRESET::ALLEY:
 		reverbProperties = FMOD_PRESET_ALLEY;
 		break;
-	case FOREST:
+	case PRESET::FOREST:
 		reverbProperties = FMOD_PRESET_FOREST;
 		break;
-	case CITY:
+	case PRESET::CITY:
 		reverbProperties = FMOD_PRESET_CITY;
 		break;
-	case MOUNTAINS:
+	case PRESET::MOUNTAINS:
 		reverbProperties = FMOD_PRESET_MOUNTAINS;
 		break;
-	case QUARRY:
+	case PRESET::QUARRY:
 		reverbProperties = FMOD_PRESET_QUARRY;
 		break;
-	case PLAIN:
+	case PRESET::PLAIN:
 		reverbProperties = FMOD_PRESET_PLAIN;
 		break;
-	case PARKINGLOT:
+	case PRESET::PARKINGLOT:
 		reverbProperties = FMOD_PRESET_PARKINGLOT;
 		break;
-	case SEWERPIPE:
+	case PRESET::SEWERPIPE:
 		reverbProperties = FMOD_PRESET_SEWERPIPE;
 		break;
-	case UNDERWATER:
+	case PRESET::UNDERWATER:
 		reverbProperties = FMOD_PRESET_UNDERWATER;
 		break;
 	default:
 		reverbProperties = FMOD_PRESET_OFF;
 		break;
 	}
+	checkNullAndBreak(reverb);
 	reverb->setProperties(&reverbProperties);
 }
 

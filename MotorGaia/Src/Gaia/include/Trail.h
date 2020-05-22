@@ -15,25 +15,22 @@ class MeshRenderer;
 class GAIA_API Trail : public GaiaComponent
 {
 private:
-	Ogre::BillboardSet* bbs;
+	Ogre::BillboardSet* billboardSet;
 	Ogre::RibbonTrail* trail;
-
-	Vector3 offset;
 
 	MeshRenderer* mesh;
 	float length;
+	Vector3 offset;
 public:
 	Trail(GameObject* gameObject);
-	~Trail();
+	virtual ~Trail();
 
 	void configureTrail(const std::string& trailFilename);
 	void newTrail(const std::string& bone = "");
 
 	void start();
 	void stop();
-	bool started();
-
-	virtual void handleData(ComponentData* data);
+	bool started() const;
 
 	void setMeshRenderer(MeshRenderer* mesh);
 
@@ -44,6 +41,10 @@ public:
 	void setColourChange(const Vector3& colourChange, float colourChangeAlpha);
 	void setWidth(float width);
 	void setWidthChange(float widthChange);
+
+protected:
+	virtual void handleData(ComponentData* data);
+
 };
 
 #endif

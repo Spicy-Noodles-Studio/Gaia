@@ -1,7 +1,6 @@
 #pragma once
 #ifndef SOUND_EMITTER_H
 #define SOUND_EMITTER_H
-
 #include "GaiaComponent.h"
 #include "SoundSystem.h"
 #include "Vector3.h"
@@ -11,16 +10,13 @@ typedef SoundSystem::SoundChannel SoundChannel;
 class GAIA_API SoundEmitter : public GaiaComponent
 {
 private:
-	SoundSystem::EmitterData * emitterData;
-
+	SoundSystem::EmitterData* emitterData;
 	float pitch;
 	float volume;
 
-	void setUpChannel(SoundChannel* channel, bool reverb);
-
 public:
 	SoundEmitter(GameObject* gameObject);
-	~SoundEmitter();
+	virtual ~SoundEmitter();
 
 	void playSound(const std::string& soundName, bool reverb = false);
 	void playMusic(const std::string& soundName, bool reverb = false);
@@ -36,8 +32,12 @@ public:
 	void setPitch(float pitch);
 	void setPitch(float pitch, const std::string& sound);
 
-	bool isPlaying(const std::string& soundName);
+	bool isPlaying(const std::string& soundName) const;
 
+private:
+	void setUpChannel(SoundChannel* channel, bool reverb);
+
+protected:
 	void handleData(ComponentData* data);
 };
 

@@ -18,5 +18,8 @@ LOG("ERROR: %s reference is nullptr on file %s on line %d",#element, __FILE__, _
 return returnValue;\
 }
 
-GAIA_API bool notNull(void* element); 
+GAIA_API bool notNullFunc(void* element, char const* name, char const* file, int line);
+
+#define notNull(element) notNullFunc(element, #element, __FILE__, __LINE__)
+
 #endif

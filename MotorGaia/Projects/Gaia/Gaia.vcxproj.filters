@@ -166,6 +166,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\NoLogger.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\ErrorManagement.cpp">
+      <Filter>Archivos de código fuente\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">

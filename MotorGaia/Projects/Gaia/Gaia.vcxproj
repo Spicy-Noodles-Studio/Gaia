@@ -149,6 +149,7 @@
     <ClCompile Include="..\..\Src\Gaia\src\Systems\RenderSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Systems\SoundSystem.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\CameraDebugControl.cpp" />
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\ErrorManagement.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaData.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\GaiaMotionState.cpp" />
     <ClCompile Include="..\..\Src\Gaia\src\Utilities\Loadable.cpp" />

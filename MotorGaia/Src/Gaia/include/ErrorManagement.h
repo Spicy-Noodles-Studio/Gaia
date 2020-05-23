@@ -4,7 +4,9 @@
 #define ERROR_MANAGEMENT_H
 
 #include "DebugUtils.h"
+#include "GaiaExports.h"
 
+#define TO_STRING(x) #x
 //Llamar cuando demos valor a una referencia 
 #define checkNull(element)\
 if(element == nullptr)\
@@ -16,4 +18,5 @@ LOG("ERROR: %s reference is nullptr on file %s on line %d",#element, __FILE__, _
 return returnValue;\
 }
 
+GAIA_API bool notNull(void* element); 
 #endif

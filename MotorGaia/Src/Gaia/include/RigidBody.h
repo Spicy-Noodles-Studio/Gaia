@@ -26,6 +26,8 @@ protected:
 	const Vector3 parseFromBulletVector(const btVector3& v) const;
 	void initPresets();
 
+	bool trigger;
+
 public:
 	RigidBody(GameObject* gameObject);
 	virtual ~RigidBody();
@@ -48,6 +50,7 @@ public:
 	void setMovementConstraints(const Vector3& constraints);
 	void setRotationConstraints(const Vector3& constraints);
 
+	void setContactResponse(bool contact);
 	void setTrigger(bool trigger);
 	void setKinematic(bool kinematic);
 	void setStatic(bool stat);
@@ -58,6 +61,7 @@ public:
 
 	void disableDeactivation();
 
+	bool hasContactResponse() const;
 	bool isTrigger() const;
 	bool isKinematic() const;
 	bool isStatic() const;

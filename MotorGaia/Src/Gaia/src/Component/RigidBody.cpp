@@ -12,7 +12,7 @@
 
 REGISTER_FACTORY(RigidBody);
 
-RigidBody::RigidBody(GameObject* gameObject) : GaiaComponent(gameObject), body(nullptr), motionState(nullptr), colPresets()
+RigidBody::RigidBody(GameObject* gameObject) : GaiaComponent(gameObject), body(nullptr), motionState(nullptr), colPresets(), trigger(false)
 {
 	initPresets();
 }
@@ -143,13 +143,19 @@ void RigidBody::setRotationConstraints(const Vector3& constraints)
 	body->setAngularFactor(parseToBulletVector(constraints));
 }
 
-void RigidBody::setTrigger(bool trigger)
+void RigidBody::setContactResponse(bool contact)
 {
 	checkNullAndBreak(body);
 	int flag = 0;
-	if (isTrigger() && !trigger) flag = -body->CF_NO_CONTACT_RESPONSE;
-	else if (!isTrigger() && trigger) flag = body->CF_NO_CONTACT_RESPONSE;
+	if (hasContactResponse() && !contact) flag = body->CF_NO_CONTACT_RESPONSE;
+	else if (!hasContactResponse() && contact)flag = -body->CF_NO_CONTACT_RESPONSE;
 	body->setCollisionFlags(body->getCollisionFlags() + flag);
+}
+
+void RigidBody::setTrigger(bool trigger)
+{
+	setContactResponse(!trigger);
+	this->trigger = trigger;
 }
 
 void RigidBody::setKinematic(bool kinematic)
@@ -177,6 +183,11 @@ void RigidBody::setActive(bool active)
 	checkNullAndBreak(body);
 	int state = (active) ? ((!isStatic()) ? DISABLE_DEACTIVATION : ACTIVE_TAG) : DISABLE_SIMULATION;
 	body->forceActivationState(state);
+
+	if (trigger) return;  //If it´s a trigger we dont want to activate the contact
+	
+	setContactResponse(active);
+
 }
 
 // Multiplies original rigidBody scale with the input vector
@@ -204,10 +215,15 @@ void RigidBody::disableDeactivation()
 	body->forceActivationState(DISABLE_DEACTIVATION);//body->setActivationState(DISABLE_DEACTIVATION);
 }
 
-bool RigidBody::isTrigger() const
+bool RigidBody::hasContactResponse() const
 {
 	checkNullAndBreak(body, false);
-	return (body->getCollisionFlags() & body->CF_NO_CONTACT_RESPONSE) != 0;
+	return (body->getCollisionFlags() & body->CF_NO_CONTACT_RESPONSE) == 0;
+}
+
+bool RigidBody::isTrigger() const
+{
+	return trigger;
 }
 
 bool RigidBody::isKinematic() const

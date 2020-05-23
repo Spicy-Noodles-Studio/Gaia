@@ -278,6 +278,7 @@ void PhysicsSystem::checkCollisions()
 
 			if (!(rbA == nullptr || rbB == nullptr))
 			{
+				if (!rbA->isActive() || !rbB->isActive()) continue;
 				// Orden A < B, para el mapa
 				if (rbA > rbB) std::swap(rbA, rbB);
 

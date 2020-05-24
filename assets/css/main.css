@@ -1324,6 +1324,7 @@ input, select, textarea {
 				#header .logo img {
 					width: 5.5rem;
 					height: 5.5rem;
+					transform: translate(-1px);
 				}
 
 			#header .logo .icon:before {
@@ -1471,7 +1472,7 @@ input, select, textarea {
 			#header .logo {
 				width: 4.75rem;
 				height: 4.75rem;
-				line-height: 4.75rem;
+				/*line-height: 4.75rem;*/
 			}
 
 				#header .logo .icon:before {

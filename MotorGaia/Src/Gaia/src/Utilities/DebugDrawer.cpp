@@ -1,9 +1,10 @@
 #include "DebugDrawer.h"
 #include "OgreBulletUtils.h"
-
+#include "ErrorManagement.h"
 
 DebugDrawer::DebugDrawer(Ogre::SceneManager* scm) : sceneManager(scm)
 {
+	checkNullAndBreak(scm);
 	mContactPoints = &mContactPoints1;
 	mLines = new Ogre::ManualObject("physics lines");
 	assert(mLines);
@@ -16,7 +17,6 @@ DebugDrawer::DebugDrawer(Ogre::SceneManager* scm) : sceneManager(scm)
 
 	scm->getRootSceneNode()->attachObject(mLines);
 	scm->getRootSceneNode()->attachObject(mTriangles);
-
 
 	static const char* matName = "OgreBulletCollisionsDebugDefault";
 	Ogre::MaterialPtr mtl = Ogre::MaterialManager::getSingleton().getDefaultSettings()->clone(matName);

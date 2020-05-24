@@ -25,7 +25,7 @@ void Loadable::locate(std::string filename)
 	std::ifstream fs;
 	fs.open(filename);
 	if (!fs.is_open()) {
-		LOG_ERROR("LOADABLE","Filename \"%s\" not found", filename.c_str());
+		LOG_ERROR("LOADABLE", "Filename \"%s\" not found", filename.c_str());
 		return;
 	}
 
@@ -37,7 +37,7 @@ void Loadable::locate(std::string filename)
 		this->id = id;
 	}
 	catch (std::exception message) {
-		LOG_ERROR("LOADABLE","File \"%s\" invalid format. Should be .json formatting", filename.c_str());
+		LOG_ERROR("LOADABLE", "File \"%s\" invalid format. Should be .json formatting", filename.c_str());
 		fileData.clear();
 		fs.close();
 		return;

@@ -30,7 +30,7 @@ private:
 	void render(float deltaTime);
 	void close();
 
-	void applyBrightness(Ogre::Viewport* vp);
+	void applyBrightness(Ogre::Viewport* viewport);
 };
 
 #endif

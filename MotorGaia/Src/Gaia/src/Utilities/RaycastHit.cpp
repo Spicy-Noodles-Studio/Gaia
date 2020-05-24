@@ -4,16 +4,25 @@
 #include "Transform.h"
 #include "GameObject.h"
 
-RaycastHit::RaycastHit(): transform(nullptr), rb(nullptr), distance(0.0f), normal({0,0,0}), point({0,0,0})
+RaycastHit::RaycastHit(): transform(nullptr), rigidBody(nullptr), distance(0.0f), normal({0,0,0}), point({0,0,0})
 {
 
 }
 
-void RaycastHit::createRaycastHit(RigidBody* rb, const btVector3& normal, const btVector3& point, float distance)
+RaycastHit::~RaycastHit()
 {
-	this->rb = rb;
-	transform = rb->gameObject->transform;
-	this->normal = rb->parseFromBulletVector(normal);
+
+}
+
+void RaycastHit::createRaycastHit(RigidBody* rigidBody, const btVector3& normal, const btVector3& point, float distance)
+{
+	checkNullAndBreak(rigidBody);
+	checkNullAndBreak(rigidBody->gameObject);
+	checkNullAndBreak(rigidBody->gameObject->transform);
+
+	this->rigidBody = rigidBody;
+	transform = rigidBody->gameObject->transform;
+	this->normal = rigidBody->parseFromBulletVector(normal);
 	this->normal.normalize();
-	this->point = rb->parseFromBulletVector(point);
+	this->point = rigidBody->parseFromBulletVector(point);
 }

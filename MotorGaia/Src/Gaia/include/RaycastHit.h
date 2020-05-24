@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef RAYCAST_HIT_H
 #define RAYCAST_HIT_H
 
@@ -14,13 +13,14 @@ struct GAIA_API RaycastHit
 friend class PhysicsSystem;
 public:
 	RaycastHit();
+	~RaycastHit();
 
-	RigidBody* rb;
+	RigidBody* rigidBody;
 	Transform* transform;
 	Vector3 point, normal;
 	float distance;
 private:
-	void createRaycastHit(RigidBody* rb, const btVector3& normal, const btVector3& point, float distance);
+	void createRaycastHit(RigidBody* rigidBody, const btVector3& normal, const btVector3& point, float distance);
 };
 
 #endif 

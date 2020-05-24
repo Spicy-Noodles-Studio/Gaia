@@ -1,4 +1,5 @@
 #include "RenderSystem.h"
+#include "ErrorManagement.h"
 #include <Ogre.h>
 #include <OgreRoot.h>
 #include <OgreMaterialManager.h>
@@ -26,6 +27,8 @@ void RenderSystem::init(Ogre::Root* root)
 
 void RenderSystem::render(float deltaTime)
 {
+	checkNullAndBreak(root);
+
 	root->renderOneFrame(deltaTime);
 }
 
@@ -34,18 +37,37 @@ void RenderSystem::close()
 	destroy();
 }
 
-void RenderSystem::changeParamOfShader(const std::string& material, const std::string& paramName,  float paramValue)
+void RenderSystem::changeParamOfShader(const std::string& material, const std::string& paramName, float paramValue)
 {
-	Ogre::GpuProgramParametersSharedPtr x;
-	x = Ogre::MaterialManager::getSingleton().getByName(material)->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
-	x->getSharedParameters().at(0).getSharedParams()->setNamedConstant(paramName, paramValue);
+	Ogre::GpuProgramParametersSharedPtr programParameters;
+	Ogre::MaterialManager* materialManager = Ogre::MaterialManager::getSingletonPtr();
+	checkNullAndBreak(materialManager);
+	Ogre::Material* mMaterial = materialManager->getByName(material).get();
+	checkNullAndBreak(mMaterial);
+	Ogre::Technique* technique = mMaterial->getTechnique(0);
+	checkNullAndBreak(technique);
+	Ogre::Pass* pass = technique->getPass(0);
+	checkNullAndBreak(pass);
+	programParameters = pass->getFragmentProgramParameters();
+	checkNullAndBreak(programParameters);
+
+	auto& sharedParameters = programParameters->getSharedParameters();
+	if (!sharedParameters.size()) return;
+
+	Ogre::GpuSharedParameters* shared = sharedParameters[0].getSharedParams().get();
+	checkNullAndBreak(shared);
+	shared->setNamedConstant(paramName, paramValue);
 	
-	Ogre::MaterialManager::getSingleton().getByName(material)->getTechnique(0)->getPass(0)->setFragmentProgramParameters(x);
+	pass->setFragmentProgramParameters(programParameters);
 }
 
 
-void RenderSystem::applyBrightness(Ogre::Viewport* vp)
+void RenderSystem::applyBrightness(Ogre::Viewport* viewport)
 {
-	Ogre::CompositorManager::getSingleton().addCompositor(vp, "Brightness");
-	Ogre::CompositorManager::getSingleton().setCompositorEnabled(vp, "Brightness", true);
+	checkNullAndBreak(viewport);
+	Ogre::CompositorManager* compositorManager = Ogre::CompositorManager::getSingletonPtr();
+	checkNullAndBreak(compositorManager);
+
+	compositorManager->addCompositor(viewport, "Brightness");
+	compositorManager->setCompositorEnabled(viewport, "Brightness", true);
 }

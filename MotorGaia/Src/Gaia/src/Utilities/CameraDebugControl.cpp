@@ -25,24 +25,29 @@ void CameraDebugControl::start()
 
 void CameraDebugControl::update(float deltaTime)
 {
-	InputSystem* input = InputSystem::GetInstance();
+	checkNullAndBreak(camera);
+
+	InputSystem* inputSystem = InputSystem::GetInstance();
+	checkNullAndBreak(inputSystem);
+
 	Vector3 camDir = camera->getDirection();
 	Vector3 viewY = camDir.cross(Vector3(0, 1, 0)).normalized();
 	Vector3 myPos = camera->gameObject->transform->getPosition();
 	float vel = 5.f * deltaTime;
-	auto currentPos = input->getMousePosition();
+	auto currentPos = inputSystem->getMousePosition();
 
 	//Teclado
-	if (input->isKeyPressed("W"))
+	if (inputSystem->isKeyPressed("W"))
 		myPos += camDir * vel;
-	if (input->isKeyPressed("S"))
+	if (inputSystem->isKeyPressed("S"))
 		myPos -= camDir * vel;
-	if (input->isKeyPressed("A"))
+	if (inputSystem->isKeyPressed("A"))
 		myPos -= viewY * vel;
-	if (input->isKeyPressed("D"))
+	if (inputSystem->isKeyPressed("D"))
 		myPos += viewY * vel;
+
 	//Mouse
-	if (input->getMouseButtonHold('l')) {
+	if (inputSystem->getMouseButtonHold('l')) {
 		int xDelta = mousePos.first - currentPos.first;
 		int yDelta = mousePos.second - currentPos.second;
 		camera->gameObject->transform->rotate(Vector3(yDelta, xDelta, 0.0));
@@ -52,11 +57,11 @@ void CameraDebugControl::update(float deltaTime)
 	camera->gameObject->transform->setPosition(myPos);
 
 	// PARA PROBAR FISICAS
-	if (input->getKeyPress("C")) {
+	if (inputSystem->getKeyPress("C")) {
 		instantiate("Cubo", Vector3(0, 1, 0));
 		instantiate("Cubo", Vector3(1, 1, 0));
 	}
-	if (input->getKeyPress("V")) {
+	if (inputSystem->getKeyPress("V")) {
 		GameObject* gObject = instantiate("Bola", gameObject->transform->getPosition());
 		gObject->getComponent<RigidBody>()->setLinearVelocity(camDir * 20);
 	}

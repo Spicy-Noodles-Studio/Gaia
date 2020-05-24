@@ -200,8 +200,8 @@ bool Scene::addGameObject(GameObject* gameObject)
 	std::string objectName = gameObject->getName();
 	if (repeatedNames.find(objectName) != repeatedNames.end()) {
 		objectName += ("(" + std::to_string(++repeatedNames[objectName]) + ")");
-		LOG("SCENE: Trying to add gameobject with name %s that already exists in scene %s\n", gameObject->getName().c_str(), name.c_str());
-		LOG("SCENE: Adding gameobject with name %s\n", objectName.c_str());
+		LOG_ERROR("SCENE", "Trying to add gameobject with name %s that already exists in scene %s", gameObject->getName().c_str(), name.c_str());
+		LOG_ERROR("SCENE", "Adding gameobject with name %s", objectName.c_str());
 		gameObject->name = objectName;
 		// Try to add again
 		return addGameObject(gameObject);
@@ -249,8 +249,8 @@ void Scene::instantiate(GameObject* gameObject)
 	std::string objectName = gameObject->getName();
 	if (repeatedNames.find(objectName) != repeatedNames.end()) {
 		objectName += ("(" + std::to_string(++repeatedNames[objectName]) + ")");
-		LOG("SCENE: Trying to add gameobject with name %s that already exists in scene %s\n", gameObject->getName().c_str(), name.c_str());
-		LOG("SCENE: Adding gameobject with name %s\n", objectName.c_str());
+		LOG_ERROR("SCENE", "Trying to add gameobject with name %s that already exists in scene %s", gameObject->getName().c_str(), name.c_str());
+		LOG_ERROR("SCENE", "Adding gameobject with name %s", objectName.c_str());
 		gameObject->name = objectName;
 		// Try to add again
 		instantiate(gameObject);

@@ -15,7 +15,7 @@ class GaiaMotionState : public btMotionState
 {
 protected:
 	Transform* transform;
-	Vector3 offset = Vector3();
+	Vector3 offset;
 public:
 	GaiaMotionState(Transform* transform, const Vector3& offset = { 0,0,0 });
 	~GaiaMotionState();

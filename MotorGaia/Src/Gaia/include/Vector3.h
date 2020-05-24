@@ -3,7 +3,6 @@
 #define VECTOR3_H
 
 #include <string>
-
 #include "GaiaExports.h"
 
 #define CHECK_VALID( _v ) 0

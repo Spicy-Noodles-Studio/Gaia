@@ -40,7 +40,7 @@ void ResourcesManager::init()
 		LOG_ERROR("RESOURCES MANAGER", "Resources filepath not valid: %s", resourcesPath.c_str());
 		return;
 	}
-	LOG("Reading Resources paths...\n");
+	LOG("Reading Resources paths...");
 	// Start reading resources
 	std::string type, c, filename;
 	while (file >> type >> c >> filename) {
@@ -168,7 +168,7 @@ void ResourcesManager::loadSound(const std::string& filename)
 	std::lock_guard<std::mutex> lock(soundMutex);
 	sounds[name] = sound;
 
-	LOG("Sound loaded: %s\n", soundfile.c_str());
+	LOG("Sound loaded: %s", soundfile.c_str());
 }
 
 void ResourcesManager::initializeAllResources()
@@ -518,5 +518,5 @@ void ResourcesManager::locateOgreResources(const std::string& filename)
 	}
 
 	//Initialize (REMEMBER TO INITIALIZE OGRE)
-	LOG("RESOURCES MANAGER: Ogre resources loaded\n");
+	LOG("RESOURCES MANAGER: Ogre resources loaded");
 }

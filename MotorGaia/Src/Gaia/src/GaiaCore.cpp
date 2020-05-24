@@ -44,7 +44,7 @@ GaiaCore::~GaiaCore()
 	// Call close before GaiaCore destructor
 }
 
-void GaiaCore::init(std::string windowName)
+void GaiaCore::init(const std::string& windowTitle, unsigned int width, unsigned int height)
 {
 #ifdef _DEBUG
 	root = new Ogre::Root("plugins_d.cfg", "window_d.cfg");
@@ -55,28 +55,20 @@ void GaiaCore::init(std::string windowName)
 	if (!(root->restoreConfig() || root->showConfigDialog(nullptr)))
 		return;
 
-	windowManager = new WindowManager();
-	windowManager->createWindow(root, windowName);
+	windowManager = WindowManager::GetInstance();
+	windowManager->init(root);
 
 	// Setup window
-	window = windowManager->getWindow();
-	windowManager->initResolutions();
-
-	std::vector<std::pair<int, int>> resolutions = windowManager->getAvailableResolutionsForWindow();
-
-	windowManager->setWindowMinArea(resolutions[0].first, resolutions[0].second);
-	windowManager->windowResize(resolutions[resolutions.size() / 2].first, resolutions[resolutions.size() / 2].second);
-	windowManager->setActualResolutionId(resolutions.size() / 2);
+	window = windowManager->createWindow(windowTitle, width, height);
 
 	// Systems initialization
-
 	// EventSystem
 	eventSystem = new EventSystem();
 	eventSystem->init();
 
 	// RenderSystem
 	renderSystem = RenderSystem::GetInstance();
-	renderSystem->init(root, window);
+	renderSystem->init(root);
 
 	// InputSystem
 	inputSystem = InputSystem::GetInstance();
@@ -95,7 +87,6 @@ void GaiaCore::init(std::string windowName)
 	soundSystem->init();
 
 	// Managers initialization
-
 	// ResourcesManager initialization
 	resourcesManager.init();
 
@@ -118,7 +109,7 @@ void GaiaCore::init(std::string windowName)
 void GaiaCore::run()
 {
 	float deltaTime = timer->getDeltaTime();
-	while (!windowManager->isWindowClosed())
+	while (!windowManager->isClosed())
 	{
 		// Update elapsed time
 		timer->update();
@@ -140,7 +131,7 @@ void GaiaCore::run()
 
 void GaiaCore::close()
 {
-	Timer::GetInstance()->close();
+	timer->close();
 
 	// SceneManager termination
 	sceneManager->close();

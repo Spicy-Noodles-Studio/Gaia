@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef RESOURCES_MANAGER_H
 #define RESOURCES_MANAGER_H
 

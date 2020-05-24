@@ -1,4 +1,6 @@
 #include "RenderSystem.h"
+#include <Ogre.h>
+#include <OgreRoot.h>
 #include <OgreMaterialManager.h>
 #include <OgreTechnique.h>
 
@@ -6,7 +8,7 @@
 #include <OgreCompositor.h>
 #include <OgreCompositorInstance.h>
 
-#include "Window.h"
+
 RenderSystem::RenderSystem() : root(nullptr)
 {
 
@@ -17,10 +19,9 @@ RenderSystem::~RenderSystem()
 
 }
 
-void RenderSystem::init(Ogre::Root* root, Window* window)
+void RenderSystem::init(Ogre::Root* root)
 {
 	this->root = root;
-	this->window = window;
 }
 
 void RenderSystem::render(float deltaTime)

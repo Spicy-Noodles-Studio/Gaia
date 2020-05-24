@@ -16,14 +16,23 @@
 
 class DebugDrawer;
 
-class GAIA_API  SceneManager : public Singleton<SceneManager>
+class GAIA_API SceneManager : public Singleton<SceneManager>
 {
+	friend class GaiaCore;
+	friend class InterfaceSystem;
 	friend class Scene;
 	friend class GameObject;
 public:
 	SceneManager();
 	~SceneManager();
 
+	bool changeScene(const std::string& name, bool async = false);
+	bool exist(const std::string& name) const;
+
+	Scene* getCurrentScene() const;
+	std::string getSceneToLoad() const;
+
+private:
 	void init(Ogre::Root* root);
 	void close();
 
@@ -34,14 +43,6 @@ public:
 	// After process currentScene
 	void postUpdate(float deltaTime);
 
-	bool changeScene(const std::string& name, bool async = false);
-	bool exist(const std::string& name);
-
-	Scene* getCurrentScene();
-
-	std::string getSceneToLoad();
-
-private:
 	Scene* createScene(const SceneData* data);
 	GameObject* createGameObject(const GameObjectData* data, Scene* scene, GameObject* parent = nullptr);
 

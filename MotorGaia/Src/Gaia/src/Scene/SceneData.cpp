@@ -36,8 +36,8 @@ const std::vector<GameObjectData*>& SceneData::getGameObjectsData() const
 
 SceneData* SceneData::empty()
 {
-	SceneData* s = new SceneData();
-	s->name = "Default";
+	SceneData* sceneData = new SceneData();
+	sceneData->name = "Default";
 	
 	// Camera with white light
 	GameObjectData* camera = new GameObjectData();
@@ -73,10 +73,10 @@ SceneData* SceneData::empty()
 	cube->components[1]->name = "MeshRenderer";
 	cube->components[1]->addProperty("mesh", "Cube Cube.mesh");
 
-	s->setGameObjectData(camera);
-	s->setGameObjectData(cube);
+	sceneData->setGameObjectData(camera);
+	sceneData->setGameObjectData(cube);
 
-	return s;
+	return sceneData;
 }
 
 bool SceneData::load_internal()

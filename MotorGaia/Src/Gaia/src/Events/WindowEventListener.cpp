@@ -26,10 +26,10 @@ void WindowEventListener::processEvent(const SDL_Event& event)
             if (windowMoved) windowMoved(event.window.data1, event.window.data2);
             break;
         case SDL_WINDOWEVENT_RESIZED:
-            if (windowResized) windowResized(event.window.data1, event.window.data2);
+            if (windowResized) windowResized(unsigned int(event.window.data1), unsigned int(event.window.data2));
             break;
         case SDL_WINDOWEVENT_SIZE_CHANGED:
-            if (windowSizeChanged) windowSizeChanged(event.window.data1, event.window.data2);
+            if (windowSizeChanged) windowSizeChanged(unsigned int(event.window.data1), unsigned int(event.window.data2));
             break;
         case SDL_WINDOWEVENT_MINIMIZED:
             if (windowMinimized) windowMinimized();

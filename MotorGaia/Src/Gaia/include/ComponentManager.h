@@ -12,17 +12,22 @@ typedef std::function<Component* (GameObject*)> ComponentFactory;
 
 class GAIA_API ComponentManager : public Singleton<ComponentManager>
 {
+	friend class GaiaCore;
+	friend class SceneManager;
+	friend class GameObject;
+	friend class UserComponent;
 public:
 	ComponentManager();
 	~ComponentManager();
 
+	template<typename T>
+	void registerComponent(const std::string& nameID);
+
+private:
 	void init();
 	void close();
 	
 	const ComponentFactory& getComponentFactory(const std::string& nameID);
-
-	template<typename T>
-	void registerComponent(const std::string& nameID);
 
 	template<typename T>
 	const std::string& getID();

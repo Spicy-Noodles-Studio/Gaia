@@ -114,7 +114,8 @@ void InterfaceSystem::init(Window* window)
 
 	onMouseWheelScrollY([this](int value) { CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseWheelChange(value); });
 
-	onWindowResized([this](int width, int height) { CEGUI::System::getSingleton().notifyDisplaySizeChanged(CEGUI::Sizef(width, height)); });
+	onWindowSizeChanged([this](unsigned int width, unsigned int height) { CEGUI::System::getSingleton().notifyDisplaySizeChanged(CEGUI::Sizef(width, height)); });
+	onWindowResized([this](unsigned int width, unsigned int height) { CEGUI::System::getSingleton().notifyDisplaySizeChanged(CEGUI::Sizef(width, height)); });
 
 	onControllerButtonDown([this](int index, int button) { processControllerButtonDown(index, button); });
 	onControllerButtonUp([this](int index, int button) { processControllerButtonUp(index, button); });

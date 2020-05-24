@@ -1,20 +1,27 @@
 #include "GameObjectData.h"
 #include "DebugUtils.h"
 #include "ResourcesManager.h"
-#include <stdio.h>
 
 
 GameObjectData::GameObjectData() : blueprintRef(nullptr)
 {
+
 }
 
 GameObjectData::GameObjectData(const GameObjectData& other)
 {
+	// Used to build a GameObjectData without Blueprint references
 	name = other.name;
 	tag = other.tag;
 	
 	if (other.blueprintRef != nullptr) {
-		while (other.blueprintRef->getLoadState() != Loadable::LoadState::READY); //Wait till loaded
+		Loadable::LoadState state = other.blueprintRef->getLoadState();
+		if (state == Loadable::LoadState::INVALID) { 
+			LOG_ERROR("GAMEOBJECT DATA", "Blueprint reference is invalid");
+			return; 
+		}
+
+		while (state != Loadable::LoadState::READY); //Wait till loaded
 		GameObjectData bp(*other.blueprintRef);
 
 		for (auto c : bp.components) {
@@ -96,24 +103,20 @@ bool GameObjectData::loadData(const RawData& data)
 	std::string type = *objectType;
 	std::transform(type.begin(), type.end(), type.begin(), std::tolower);
 
-	// Si es blueprint
 	if (type == "blueprint") {
-		// Buscar referencia
 		nlohmann::json::const_iterator bpPath = data.find("BlueprintPath");
 		if (bpPath == data.end()) {
 			LOG_ERROR("BLUEPRINT DATA", "BlueprintPath keyword not found in \"%s\" blueprint", name.c_str());
 			return false;
 		}
 		std::string bpName = *bpPath;
-		// Coge la referencia del blueprint
 		const BlueprintData* bpData = ResourcesManager::getBlueprint(bpName);
-		if (bpData == nullptr || bpData->getLoadState() == Loadable::LoadState::INVALID)
+		if (bpData == nullptr || bpData->getLoadState() == Loadable::LoadState::INVALID) {
+			LOG_ERROR("GAMEOBJECT DATA", "Trying to get a reference to a null or non valid Blueprint");
 			return false;
+		}
 
 		setBlueprint(bpData);
-		// Buscar modificicadores
-
-		//Se modifican los componentes si es necesario
 		nlohmann::json::const_iterator compoMod = data.find("ComponentModifications");
 		if (compoMod != data.end()) {
 			if (!addComponentModifications(*compoMod)) {
@@ -121,7 +124,6 @@ bool GameObjectData::loadData(const RawData& data)
 			}
 		}
 
-		//Se modifican los children si es necesario
 		nlohmann::json::const_iterator childMod = data.find("ChildrenModifications");
 		if (childMod != data.end()) {
 			if (!addChildrenModifications(*childMod)) {
@@ -129,9 +131,6 @@ bool GameObjectData::loadData(const RawData& data)
 			}
 		}
 	}
-	// Tanto para gameobjects como blueprints, componentes e hijos
-
-	// Se cargan los nuevos componentes
 	nlohmann::json::const_iterator components = data.find("Components");
 	if (components != data.end()) {
 		LOG("\"Components\" keyword found. Loading...");
@@ -142,7 +141,6 @@ bool GameObjectData::loadData(const RawData& data)
 		LOG("\"Components\" loaded successfully");
 	}
 
-	// Se cargan los hijos
 	nlohmann::json::const_iterator children = data.find("Children");
 	if (children != data.end()) {
 		LOG("\"Children\" keyword found. Loading...");
@@ -158,12 +156,11 @@ bool GameObjectData::loadData(const RawData& data)
 
 bool GameObjectData::addComponentModifications(const RawData& data)
 {
-	// Para cada modificacion
 	for (auto& mod : data) {
 		nlohmann::json::const_iterator name = mod.find("ComponentName");
 		if (name == mod.end()) {
 			LOG_ERROR("GAMEOBJECT DATA", "ComponentName not found for modification");
-			continue; // Si no se ha podido modificar el componente pasamos al siguiente
+			continue; 
 		}
 		nlohmann::json::const_iterator properties = mod.find("ComponentProperties");
 		if (properties == mod.end()) {
@@ -175,12 +172,10 @@ bool GameObjectData::addComponentModifications(const RawData& data)
 			continue;
 		}
 
-		// Todo bien, a�adimos
 		ComponentData* cData = new ComponentData();
 		componentModifications[*name] = cData;
 
 		cData->setName(*name);
-		// Por cada propiedad
 		for (auto& prop : properties.value().items()) {
 			std::string cName = prop.value()[0];
 			std::string cValue = prop.value()[1];
@@ -195,7 +190,6 @@ bool GameObjectData::addComponentModifications(const RawData& data)
 
 bool GameObjectData::addChildrenModifications(const RawData& data)
 {
-	// Para cada modificacion
 	for (auto& mod : data.items()) {
 
 		if (childrenModifications.find(mod.key()) != childrenModifications.end()) {
@@ -206,19 +200,16 @@ bool GameObjectData::addChildrenModifications(const RawData& data)
 		GameObjectData* childData = new GameObjectData();
 		childrenModifications[mod.key()] = childData;
 
-		// Modificaciones de componentes existentes
 		nlohmann::json::const_iterator childCompMod = mod.value().find("ComponentModifications");
 		if (childCompMod != mod.value().end())
 			if(!childData->addComponentModifications(*childCompMod))
 				LOG_ERROR("GAMEOBJECT DATA", "Adding ComponentModifications \"%s\" failed", childCompMod.key().c_str());
 
-		// Modificaciones de hijos que existen
 		nlohmann::json::const_iterator childModMod = mod.value().find("ChildrenModifications");
 		if (childCompMod != mod.value().end())
 			if (!childData->addChildrenModifications(*childModMod))
 				LOG_ERROR("GAMEOBJECT DATA", "Adding ChildrenModifications \"%s\" failed", childCompMod.key().c_str());
 
-		// Anyadir componentes a los ya existentes
 		nlohmann::json::const_iterator childComp = mod.value().find("Components");
 		if (childComp != mod.value().end()) {
 			LOG("\"Components\" keyword found. Loading...");
@@ -229,7 +220,6 @@ bool GameObjectData::addChildrenModifications(const RawData& data)
 			LOG("\"Components\" loaded successfully");
 		}
 
-		// Anyadir hijos a los ya existentes
 		nlohmann::json::const_iterator childChildren = mod.value().find("Children");
 		if (childChildren != mod.value().end()) {
 			LOG("\"Children\" keyword found. Loading...");
@@ -251,7 +241,8 @@ bool GameObjectData::addComponents(const RawData& data)
 			LOG_ERROR("GAMEOBJECT DATA", "ComponentName keyword not found");
 			return false;
 		}
-		addComponent(component);
+		if (!addComponent(component))
+			return false;
 	}
 	return true;
 }
@@ -276,6 +267,7 @@ bool GameObjectData::addComponent(const RawData& data)
 		LOG("Loading %s properties", cData->getName().c_str());
 		for (auto& property : (*properties).items()) {
 			if (property.value().size() != 2 || !cData->addProperty(property.value()[0], property.value()[1])) {
+				LOG_ERROR("GAMEOBJECT DATA", "Property syntax not correct");
 				return false;
 			}
 		}
@@ -296,7 +288,8 @@ bool GameObjectData::addChildren(const RawData& data)
 			LOG_ERROR("GAMEOBJECT DATA", "ObjectType keyword not found");
 			return false;
 		}
-		addChild(child);
+		if (!addChild(child))
+			return false;
 	}
 	return true;
 }
@@ -334,7 +327,7 @@ void GameObjectData::setTag(const std::string& gameObjectTag)
 void GameObjectData::addComponentData(const std::string& componentName, ComponentData* data)
 {
 	if (componentsIndexes.find(componentName) != componentsIndexes.end()) {
-		LOG("GAMEOBJECT DATA: object %s component %s data has been overwritten\n", name.c_str(), componentName.c_str());
+		LOG_ERROR("GAMEOBJECT DATA", "Object %s component %s data has been overwritten", name.c_str(), componentName.c_str());
 		delete components[componentsIndexes[componentName]];
 		components[componentsIndexes[componentName]] = data;
 		return;
@@ -346,7 +339,7 @@ void GameObjectData::addComponentData(const std::string& componentName, Componen
 void GameObjectData::addChildrenData(const std::string& childrenName, GameObjectData* data)
 {
 	if (childrenIndexes.find(childrenName) != childrenIndexes.end()) {
-		LOG("GAMEOBJECT DATA: object %s child %s data has been overwritten\n", name.c_str(), childrenName.c_str());
+		LOG_ERROR("GAMEOBJECT DATA", "Object %s child %s data has been overwritten", name.c_str(), childrenName.c_str());
 		delete children[childrenIndexes[childrenName]];
 		children[childrenIndexes[childrenName]] = data;
 		return;
@@ -364,16 +357,20 @@ void GameObjectData::applyChildModification(const std::string& name, GameObjectD
 {
 	for (auto child : data->children) {
 		for (auto comp : child->components) {
-			for (auto prop : comp->getProperties())
-				modifyChildData(child->name, comp->name, prop.first, prop.second);
+			for (auto prop : comp->getProperties()) {
+				if (!modifyChildData(child->name, comp->name, prop.first, prop.second))
+					LOG_ERROR("GAMEOBJECT DATA", "Error ocurred modifying child \"%s\" component \"%s\"", child->name.c_str(), comp->name.c_str());
+			}
 		}
 	}
 }
 
 void GameObjectData::applyComponentModification(const std::string& name, ComponentData* data)
 {
-	for (auto prop : data->getProperties())
-		modifyComponentData(data->getName(), prop.first, prop.second);
+	for (auto prop : data->getProperties()) {
+		if (!modifyComponentData(data->getName(), prop.first, prop.second))
+			LOG_ERROR("GAMEOBJECT DATA", "Error ocurred modifying component \"%s\"", data->name.c_str());
+	}
 
 }
 
@@ -383,8 +380,7 @@ bool GameObjectData::modifyComponentData(const std::string& componentName, const
 		LOG("GAMEOBJECT DATA: tried to modify component %s, does not exist in object %s\n", componentName.c_str(), name.c_str());
 		return false;
 	}
-	components[componentsIndexes[componentName]]->modifyProperty(propertyName, value);
-	return true;
+	return components[componentsIndexes[componentName]]->modifyProperty(propertyName, value);
 }
 
 bool GameObjectData::modifyChildData(const std::string& childName, const std::string& componentName, const std::string& propertyName, const std::string& value)

@@ -22,7 +22,7 @@ WinMain(HINSTANCE hinstance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nCmdSh
 #endif	
 	
 	GaiaCore engine;
-	engine.init("Test window");
+	engine.init("Test window", 1280, 720);
 
 	engine.run();
 

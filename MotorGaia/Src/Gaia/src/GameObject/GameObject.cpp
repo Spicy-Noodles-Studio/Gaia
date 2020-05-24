@@ -1,13 +1,18 @@
 #include "GameObject.h"
-#include "Scene.h"
-#include <OgreSceneNode.h>
-#include <OgreSceneManager.h>
 #include "SceneManager.h"
 
 
-GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), active(true), myScene(scene)
+GameObject::GameObject(const std::string& name, const std::string& tag, Scene* scene) : name(name), tag(tag), active(true), myScene(scene),
+																						transform (nullptr), node(nullptr), parent(nullptr)
 {
-	node = scene->getSceneManager()->getRootSceneNode()->createChildSceneNode(scene->sceneManager->getNextNodeID());
+	checkNullAndBreak(scene);
+	checkNullAndBreak(scene->sceneManager);
+	Ogre::SceneManager* sceneManager = scene->getSceneManager();
+	checkNullAndBreak(sceneManager);
+	Ogre::SceneNode* root = sceneManager->getRootSceneNode();
+	checkNullAndBreak(root);
+
+	node = root->createChildSceneNode(scene->sceneManager->getNextNodeID());
 }
 
 GameObject::~GameObject()
@@ -50,6 +55,8 @@ std::vector<GameObject*> GameObject::findChildrenWithTag(const std::string& tag)
 {
 	std::vector<GameObject*> childrenFound;
 	for (GameObject* child : children) {
+		if (child == nullptr) continue;
+
 		if (child->getTag() == tag)
 			childrenFound.push_back(child);
 	}
@@ -61,13 +68,16 @@ void GameObject::addChild(GameObject* child)
 	if (child == nullptr) return;
 
 	// Check if it has parent and if son, remove it
-	if (child->getParent() != nullptr)
-		child->getParent()->removeChild(child);
+	GameObject* parent = child->getParent();
+	if (parent != nullptr)
+		parent->removeChild(child);
 
 	children.push_back(child);
 	child->parent = this;
 
 	// SceneNode stuff
+	checkNullAndBreak(node);
+	checkNullAndBreak(child->node);
 	child->node->getParent()->removeChild(child->node);
 	node->addChild(child->node);
 }
@@ -85,8 +95,14 @@ void GameObject::removeChild(GameObject* child)
 	child->parent = nullptr; // Dereference parent
 
 	// SceneNode stuff
+	checkNullAndBreak(node);
+	checkNullAndBreak(child->node);
 	node->removeChild(child->node);
-	node->getCreator()->getRootSceneNode()->addChild(child->node);
+	Ogre::SceneManager* sceneManager = node->getCreator();
+	checkNullAndBreak(sceneManager);
+	Ogre::SceneNode* root = sceneManager->getRootSceneNode();
+	checkNullAndBreak(root);
+	root->addChild(child->node);
 }
 
 const std::string& GameObject::getName() const
@@ -111,71 +127,118 @@ Scene* GameObject::getScene() const
 
 void GameObject::onCollisionEnter(GameObject* other)
 {
-	for (UserComponent* c : userComponents)
-		if (c->isActive())
-			c->onCollisionEnter(other);
+	std::vector<UserComponent*> components = userComponents;
+
+	for (UserComponent* component : components) {
+		checkNullAndBreak(component);
+
+		if (component->isActive())
+			component->onCollisionEnter(other);
+	}
 }
 
 void GameObject::onTriggerEnter(GameObject* other)
 {
-	for (UserComponent* c : userComponents)
-		if (c->isActive())
-			c->onTriggerEnter(other);
+	std::vector<UserComponent*> components = userComponents;
+
+	for (UserComponent* component : components) {
+		checkNullAndBreak(component);
+
+		if (component->isActive())
+			component->onTriggerEnter(other);
+	}
 }
 
 void GameObject::onObjectEnter(GameObject* other)
 {
-	for (UserComponent* c : userComponents)
-		if (c->isActive())
-			c->onObjectEnter(other);
+	std::vector<UserComponent*> components = userComponents;
+
+	for (UserComponent* component : components) {
+		checkNullAndBreak(component);
+
+		if (component->isActive())
+			component->onObjectEnter(other);
+	}
 }
 
 void GameObject::onCollisionStay(GameObject* other)
 {
-	for (UserComponent* c : userComponents)
-		if (c->isActive())
-			c->onCollisionStay(other);
+	std::vector<UserComponent*> components = userComponents;
+
+	for (UserComponent* component : components) {
+		checkNullAndBreak(component);
+
+		if (component->isActive())
+			component->onCollisionStay(other);
+	}
 }
 
 void GameObject::onTriggerStay(GameObject* other)
 {
-	for (UserComponent* c : userComponents)
-		if (c->isActive())
-			c->onTriggerStay(other);
+	std::vector<UserComponent*> components = userComponents;
+
+	for (UserComponent* component : components) {
+		checkNullAndBreak(component);
+
+		if (component->isActive())
+			component->onTriggerStay(other);
+	}
 }
 
 void GameObject::onObjectStay(GameObject* other)
 {
-	for (UserComponent* c : userComponents)
-		if (c->isActive())
-			c->onObjectStay(other);
+	std::vector<UserComponent*> components = userComponents;
+
+	for (UserComponent* component : components) {
+		checkNullAndBreak(component);
+
+		if (component->isActive())
+			component->onObjectStay(other);
+	}
 }
 
 void GameObject::onCollisionExit(GameObject* other)
 {
-	for (UserComponent* c : userComponents)
-		if (c->isActive())
-			c->onCollisionExit(other);
+	std::vector<UserComponent*> components = userComponents;
+
+	for (UserComponent* component : components) {
+		checkNullAndBreak(component);
+
+		if (component->isActive())
+			component->onCollisionExit(other);
+	}
 }
 
 void GameObject::onTriggerExit(GameObject* other)
 {
-	for (UserComponent* c : userComponents)
-		if (c->isActive())
-			c->onTriggerExit(other);
+	std::vector<UserComponent*> components = userComponents;
+
+	for (UserComponent* component : components) {
+		checkNullAndBreak(component);
+
+		if (component->isActive())
+			component->onTriggerExit(other);
+	}
 }
 
 void GameObject::onObjectExit(GameObject* other)
 {
-	for (UserComponent* c : userComponents)
-		if (c->isActive())
-			c->onObjectExit(other);
+	std::vector<UserComponent*> components = userComponents;
+
+	for (UserComponent* component : components) {
+		checkNullAndBreak(component);
+
+		if (component->isActive())
+			component->onObjectExit(other);
+	}
 }
 
 void GameObject::setActive(bool active)
 {
-	for (auto comp : components)
+	for (auto comp : components) {
+		checkNull(comp.second);
 		comp.second->setActive(active);
+	}
 
 	this->active = active;
 }
@@ -187,6 +250,8 @@ bool GameObject::isActive() const
 
 bool GameObject::addComponent(const std::string& componentName, Component* component)
 {
+	checkNullAndBreak(component, false);
+
 	if (components.find(componentName) != components.end()) {
 		LOG("GAMEOBJECT: Trying to add component with name %s that already exists in gameobject %s.\n", componentName.c_str(), name.c_str());
 		return false;
@@ -197,5 +262,6 @@ bool GameObject::addComponent(const std::string& componentName, Component* compo
 
 void GameObject::addUserComponent(UserComponent* component)
 {
+	checkNullAndBreak(component);
 	userComponents.push_back(component);
 }

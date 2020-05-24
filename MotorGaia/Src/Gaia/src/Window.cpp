@@ -159,6 +159,7 @@ void Window::resize(unsigned int width, unsigned int height)
 	SDL_SetWindowResizable(sdlWindow, SDL_bool(true));
 	SDL_SetWindowSize(sdlWindow, width, height);
 	SDL_SetWindowResizable(sdlWindow, SDL_bool(isResizable));
+	move(WINDOW_CENTER_X, WINDOW_CENTER_Y);
 }
 
 bool Window::isClosed()

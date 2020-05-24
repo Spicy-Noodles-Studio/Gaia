@@ -28,6 +28,8 @@ typedef std::pair<std::string, std::function<bool()>> UIEvent;
 
 class GAIA_API InterfaceSystem : public Singleton<InterfaceSystem>, public MouseEventListener, public KeyboardEventListener, public WindowEventListener, public ControllerEventListener
 {
+	friend class GaiaCore;
+	friend class UILayout;
 private:
 	CEGUI::OgreRenderer* renderer;
 	UIElement* root;
@@ -76,22 +78,23 @@ public:
 	InterfaceSystem();
 	~InterfaceSystem();
 
+private:
 	void init(Window* window);
 	void render();
 	void update(float deltaTime);
 	void close();
 
+	void createRoot();
+	void initDefaultResources(const std::string& filename);
 	CEGUI::String getEventType(std::string eventType);
-
-	static void registerEvent(const std::string& eventName, UIEvent event);
-	void unregisterEvent(const std::string& eventName);
 	static UIEvent getEvent(const std::string& eventName);
 
-	void createRoot();
-	UIElement* getRoot();
+public:
+	static void registerEvent(const std::string& eventName, UIEvent event);
+	void unregisterEvent(const std::string& eventName);
 
+	UIElement* getRoot();
 	UIElement* loadLayout(const std::string& filename);
-	void initDefaultResources(const std::string& filename);
 
 	void initControllerMenuInput(UIElement* newRoot = nullptr);
 	void clearControllerMenuInput();

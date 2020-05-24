@@ -3,6 +3,7 @@
 #define COMPONENT_H
 
 #include <string>
+#include <sstream>
 #include "ComponentData.h"
 #include "DebugUtils.h"
 #include "Macros.h"
@@ -16,8 +17,8 @@ friend class ComponentManager;
 friend class GameObject;
 friend class UserComponent;
 friend class SceneManager;
-public:
 
+public:
 	Component(GameObject* gameObject);
 	virtual ~Component();
 

@@ -14,6 +14,8 @@ typedef Ogre::RenderWindow RenderWindow;
 
 #define WINDOW_CENTER_X SDL_WINDOWPOS_CENTERED
 #define WINDOW_CENTER_Y SDL_WINDOWPOS_CENTERED
+#define DISPLAY_SIZE_X SDL_
+#define DISPLAT_SIZE_Y
 
 class Window : public WindowEventListener
 {

@@ -119,10 +119,6 @@ bool SceneManager::changeScene(const std::string& name, bool async)
 
 	loadScene(data);
 
-	InterfaceSystem* interfaceSystem = InterfaceSystem::GetInstance();
-	if(interfaceSystem != nullptr)
-		interfaceSystem->clearControllerMenuInput();
-
 	return data == nullptr ? false : true;
 }
 
@@ -209,6 +205,12 @@ void SceneManager::processSceneChange()
 		delete oldScene;
 
 	processCameraChange();
+
+	InterfaceSystem* interfaceSystem = InterfaceSystem::GetInstance();
+	if (interfaceSystem != nullptr) {
+		interfaceSystem->clearControllerMenuInput();
+		interfaceSystem->initControllerMenuInput();
+	}
 }
 
 void SceneManager::processCameraChange()

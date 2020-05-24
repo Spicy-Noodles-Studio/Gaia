@@ -30,9 +30,10 @@ Window* WindowManager::createWindow(const std::string& title, unsigned int width
 	}
 	
 	if (width == 0 || height == 0) {
-		auto maxResolution = *(resolutions.end() - 1);
-		width = maxResolution.first;
-		height = maxResolution.second;
+		SDL_DisplayMode displayMode;
+		SDL_GetCurrentDisplayMode(0, &displayMode);
+		width = displayMode.w;
+		height = displayMode.h;
 	}
 
 	Window* window = new Window(root, title, width, height);

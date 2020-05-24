@@ -1481,7 +1481,7 @@ input, select, textarea {
 				#header .logo img {
 					width: 4.75rem;
 					height: 4.75rem;
-					transform: translate(0, -30px);
+					transform: translate(-1px, -2rem);
 				}
 
 			#header .content .inner {

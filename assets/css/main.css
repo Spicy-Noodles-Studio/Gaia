@@ -33,6 +33,24 @@ body {
 	line-height: 1;
 }
 
+	.responsive {
+  		width: 100%;
+  		max-width: 150px;
+  		height: auto;
+  		max-height: 150px;
+	}
+
+	.blockquote-border-right {
+		/*border-right: 5px solid #FFFFFF40 !important;*/
+		border-right-style: solid;
+		border-right-width: 4px;
+		line-height: 1.5em;
+		border-right-color: #ffffff;
+		border-left-width:0px!important;
+		border-left-style:0px transparent solid!important;
+		padding-right: 30px;
+	}
+
 p img {
 	max-width: 80%;  height: auto;
 }

@@ -27,7 +27,7 @@ private:
 	void init();
 	void close();
 	
-	const ComponentFactory& getComponentFactory(const std::string& nameID);
+	ComponentFactory* getComponentFactory(const std::string& nameID);
 
 	template<typename T>
 	const std::string& getID();

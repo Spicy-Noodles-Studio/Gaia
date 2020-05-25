@@ -324,6 +324,11 @@ const BlueprintData* ResourcesManager::getBlueprint(const std::string& name)
 		LOG_ERROR("RESOURCES MANAGER", "Trying to get not existing Blueprint: %s", name.c_str());
 		return nullptr;
 	}
+	BlueprintData* data = blueprintData[name];
+	if (data->getLoadState() == Loadable::LoadState::INVALID) { 
+		blueprintData.erase(name);
+		return nullptr; 
+	}
 	return blueprintData[name];
 }
 

@@ -159,7 +159,7 @@ GameObject* SceneManager::createGameObject(const GameObjectData* data, Scene* sc
 		auto constructor = componentManager->getComponentFactory(cData->getName());
 		if (constructor != nullptr)
 		{
-			Component* comp = constructor(gameObject);
+			Component* comp = (*constructor)(gameObject);
 			if (comp == nullptr) continue;
 
 			comp->handleData(cData);

@@ -110,10 +110,16 @@ GameObject* UserComponent::instantiate(const GameObjectData* data)
 		ComponentData* cData = compData;
 		if (cData == nullptr) continue;
 
-		auto constructor = ComponentManager::GetInstance()->getComponentFactory(cData->getName());
+		ComponentManager* componentManager = ComponentManager::GetInstance();
+		if (componentManager == nullptr) {
+			LOG_ERROR("USER COMPONENT", "Error ocurred while instantiating a GameObject named \"%s\"", gameObject->getName().c_str());
+			delete instance;
+			return nullptr;
+		}
+		auto constructor = componentManager->getComponentFactory(cData->getName());
 		if (constructor != nullptr)
 		{
-			Component* comp = constructor(instance);
+			Component* comp = (*constructor)(instance);
 			if (comp == nullptr) continue;
 
 			comp->handleData(cData);

@@ -18,16 +18,17 @@ We give you the tools to **render 3D models** and worlds, to implement animation
 
 # How to Install
 
-- Create a VS project for your game. Inside root, create a 'Dependencies' folder (if it does not exist) and download GAIA inside that folder.
+- Download GAIA.
 	- Download the most recent release version. **DO NOT** download the master version, only release versions are stable.
 - Set up GAIA:
+	- Inside 'Dependencies', use CMAKE to install the following tools: Ogre3D, FMOD, CEGUI, SDL2.0, Bullet Physics.
 	- Go to the properties of GAIA, get into 'Configuration Properties >> Debugging >> Work Directory' and change it's value to **$(TargetDir)** in debug and release.
 	- Inside GAIA, run the DLLCopier, both in debug as in release, to install the necessary tools for the engine.
 	- Now compile GAIA both in debug as in release. Debug is used for code / game testing purposes, and release for the final stable version of the game.
 - Set up your game Project:
-	- Go to the properties of the project, get into 'Configuration Properties >> Debugging >> Work Directory' and change it's value to **$(TargetDir)** in debug and release.
-	- Run the DLLCopier inside your game project, and you are all set up to start working on your game.
-	- Your main.cpp file should look like this in order to start and employ the engine:
+	- Create a Visual Studio project in c++.
+	- Inside the folder with your .exe, create a 'Gaia' folder and move inside your compiled GAIA project from the previous step.
+	- Create a main.cpp file. It should look like this in order to start and employ the engine:
 ```
 #include <GaiaCore.h>
 

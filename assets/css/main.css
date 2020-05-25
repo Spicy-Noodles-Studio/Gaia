@@ -40,6 +40,55 @@ body {
   		max-height: 150px;
 	}
 
+	.responsive-logo {
+		width: 100%;
+		max-width: 150px;
+		height: auto;
+	}
+
+	a img {
+		text-decoration: none;
+		border: 0 none;
+	}
+
+	#img-link, #img-link .responsive-logo{
+		text-decoration: none !important;
+		border:0px !important;
+		outline:none;
+		border-width: 0px;
+		outline-width:0px;
+		border-bottom: none;
+	}
+
+	@media screen and (max-width: 980px) {
+
+			.responsive-logo {
+				width: 90%;
+				max-width: 130px;
+				height: auto;
+			}
+
+		}
+
+		@media screen and (max-width: 736px) {
+			.responsive-logo {
+				width: 75%;
+				max-width: 110px;
+				height: auto;
+			}
+			
+		}
+
+		@media screen and (max-width: 480px) {
+
+			.responsive-logo {
+				width: 50%;
+				max-width: 90px;
+				height: auto;
+			}	
+
+		}
+
 	.blockquote-border-right {
 		/*border-right: 5px solid #FFFFFF40 !important;*/
 		border-right-style: solid;
@@ -1449,6 +1498,12 @@ input, select, textarea {
 				padding-bottom: 0;
 				opacity: 0;
 			}
+
+		#header img {
+			width: 100%;
+			max-width: 150px;
+			height: auto;
+		}
 
 		@media screen and (max-width: 980px) {
 

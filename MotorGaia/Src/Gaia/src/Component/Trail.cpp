@@ -230,24 +230,22 @@ void Trail::newTrail(const std::string& bone)
 void Trail::start()
 {
 	checkNullAndBreak(trail);
-	/*trail->(length);
-	LOG("LENGTH: %d\n", length);*/
-	trail->setVisible(true); // esto se puede mejorar!
+
+	trail->setVisible(true);
 }
 
 void Trail::stop()
 {
 	checkNullAndBreak(trail);
 
-	//trail->setTrailLength(0);
-	trail->setVisible(false); // esto se puede mejorar!
+	trail->setVisible(false);
 }
 
 bool Trail::started() const
 {
 	checkNullAndBreak(trail, false);
 
-	return /*trail->getTrailLength();*/trail->isVisible(); // esto se puede mejorar!
+	return trail->isVisible();
 }
 
 void Trail::handleData(ComponentData* data)

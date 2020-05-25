@@ -64,7 +64,14 @@ void MeshRenderer::setMesh(const std::string& id, const std::string& mesh)
 	checkNullAndBreak(gameObject);
 	Scene* scene = gameObject->getScene();
 	checkNullAndBreak(scene);
-	Ogre::Entity* entity = scene->createEntity(mesh);
+	Ogre::Entity* entity = nullptr;
+	try {
+		entity = scene->createEntity(mesh);
+	}
+	catch (std::exception exception) {
+		LOG_ERROR("MESH RENDERER", "Error ocurred while creating an entity %s", mesh.c_str());
+		return;
+	}
 	checkNullAndBreak(entity);
 	entities[id] = entity;
 }

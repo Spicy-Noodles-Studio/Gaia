@@ -135,6 +135,7 @@ void InterfaceSystem::update(float deltaTime)
 		clearControllerMenuInput();
 
 #ifdef _DEBUG
+	checkNullAndBreak(fpsText);
 	fpsText->setText("FPS: " + std::to_string((int)(1.0 / deltaTime)));
 	fpsText->setAlwaysOnTop(true);
 	fpsText->setEnabled(false);
@@ -147,72 +148,77 @@ UIElement* InterfaceSystem::loadLayout(const std::string& filename)
 		return new UIElement(CEGUI::WindowManager::getSingleton().loadLayoutFromFile(filename));
 	}
 	catch (std::exception e) {
-		LOG_ERROR("INTERFACE SYSTEM", "Yrying to load \"%s\" layout", filename.c_str());
+		LOG_ERROR("INTERFACE SYSTEM", "Trying to load \"%s\" layout", filename.c_str());
 		return nullptr;
 	}
 }
 
 void InterfaceSystem::initDefaultResources(const std::string& filepath)
 {
-	/* Resources are loaded at this moment by OgreResourceProvider */
-	/* Here we just initilialize default interface resources */
-	std::ifstream file(filepath);
-	std::string type, c, filename;
-	std::string name, size;
-	float fontSize;
+	try {
+		/* Resources are loaded at this moment by OgreResourceProvider */
+		/* Here we just initilialize default interface resources */
+		std::ifstream file(filepath);
+		std::string type, c, filename;
+		std::string name, size;
+		float fontSize;
 
-	while (file >> type >> c >> filename)
-	{
-		if (c != "=")
+		while (file >> type >> c >> filename)
 		{
-			LOG_ERROR("RESOURCES MANAGER", "Invalid resources file format\nFailed at: %s %s %s", type.c_str(), c.c_str(), filename.c_str());
-			file.close();
-			return;
-		}
-
-		if (type == "Scheme")
-		{
-			CEGUI::SchemeManager::getSingleton().createFromFile(filename);
-		}
-
-		if (type == "MouseCursor")
-		{
-			CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage(filename);
-		}
-
-		if (type == "Font")
-		{
-			file >> name >> size;
-			if (size <= "0")
+			if (c != "=")
 			{
-				LOG_ERROR("RESOURCES MANAGER", "Invalid resources file format\nFailed at: %s %s %s %s %s", type.c_str(), c.c_str(), filename.c_str(), name.c_str(), size.c_str());
+				LOG_ERROR("RESOURCES MANAGER", "Invalid resources file format\nFailed at: %s %s %s", type.c_str(), c.c_str(), filename.c_str());
 				file.close();
 				return;
 			}
-			fontSize = std::stof(size);
 
-			CEGUI::FontManager::getSingleton().createFreeTypeFont(name, fontSize, true, filename, "", CEGUI::AutoScaledMode::ASM_Both);
+			if (type == "Scheme")
+			{
+				CEGUI::SchemeManager::getSingleton().createFromFile(filename);
+			}
+
+			if (type == "MouseCursor")
+			{
+				CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage(filename);
+			}
+
+			if (type == "Font")
+			{
+				file >> name >> size;
+				if (size <= "0")
+				{
+					LOG_ERROR("RESOURCES MANAGER", "Invalid resources file format\nFailed at: %s %s %s %s %s", type.c_str(), c.c_str(), filename.c_str(), name.c_str(), size.c_str());
+					file.close();
+					return;
+				}
+				fontSize = std::stof(size);
+
+				CEGUI::FontManager::getSingleton().createFreeTypeFont(name, fontSize, true, filename, "", CEGUI::AutoScaledMode::ASM_Both);
+			}
+
+			if (type == "Image")
+			{
+				file >> name;
+
+				CEGUI::ImageManager::getSingleton().addFromImageFile(name, filename);
+
+			}
+
+			// Reset variables
+			type = c = filename = name = size = "";
 		}
 
-		if (type == "Image")
-		{
-			file >> name;
-
-			CEGUI::ImageManager::getSingleton().addFromImageFile(name, filename);
-
-		}
-
-		// Reset variables
-		type = c = filename = name = size = "";
-	}
-
-	file.close();
+		file.close();
 
 #ifdef _DEBUG
-	fpsText = new UIElement(root->getElement()->createChild("TaharezLook/StaticText", "FPSText"));
-	fpsText->setPosition(0.9f, 0.0f);
-	fpsText->setSize(0.1f, 0.1f);
+		fpsText = new UIElement(root->getElement()->createChild("TaharezLook/StaticText", "FPSText"));
+		fpsText->setPosition(0.9f, 0.0f);
+		fpsText->setSize(0.1f, 0.1f);
 #endif
+	}
+	catch (std::exception exception) {
+		LOG_ERROR("INTERFACE SYSTEM", "Error ocurred while loading assets");
+	}
 }
 
 

@@ -46,9 +46,14 @@ void ParticleEmitter::newEmitter(const std::string& source)
 		sceneManager->destroyParticleSystem(particleSystem);
 		particleSystem = nullptr;
 	}
-
-	particleSystem = sceneManager->createParticleSystem(gameObject->getName() + "PS", source);
-	checkNullAndBreak(particleSystem);
+	try {
+		particleSystem = sceneManager->createParticleSystem(gameObject->getName() + "PS", source);
+		checkNullAndBreak(particleSystem);
+	}
+	catch (std::exception exception) {
+		LOG_ERROR("PARTICLE EMITTER", "Error ocurred while creating %s", source.c_str());
+		return;
+	}
 
 	particleSystem->setMaterialName(source);
 	gameObject->node->attachObject(particleSystem);

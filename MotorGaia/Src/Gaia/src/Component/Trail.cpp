@@ -191,16 +191,21 @@ void Trail::newTrail(const std::string& bone)
 		sceneManager->destroyBillboardSet(billboardSet);
 		billboardSet = nullptr;
 	}
+	try {
+		// Create billboard set
+		billboardSet = sceneManager->createBillboardSet(gameObject->getName() + "BB");
+		billboardSet->setDefaultDimensions(0.25, 0.25);
+		billboardSet->setMaterialName("Billboard");
+		billboardSet->createBillboard(0, 0, 0, Ogre::ColourValue::Black);
 
-	// Create billboard set
-	billboardSet = sceneManager->createBillboardSet(gameObject->getName() + "BB");
-	billboardSet->setDefaultDimensions(0.25, 0.25);
-	billboardSet->setMaterialName("Billboard");
-	billboardSet->createBillboard(0, 0, 0, Ogre::ColourValue::Black);
-
-	// Create trail
-	trail = sceneManager->createRibbonTrail(gameObject->getName() + "Trail");
-	trail->setMaterialName("Trail");
+		// Create trail
+		trail = sceneManager->createRibbonTrail(gameObject->getName() + "Trail");
+		trail->setMaterialName("Trail");
+	}
+	catch (std::exception exception) {
+		LOG_ERROR("TRAIL", "Error ocurred while creating trail");
+		return;
+	}
 
 	if (bone == "") // Node trail
 	{

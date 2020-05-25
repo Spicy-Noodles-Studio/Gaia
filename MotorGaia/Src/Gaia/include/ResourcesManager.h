@@ -9,7 +9,8 @@
 
 #include <OgreFileSystemLayer.h>
 #include "ShaderTechniqueResolver.h"
-#include <SoundSystem.h>
+#include "SoundSystem.h"
+#include "InterfaceSystem.h"
 
 class ResourcesManager
 {
@@ -33,6 +34,7 @@ private:
 	void locateScenes(const std::string& filename);
 	void locateBlueprints(const std::string& filename);
 	void locateSounds(const std::string& filename);
+	void locateInterface(const std::string& filename);
 	void locateOgreResources(const std::string& filename);
 
 	void locateScene(const std::string& filename, int index);
@@ -44,6 +46,7 @@ private:
 	void initializeScenes();
 	void initializeBlueprints();
 	void initializeSounds();
+	void initializeInterface();
 
 	bool initShaderSystem();
 	void destroyShaderSystem();
@@ -60,6 +63,7 @@ public:
 	static std::vector<SceneData*> sceneData;
 	static std::map<std::string, BlueprintData*> blueprintData;
 	static std::map<std::string, Sound*> sounds;
+	std::string interfacePath;
 
 	Ogre::FileSystemLayer* fileSystemLayer;
 	std::string shaderLibPath;

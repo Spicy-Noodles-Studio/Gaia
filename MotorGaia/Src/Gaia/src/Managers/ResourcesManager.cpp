@@ -1,6 +1,7 @@
 ﻿#include "ResourcesManager.h"
 #include <fstream>
 #include "DebugUtils.h"
+#include "ErrorManagement.h"
 
 #include <OgreConfigFile.h>
 #include <OgreResourceGroupManager.h>
@@ -14,7 +15,7 @@ std::map<std::string, BlueprintData*> ResourcesManager::blueprintData;
 std::map<std::string, Sound*> ResourcesManager::sounds;
 
 ResourcesManager::ResourcesManager(const std::string& filePath) :	resourcesPath(filePath), fileSystemLayer(nullptr), 
-																	shaderLibPath(""), shaderGenerator(nullptr), shaderTechniqueResolver(nullptr)
+																	shaderLibPath(""), shaderGenerator(nullptr), shaderTechniqueResolver(nullptr), interfacePath("")
 {
 
 }
@@ -187,6 +188,9 @@ void ResourcesManager::initializeAllResources()
 	//Sounds
 	//threads.push_back(std::thread(&ResourcesManager::initializeSounds, std::ref(*this)));
 
+	//Interface
+	initializeInterface();
+
 	//Wait
 	for (int i = 0; i < threads.size(); i++)
 		threads[i].join();
@@ -217,6 +221,14 @@ void ResourcesManager::initializeBlueprints()
 void ResourcesManager::initializeSounds()
 {
 	// FMOD does it for us
+}
+
+void ResourcesManager::initializeInterface()
+{
+	InterfaceSystem* interfaceSystem = InterfaceSystem::GetInstance();
+	checkNullAndBreak(interfaceSystem);
+
+	interfaceSystem->initDefaultResources(interfacePath);
 }
 
 bool ResourcesManager::initShaderSystem()
@@ -349,6 +361,8 @@ void ResourcesManager::locateResourceType(const std::string& resourceType, const
 		locateBlueprints(path);
 	else if (resourceType == "Sounds")
 		locateSounds(path);
+	else if (resourceType == "Interface")
+		locateInterface(path);
 	else if (resourceType == "Ogre")
 		locateOgreResources(path);
 	else
@@ -433,6 +447,19 @@ void ResourcesManager::locateSounds(const std::string& filename)
 	for (int i = 0; i < threads.size(); i++)
 		threads[i].join();
 
+}
+
+void ResourcesManager::locateInterface(const std::string& filename)
+{
+	std::ifstream stream;
+	stream.open(filename);
+	if (!stream.is_open()) {
+		LOG_ERROR("RESOURCES MANAGER", "InterfaceAssets path %s not found", filename.c_str());
+		return;
+	}
+	stream.close();
+
+	interfacePath = filename;
 }
 
 void ResourcesManager::locateOgreResources(const std::string& filename)

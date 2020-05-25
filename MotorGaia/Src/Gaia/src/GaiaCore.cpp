@@ -103,9 +103,6 @@ void GaiaCore::init(const std::string& windowTitle, unsigned int width, unsigned
 	checkNullAndBreak(componentManager);
 	componentManager->init();
 
-	//Init Default Resources
-	interfaceSystem->initDefaultResources("./Assets/Files/interface.asset");
-
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
 	checkNullAndBreak(sceneManager);

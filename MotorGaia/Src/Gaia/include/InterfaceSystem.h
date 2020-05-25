@@ -29,6 +29,7 @@ typedef std::pair<std::string, std::function<bool()>> UIEvent;
 class GAIA_API InterfaceSystem : public Singleton<InterfaceSystem>, public MouseEventListener, public KeyboardEventListener, public WindowEventListener, public ControllerEventListener
 {
 	friend class GaiaCore;
+	friend class ResourcesManager;
 	friend class UILayout;
 private:
 	CEGUI::OgreRenderer* renderer;

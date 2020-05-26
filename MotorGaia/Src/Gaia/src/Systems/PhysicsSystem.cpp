@@ -388,6 +388,10 @@ void PhysicsSystem::CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody
 		goA->onTriggerExit(goB);
 		goB->onObjectExit(goA);
 	}
+	else {
+		goA->onObjectExit(goB);
+		goB->onObjectExit(goA);
+	}
 }
 
 void PhysicsSystem::CollisionStayCallbacks(const std::pair<RigidBody*, RigidBody*>& col)

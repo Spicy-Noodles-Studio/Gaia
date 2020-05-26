@@ -17,22 +17,44 @@ ParticleEmitter::ParticleEmitter(GameObject* gameObject) : GaiaComponent(gameObj
 
 ParticleEmitter::~ParticleEmitter()
 {
-	if (particleSystem != nullptr) {
-		gameObject->node->detachObject(particleSystem);
-		gameObject->getScene()->getSceneManager()->destroyParticleSystem(particleSystem);
-		particleSystem = nullptr;
-	}
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
+	checkNullAndBreak(particleSystem);
+
+	gameObject->node->detachObject(particleSystem);
+	Scene* scene = gameObject->getScene();
+	checkNullAndBreak(scene);
+	Ogre::SceneManager* sceneManager = scene->getSceneManager();
+	checkNullAndBreak(sceneManager);
+
+	sceneManager->destroyParticleSystem(particleSystem);
+	particleSystem = nullptr;
 }
 
 void ParticleEmitter::newEmitter(const std::string& source)
 {
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
+	Scene* scene = gameObject->getScene();
+	checkNullAndBreak(scene);
+	Ogre::SceneManager* sceneManager = scene->getSceneManager();
+	checkNullAndBreak(sceneManager);
+
 	if (particleSystem != nullptr) {
+		checkNullAndBreak(particleSystem);
 		gameObject->node->detachObject(particleSystem);
-		gameObject->getScene()->getSceneManager()->destroyParticleSystem(particleSystem);
+		sceneManager->destroyParticleSystem(particleSystem);
 		particleSystem = nullptr;
 	}
+	try {
+		particleSystem = sceneManager->createParticleSystem(gameObject->getName() + "PS", source);
+		checkNullAndBreak(particleSystem);
+	}
+	catch (std::exception exception) {
+		LOG_ERROR("PARTICLE EMITTER", "Error ocurred while creating %s", source.c_str());
+		return;
+	}
 
-	particleSystem = gameObject->getScene()->getSceneManager()->createParticleSystem(gameObject->getName() + "PS", source);
 	particleSystem->setMaterialName(source);
 	gameObject->node->attachObject(particleSystem);
 	particleSystem->setEmitting(false);
@@ -43,7 +65,7 @@ void ParticleEmitter::start()
 	if (particleSystem != nullptr)
 		particleSystem->setEmitting(true);
 	else
-		LOG("PARTICLE EMITTER: trying to start a NULL particle emitter\n");
+		LOG_ERROR("PARTICLE EMITTER", "Trying to start a NULL particle emitter");
 }
 
 void ParticleEmitter::stop()
@@ -51,11 +73,13 @@ void ParticleEmitter::stop()
 	if (particleSystem != nullptr)
 		particleSystem->setEmitting(false);
 	else
-		LOG("PARTICLE EMITTER: trying to stop a NULL particle emitter\n");
+		LOG_ERROR("PARTICLE EMITTER", "Trying to stop a NULL particle emitter");
 }
 
 void ParticleEmitter::handleData(ComponentData* data)
 {
+	checkNullAndBreak(data);
+
 	for (auto prop : data->getProperties()) {
 		if (prop.first == "emitter") {
 			std::stringstream ss(prop.second);
@@ -64,7 +88,7 @@ void ParticleEmitter::handleData(ComponentData* data)
 				newEmitter(source);
 			}
 			else {
-				LOG("PARTICLE EMITTER: invalid data format. Property \"emitter\"\n");
+				LOG_ERROR("PARTICLE EMITTER", "Invalid data format. Property \"emitter\"");
 			}
 		}
 		else if (prop.first == "start") {
@@ -75,11 +99,11 @@ void ParticleEmitter::handleData(ComponentData* data)
 				stop();
 			}
 			else {
-				LOG("PARTICLE EMITTER: invalid value \"%s\". Property \"start\"\n", prop.second.c_str());
+				LOG_ERROR("PARTICLE EMITTER", "Invalid value \"%s\". Property \"start\"", prop.second.c_str());
 			}
 		}
 		else {
-			LOG("PARTICLE EMITTER: invalid property name \"%s\"\n", prop.first.c_str());
+			LOG_ERROR("PARTICLE EMITTER", "Invalid property name \"%s\"", prop.first.c_str());
 		}
 	}
 }

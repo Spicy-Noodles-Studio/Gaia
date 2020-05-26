@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef GAMEOBJECT_DATA_H
 #define GAMEOBJECT_DATA_H
 

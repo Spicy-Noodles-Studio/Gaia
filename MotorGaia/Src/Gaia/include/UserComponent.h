@@ -11,12 +11,14 @@
 
 class GAIA_API UserComponent : public Component
 {
+	friend class GameObject;
 	friend class SceneManager;
 	friend class Scene;
 public:
 	UserComponent(GameObject* gameObject);
 	virtual ~UserComponent();
 
+protected:
 	virtual void awake();
 	virtual void start();
 	virtual void preUpdate(float deltaTime);

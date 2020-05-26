@@ -50,6 +50,8 @@ void PhysicsSystem::init()
 
 void PhysicsSystem::render()
 {
+	checkNullAndBreak(dynamicsWorld);
+
 	dynamicsWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
 	dynamicsWorld->debugDrawWorld();
 }
@@ -59,6 +61,7 @@ void PhysicsSystem::update(float deltaTime)
 	timeAccumulator += deltaTime;
 	while (timeAccumulator >= 1.0f / 50.0f)
 	{
+		checkNullAndBreak(dynamicsWorld);
 		dynamicsWorld->stepSimulation(1.0f / 50.0f, 0);
 		checkCollisions();
 		timeAccumulator -= 1.0f / 50.0f;
@@ -67,15 +70,17 @@ void PhysicsSystem::update(float deltaTime)
 
 void PhysicsSystem::postUpdate()
 {
+	checkNullAndBreak(dynamicsWorld);
+
 	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
 		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
 		btRigidBody* body = btRigidBody::upcast(obj);
 		if (body != nullptr)
 		{
-			RigidBody* rb = (RigidBody*)body->getUserPointer();
-			if (rb != nullptr)
-				rb->updateTransform();
+			RigidBody* rigidBody = (RigidBody*)body->getUserPointer();
+			if (rigidBody != nullptr)
+				rigidBody->updateTransform();
 		}
 	}
 }
@@ -104,6 +109,8 @@ void PhysicsSystem::close()
 
 void PhysicsSystem::clearWorld()
 {
+	checkNullAndBreak(dynamicsWorld);
+
 	//remove the rigidbodies from the dynamics world and delete them
 	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
@@ -124,17 +131,24 @@ void PhysicsSystem::clearWorld()
 
 void PhysicsSystem::setWorldGravity(Vector3 gravity)
 {
+	checkNullAndBreak(dynamicsWorld);
+
 	dynamicsWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 }
 
 Vector3 PhysicsSystem::getWorldGravity() const
 {
+	checkNullAndBreak(dynamicsWorld, Vector3::ZERO);
+
 	btVector3 g = dynamicsWorld->getGravity();
 	return{ g.x(),g.y(),g.z() };
 }
 
 void PhysicsSystem::setDebugDrawer(DebugDrawer* debugDrawer)
 {
+	checkNullAndBreak(dynamicsWorld);
+	checkNullAndBreak(debugDrawer);
+
 	debugDrawer->setDebugMode(btIDebugDraw::DBG_MAX_DEBUG_DRAW_MODE + btIDebugDraw::DBG_DrawContactPoints);
 	dynamicsWorld->setDebugDrawer(debugDrawer);
 }
@@ -178,9 +192,12 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 	btVector3 localInertia(0, 0, 0);
 	if (isDynamic)
 		colShape->calculateLocalInertia(mass, localInertia);
+
+	checkNullAndBreak(mState, nullptr);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
+	checkNullAndBreak(dynamicsWorld, body);
 	dynamicsWorld->addRigidBody(body, myGroup, collidesWith);
 
 	return body;
@@ -188,8 +205,8 @@ btRigidBody* PhysicsSystem::createRigidBody(float m, RB_Shape shape, GaiaMotionS
 
 void PhysicsSystem::deleteRigidBody(btRigidBody* body)
 {
-	if (body != nullptr) {
-
+	if (body != nullptr) 
+	{
 		RigidBody* rigidBody = (RigidBody*)body->getUserPointer();
 		//Buscar en la lista de contactos
 		//Registramos presencia
@@ -218,6 +235,8 @@ void PhysicsSystem::deleteRigidBody(btRigidBody* body)
 
 btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 {
+	checkNullAndBreak(transform, btTransform());
+
 	btTransform t;
 	t.setIdentity();
 	Vector3 pos = transform->getWorldPosition(), rot = transform->getWorldRotation();
@@ -229,6 +248,9 @@ btTransform PhysicsSystem::parseToBulletTransform(Transform* transform)
 
 btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim, uint16_t myGroup, uint16_t collidesWith)
 {
+	checkNullAndBreak(strider, nullptr);
+	checkNullAndBreak(mState, nullptr);
+
 	btCollisionShape* colShape = new btBvhTriangleMeshShape(strider, true, true);
 	collisionShapes.push_back(colShape);
 	colShape->setLocalScaling({ btScalar(dim.x), btScalar(dim.y), btScalar(dim.z) });
@@ -239,6 +261,7 @@ btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, GaiaMotionStat
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mState, colShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
+	checkNullAndBreak(dynamicsWorld, nullptr);
 	dynamicsWorld->addRigidBody(body, myGroup, collidesWith);
 
 	return body;
@@ -246,6 +269,9 @@ btRigidBody* PhysicsSystem::bodyFromStrider(MeshStrider* strider, GaiaMotionStat
 
 void PhysicsSystem::checkCollisions()
 {
+	checkNullAndBreak(dynamicsWorld);
+	checkNullAndBreak(dynamicsWorld->getDispatcher());
+
 	std::map<std::pair<RigidBody*, RigidBody*>, bool> newContacts;
 
 	int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
@@ -274,14 +300,15 @@ void PhysicsSystem::checkCollisions()
 
 		if (contact)
 		{
-			RigidBody* rbA = (RigidBody*)obA->getUserPointer(), * rbB = (RigidBody*)obB->getUserPointer();
+			RigidBody* rigidBodyA = (RigidBody*)obA->getUserPointer(), * rigibBodyB = (RigidBody*)obB->getUserPointer();
 
-			if (!(rbA == nullptr || rbB == nullptr))
+			if (!(rigidBodyA == nullptr || rigibBodyB == nullptr))
 			{
+				if (!rigidBodyA->isActive() || !rigibBodyB->isActive()) continue;
 				// Orden A < B, para el mapa
-				if (rbA > rbB) std::swap(rbA, rbB);
+				if (rigidBodyA > rigibBodyB) std::swap(rigidBodyA, rigibBodyB);
 
-				std::pair<RigidBody*, RigidBody*> col = { rbA,rbB };
+				std::pair<RigidBody*, RigidBody*> col = { rigidBodyA, rigibBodyB };
 				newContacts[col] = true;
 
 				//Llamamos al collisionEnter si no estaban registrados.
@@ -307,6 +334,9 @@ void PhysicsSystem::checkCollisions()
 
 void PhysicsSystem::drawLine(const Vector3& ini, const Vector3& end, const Vector3& color)
 {
+	checkNullAndBreak(dynamicsWorld);
+	checkNullAndBreak(dynamicsWorld->getDebugDrawer());
+
 	btVector3 start = btVector3(btScalar(ini.x), btScalar(ini.y), btScalar(ini.z));
 	btVector3 to = btVector3(btScalar(end.x), btScalar(end.y), btScalar(end.z));
 	btVector3 btColor = btVector3(btScalar(color.x), btScalar(color.y), btScalar(color.z));
@@ -315,6 +345,9 @@ void PhysicsSystem::drawLine(const Vector3& ini, const Vector3& end, const Vecto
 
 void PhysicsSystem::CollisionEnterCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
 {
+	checkNullAndBreak(col.first);
+	checkNullAndBreak(col.second);
+
 	bool aTrigger = col.first->isTrigger(), bTrigger = col.second->isTrigger();
 	GameObject* goA = col.first->gameObject, * goB = col.second->gameObject;
 
@@ -334,6 +367,9 @@ void PhysicsSystem::CollisionEnterCallbacks(const std::pair<RigidBody*, RigidBod
 
 void PhysicsSystem::CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
 {
+	checkNullAndBreak(col.first);
+	checkNullAndBreak(col.second);
+
 	if (col.first->gameObject == nullptr || col.second->gameObject == nullptr)
 		return;
 
@@ -352,10 +388,17 @@ void PhysicsSystem::CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody
 		goA->onTriggerExit(goB);
 		goB->onObjectExit(goA);
 	}
+	else {
+		goA->onObjectExit(goB);
+		goB->onObjectExit(goA);
+	}
 }
 
 void PhysicsSystem::CollisionStayCallbacks(const std::pair<RigidBody*, RigidBody*>& col)
 {
+	checkNullAndBreak(col.first);
+	checkNullAndBreak(col.second);
+
 	bool aTrigger = col.first->isTrigger(), bTrigger = col.second->isTrigger();
 	GameObject* goA = col.first->gameObject, * goB = col.second->gameObject;
 
@@ -375,6 +418,9 @@ void PhysicsSystem::CollisionStayCallbacks(const std::pair<RigidBody*, RigidBody
 
 void PhysicsSystem::deleteBody(btCollisionObject* obj)
 {
+	checkNullAndBreak(obj);
+	checkNullAndBreak(dynamicsWorld);
+
 	btRigidBody* body = btRigidBody::upcast(obj);
 	if (body != nullptr && body->getMotionState() != nullptr)
 	{
@@ -386,6 +432,8 @@ void PhysicsSystem::deleteBody(btCollisionObject* obj)
 
 std::vector<RaycastHit> PhysicsSystem::raycastAll(const Vector3& from, const Vector3& to, uint16_t mask)
 {
+	checkNullAndBreak(dynamicsWorld, std::vector<RaycastHit>());
+
 	mask = mask & ~IGNORE_RAYCAST;//Siempre ignora la capa ignore raycast
 	std::vector<RaycastHit> hits;
 	btVector3 start = btVector3(btScalar(from.x), btScalar(from.y), btScalar(from.z));
@@ -413,7 +461,6 @@ std::vector<RaycastHit> PhysicsSystem::raycastAll(const Vector3& from, const Vec
 		dynamicsWorld->getDebugDrawer()->drawLine(p, p + allResults.m_hitNormalWorld[i], btVector3(1, 0, 0));
 #endif
 	}
-
 	return hits;
 }
 
@@ -428,6 +475,8 @@ std::vector<RaycastHit> PhysicsSystem::raycastAll(const Vector3& from, const Vec
 
 bool PhysicsSystem::raycast(const Vector3& from, const Vector3& to, RaycastHit& hit, uint16_t mask)
 {
+	checkNullAndBreak(dynamicsWorld, false);
+
 	mask = mask & ~IGNORE_RAYCAST;//Siempre ignora la capa ignore raycast
 	btVector3 start = btVector3(btScalar(from.x), btScalar(from.y), btScalar(from.z));
 	btVector3 end = btVector3(btScalar(to.x), btScalar(to.y), btScalar(to.z));

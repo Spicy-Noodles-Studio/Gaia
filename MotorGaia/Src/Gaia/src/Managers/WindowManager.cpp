@@ -1,4 +1,5 @@
 #include "WindowManager.h"
+#include <algorithm>
 #include "Window.h"
 #include "Camera.h"
 
@@ -9,7 +10,7 @@
 #include <OgreConfigOptionMap.h>
 #include <SDL2/SDL_syswm.h>
 
-WindowManager::WindowManager() : actualResolutionId(0), brightness(0.0f), isFullScreen(false), ogreRoot(nullptr)
+WindowManager::WindowManager() : brightness(1.0f), isFullScreen(false), root(nullptr)
 {
 
 }
@@ -19,136 +20,61 @@ WindowManager::~WindowManager()
 
 }
 
-void WindowManager::createWindow(Ogre::Root* root, std::string windowName)
+Window* WindowManager::createWindow(const std::string& title, unsigned int width, unsigned int height)
 {
-	ogreRoot = root;
-	windows.push_back(new Window(root, windowName));
-}
+	checkNullAndBreak(root, nullptr);
 
-void WindowManager::initResolutions()
-{
-	isFullScreen = false;
-	brightness = 1;
-	actualResolutionId = 0;
-
-	Ogre::ConfigOptionMap map = ogreRoot->getRenderSystem()->getConfigOptions();
-	Ogre::ConfigOptionMap::iterator configIt = map.begin();
-
-	while (configIt != map.end())
-	{
-		if (configIt->first == "Video Mode")
-			resolutionNames = configIt->second.possibleValues;
-
-		configIt++;
+	if (!resolutions.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Resolutions vector not initialized");
+		return nullptr;
+	}
+	
+	if (width == 0 || height == 0) {
+		SDL_DisplayMode displayMode;
+		SDL_GetCurrentDisplayMode(0, &displayMode);
+		width = displayMode.w;
+		height = displayMode.h;
 	}
 
-	std::vector<std::pair<int, int>> resolutionsVector;
-	std::pair<int, int> resolutionPair;
+	Window* window = new Window(root, title, width, height);
+	window->setMinimumSize(resolutions[0].first, resolutions[0].second);
 
-	for (std::string res : resolutionNames)
-	{
-		int resX = 0;
-		int resY = 0;
-		int it = 0;
-		bool notANumber = false;
-
-		while (it < res.length() && !notANumber)
-		{
-			if (res.at(it) != 'x' && res.at(it) != 'X' && res.at(it) != ' ')
-			{
-				resX += (int)res.at(it) - '0';
-				resX = resX * 10;
-			}
-			else if (res.at(it) == 'x' || res.at(it) == 'X')
-				notANumber = true;
-
-			it++;
-		}
-
-		notANumber = false;
-		while (it < res.length())
-		{
-			if (res.at(it) != 'x' && res.at(it) != 'X' && res.at(it) != ' ')
-			{
-				resY += (int)res.at(it) - '0';
-				resY = resY * 10;
-			}
-			it++;
-		}
-
-		resolutionPair.first = resX / 10;
-		resolutionPair.second = resY / 10;
-		resolutionsVector.push_back(resolutionPair);
-	}
-	resolutions = resolutionsVector;
+	windows.push_back(window);
+	return window;
 }
 
 void WindowManager::windowResize(unsigned int width, unsigned int height, int id)
 {
-	windows.at(id)->resize(width, height);
-	actualResolution.first = width;
-	actualResolution.second = height;
+	if (id >= windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return;
+	}
+
+	windows[id]->resize(width, height);
 }
 
 void WindowManager::setFullscreen(bool fullscreen, int id)
 {
-	windows.at(id)->setFullscreen(fullscreen);
+	if (id >= windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return;
+	}
+
+	windows[id]->setFullscreen(fullscreen);
 	isFullScreen = fullscreen;
 }
 
-bool WindowManager::isAllWindowsClosed()
+std::pair<unsigned int, unsigned int> WindowManager::getActualResolucion() const
 {
-	bool closed = false;
-	int i = 0;
-	while (!closed && windows.size() > i)
-	{
-		closed = windows.at(i);
-		i++;
+	if (!windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return { 0, 0 };
 	}
-	return closed;
+
+	return windows[0]->getResolution();
 }
 
-bool WindowManager::isWindowClosed(int id)
-{
-	return windows.at(id)->isClosed();
-}
-
-Window* WindowManager::getWindow(int id)
-{
-	return windows.at(id);
-}
-
-std::vector<std::pair<int, int>> WindowManager::getAvailableResolutionsForWindow()
-{
-	return resolutions;
-}
-
-std::vector<std::string> WindowManager::getAvailableResolutionsStrings()
-{
-	return resolutionNames;
-}
-
-void WindowManager::closeWindow(int id)
-{
-	windows.at(id)->close();
-}
-
-void WindowManager::removeAllViewportsFromWindow(int id)
-{
-	windows.at(id)->removeAllViewports();
-}
-
-Ogre::Viewport* WindowManager::addViewportToWindow(Camera* cam, int id)
-{
-	return windows.at(id)->addViewport(cam->getCamera());
-}
-
-std::pair<int, int> WindowManager::getActualResolution()
-{
-	return actualResolution;
-}
-
-bool WindowManager::getFullscreen()
+bool WindowManager::getFullscreen() const
 {
 	return isFullScreen;
 }
@@ -158,42 +84,192 @@ void WindowManager::setBrightness(float value)
 	brightness = value;
 }
 
-float WindowManager::getBrightness()
+float WindowManager::getBrightness() const
 {
 	return brightness;
 }
 
-void WindowManager::setWindowMinArea(int width, int height, int id)
+void WindowManager::closeWindow(int id)
 {
-	windows.at(id)->setWindowMinArea(width, height);
+	if (id >= windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return;
+	}
+
+	windows[id]->close();
+}
+
+bool WindowManager::allClosed() const
+{
+	for (Window* window : windows) {
+		checkNullAndBreak(window, false);
+		if (!window->isClosed())
+			return false;
+	}
+
+	return true;
+}
+
+bool WindowManager::isClosed(int id) const
+{
+	if (id >= windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return false;
+	}
+
+	return windows[id]->isClosed();
+}
+
+Window* WindowManager::getWindow(int id)
+{
+	if (id >= windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return nullptr;
+	}
+
+	return windows[id];
+}
+
+const std::vector<std::pair<unsigned int, unsigned int>>& WindowManager::getAvailableResolutionsForWindow() const
+{
+	return resolutions;
+}
+
+const std::vector<std::string>& WindowManager::getAvailableResolutionsStrings() const
+{
+	return resolutionNames;
+}
+
+void WindowManager::setMinimumSize(unsigned int width, unsigned int height, int id)
+{
+	if (id >= windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return;
+	}
+
+	windows[id]->setMinimumSize(width, height);
 }
 
 void WindowManager::setWindowResizable(bool resize, int id)
 {
-	windows.at(id)->setWindowResizable(resize);
+	if (id >= windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return;
+	}
+
+	windows[id]->setWindowResizable(resize);
 }
 
-void WindowManager::setActualResolutionId(int id)
+void WindowManager::init(Ogre::Root* root)
 {
-	actualResolutionId = id;
-}
+	checkNullAndBreak(root);
+	this->root = root;
 
-int WindowManager::getActualResolutionId()
-{
-	return actualResolutionId;
+	Ogre::RenderSystem* rs = root->getRenderSystem();
+	root->setRenderSystem(rs);
+
+	root->initialise(false);
+
+	SDL_SetMainReady();
+	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+		OGRE_EXCEPT(Ogre::Exception::ERR_INTERNAL_ERROR, "Cannot initialize SDL2!",
+			"BaseApplication::setup");
+	}
+
+	initResolutions();
 }
 
 void WindowManager::close()
 {
-	for (Window* var : windows)
-	{
-		if (var != nullptr)
-		{
-			delete var;
-			var = nullptr;
+	for (Window* window : windows) {
+		if (window != nullptr) {
+			delete window;
+			window = nullptr;
 		}
 	}
 	windows.clear();
 
 	destroy();
+}
+
+void WindowManager::initResolutions()
+{
+	isFullScreen = false;
+	brightness = 1.0f;
+
+	Ogre::ConfigOptionMap map = root->getRenderSystem()->getConfigOptions();
+	Ogre::ConfigOptionMap::iterator configIt = map.find("Video Mode");
+
+	if (configIt != map.end())
+		resolutionNames = configIt->second.possibleValues;
+
+	std::vector<std::pair<unsigned int, unsigned int>> resolutionsVector;
+	std::pair<unsigned int, unsigned int> resolutionPair;
+
+	for (std::string resolution : resolutionNames)
+	{
+		std::stringstream ss(resolution);
+		unsigned int width = 0;
+		unsigned int height = 0;
+		char token = ' ';
+
+		if (!(ss >> width >> token >> height)) {
+			LOG_ERROR("WINDOW MANAGER", "Error ocurred while initializing resolutions");
+			return;
+		}
+		resolutions.push_back({ width, height });
+	}
+}
+
+void WindowManager::removeAllViewportsFromWindow(int id)
+{
+	if (id >= windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return;
+	}
+
+	windows[id]->removeAllViewports();
+}
+
+Ogre::Viewport* WindowManager::addViewportToWindow(Camera* camera, int id)
+{
+	if (id >= windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return nullptr;
+	}
+	checkNullAndBreak(camera, nullptr);
+
+	return windows[id]->addViewport(camera->getCamera());
+}
+
+void WindowManager::setActualResolutionId(int id)
+{
+	if (id >= resolutions.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing resolution");
+		return;
+	}
+
+	if (!windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return;
+	}
+	auto resolution = resolutions[id];
+	windows[0]->resize(resolution.first, resolution.second);
+}
+
+int WindowManager::getActualResolutionId() const
+{
+	if (!windows.size()) {
+		LOG_ERROR("WINDOW MANAGER", "Trying to access to a non existing window");
+		return -1;
+	}
+	std::pair<unsigned int, unsigned int> resolution = windows[0]->getResolution();
+	
+	auto it = std::find(resolutions.begin(), resolutions.end(), resolution);
+	if (it == resolutions.end()) {
+		LOG_ERROR("WINDOW MANAGER", "Resolution \"%i x %i\" not detected", resolution.first, resolution.second);
+		return -1;
+	}
+
+	return it - resolutions.begin();
 }

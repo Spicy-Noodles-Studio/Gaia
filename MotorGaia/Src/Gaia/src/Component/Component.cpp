@@ -16,7 +16,7 @@ void Component::setActive(bool active)
 	this->active = active;
 }
 
-bool Component::isActive()
+bool Component::isActive() const
 {
 	return active;
 }

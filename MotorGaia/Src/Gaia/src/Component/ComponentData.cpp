@@ -19,7 +19,7 @@ bool ComponentData::addProperty(const std::string& propName, const std::string& 
 {
 	if (nameID.find(propName) != nameID.end())
 	{
-		LOG("COMPONENT DATA: tried to add to %s a property %s already defined\n", name.c_str(), propName.c_str());
+		LOG_ERROR("COMPONENT DATA", "Tried to add to %s a property %s already defined", name.c_str(), propName.c_str());
 		return false;
 	}
 	properties.push_back({ propName, propValue });

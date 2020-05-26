@@ -28,10 +28,16 @@ class RaycastHit;
 
 class GAIA_API PhysicsSystem : public Singleton<PhysicsSystem>
 {
+	friend class GaiaCore;
+	friend class SceneManager;
+	friend class RigidBody;
+	friend class Strider;
+	friend class GaiaMotionState;
 public:
 	PhysicsSystem();
 	~PhysicsSystem();
 
+private:
 	void init();
 	void render();
 	void update(float deltaTime);
@@ -40,10 +46,19 @@ public:
 
 	void clearWorld();
 
+public:
 	// World config methods
 	void setWorldGravity(Vector3 gravity);
-	Vector3 getWorldGravity()const;
+	Vector3 getWorldGravity() const;
 
+	std::vector<RaycastHit> raycastAll(const Vector3& from, const Vector3& to, uint16_t mask = ALL);
+	std::vector<RaycastHit> raycastAll(const Vector3& from, const Vector3& dir, float maxDistance, uint16_t mask = ALL);
+	bool raycast(const Vector3& from, const Vector3& to, RaycastHit& hit, uint16_t mask = ALL);
+	bool raycast(const Vector3& from, const Vector3& dir, float maxDistance, RaycastHit& hit, uint16_t mask = ALL);
+
+	void drawLine(const Vector3& ini, const Vector3& end, const Vector3& color);
+
+private:
 	void setDebugDrawer(DebugDrawer* debugDrawer);
 
 	// Rigid Body methods
@@ -52,17 +67,8 @@ public:
 	// Turns a Gaia Transform into a Bullet Physics Transform
 	btTransform parseToBulletTransform(Transform* transform);
 	btRigidBody* bodyFromStrider(MeshStrider* strider, GaiaMotionState* mState, const Vector3& dim, uint16_t myGroup, uint16_t collidesWith);
-
-	std::vector<RaycastHit> raycastAll(const Vector3& from, const Vector3& to, uint16_t mask = ALL);
-	std::vector<RaycastHit> raycastAll(const Vector3& from, const Vector3& dir, float maxDistance, uint16_t mask = ALL);
-	bool raycast(const Vector3& from, const Vector3& to, RaycastHit& hit, uint16_t mask = ALL);
-	bool raycast(const Vector3& from, const Vector3& dir, float maxDistance, RaycastHit& hit, uint16_t mask = ALL);
-
 	void checkCollisions();
 
-	void drawLine(const Vector3& ini, const Vector3& end, const Vector3& color);
-
-private:
 	void CollisionEnterCallbacks(const std::pair<RigidBody*, RigidBody*>& col);
 	void CollisionExitCallbacks(const std::pair<RigidBody*, RigidBody*>& col);
 	void CollisionStayCallbacks(const std::pair<RigidBody*, RigidBody*>& col);

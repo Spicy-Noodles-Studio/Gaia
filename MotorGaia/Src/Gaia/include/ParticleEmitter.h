@@ -11,15 +11,17 @@ namespace Ogre {
 class GAIA_API ParticleEmitter : public GaiaComponent
 {
 private:
-	Ogre::ParticleSystem* particleSystem = nullptr;
+	Ogre::ParticleSystem* particleSystem;
 
 public:
 	ParticleEmitter(GameObject* gameObject);
-	~ParticleEmitter();
+	virtual ~ParticleEmitter();
+
 	void newEmitter(const std::string& source);
 	void start();
 	void stop();
 
+protected:
 	virtual void handleData(ComponentData* data);
 };
 

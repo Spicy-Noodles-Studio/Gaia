@@ -12,32 +12,35 @@ namespace Ogre {
 
 class GAIA_API Camera : public GaiaComponent
 {
+	friend class WindowManager;
+public:
+	enum class SpaceReference { LocalSpace, WorldSpace, ParentSpace };
+
 private:
 	Ogre::Camera* camera;
 	bool isMainCamera;
 
 public:
 	Camera(GameObject* gameObject);
-	~Camera();
-
-	enum SpaceReference { LocalSpace, WorldSpace, ParentSpace };
-
-	void lookAt(const Vector3& pos, SpaceReference space);
+	virtual ~Camera();
+	
+	void lookAt(const Vector3& position, SpaceReference space);
 
 	Vector3 getDirection() const;
-	void setDirection(const Vector3& dir);
 	Quaternion getOrientation() const;
-	void setOrientation(const Quaternion& q);
-
-	Ogre::Camera* getCamera();
+	void setDirection(const Vector3& direction);
+	void setOrientation(const Quaternion& orientation);
 
 	Vector3 worldToScreen(const Vector3& worldPoint);
-
 	Vector3 worldToScreenPixel(const Vector3& worldPoint);
 
 	void setClipDistances(double near, double far);
 
+protected:
 	virtual void handleData(ComponentData* data);
+
+private:
+	Ogre::Camera* getCamera() const;
 };
 
 #endif

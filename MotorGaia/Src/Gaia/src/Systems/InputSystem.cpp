@@ -35,8 +35,8 @@ void InputSystem::init()
 	SDL_GameControllerEventState(true);
 
 	// Callback definitions
-	onKeyDown([this](std::string keyName, int key) { processKeyDown(keyName, key); });
-	onKeyUp([this](std::string keyName, int key) { processKeyUp(keyName, key); });
+	onKeyDown([this](std::string keyName, int key) { processKeyDown(keyName); });
+	onKeyUp([this](std::string keyName, int key) { processKeyUp(keyName); });
 	onMouseMotion([this](int x, int y) { processMouseMotion(x, y); });
 	onMouseLeftButtonDown([this]() { processMouseLeftButtonDown(); });
 	onMouseRightButtonDown([this]() { processMouseRightButtonDown(); });
@@ -118,18 +118,24 @@ void InputSystem::setDeadZone(int controller, int zone)
 {
 	if (controller > 0 && controller < 4)
 		controllers[controller].JOYSTICK_DEAD_ZONE = zone;
-	if (flags) LOG("Controller: %i | Deadzone: %i", controller, zone);
+	LOG("Controller: %i | Deadzone: %i", controller, zone);
 }
 
-bool InputSystem::isControllerConnected(int index)
+bool InputSystem::isControllerConnected(int index) const
 {
+	if (index < 0 || index >= MAX_CONTROLLERS) return false;
 	return controllers[index].isConnected;
 }
 
 // KEYBOARD
 
+bool InputSystem::isKeyPressed(SDL_Keycode key) const
+{
+	return keyboardState[key];
+}
+
 /// Returns "true" while "key" is hold
-bool InputSystem::isKeyPressed(std::string key)
+bool InputSystem::isKeyPressed(std::string key) const
 {
 	std::transform(key.begin(), key.end(), key.begin(), ::toupper);
 	const bool is_in = keyHold.find(key) != keyHold.end();
@@ -137,7 +143,7 @@ bool InputSystem::isKeyPressed(std::string key)
 }
 
 /// Returns "true" if "key" has been pressed on latest frame
-bool InputSystem::getKeyPress(std::string key)
+bool InputSystem::getKeyPress(std::string key) const
 {
 	std::transform(key.begin(), key.end(), key.begin(), ::toupper);
 	const bool is_in = keyPress.find(key) != keyPress.end();
@@ -145,7 +151,7 @@ bool InputSystem::getKeyPress(std::string key)
 }
 
 /// Returns "true" if "key" has been released on latest frame
-bool InputSystem::getKeyRelease(std::string key)
+bool InputSystem::getKeyRelease(std::string key) const
 {
 	std::transform(key.begin(), key.end(), key.begin(), ::toupper);
 	const bool is_in = keyRelease.find(key) != keyRelease.end();
@@ -156,23 +162,25 @@ bool InputSystem::getKeyRelease(std::string key)
 
 void InputSystem::processMouseInputDown(SDL_MouseButtonEvent& e)
 {
+	auto& context = CEGUI::System::getSingleton().getDefaultGUIContext();
 	switch (e.button) {
 	case SDL_BUTTON_LEFT:
 		MOUSE_BUTTON_LEFT.hold = true;
 		MOUSE_BUTTON_LEFT.pressed = true;
 
-		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
+		context.injectMouseButtonDown(CEGUI::MouseButton::LeftButton);
 		break;
 	case SDL_BUTTON_RIGHT:
 		MOUSE_BUTTON_RIGHT.hold = true;
 		MOUSE_BUTTON_RIGHT.pressed = true;
 
-		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::RightButton);
+		context.injectMouseButtonDown(CEGUI::MouseButton::RightButton);
 		break;
 	case SDL_BUTTON_MIDDLE:
 		MOUSE_BUTTON_MIDDLE.hold = true;
 		MOUSE_BUTTON_MIDDLE.pressed = true;
-		CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MouseButton::MiddleButton);
+
+		context.injectMouseButtonDown(CEGUI::MouseButton::MiddleButton);
 		break;
 	default:
 		break;
@@ -200,7 +208,7 @@ void InputSystem::processMouseInputUp(SDL_MouseButtonEvent& e)
 }
 
 /// 'l' = left button | 'r' = right button | 'm' = middle button
-bool InputSystem::getMouseButtonClick(char button)
+bool InputSystem::getMouseButtonClick(char button) const
 {
 	switch (button) {
 	case 'l':
@@ -214,13 +222,13 @@ bool InputSystem::getMouseButtonClick(char button)
 		break;
 	default:
 		LOG("Button does not exist");
-		;
+		break;
 	}
 	return false;
 }
 
 /// 'l' = left button | 'r' = right button | 'm' = middle button
-bool InputSystem::getMouseButtonHold(char button)
+bool InputSystem::getMouseButtonHold(char button) const
 {
 	switch (button) {
 	case 'l':
@@ -240,7 +248,7 @@ bool InputSystem::getMouseButtonHold(char button)
 }
 
 /// 'l' = left button | 'r' = right button | 'm' = middle button
-bool InputSystem::getMouseButtonRelease(char button)
+bool InputSystem::getMouseButtonRelease(char button) const
 {
 	switch (button) {
 	case 'l':
@@ -259,12 +267,23 @@ bool InputSystem::getMouseButtonRelease(char button)
 	return false;
 }
 
+int InputSystem::getMouseWheel() const
+{
+	return MOUSE_WHEEL;
+}
+
+std::pair<int, int> InputSystem::getMousePosition() const
+{
+	return { MOUSE_POSITION_X, MOUSE_POSITION_Y };
+}
+
 
 // CONTROLLER
 
 void InputSystem::controllerInputDown(int index)
 {
-	if (!controllers[index].isConnected)return;
+	if (index < 0 || index >= MAX_CONTROLLERS) return;
+	if (!controllers[index].isConnected) return;
 
 	if (SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_UP) && !controllers[index].Up) {
 		controllers[index].Up = true;
@@ -318,6 +337,7 @@ void InputSystem::controllerInputDown(int index)
 
 void InputSystem::controllerInputUp(int index)
 {
+	if (index < 0 || index >= MAX_CONTROLLERS) return;
 	if (!controllers[index].isConnected)return;
 
 	if (!SDL_GameControllerGetButton(controllers[index].controller, SDL_CONTROLLER_BUTTON_DPAD_UP) && controllers[index].Up) {
@@ -370,23 +390,23 @@ void InputSystem::controllerInputUp(int index)
 	}
 }
 
-void InputSystem::processKeyDown(std::string keyName, int key)
+void InputSystem::processKeyDown(std::string keyName)
 {
 	std::transform(keyName.begin(), keyName.end(), keyName.begin(), ::toupper);
 	if (!isKeyPressed(keyName)) {
 		keyPress.emplace(keyName);
 		keyHold.emplace(keyName);
-		if (flags) LOG("Key down: %s", keyName.c_str());
+		LOG("Key down: %s", keyName.c_str());
 	}
 	keyboardUsed = true;
 }
 
-void InputSystem::processKeyUp(std::string keyName, int key)
+void InputSystem::processKeyUp(std::string keyName)
 {
 	std::transform(keyName.begin(), keyName.end(), keyName.begin(), ::toupper);
 	keyRelease.emplace(keyName);
 	keyHold.erase(keyName);
-	if (flags) LOG("Key up: %s", keyName.c_str());
+	LOG("Key up: %s", keyName.c_str());
 	keyboardUsed = true;
 }
 
@@ -402,7 +422,7 @@ void InputSystem::processMouseLeftButtonDown()
 {
 	MOUSE_BUTTON_LEFT.hold = true;
 	MOUSE_BUTTON_LEFT.pressed = true;
-	if (flags) LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
+	LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
 	mouseUsed = true;
 }
 
@@ -410,7 +430,7 @@ void InputSystem::processMouseRightButtonDown()
 {
 	MOUSE_BUTTON_RIGHT.hold = true;
 	MOUSE_BUTTON_RIGHT.pressed = true;
-	if (flags) LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
+	LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
 	mouseUsed = true;
 }
 
@@ -418,7 +438,7 @@ void InputSystem::processMouseMiddleButtonDown()
 {
 	MOUSE_BUTTON_MIDDLE.hold = true;
 	MOUSE_BUTTON_MIDDLE.pressed = true;
-	if (flags) LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
+	LOG("Mouse X: %i | Mouse Y: %i", MOUSE_POSITION_X, MOUSE_POSITION_Y);
 	mouseUsed = true;
 }
 
@@ -447,11 +467,11 @@ void InputSystem::processMouseWheelScrollY(int value)
 {
 	if (value > 0) {
 		MOUSE_WHEEL = 1;
-		if (flags) LOG("Mouse wheel up");
+		LOG("Mouse wheel up");
 	}
 	else if (value < 0) {
 		MOUSE_WHEEL = -1;
-		if (flags) LOG("Mouse wheel down");
+		LOG("Mouse wheel down");
 	}
 	mouseUsed = true;
 }
@@ -463,7 +483,7 @@ void InputSystem::processControllerButtonDown(int index, int button)
 
 	if (controllers[controllerIndex].isConnected) controllerInputDown(controllerIndex);
 
-	if (flags) LOG("Controller: %i Button Down", controllerIndex);
+	LOG("Controller: %i Button Down", controllerIndex);
 	controllerUsed = true;
 }
 
@@ -474,7 +494,7 @@ void InputSystem::processControllerButtonUp(int index, int button)
 
 	if (controllers[controllerIndex].isConnected) controllerInputUp(controllerIndex);
 
-	if (flags) LOG("Controller: %i Button Up", controllerIndex);
+	LOG("Controller: %i Button Up", controllerIndex);
 	controllerUsed = true;
 }
 
@@ -500,7 +520,7 @@ void InputSystem::processControllerDeviceAdded(int index)
 
 		currentControllers++;
 
-		if (flags) LOG("Controller: %i added", controllerIndex);
+		LOG("Controller: %i added", controllerIndex);
 	}
 }
 
@@ -523,7 +543,7 @@ void InputSystem::processControllerDeviceRemoved(int index)
 
 	currentControllers--;
 
-	if (flags) LOG("Controller: %i removed", controllerIndex);
+	LOG("Controller: %i removed", controllerIndex);
 }
 
 bool InputSystem::isMouseUsed() const
@@ -541,13 +561,13 @@ bool InputSystem::isControllerUsed() const
 	return controllerUsed;
 }
 
-bool InputSystem::isButtonPressed(int controllerIndex, std::string button)
+bool InputSystem::isButtonPressed(int controllerIndex, std::string button) const
 {
+	if (controllerIndex < 0 || controllerIndex >= MAX_CONTROLLERS) return false;
 	if (!controllers[controllerIndex].isConnected) return false;
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 
-	controllerUsed = true;
 	if (button == "UP") {
 		return controllers[controllerIndex].Up;
 	}
@@ -586,34 +606,59 @@ bool InputSystem::isButtonPressed(int controllerIndex, std::string button)
 	}
 	// TODO
 	else {
-		controllerUsed = false;
 		return false; 
 	}
 }
 
-bool InputSystem::getButtonPress(int controllerIndex, std::string button)
+bool InputSystem::getButtonPress(int controllerIndex, std::string button) const
 {
+	if (controllerIndex < 0 || controllerIndex >= MAX_CONTROLLERS) return false;
 	if (!controllers[controllerIndex].isConnected) return false;
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 	const bool is_in = controllers[controllerIndex].buttonPress.find(button) != controllers[controllerIndex].buttonPress.end();
-	controllerUsed = is_in;
 	return is_in;
 }
 
-bool InputSystem::getButtonRelease(int controllerIndex, std::string button)
+bool InputSystem::getButtonRelease(int controllerIndex, std::string button) const
 {
+	if (controllerIndex < 0 || controllerIndex >= MAX_CONTROLLERS) return false;
 	if (!controllers[controllerIndex].isConnected) return false;
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 	const bool is_in = controllers[controllerIndex].buttonRelease.find(button) != controllers[controllerIndex].buttonRelease.end();
-	controllerUsed = is_in;
 	return is_in;
+}
+
+std::pair<int, int> InputSystem::getLeftJoystick(int controllerIndex) const
+{
+	if (controllerIndex < 0 || controllerIndex >= MAX_CONTROLLERS) return { 0, 0 };
+	return { controllers[controllerIndex].LeftStickX, controllers[controllerIndex].LeftStickY };
+}
+
+std::pair<int, int> InputSystem::getRightJoystick(int controllerIndex) const
+{
+	if (controllerIndex < 0 || controllerIndex >= MAX_CONTROLLERS) return { 0, 0 };
+	return { controllers[controllerIndex].RightStickX, controllers[controllerIndex].RightStickY };
+}
+
+int InputSystem::getLeftTrigger(int controllerIndex) const
+{
+	if (controllerIndex < 0 || controllerIndex >= MAX_CONTROLLERS) return 0;
+	return controllers[controllerIndex].LeftTrigger;
+}
+
+int InputSystem::getRightTrigger(int controllerIndex) const
+{
+	if (controllerIndex < 0 || controllerIndex >= MAX_CONTROLLERS) return 0;
+	return controllers[controllerIndex].RightTrigger;
 }
 
 /// strength = rumble strength percentage [0.0 , 1.0] | length = duration of effect in miliseconds
 void InputSystem::controllerRumble(int controllerIndex, float strength, int length)
 {
+	if (controllerIndex < 0 || controllerIndex >= MAX_CONTROLLERS) return;
+
 	if (strength > 1.0f) strength = 1.0f;
 	if (length > 10000) length = 10000;
 	if (controllers[controllerIndex].isConnected && controllers[controllerIndex].controllerRumble)
@@ -643,149 +688,32 @@ void InputSystem::clearInputs()
 		controllers[i].buttonRelease.clear();
 	}
 }
-int InputSystem::getFirstFreeController()
+int InputSystem::getFirstFreeController() const
 {
 	for (int i = 0; i < 4; i++) {
 		if (!controllers[i].isConnected) return i;
 	}
 	return -1;
 }
-int InputSystem::getControllerByReference(SDL_GameController* handle)
+int InputSystem::getControllerByReference(SDL_GameController* handle) const
 {
 	for (int i = 0; i < 4; i++) {
 		if (controllers[i].controller == handle) return i;
 	}
 	return -1;
 }
-int InputSystem::getControllerFromEvent(int index)
+int InputSystem::getControllerFromEvent(int index) const
 {
 	for (int i = 0; i < 4; i++) {
 		if (controllers[i].ID == index) return i;
 	}
 	return -1;
 }
-int InputSystem::getControllerRemovedIndex(int index)
+int InputSystem::getControllerRemovedIndex(int index) const
 {
 	for (int i = 0; i < 4; i++) {
 		if (controllers[i].ID == index) return i;
 	}
 	return -1;
 }
-
-CEGUI::Key::Scan SDLKeyToCEGUIKey(SDL_Keycode key)
-{
-	using namespace CEGUI;
-	switch (key)
-	{
-	case SDLK_BACKSPACE:    return Key::Backspace;
-	case SDLK_TAB:          return Key::Tab;
-	case SDLK_RETURN:       return Key::Return;
-	case SDLK_PAUSE:        return Key::Pause;
-	case SDLK_ESCAPE:       return Key::Escape;
-	case SDLK_SPACE:        return Key::Space;
-	case SDLK_COMMA:        return Key::Comma;
-	case SDLK_MINUS:        return Key::Minus;
-	case SDLK_PERIOD:       return Key::Period;
-	case SDLK_SLASH:        return Key::Slash;
-	case SDLK_0:            return Key::Zero;
-	case SDLK_1:            return Key::One;
-	case SDLK_2:            return Key::Two;
-	case SDLK_3:            return Key::Three;
-	case SDLK_4:            return Key::Four;
-	case SDLK_5:            return Key::Five;
-	case SDLK_6:            return Key::Six;
-	case SDLK_7:            return Key::Seven;
-	case SDLK_8:            return Key::Eight;
-	case SDLK_9:            return Key::Nine;
-	case SDLK_COLON:        return Key::Colon;
-	case SDLK_SEMICOLON:    return Key::Semicolon;
-	case SDLK_EQUALS:       return Key::Equals;
-	case SDLK_LEFTBRACKET:  return Key::LeftBracket;
-	case SDLK_BACKSLASH:    return Key::Backslash;
-	case SDLK_RIGHTBRACKET: return Key::RightBracket;
-	case SDLK_a:            return Key::A;
-	case SDLK_b:            return Key::B;
-	case SDLK_c:            return Key::C;
-	case SDLK_d:            return Key::D;
-	case SDLK_e:            return Key::E;
-	case SDLK_f:            return Key::F;
-	case SDLK_g:            return Key::G;
-	case SDLK_h:            return Key::H;
-	case SDLK_i:            return Key::I;
-	case SDLK_j:            return Key::J;
-	case SDLK_k:            return Key::K;
-	case SDLK_l:            return Key::L;
-	case SDLK_m:            return Key::M;
-	case SDLK_n:            return Key::N;
-	case SDLK_o:            return Key::O;
-	case SDLK_p:            return Key::P;
-	case SDLK_q:            return Key::Q;
-	case SDLK_r:            return Key::R;
-	case SDLK_s:            return Key::S;
-	case SDLK_t:            return Key::T;
-	case SDLK_u:            return Key::U;
-	case SDLK_v:            return Key::V;
-	case SDLK_w:            return Key::W;
-	case SDLK_x:            return Key::X;
-	case SDLK_y:            return Key::Y;
-	case SDLK_z:            return Key::Z;
-	case SDLK_DELETE:       return Key::Delete;
-	case SDLK_KP_0:          return Key::Numpad0;
-	case SDLK_KP_1:          return Key::Numpad1;
-	case SDLK_KP_2:          return Key::Numpad2;
-	case SDLK_KP_3:          return Key::Numpad3;
-	case SDLK_KP_4:          return Key::Numpad4;
-	case SDLK_KP_5:          return Key::Numpad5;
-	case SDLK_KP_6:          return Key::Numpad6;
-	case SDLK_KP_7:          return Key::Numpad7;
-	case SDLK_KP_8:          return Key::Numpad8;
-	case SDLK_KP_9:          return Key::Numpad9;
-	case SDLK_KP_PERIOD:    return Key::Decimal;
-	case SDLK_KP_DIVIDE:    return Key::Divide;
-	case SDLK_KP_MULTIPLY:  return Key::Multiply;
-	case SDLK_KP_MINUS:     return Key::Subtract;
-	case SDLK_KP_PLUS:      return Key::Add;
-	case SDLK_KP_ENTER:     return Key::NumpadEnter;
-	case SDLK_KP_EQUALS:    return Key::NumpadEquals;
-	case SDLK_UP:           return Key::ArrowUp;
-	case SDLK_DOWN:         return Key::ArrowDown;
-	case SDLK_RIGHT:        return Key::ArrowRight;
-	case SDLK_LEFT:         return Key::ArrowLeft;
-	case SDLK_INSERT:       return Key::Insert;
-	case SDLK_HOME:         return Key::Home;
-	case SDLK_END:          return Key::End;
-	case SDLK_PAGEUP:       return Key::PageUp;
-	case SDLK_PAGEDOWN:     return Key::PageDown;
-	case SDLK_F1:           return Key::F1;
-	case SDLK_F2:           return Key::F2;
-	case SDLK_F3:           return Key::F3;
-	case SDLK_F4:           return Key::F4;
-	case SDLK_F5:           return Key::F5;
-	case SDLK_F6:           return Key::F6;
-	case SDLK_F7:           return Key::F7;
-	case SDLK_F8:           return Key::F8;
-	case SDLK_F9:           return Key::F9;
-	case SDLK_F10:          return Key::F10;
-	case SDLK_F11:          return Key::F11;
-	case SDLK_F12:          return Key::F12;
-	case SDLK_F13:          return Key::F13;
-	case SDLK_F14:          return Key::F14;
-	case SDLK_F15:          return Key::F15;
-	case SDLK_NUMLOCKCLEAR:      return Key::NumLock;
-	case SDLK_SCROLLLOCK:    return Key::ScrollLock;
-	case SDLK_RSHIFT:       return Key::RightShift;
-	case SDLK_LSHIFT:       return Key::LeftShift;
-	case SDLK_RCTRL:        return Key::RightControl;
-	case SDLK_LCTRL:        return Key::LeftControl;
-	case SDLK_RALT:         return Key::RightAlt;
-	case SDLK_LALT:         return Key::LeftAlt;
-	case SDLK_LGUI:       return Key::LeftWindows;
-	case SDLK_RGUI:       return Key::RightWindows;
-	case SDLK_SYSREQ:       return Key::SysRq;
-	case SDLK_MENU:         return Key::AppMenu;
-	case SDLK_POWER:        return Key::Power;
-	default:                return Key::Unknown;
-	}
-}
-
 #pragma endregion

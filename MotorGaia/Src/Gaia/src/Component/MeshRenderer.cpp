@@ -23,57 +23,86 @@
 
 REGISTER_FACTORY(MeshRenderer);
 
-MeshRenderer::MeshRenderer(GameObject* gameObject) : GaiaComponent(gameObject), visible(true)
+MeshRenderer::MeshRenderer(GameObject* gameObject) : GaiaComponent(gameObject), entities(), meshId(""), meshName(""), visible(true)
 {
 
 }
 
 MeshRenderer::~MeshRenderer()
 {
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
+	Scene* scene = gameObject->getScene();
+	checkNullAndBreak(scene);
+	Ogre::SceneManager* sceneManager = scene->getSceneManager();
+	checkNullAndBreak(sceneManager);
+
 	for (auto entity : entities)
 	{
 		gameObject->node->detachObject(entity.second);
-		gameObject->getScene()->getSceneManager()->destroyEntity(entity.second);
+		sceneManager->destroyEntity(entity.second);
 	}
 
 	entities.clear();
 }
 
-Ogre::Entity* MeshRenderer::getMesh(std::string mesh)
-{
-	return entities[mesh];
-}
-
-std::string MeshRenderer::getMeshId() const
+const std::string& MeshRenderer::getMeshId() const
 {
 	return meshId;
 }
 
-std::string MeshRenderer::getMeshName() const
+const std::string& MeshRenderer::getMeshName() const
 {
 	return meshName;
 }
 
 void MeshRenderer::setMesh(const std::string& id, const std::string& mesh)
 {
-	if (entities.find(id) == entities.end())
-		entities[id] = gameObject->getScene()->createEntity(mesh);
+	if (entities.find(id) != entities.end())
+		LOG_ERROR("MESH RENDERER", "Given ID already in use. Overwritting mesh if not the same");
+
+	checkNullAndBreak(gameObject);
+	Scene* scene = gameObject->getScene();
+	checkNullAndBreak(scene);
+	Ogre::Entity* entity = nullptr;
+	try {
+		entity = scene->createEntity(mesh);
+	}
+	catch (std::exception exception) {
+		LOG_ERROR("MESH RENDERER", "Error ocurred while creating an entity %s", mesh.c_str());
+		return;
+	}
+	checkNullAndBreak(entity);
+	entities[id] = entity;
 }
 
 void MeshRenderer::setMaterial(const std::string& id, const std::string& material)
 {
-	if (entities.find(id) != entities.end())
-		entities[id]->setMaterialName(material);
+	if (entities.find(id) == entities.end()) {
+		LOG_ERROR("MESH RENDERER", "No mesh exits with given ID");
+		return;
+	}
+	checkNullAndBreak(entities[id]);
+
+	entities[id]->setMaterialName(material);
 }
 
 void MeshRenderer::setMaterial(const std::string& id, int subentity, const std::string& material)
 {
-	if (entities.find(id) != entities.end())
-		entities[id]->getSubEntity(subentity)->setMaterialName(material);
+	if (entities.find(id) == entities.end()) {
+		LOG_ERROR("MESH RENDERER", "No mesh exits with given ID");
+		return;
+	}
+	checkNullAndBreak(entities[id]);
+	Ogre::SubEntity* subEntity = entities[id]->getSubEntity(subentity);
+	checkNullAndBreak(subEntity);
+	subEntity->setMaterialName(material);
 }
 
 void MeshRenderer::changeMesh(const std::string& id, const std::string& mesh)
 {
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
 	// Dettach previously attached meshes
 	gameObject->node->detachAllObjects();
 
@@ -84,16 +113,21 @@ void MeshRenderer::changeMesh(const std::string& id, const std::string& mesh)
 	meshName = mesh;
 
 	// Change animations if the mesh has animations
-	auto anim = gameObject->getComponent<Animator>();
-	if (anim != nullptr)	anim->setMesh(id);
+	Animator* animator = gameObject->getComponent<Animator>();
+	if (animator != nullptr)	animator->setMesh(id);
 }
 
 void MeshRenderer::attachEntityToNode(const std::string& mesh)
 {
-	if (entities.find(mesh) != entities.end())
-		gameObject->node->attachObject(entities[mesh]);
-	else
-		LOG("MESH RENDERER: Trying to attach non existing mesh %s", mesh.c_str());
+	if (entities.find(mesh) == entities.end()) {
+		LOG_ERROR("MESH RENDERER", "Trying to attach non existing mesh %s", mesh.c_str());
+		return;
+	}
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
+	checkNullAndBreak(entities[mesh]);
+
+	gameObject->node->attachObject(entities[mesh]);
 }
 
 void MeshRenderer::attachEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh)
@@ -101,14 +135,23 @@ void MeshRenderer::attachEntityToBone(const std::string& owner, const std::strin
 	auto ownerIt = entities.find(owner), meshIt = entities.find(mesh);
 	if (ownerIt != entities.end() && meshIt != entities.end())
 	{
-		Ogre::Entity* ownerEnt = (*ownerIt).second, * meshEnt = (*meshIt).second;
-		if (ownerEnt->hasSkeleton() && ownerEnt->getSkeleton()->hasBone(bone))
-			ownerEnt->attachObjectToBone(bone, meshEnt);
+		Ogre::Entity* ownerEntity = (*ownerIt).second;
+		Ogre::Entity *meshEntity = (*meshIt).second;
+		checkNullAndBreak(ownerEntity);
+		checkNullAndBreak(meshEntity);
+
+		Ogre::SkeletonInstance* skeleton = ownerEntity->getSkeleton();
+		checkNullAndBreak(skeleton);
+
+		if (ownerEntity->hasSkeleton() && skeleton->hasBone(bone))
+			ownerEntity->attachObjectToBone(bone, meshEntity);
 		else
-			LOG("MESH RENDERER: The mesh %s does not have a skeleton or bone %s does not exist", owner.c_str(), bone.c_str());
+			LOG_ERROR("MESH RENDERER", "The mesh %s does not have a skeleton or bone %s does not exist", owner.c_str(), bone.c_str());
 	}
-	else
-		LOG("MESH RENDERER: One of the meshes specified does not exist in object %s", gameObject->getName().c_str());
+	else {
+		checkNullAndBreak(gameObject);
+		LOG_ERROR("MESH RENDERER", "One of the meshes specified does not exist in object %s", gameObject->getName().c_str());
+	}
 }
 
 void MeshRenderer::detachEntityFromBone(const std::string& owner, const std::string& mesh)
@@ -116,14 +159,20 @@ void MeshRenderer::detachEntityFromBone(const std::string& owner, const std::str
 	auto ownerIt = entities.find(owner), meshIt = entities.find(mesh);
 	if (ownerIt != entities.end() && meshIt != entities.end())
 	{
-		Ogre::Entity* ownerEnt = (*ownerIt).second, * meshEnt = (*meshIt).second;
-		if (ownerEnt->hasSkeleton())
-			ownerEnt->detachObjectFromBone(meshEnt);
+		Ogre::Entity* ownerEntity = (*ownerIt).second;
+		Ogre::Entity* meshEntity = (*meshIt).second;
+		checkNullAndBreak(ownerEntity);
+		checkNullAndBreak(meshEntity);
+
+		if (ownerEntity->hasSkeleton())
+			ownerEntity->detachObjectFromBone(meshEntity);
 		else
-			LOG("MESH RENDERER: The mesh %s does not have a skeleton", owner.c_str());
+			LOG_ERROR("MESH RENDERER", "The mesh %s does not have a skeleton", owner.c_str());
 	}
-	else
-		LOG("MESH RENDERER: The mesh specified does not exist in object %s", gameObject->getName().c_str());
+	else {
+		checkNullAndBreak(gameObject);
+		LOG_ERROR("MESH RENDERER", "The mesh specified does not exist in object %s", gameObject->getName().c_str());
+	}
 }
 
 void MeshRenderer::moveEntityToBone(const std::string& owner, const std::string& bone, const std::string& mesh)
@@ -134,25 +183,35 @@ void MeshRenderer::moveEntityToBone(const std::string& owner, const std::string&
 
 void MeshRenderer::setVisible(bool visible)
 {
+	checkNullAndBreak(gameObject);
+	checkNullAndBreak(gameObject->node);
+
 	gameObject->node->setVisible(visible, false);
 	this->visible = visible;
 }
 
-bool MeshRenderer::isVisible()
+bool MeshRenderer::isVisible() const
 {
 	return visible;
 }
 
-void MeshRenderer::printAllBones()
+void MeshRenderer::printAllBones() const
 {
-	printf("%s BONES:\n", meshName.c_str());
-	auto skeleton = getMesh(meshId)->getMesh()->getSkeleton();
+	Ogre::Entity* entity = getMesh(meshId);
+	checkNullAndBreak(entity);
+	Ogre::MeshPtr meshPtr = entity->getMesh();
+	checkNullAndBreak(meshPtr.get());
+	Ogre::SkeletonPtr skeleton = meshPtr->getSkeleton();
+	checkNullAndBreak(skeleton.get());
+
 	auto numBones = skeleton->getNumBones();
-	for (int i = 0; i < numBones; i++)
-	{
-		printf("%s\n", skeleton->getBone(i)->getName().c_str());
+	LOG("%s BONES:", meshName.c_str());
+	for (int i = 0; i < numBones; i++) {
+		Ogre::Bone* bone = skeleton->getBone(i);
+		checkNullAndBreak(bone);
+		LOG("%s", bone->getName().c_str());
 	}
-	printf("\n");
+	LOG("");
 }
 
 void MeshRenderer::setDiffuse(int subentity, const Vector3& diffuse, float alpha)
@@ -160,72 +219,190 @@ void MeshRenderer::setDiffuse(int subentity, const Vector3& diffuse, float alpha
 	setDiffuse(meshId, subentity, diffuse, alpha);
 }
 
-void MeshRenderer::setDiffuse(std::string entity, int subentity, const Vector3& diffuse, float alpha)
+void MeshRenderer::setDiffuse(const std::string& entity, int subentity, const Vector3& diffuse, float alpha)
 {
-	Ogre::MaterialPtr mat = getMesh(entity)->getSubEntity(subentity)->getMaterial();
-	Ogre::MaterialPtr newMat = Ogre::MaterialManager::getSingleton().getByName(mat->getName() + gameObject->getName());
-	if (newMat == NULL) newMat = mat->clone(mat->getName() + gameObject->getName());
-	newMat->getTechnique(0)->getPass(0)->setDiffuse(diffuse.x, diffuse.y, diffuse.z, alpha);
-	setMaterial(entity, subentity, newMat->getName());
+	checkNullAndBreak(gameObject);
+
+	Ogre::Entity* mEntity = getMesh(entity);
+	checkNullAndBreak(mEntity);
+	Ogre::SubEntity* subEntity = mEntity->getSubEntity(subentity);
+	checkNullAndBreak(subEntity);
+
+	Ogre::MaterialPtr material = subEntity->getMaterial();
+	checkNullAndBreak(material.get());
+
+	Ogre::MaterialPtr newMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName() + gameObject->getName());
+	if (newMaterial == NULL) 
+		newMaterial = material->clone(material->getName() + gameObject->getName());
+	checkNullAndBreak(newMaterial.get());
+
+	Ogre::Technique* technique = newMaterial->getTechnique(0);
+	checkNullAndBreak(technique);
+	Ogre::Pass* pass = technique->getPass(0);
+	checkNullAndBreak(pass);
+
+	pass->setDiffuse(diffuse.x, diffuse.y, diffuse.z, alpha);
+	setMaterial(entity, subentity, newMaterial->getName());
 }
 
 void MeshRenderer::setFpParam(int subentity, const std::string& param, float value)
 {
-	Ogre::MaterialPtr mat = getMesh(meshId)->getSubEntity(subentity)->getMaterial();
-	Ogre::MaterialPtr newMat = Ogre::MaterialManager::getSingleton().getByName(mat->getName() + gameObject->getName());
-	if (newMat == NULL) newMat = mat->clone(mat->getName() + gameObject->getName());
-	Ogre::GpuProgramParametersSharedPtr params = newMat->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
+	checkNullAndBreak(gameObject);
+
+	Ogre::Entity* mEntity = getMesh(meshId);
+	checkNullAndBreak(mEntity);
+	Ogre::SubEntity* subEntity = mEntity->getSubEntity(subentity);
+	checkNullAndBreak(subEntity);
+
+	Ogre::MaterialPtr material = subEntity->getMaterial();
+	checkNullAndBreak(material.get());
+
+	Ogre::MaterialPtr newMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName() + gameObject->getName());
+	if (newMaterial == NULL)
+		newMaterial = material->clone(material->getName() + gameObject->getName());
+	checkNullAndBreak(newMaterial.get());
+
+	Ogre::Technique* technique = newMaterial->getTechnique(0);
+	checkNullAndBreak(technique);
+	Ogre::Pass* pass = technique->getPass(0);
+	checkNullAndBreak(pass);
+
+	Ogre::GpuProgramParametersSharedPtr params = pass->getFragmentProgramParameters();
+	checkNullAndBreak(params.get());
+
 	params->setNamedConstant(param, value);
-	setMaterial(meshId, subentity, newMat->getName());
+	setMaterial(meshId, subentity, newMaterial->getName());
 }
 
-Vector3 MeshRenderer::getDiffuse(int subentity)
+Vector3 MeshRenderer::getDiffuse(int subentity) const
 {
 	return getDiffuse(meshId, subentity);
 }
 
-Vector3 MeshRenderer::getDiffuse(std::string entity, int subentity)
+Vector3 MeshRenderer::getDiffuse(std::string entity, int subentity) const
 {
-	Ogre::ColourValue c = getMesh(entity)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getDiffuse();
+	Ogre::Entity* mEntity = getMesh(entity);
+	checkNullAndBreak(mEntity, Vector3::ZERO);
+	Ogre::SubEntity* subEntity = mEntity->getSubEntity(subentity);
+	checkNullAndBreak(subEntity, Vector3::ZERO);
+
+	Ogre::MaterialPtr material = subEntity->getMaterial();
+	checkNullAndBreak(material.get(), Vector3::ZERO);
+
+	Ogre::Technique* technique = material->getTechnique(0);
+	checkNullAndBreak(technique, Vector3::ZERO);
+	Ogre::Pass* pass = technique->getPass(0);
+	checkNullAndBreak(pass, Vector3::ZERO);
+
+	Ogre::ColourValue c = pass->getDiffuse();
 	return { c.r, c.g, c.b };
 }
 
 void MeshRenderer::setEmissive(int subentity, const Vector3& emissive)
 {
-	Ogre::MaterialPtr mat = getMesh(meshId)->getSubEntity(subentity)->getMaterial();
-	Ogre::MaterialPtr newMat = Ogre::MaterialManager::getSingleton().getByName(mat->getName() + gameObject->getName());
-	if (newMat == NULL) newMat = mat->clone(mat->getName() + gameObject->getName());
-	newMat->getTechnique(0)->getPass(0)->setEmissive(emissive.x, emissive.y, emissive.z);
-	setMaterial(meshId, subentity, newMat->getName());
+	checkNullAndBreak(gameObject);
+
+	Ogre::Entity* entity = getMesh(meshId);
+	checkNullAndBreak(entity);
+	Ogre::SubEntity* subEntity = entity->getSubEntity(subentity);
+	checkNullAndBreak(subEntity);
+
+	Ogre::MaterialPtr material = subEntity->getMaterial();
+	checkNullAndBreak(material.get());
+
+	Ogre::MaterialPtr newMaterial = Ogre::MaterialManager::getSingleton().getByName(material->getName() + gameObject->getName());
+	if (newMaterial == NULL) newMaterial = material->clone(material->getName() + gameObject->getName());
+	checkNullAndBreak(newMaterial.get());
+
+	Ogre::Technique* technique = newMaterial->getTechnique(0);
+	checkNullAndBreak(technique);
+	Ogre::Pass* pass = technique->getPass(0);
+	checkNullAndBreak(pass);
+
+	pass->setEmissive(emissive.x, emissive.y, emissive.z);
+	setMaterial(meshId, subentity, newMaterial->getName());
 }
 
-Vector3 MeshRenderer::getEmissive(int subentity)
+Vector3 MeshRenderer::getEmissive(int subentity) const
 {
-	Ogre::ColourValue c = getMesh(meshId)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getEmissive();
+	Ogre::Entity* entity = getMesh(meshId);
+	checkNullAndBreak(entity, Vector3::ZERO);
+	Ogre::SubEntity* subEntity = entity->getSubEntity(subentity);
+	checkNullAndBreak(subEntity, Vector3::ZERO);
+
+	Ogre::MaterialPtr material = subEntity->getMaterial();
+	checkNullAndBreak(material.get(), Vector3::ZERO);
+
+	Ogre::Technique* technique = material->getTechnique(0);
+	checkNullAndBreak(technique, Vector3::ZERO);
+	Ogre::Pass* pass = technique->getPass(0);
+	checkNullAndBreak(pass, Vector3::ZERO);
+
+	Ogre::ColourValue c = pass->getEmissive();
 	return { c.r, c.g, c.b };
 }
 
-int MeshRenderer::getSubentitiesSize()
+int MeshRenderer::getSubentitiesSize() const
 {
-	return getMesh(meshId)->getSubEntities().size();
+	Ogre::Entity* entity = getMesh(meshId);
+	checkNullAndBreak(entity, 0);
+
+	return entity->getSubEntities().size();
 }
 
 void MeshRenderer::setTexture(int subentity, const std::string& textureName)
 {
-	getMesh(meshId)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureName(textureName);
+	Ogre::Entity* entity = getMesh(meshId);
+	checkNullAndBreak(entity);
+
+	Ogre::SubEntity* subEntity = entity->getSubEntity(subentity);
+	checkNullAndBreak(subEntity);
+
+	Ogre::MaterialPtr material = subEntity->getMaterial();
+	checkNullAndBreak(material.get());
+
+	Ogre::Technique* technique = material->getTechnique(0);
+	checkNullAndBreak(technique);
+
+	Ogre::Pass* pass = technique->getPass(0);
+	checkNullAndBreak(pass);
+
+	Ogre::TextureUnitState* texture = pass->getTextureUnitState(0);
+	checkNullAndBreak(texture);
+
+	texture->setTextureName(textureName);
 }
 
-std::string MeshRenderer::getTexture(int subentity)
+const std::string& MeshRenderer::getTexture(int subentity) const
 {
-	return getMesh(meshId)->getSubEntity(subentity)->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0)->getTextureName();
+	Ogre::Entity* entity = getMesh(meshId);
+	checkNullAndBreak(entity, "");
+
+	Ogre::SubEntity* subEntity = entity->getSubEntity(subentity);
+	checkNullAndBreak(subEntity, "");
+
+	Ogre::MaterialPtr material = subEntity->getMaterial();
+	checkNullAndBreak(material.get(), "");
+
+	Ogre::Technique* technique = material->getTechnique(0);
+	checkNullAndBreak(technique, "");
+
+	Ogre::Pass* pass = technique->getPass(0);
+	checkNullAndBreak(pass, "");
+
+	Ogre::TextureUnitState* texture = pass->getTextureUnitState(0);
+	checkNullAndBreak(texture, "");
+
+	return texture->getTextureName();
 }
 
 void MeshRenderer::handleData(ComponentData* data)
 {
+	checkNullAndBreak(data);
+
 	for (auto prop : data->getProperties())
 	{
 		std::stringstream ss(prop.second);
-
 		if (prop.first == "mesh")
 		{
 			char c;
@@ -254,14 +431,24 @@ void MeshRenderer::handleData(ComponentData* data)
 			if (ss >> id >> name)
 				setMaterial(id, name);
 			else
-				LOG("MESH RENDERER: wrong value for property %s.\n", prop.first.c_str());
+				LOG_ERROR("MESH RENDERER", "Wrong value for property %s", prop.first.c_str());
 		}
 		else if (prop.first == "visible")
 		{
 			if (ss >> visible)
 				setVisible(visible);
 			else
-				LOG("MESH RENDERER: wrong value for property %s.\n", prop.first.c_str());
+				LOG_ERROR("MESH RENDERER", "Wrong value for property %s", prop.first.c_str());
 		}
 	}
+}
+
+Ogre::Entity* MeshRenderer::getMesh(const std::string& mesh) const
+{
+	if (entities.find(mesh) == entities.end()) {
+		LOG_ERROR("MESH RENDERER", "No \"%s\" mesh found", mesh.c_str());
+		return nullptr;
+	}
+
+	return entities.at(mesh);
 }

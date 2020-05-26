@@ -7,12 +7,11 @@
 #include "GameObject.h"
 #include "MeshRenderer.h"
 #include "Scene.h"
-#include "ComponentData.h"
 #include "ComponentRegister.h"
 
 REGISTER_FACTORY(Animator);
 
-Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject), endSequenceWithLoop(false), currentAnimation("")
+Animator::Animator(GameObject* gameObject) : GaiaComponent(gameObject), endSequenceWithLoop(false), currentAnimation(""), animations(nullptr)
 {
 
 }
@@ -24,30 +23,37 @@ Animator::~Animator()
 
 void Animator::setMesh(const std::string& mesh)
 {
-	MeshRenderer* aux = gameObject->getComponent<MeshRenderer>();
+	MeshRenderer* meshRenderer = gameObject->getComponent<MeshRenderer>();
+	checkNullAndBreak(meshRenderer);
 
-	if (aux != nullptr)
+	if (currentAnimation != "") 
 	{
-		if (currentAnimation != "") 
-		{
-			Ogre::AnimationState* prev = getAnimation(currentAnimation);
-			prev->setTimePosition(0);
-			prev->setEnabled(false);
-			currentAnimation = "";
-		} 
-		// clear previous sequence
-		std::queue<std::string>().swap(animSequence);
+		Ogre::AnimationState* previous = getAnimation(currentAnimation);
+		checkNullAndBreak(previous);
+		previous->setTimePosition(0);
+		previous->setEnabled(false);
+		currentAnimation = "";
+	} 
+	// clear previous sequence
+	std::queue<std::string>().swap(animationSequence);
 
-		animations = aux->getMesh(mesh)->getAllAnimationStates();
-		if(animations != 0)
-			gameObject->getScene()->addAnimationSet(gameObject->getName(), animations);
-		currentMesh = mesh;
+	animations = meshRenderer->getMesh(mesh)->getAllAnimationStates();
+	if (animations != nullptr) {
+		checkNullAndBreak(gameObject);
+		Scene* scene = gameObject->getScene();
+		checkNullAndBreak(scene);
+		scene->addAnimationSet(gameObject->getName(), animations);
 	}
+	currentMesh = mesh;
 }
 
-Ogre::AnimationState* Animator::getAnimation(const std::string& animation)
+Ogre::AnimationState* Animator::getAnimation(const std::string& animation) const
 {
-	return animations->getAnimationState(animation);
+	checkNullAndBreak(animations, nullptr);
+	Ogre::AnimationState* animationState = animations->getAnimationState(animation);
+	
+	checkNullAndBreak(animationState, nullptr);
+	return animationState;
 }
 
 void Animator::playAnimation(const std::string& animation, bool begin)
@@ -56,52 +62,56 @@ void Animator::playAnimation(const std::string& animation, bool begin)
 
 	if (currentAnimation != "")
 	{
-		Ogre::AnimationState* prev = getAnimation(currentAnimation);
-		prev->setTimePosition(0);
-		prev->setEnabled(false);
+		Ogre::AnimationState* previous = getAnimation(currentAnimation);
+		checkNullAndBreak(previous);
+		previous->setTimePosition(0);
+		previous->setEnabled(false);
 	}
-
-	getAnimation(animation)->setEnabled(true);
+	Ogre::AnimationState* animationState = getAnimation(animation);
+	checkNullAndBreak(animationState);
+	animationState->setEnabled(true);
 	currentAnimation = animation;
 }
 
 void Animator::playAnimationSequence(const std::vector<std::string>& sequence, bool endWithLoop)
 {
 	// clear previous sequence
-	std::queue<std::string>().swap(animSequence);
+	std::queue<std::string>().swap(animationSequence);
 
 	// play first animation
+	if (!sequence.size()) return;
 	playAnimation(sequence[0]);
 	setLoop(false);
 
 	// add the rest to the queue
 	for (int i = 1; i < sequence.size(); i++)
-		animSequence.push(sequence[i]);
+		animationSequence.push(sequence[i]);
 
 	endSequenceWithLoop = endWithLoop;
 }
 
 void Animator::updateAnimationSequence()
 {
-	if (!animSequence.empty() && hasEnded())
+	if (!animationSequence.empty() && hasEnded())
 	{
-		playAnimation(animSequence.front()); animSequence.pop();
+		playAnimation(animationSequence.front()); animationSequence.pop();
 
-		if (animSequence.empty() && endSequenceWithLoop)
+		if (animationSequence.empty() && endSequenceWithLoop)
 			setLoop(true);
 		else
 			setLoop(false);
 	}
 }
 
-std::string Animator::getCurrentAnimation()
+const std::string& Animator::getCurrentAnimation() const
 {
 	return currentAnimation;
 }
 
-std::vector<std::string> Animator::getAllAnimationsNames()
+std::vector<std::string> Animator::getAllAnimationsNames() const
 {
 	std::vector<std::string> names;
+	checkNullAndBreak(animations, names);
 
 	for (auto anim : animations->getAnimationStateIterator())
 		names.push_back(anim.first);
@@ -109,80 +119,95 @@ std::vector<std::string> Animator::getAllAnimationsNames()
 	return names;
 }
 
-void Animator::printAllAnimationsNames()
+void Animator::printAllAnimationsNames() const
 {
-	printf("%s MESH ANIMATIONS: \n", currentMesh.c_str());
+	LOG("%s MESH ANIMATIONS: ", currentMesh.c_str());
 	for (auto anim : animations->getAnimationStateIterator())
-		printf(" - %s\n", anim.first.c_str());
-	printf("\n");
+		LOG(" - %s", anim.first.c_str());
+	LOG("");
 }
 
 void Animator::handleData(ComponentData* data)
 {
+	checkNullAndBreak(data);
+
 	for (auto prop : data->getProperties())
 	{
 		std::stringstream ss(prop.second);
-
 		if (prop.first == "anim")
 		{
-			std::string anim, mesh; 
-			if (ss >> anim >> mesh) {
+			std::string animationName, mesh; 
+			if (ss >> animationName >> mesh) {
 				setMesh(mesh);
 
-				Ogre::AnimationState* aux = getAnimation(anim);
-				aux->setEnabled(true);
-				currentAnimation = anim;
+				Ogre::AnimationState* animation = getAnimation(animationName);
+				checkNull(animation);
+
+				if (animation == nullptr) continue;
+				animation->setEnabled(true);
+				currentAnimation = animationName;
 			}
 			else
-				LOG("ANIMATOR: wrong value for property %s.\n", prop.first.c_str());
+				LOG_ERROR("ANIMATOR", "Wrong value for property %s.", prop.first.c_str());
 		}
 	}
 }
 
 void Animator::setLoop(bool loop)
 {
-	auto anim = getAnimation(currentAnimation);
-	anim->setLoop(loop);
+	Ogre::AnimationState* animation = getAnimation(currentAnimation);
+	checkNullAndBreak(animation);
+	animation->setLoop(loop);
 }
 
 void Animator::setTimePosition(float pos)
 {
-	auto anim = getAnimation(currentAnimation);
-	anim->setTimePosition(Ogre::Real(pos));
+	Ogre::AnimationState* animation = getAnimation(currentAnimation);
+	checkNullAndBreak(animation);
+	animation->setTimePosition(Ogre::Real(pos));
 }
 
 void Animator::setLength(float length)
 {
-	auto anim = getAnimation(currentAnimation);
-	anim->setLength(Ogre::Real(length));
+	Ogre::AnimationState* animation = getAnimation(currentAnimation);
+	checkNullAndBreak(animation);
+	animation->setLength(Ogre::Real(length));
 }
 
-bool Animator::getLoop()
+bool Animator::getLoop() const
 {
-	return getAnimation(currentAnimation)->getLoop();
+	Ogre::AnimationState* animation = getAnimation(currentAnimation);
+	checkNullAndBreak(animation, false);
+	return animation->getLoop();
 }
 
-float Animator::getTimePosition()
+float Animator::getTimePosition() const
 {
-	return float(getAnimation(currentAnimation)->getTimePosition());
+	Ogre::AnimationState* animation = getAnimation(currentAnimation);
+	checkNullAndBreak(animation, 0.0f);
+	return float(animation->getTimePosition());
 }
 
-float Animator::getLength()
+float Animator::getLength() const
 {
-	return float(getAnimation(currentAnimation)->getLength());
+	Ogre::AnimationState* animation = getAnimation(currentAnimation);
+	checkNullAndBreak(animation, 0.0f);
+	return float(animation->getLength());
 }
 
-bool Animator::hasEnded()
+bool Animator::hasEnded() const
 {
-	return getAnimation(currentAnimation)->hasEnded();
+	Ogre::AnimationState* animation = getAnimation(currentAnimation);
+	checkNullAndBreak(animation, false);
+	return animation->hasEnded();
 }
 
 bool Animator::isPlayingSequence() const
 {
-	return !animSequence.empty();
+	return !animationSequence.empty();
 }
 
-std::queue<std::string>& Animator::getAnimationSequence()
+const std::queue<std::string>& Animator::getAnimationSequence() const
 {
-	return animSequence;
+	return animationSequence;
 }

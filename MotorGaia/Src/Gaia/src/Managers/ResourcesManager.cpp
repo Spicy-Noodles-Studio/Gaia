@@ -1,6 +1,7 @@
 ﻿#include "ResourcesManager.h"
 #include <fstream>
 #include "DebugUtils.h"
+#include "ErrorManagement.h"
 
 #include <OgreConfigFile.h>
 #include <OgreResourceGroupManager.h>
@@ -14,7 +15,7 @@ std::map<std::string, BlueprintData*> ResourcesManager::blueprintData;
 std::map<std::string, Sound*> ResourcesManager::sounds;
 
 ResourcesManager::ResourcesManager(const std::string& filePath) :	resourcesPath(filePath), fileSystemLayer(nullptr), 
-																	shaderLibPath(""), shaderGenerator(nullptr), shaderTechniqueResolver(nullptr)
+																	shaderLibPath(""), shaderGenerator(nullptr), shaderTechniqueResolver(nullptr), interfacePath("")
 {
 
 }
@@ -37,15 +38,15 @@ void ResourcesManager::init()
 	// Reads all file paths
 	std::ifstream file(resourcesPath);
 	if (!file.is_open()) {
-		LOG("RESOURCES MANAGER: Resources filepath not valid: %s\n", resourcesPath.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "Resources filepath not valid: %s", resourcesPath.c_str());
 		return;
 	}
-	LOG("Reading Resources paths...\n");
+	LOG("Reading Resources paths...");
 	// Start reading resources
 	std::string type, c, filename;
 	while (file >> type >> c >> filename) {
 		if (c != "=") {
-			LOG("RESOURCES MANAGER: invalid resources file format\nFailed at: %s %s %s\n", type.c_str(), c.c_str(), filename.c_str());
+			LOG_ERROR("RESOURCES MANAGER", "Invalid resources file format\nFailed at: %s %s %s", type.c_str(), c.c_str(), filename.c_str());
 			file.close();
 			return;
 		}
@@ -140,11 +141,16 @@ void ResourcesManager::locateBlueprint(const std::string& filename)
 
 void ResourcesManager::loadSound(const std::string& filename)
 {
+	SoundSystem* soundSystem = SoundSystem::GetInstance();
+	if (soundSystem == nullptr) {
+		LOG_ERROR("RESOURCES MANAGER", "SoundSystem reference is nullptr, %s not loaded", filename.c_str());
+		return;
+	}
 	// Lectura de linea
 	std::string soundfile, name, soundmode, loop;
 	std::stringstream ss(filename);
 	if (!(ss >> soundfile >> name >> soundmode >> loop)) {
-		LOG("RESOURCES MANAGER: invalid format \"%s\"\n", filename.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "Invalid format \"%s\"", filename.c_str());
 		return;
 	}
 	SoundMode mode = FMOD_DEFAULT;
@@ -154,8 +160,8 @@ void ResourcesManager::loadSound(const std::string& filename)
 	//mode |= FMOD_CREATESTREAM;
 
 	FMOD::Sound* sound;
-	if ((sound = SoundSystem::GetInstance()->createSound(soundfile, mode)) == nullptr) {
-		LOG("RESOURCES MANAGER: Sound named \"%s\" not found\n", soundfile.c_str());
+	if ((sound = soundSystem->createSound(soundfile, mode)) == nullptr) {
+		LOG_ERROR("RESOURCES MANAGER", "Sound named \"%s\" not found", soundfile.c_str());
 		return;
 	}
 
@@ -163,7 +169,7 @@ void ResourcesManager::loadSound(const std::string& filename)
 	std::lock_guard<std::mutex> lock(soundMutex);
 	sounds[name] = sound;
 
-	LOG("RESOURCES MANAGER: Sound loaded: %s\n", soundfile.c_str());
+	LOG("Sound loaded: %s", soundfile.c_str());
 }
 
 void ResourcesManager::initializeAllResources()
@@ -182,6 +188,9 @@ void ResourcesManager::initializeAllResources()
 	//Sounds
 	//threads.push_back(std::thread(&ResourcesManager::initializeSounds, std::ref(*this)));
 
+	//Interface
+	initializeInterface();
+
 	//Wait
 	for (int i = 0; i < threads.size(); i++)
 		threads[i].join();
@@ -195,18 +204,31 @@ void ResourcesManager::initializeOgreResources()
 
 void ResourcesManager::initializeScenes()
 {
-	for (auto data : sceneData)
+	for (auto data : sceneData) {
+		if (data == nullptr) continue;
 		data->loadAsync();
+	}
 }
 
 void ResourcesManager::initializeBlueprints()
 {
-	for (auto data : blueprintData)
+	for (auto data : blueprintData) {
+		if (data.second == nullptr) continue;
 		data.second->loadAsync();
+	}
 }
 
 void ResourcesManager::initializeSounds()
 {
+	// FMOD does it for us
+}
+
+void ResourcesManager::initializeInterface()
+{
+	InterfaceSystem* interfaceSystem = InterfaceSystem::GetInstance();
+	checkNullAndBreak(interfaceSystem);
+
+	interfaceSystem->initDefaultResources(interfacePath);
 }
 
 bool ResourcesManager::initShaderSystem()
@@ -216,7 +238,7 @@ bool ResourcesManager::initShaderSystem()
 		shaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
 		// Core shader libs not found -> shader generating will fail.
 		if (shaderLibPath.empty()) {
-			LOG("RESOURCES MANAGER: Shader libs not found.\n");
+			LOG_ERROR("RESOURCES MANAGER", "Shader libs not found");
 			return false;
 		}
 		// Create and register the material manager listener if it doesn't exist yet.
@@ -252,10 +274,14 @@ void ResourcesManager::destroyShaderSystem()
 
 bool ResourcesManager::registerSceneData(SceneData* data)
 {
+	if (data == nullptr || data->getLoadState() == Loadable::LoadState::INVALID) {
+		LOG_ERROR("RESOURCES MANAGER", "SceneData reference is null or not valid");
+		return false;
+	}
 	// lock_guard secures unlock on destruction
 	std::lock_guard<std::mutex> lock(sceneDataMutex);
 	if (sceneDataIndexes.find(data->id) != sceneDataIndexes.end()) {
-		LOG("RESOURCES MANAGER: trying to add an already existing SceneData: %s.\n", data->id.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "Trying to add an already existing SceneData: %s", data->id.c_str());
 		return false;
 	}
 	sceneData.push_back(data);
@@ -266,10 +292,14 @@ bool ResourcesManager::registerSceneData(SceneData* data)
 
 bool ResourcesManager::registerBlueprint(BlueprintData* data)
 {
+	if (data == nullptr || data->getLoadState() == Loadable::LoadState::INVALID) {
+		LOG_ERROR("RESOURCES MANAGER", "BlueprintData reference is null or not valid");
+		return false;
+	}
 	// lock_guard secures unlock on destruction
 	std::lock_guard<std::mutex> lock(blueprintMutex);
 	if (blueprintData.find(data->id) != blueprintData.end()) {
-		LOG("RESOURCES MANAGER: trying to add an already existing Blueprint: %s.\n", data->id.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "Trying to add an already existing Blueprint: %s", data->id.c_str());
 		return false;
 	}
 	blueprintData[data->id] = data;
@@ -279,7 +309,7 @@ bool ResourcesManager::registerBlueprint(BlueprintData* data)
 const SceneData* ResourcesManager::getSceneData(const std::string& name)
 {
 	if (sceneDataIndexes.find(name) == sceneDataIndexes.end()) {
-		LOG("RESOURCES MANAGER: trying to get not existing SceneData: %s.\n", name.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "Trying to get not existing SceneData: %s", name.c_str());
 		return nullptr;
 	}
 	return sceneData[sceneDataIndexes[name].second];
@@ -288,7 +318,7 @@ const SceneData* ResourcesManager::getSceneData(const std::string& name)
 const SceneData* ResourcesManager::getSceneData(int index)
 {
 	if (index >= sceneDataIndexes.size()) {
-		LOG("RESOURCES MANAGER: trying to get not existing SceneData index: %i", index);
+		LOG_ERROR("RESOURCES MANAGER", "Trying to get not existing SceneData index: %i", index);
 		return nullptr;
 	}
 
@@ -303,8 +333,13 @@ const SceneData* ResourcesManager::getSceneData(int index)
 const BlueprintData* ResourcesManager::getBlueprint(const std::string& name)
 {
 	if (blueprintData.find(name) == blueprintData.end()) {
-		LOG("RESOURCES MANAGER: trying to get not existing Blueprint: %s.\n", name.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "Trying to get not existing Blueprint: %s", name.c_str());
 		return nullptr;
+	}
+	BlueprintData* data = blueprintData[name];
+	if (data->getLoadState() == Loadable::LoadState::INVALID) { 
+		blueprintData.erase(name);
+		return nullptr; 
 	}
 	return blueprintData[name];
 }
@@ -312,7 +347,7 @@ const BlueprintData* ResourcesManager::getBlueprint(const std::string& name)
 Sound* ResourcesManager::getSound(const std::string& name)
 {
 	if (sounds.find(name) == sounds.end()) {
-		LOG("RESOURCES MANAGER: trying to get not existing Sound: %s.\n", name.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "Trying to get not existing Sound: %s", name.c_str());
 		return nullptr;
 	}
 	return sounds[name];
@@ -326,17 +361,19 @@ void ResourcesManager::locateResourceType(const std::string& resourceType, const
 		locateBlueprints(path);
 	else if (resourceType == "Sounds")
 		locateSounds(path);
+	else if (resourceType == "Interface")
+		locateInterface(path);
 	else if (resourceType == "Ogre")
 		locateOgreResources(path);
 	else
-		LOG("RESOURCES MANAGER: invalid resource type: \"%s\". Resource not loaded.\n", resourceType.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "Invalid resource type: \"%s\". Resource not loaded", resourceType.c_str());
 }
 
 void ResourcesManager::locateScenes(const std::string& filename)
 {
 	std::ifstream file(filename);
 	if (!file.is_open()) {
-		LOG("RESOURCES MANAGER: ScenesAssets path %s not found.\n", filename.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "ScenesAssets path %s not found", filename.c_str());
 		return;
 	}
 	std::vector<std::string> paths;
@@ -363,7 +400,7 @@ void ResourcesManager::locateBlueprints(const std::string& filename)
 {
 	std::ifstream file(filename);
 	if (!file.is_open()) {
-		LOG("RESOURCES MANAGER: BlueprintsAssets path %s not found.\n", filename.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "BlueprintsAssets path %s not found", filename.c_str());
 		return;
 	}
 	std::vector<std::string> paths;
@@ -389,7 +426,7 @@ void ResourcesManager::locateSounds(const std::string& filename)
 	std::ifstream stream;
 	stream.open(filename);
 	if (!stream.is_open()) {
-		LOG("RESOURCES MANAGER: SoundsAssets path %s not found.\n", filename.c_str());
+		LOG_ERROR("RESOURCES MANAGER", "SoundsAssets path %s not found", filename.c_str());
 		return;
 	}
 	std::string line;
@@ -410,6 +447,19 @@ void ResourcesManager::locateSounds(const std::string& filename)
 	for (int i = 0; i < threads.size(); i++)
 		threads[i].join();
 
+}
+
+void ResourcesManager::locateInterface(const std::string& filename)
+{
+	std::ifstream stream;
+	stream.open(filename);
+	if (!stream.is_open()) {
+		LOG_ERROR("RESOURCES MANAGER", "InterfaceAssets path %s not found", filename.c_str());
+		return;
+	}
+	stream.close();
+
+	interfacePath = filename;
 }
 
 void ResourcesManager::locateOgreResources(const std::string& filename)
@@ -500,5 +550,5 @@ void ResourcesManager::locateOgreResources(const std::string& filename)
 	}
 
 	//Initialize (REMEMBER TO INITIALIZE OGRE)
-	LOG("RESOURCES MANAGER: Ogre resources loaded\n");
+	LOG("RESOURCES MANAGER: Ogre resources loaded");
 }

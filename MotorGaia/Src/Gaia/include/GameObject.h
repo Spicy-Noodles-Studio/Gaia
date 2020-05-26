@@ -20,6 +20,7 @@ class GAIA_API GameObject {
     friend class Scene;
     friend class SceneManager;
     friend class UserComponent;
+    friend class PhysicsSystem;
 public:
     GameObject(const std::string& name, const std::string& tag, Scene* scene);
     ~GameObject();
@@ -28,7 +29,7 @@ public:
     T* addComponent();
 
     template<typename T>
-    bool delComponent();
+    bool deleteComponent();
 
     template<typename T>
     T* getComponent();
@@ -59,9 +60,10 @@ public:
     void setActive(bool active);
     bool isActive() const;
 
+private:
 	void onCollisionEnter(GameObject* other);
-	void onTriggerEnter(GameObject* other);//An object enters a trigger
-	void onObjectEnter(GameObject* other);//A trigger is entered by an object
+	void onTriggerEnter(GameObject* other);
+	void onObjectEnter(GameObject* other);
 
 	void onCollisionStay(GameObject* other);
 	void onTriggerStay(GameObject* other);
@@ -76,33 +78,36 @@ private:
     bool addComponent(const std::string& name, Component* component);
 
 public:
-	Ogre::SceneNode* node = nullptr;
-	Transform* transform = nullptr;
+	Ogre::SceneNode* node;
+	Transform* transform;
 
 private: 
     std::string name;
     std::string tag;
     bool active;
 
-    GameObject* parent = nullptr;
+    GameObject* parent;
     std::vector<GameObject*> children;
 
-    Scene* myScene = nullptr;
+    Scene* myScene;
     std::map<std::string, Component*> components;
     std::vector<UserComponent*> userComponents;
 };
 
 template<typename T>
 T* GameObject::addComponent() {
-    const std::string key = ComponentManager::GetInstance()->getID<T>();
+    ComponentManager* componentManager = ComponentManager::GetInstance();
+    checkNullAndBreak(componentManager);
+
+    const std::string key = componentManager->getID<T>();
     if (components.find(key) != components.end()) {
-        LOG("GAMEOBJECT: Component %s already exists in %s GameObject\n", key.c_str(), name.c_str());
+        LOG_ERROR("GAMEOBJECT", "Component %s already exists in %s GameObject", key.c_str(), name.c_str());
         return (T*)components[key]; // Return the exiting one.
     }
-    auto constructor = ComponentManager::GetInstance()->getComponentFactory(key);
+    auto constructor = componentManager->getComponentFactory(key);
 
     if (constructor == nullptr) {
-        LOG("GAMEOBJECT: Component %s not attached to %s GameObject. Constructor not found\n", key.c_str(), name.c_str());
+        LOG_ERROR("GAMEOBJECT", "Component %s not attached to %s GameObject. Constructor not found", key.c_str(), name.c_str());
         return nullptr;
     }
 
@@ -111,10 +116,13 @@ T* GameObject::addComponent() {
 }
 
 template<typename T>
-bool GameObject::delComponent() {
-    const std::string key = ComponentManager::GetInstance()->getID<T>();
+bool GameObject::deleteComponent() {
+    ComponentManager* componentManager = ComponentManager::GetInstance();
+    checkNullAndBreak(componentManager);
+
+    const std::string key = componentManager->getID<T>();
     if (components.find(key) != components.end()) {
-        LOG("GAMEOBJECT: Cannot remove. Component %s does not exist in %s GameObject\n", key.c_str(), name.c_str());
+        LOG_ERROR("GAMEOBJECT", "Cannot remove. Component %s does not exist in %s GameObject", key.c_str(), name.c_str());
         return false;
     }
 
@@ -126,7 +134,10 @@ bool GameObject::delComponent() {
 
 template<typename T>
 T* GameObject::getComponent() {
-    const std::string key = ComponentManager::GetInstance()->getID<T>();
+    ComponentManager* componentManager = ComponentManager::GetInstance();
+    checkNullAndBreak(componentManager, nullptr);
+
+    const std::string key = componentManager->getID<T>();
     if (components.find(key) == components.end())
         return nullptr;
 

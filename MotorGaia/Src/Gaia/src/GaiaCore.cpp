@@ -44,7 +44,7 @@ GaiaCore::~GaiaCore()
 	// Call close before GaiaCore destructor
 }
 
-void GaiaCore::init(std::string windowName)
+void GaiaCore::init(const std::string& windowTitle, unsigned int width, unsigned int height)
 {
 #ifdef _DEBUG
 	root = new Ogre::Root("plugins_d.cfg", "window_d.cfg");
@@ -52,75 +52,77 @@ void GaiaCore::init(std::string windowName)
 	root = new Ogre::Root("plugins.cfg", "window.cfg", "");
 #endif
 
+	checkNullAndBreak(root);
 	if (!(root->restoreConfig() || root->showConfigDialog(nullptr)))
 		return;
 
-	windowManager = new WindowManager();
-	windowManager->createWindow(root, windowName);
+	windowManager = WindowManager::GetInstance();
+	checkNullAndBreak(windowManager);
+	windowManager->init(root);
 
 	// Setup window
-	window = windowManager->getWindow();
-	windowManager->initResolutions();
-
-	std::vector<std::pair<int, int>> resolutions = windowManager->getAvailableResolutionsForWindow();
-
-	windowManager->setWindowMinArea(resolutions[0].first, resolutions[0].second);
-	windowManager->windowResize(resolutions[resolutions.size() / 2].first, resolutions[resolutions.size() / 2].second);
-	windowManager->setActualResolutionId(resolutions.size() / 2);
+	window = windowManager->createWindow(windowTitle, width, height);
 
 	// Systems initialization
-
 	// EventSystem
 	eventSystem = new EventSystem();
+	checkNullAndBreak(eventSystem);
 	eventSystem->init();
 
 	// RenderSystem
 	renderSystem = RenderSystem::GetInstance();
-	renderSystem->init(root, window);
+	checkNullAndBreak(renderSystem);
+	renderSystem->init(root);
 
 	// InputSystem
 	inputSystem = InputSystem::GetInstance();
+	checkNullAndBreak(inputSystem);
 	inputSystem->init();
 
 	// InterfaceSystem
 	interfaceSystem = InterfaceSystem::GetInstance();
+	checkNullAndBreak(interfaceSystem);
 	interfaceSystem->init(window);
 
 	// PhysicsSystem
 	physicsSystem = PhysicsSystem::GetInstance();
+	checkNullAndBreak(physicsSystem);
 	physicsSystem->init();
 
 	// SoundSystem
 	soundSystem = SoundSystem::GetInstance();
+	checkNullAndBreak(soundSystem);
 	soundSystem->init();
 
 	// Managers initialization
-
 	// ResourcesManager initialization
 	resourcesManager.init();
 
 	// ComponentManager initialization
 	componentManager = ComponentManager::GetInstance();
+	checkNullAndBreak(componentManager);
 	componentManager->init();
-
-	//Init Default Resources
-	interfaceSystem->initDefaultResources("./Assets/Files/interface.asset");
 
 	// SceneManager initialization (required ResourcesManager and ComponentManager previous initialization)
 	sceneManager = SceneManager::GetInstance();
+	checkNullAndBreak(sceneManager);
 	sceneManager->init(root);
 
 	// Main Engine Timer
 	timer = Timer::GetInstance();
+	checkNullAndBreak(timer);
 	timer->init();
 }
 
 void GaiaCore::run()
 {
+	checkNullAndBreak(timer);
 	float deltaTime = timer->getDeltaTime();
-	while (!windowManager->isWindowClosed())
+	checkNullAndBreak(windowManager);
+	while (!windowManager->isClosed())
 	{
 		// Update elapsed time
+		checkNullAndBreak(timer);
 		timer->update();
 		deltaTime = timer->getDeltaTime();
 
@@ -140,26 +142,36 @@ void GaiaCore::run()
 
 void GaiaCore::close()
 {
-	Timer::GetInstance()->close();
+	checkNullAndBreak(timer);
+	timer->close();
 
 	// SceneManager termination
+	checkNullAndBreak(sceneManager);
 	sceneManager->close();
 
 	// ComponentManager termination
+	checkNullAndBreak(componentManager);
 	componentManager->close();
 
 	// ResourcesManager termination
 	resourcesManager.close();
 
 	//WindowManager termination
+	checkNullAndBreak(windowManager);
 	windowManager->close();
 
 	//Systems termination
+	checkNullAndBreak(soundSystem);
 	soundSystem->close();
+	checkNullAndBreak(physicsSystem);
 	physicsSystem->close();
+	checkNullAndBreak(interfaceSystem);
 	interfaceSystem->close();
+	checkNullAndBreak(inputSystem);
 	inputSystem->close();
+	checkNullAndBreak(renderSystem);
 	renderSystem->close();
+	checkNullAndBreak(eventSystem);
 	eventSystem->close();
 
 	if (eventSystem != nullptr)
@@ -178,53 +190,67 @@ void GaiaCore::close()
 void GaiaCore::render(float deltaTime)
 {
 	// RenderSystem
+	checkNullAndBreak(renderSystem);
 	renderSystem->render(deltaTime);
 
 #ifdef _DEBUG
 	// PhysicsSystem
+	checkNullAndBreak(physicsSystem);
 	physicsSystem->render();
 #endif
 
 	// InterfaceSystem
+	checkNullAndBreak(interfaceSystem);
 	interfaceSystem->render();
 }
 
 void GaiaCore::preUpdate(float deltaTime)
 {
 	// InputSystem
+	checkNullAndBreak(inputSystem);
 	inputSystem->preUpdate();
 
 	// EventSystem
+	checkNullAndBreak(eventSystem);
 	eventSystem->update();
 
 	// InputSystem
+	checkNullAndBreak(inputSystem);
 	inputSystem->update();
 
 	// InterfaceSystem
+	checkNullAndBreak(interfaceSystem);
 	interfaceSystem->update(deltaTime);
 
 	// PhysicsSystem
+	checkNullAndBreak(physicsSystem);
 	physicsSystem->update(deltaTime);
 
 	// SoundSystem
+	checkNullAndBreak(soundSystem);
 	soundSystem->update(deltaTime);
 
 	// Managers
+	checkNullAndBreak(sceneManager);
 	sceneManager->preUpdate(deltaTime);
 }
 
 void GaiaCore::update(float deltaTime)
 {
+	checkNullAndBreak(sceneManager);
 	sceneManager->update(deltaTime);
 }
 
 void GaiaCore::postUpdate(float deltaTime)
 {
+	checkNullAndBreak(sceneManager);
 	sceneManager->postUpdate(deltaTime);
 
 	// Systems 
+	checkNullAndBreak(inputSystem);
 	inputSystem->postUpdate();
 
+	checkNullAndBreak(physicsSystem);
 	physicsSystem->postUpdate();
 }
 

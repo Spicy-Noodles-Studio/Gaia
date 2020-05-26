@@ -9,7 +9,7 @@ class ControllerEventListener : public EventListener
 {
 public:
 	ControllerEventListener();
-	~ControllerEventListener();
+	virtual ~ControllerEventListener();
 
 private:
 	virtual void processEvent(const SDL_Event& event);

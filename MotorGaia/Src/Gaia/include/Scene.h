@@ -19,13 +19,24 @@ class GameObject;
 class SceneManager;
 
 class GAIA_API Scene {
+	friend class InterfaceSystem;
 	friend class GameObject;
 	friend class SceneManager;
 	friend class UserComponent;
+	friend class ParticleEmitter;
+	friend class MeshRenderer;
+	friend class Animator;
+	friend class Trail;
+	friend class Camera;
+	friend class Light;
 public:
 	Scene(const std::string& sceneName, SceneManager* sceneManager);
 	~Scene();
 
+	const std::string& getName() const;
+	Camera* getMainCamera() const;
+
+private:
 	//Component Calls
 	void awake();
 	void start();
@@ -34,7 +45,6 @@ public:
 	void postUpdate(float deltaTime);
 	void fixedUpdate(float deltaTime);
 	
-	const std::string& getName();
 	Ogre::SceneManager* getSceneManager() const;
 
 	Ogre::Entity* createEntity(const std::string& name);
@@ -43,11 +53,9 @@ public:
 	std::vector<GameObject*> getGameObjectsWithTag(const std::string& tag);
 
 	void setMainCamera(Camera* camera);
-	Camera* getMainCamera() const;
 
 	void addAnimationSet(const std::string& id, Ogre::AnimationStateSet* anims);
 
-private:
 	void addUserComponent(UserComponent* component);
 
 	bool addGameObject(GameObject* gameObject);

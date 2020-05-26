@@ -166,6 +166,9 @@
     <ClCompile Include="..\..\Src\Gaia\src\NoLogger.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Src\Gaia\src\Utilities\ErrorManagement.cpp">
+      <Filter>Archivos de código fuente\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Gaia\include\GaiaCore.h">
@@ -354,6 +357,9 @@
     <ClInclude Include="..\..\Src\Gaia\include\NoLogger.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Src\Gaia\include\ErrorManagement.h">
+      <Filter>Archivos de encabezado\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Archivos de encabezado">
@@ -395,14 +401,14 @@
     <Filter Include="Archivos de encabezado\Scene">
       <UniqueIdentifier>{b1adfafd-c7e9-40f3-b112-128b872f45f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\Systems">
-      <UniqueIdentifier>{52be9477-cdfb-4cb4-930f-c4e716c69b64}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\Events">
       <UniqueIdentifier>{67bcdd21-44d6-48b6-887a-5c4ef9c27354}</UniqueIdentifier>
     </Filter>
     <Filter Include="Archivos de código fuente\Events">
       <UniqueIdentifier>{21d1e15d-c747-4e22-8142-e7df25f5fd91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Systems">
+      <UniqueIdentifier>{52be9477-cdfb-4cb4-930f-c4e716c69b64}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

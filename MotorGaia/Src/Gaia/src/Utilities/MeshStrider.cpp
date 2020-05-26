@@ -1,5 +1,5 @@
 #include "MeshStrider.h"
-
+#include "ErrorManagement.h"
 #include <OgreMesh.h>
 #include <OgreSubMesh.h>
 
@@ -15,12 +15,15 @@ void MeshStrider::set(Ogre::Mesh* m)
 
 int MeshStrider::getNumSubParts() const
 {
+	checkNullAndBreak(mMesh, 0);
 	int ret = mMesh->getNumSubMeshes();
 	return ret;
 }
 
 void MeshStrider::getLockedReadOnlyVertexIndexBase(const unsigned char** vertexbase, int& numverts, PHY_ScalarType& type, int& stride, const unsigned char** indexbase, int& indexstride, int& numfaces, PHY_ScalarType& indicestype, int subpart/*=0*/) const
 {
+	checkNullAndBreak(mMesh);
+
 	Ogre::SubMesh* submesh = mMesh->getSubMesh(subpart);
 
 	Ogre::VertexData* vertex_data = submesh->useSharedVertices ? mMesh->sharedVertexData : submesh->vertexData;
@@ -70,6 +73,8 @@ void MeshStrider::getLockedVertexIndexBase(unsigned char** vertexbase, int& numv
 
 void MeshStrider::unLockReadOnlyVertexBase(int subpart) const
 {
+	checkNullAndBreak(mMesh);
+
 	Ogre::SubMesh* submesh = mMesh->getSubMesh(subpart);
 
 	Ogre::VertexData* vertex_data = submesh->useSharedVertices ? mMesh->sharedVertexData : submesh->vertexData;

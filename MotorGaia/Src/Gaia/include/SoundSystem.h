@@ -20,22 +20,27 @@ typedef FMOD::ChannelGroup ChannelGroup;
 
 class GAIA_API SoundSystem : public Singleton<SoundSystem>
 {
+	friend class GaiaCore;
+	friend class Reverb;
+	friend class ResourcesManager;
+	friend class SoundEmitter;
+	friend class SoundListener;
 public:	
 	struct SoundChannel {
 		Channel* channel;
 		bool paused;
 		
-		~SoundChannel();
 		SoundChannel();
 		SoundChannel(Channel* channel);
+		~SoundChannel();
 	};
 	struct EmitterData
 	{
 		std::map<std::string, SoundChannel*> channels;
 		const Vector3* position;	
 
-		~EmitterData();
 		EmitterData(const Vector3* position);
+		~EmitterData();
 		bool isPaused();
 	};
 	struct ListenerData
@@ -47,21 +52,31 @@ private:
 	System* system;
 
 	ChannelGroup* music;
-	ChannelGroup* soundEfects;
+	ChannelGroup* soundEffects;
 
 	float generalVolume;
 	float soundVolume;
 	float musicVolume;
 	std::vector<EmitterData*> emitters;
-	ListenerData* listener = nullptr;
+	ListenerData* listener;
 
-	void ERRCHECK(FMOD_RESULT result);
+	void ERRCHECK(FMOD_RESULT result) const;
 
-	Sound* getSound(const std::string& name);
+	Sound* getSound(const std::string& name) const;
 public:
 	SoundSystem();
 	~SoundSystem();
 
+	void setMusicVolume(float volume);
+	void setSoundEffectsVolume(float volume);
+	void setGeneralVolume(float volume);
+	void setPauseAllSounds(bool pause);
+
+	float getGeneralVolume() const;
+	float getMusicVolume() const;
+	float getSoundVolume() const;
+
+private:
 	void init();
 	void close();
 
@@ -70,24 +85,16 @@ public:
 	Channel* playSound(const std::string& name);
 	Channel* playMusic(const std::string& name);
 
-	void setPauseAllSounds(bool pause);
-
-	void setMusicVolume(float volume);
-	void setSoundEffectsVolume(float volume);
-	void setGeneralVolume(float volume);
 	void setListenerAttributes(const Vector3& position, const Vector3& forward, const Vector3& up);
-
-	float getGeneralVolume();
-	float getMusicVolume();
-	float getSoundVolume();
 
 	void removeEmitter(EmitterData* emitter);
 	void removeListener();
 
 	void update(float deltaTime);
 
-	EmitterData* createEmitter(const Vector3* pos);
-	ListenerData* createListener(const Vector3* pos,const Quaternion* q);
+	EmitterData* createEmitter(const Vector3* position);
+	ListenerData* createListener(const Vector3* position, const Quaternion* quaternion);
+
 	// Utils
 	FMOD_VECTOR vecToFMOD(const Vector3& in);
 	FMOD::Reverb3D* createReverb();

@@ -30,7 +30,7 @@ public:
 	GaiaCore();
 	~GaiaCore();
 
-	void init(std::string windowName);
+	void init(const std::string& windowTitle, unsigned int width = 0, unsigned int height = 0);
 	void run();
 	void close();
 

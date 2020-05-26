@@ -568,6 +568,7 @@ bool InputSystem::isButtonPressed(int controllerIndex, std::string button) const
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 
+	controllerUsed = true;
 	if (button == "UP") {
 		return controllers[controllerIndex].Up;
 	}
@@ -617,6 +618,7 @@ bool InputSystem::getButtonPress(int controllerIndex, std::string button) const
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 	const bool is_in = controllers[controllerIndex].buttonPress.find(button) != controllers[controllerIndex].buttonPress.end();
+	controllerUsed = is_in;
 	return is_in;
 }
 
@@ -627,6 +629,7 @@ bool InputSystem::getButtonRelease(int controllerIndex, std::string button) cons
 
 	std::transform(button.begin(), button.end(), button.begin(), ::toupper);
 	const bool is_in = controllers[controllerIndex].buttonRelease.find(button) != controllers[controllerIndex].buttonRelease.end();
+	controllerUsed = is_in;
 	return is_in;
 }
 

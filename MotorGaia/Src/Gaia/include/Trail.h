@@ -33,7 +33,6 @@ public:
 	bool started() const;
 
 	void setMeshRenderer(MeshRenderer* mesh);
-
 	void setOffset(const Vector3& offset);
 	void setLength(float length);
 	void setMax(float max);

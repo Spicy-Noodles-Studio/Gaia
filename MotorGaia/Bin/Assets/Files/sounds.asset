@@ -1,0 +1,7 @@
+USAGE: file_name" "sound_name" "2D/3D" "LOOP (true/false)
+EXAMPLE: despacito.mp3 scene_1_music 2D true
+./Assets/Sounds/despacito.mp3 despacito 2D false
+./Assets/Sounds/test1.mp3 prueba 2D true
+./Assets/Sounds/test2.mp3 prueba2 3D true
+./Assets/Sounds/piano.mp3 piano 3D false
+./Assets/Sounds/WaterDrop.wav prueba3 3D false
